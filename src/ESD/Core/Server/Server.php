@@ -38,7 +38,6 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Class Server
- * 封装了Server对象
  * @package ESD\Core\Server
  */
 abstract class Server
