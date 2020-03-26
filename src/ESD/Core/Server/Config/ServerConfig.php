@@ -812,7 +812,7 @@ class ServerConfig extends BaseConfig
             $build['websocket_subprotocol'] = $this->getWebsocketSubprotocol();
         }
         $build['open_websocket_close_frame'] = $this->isOpenWebsocketCloseFrame();
-        $build['enable_coroutine'] = Runtime::$enableCo;
+        $build['enable_coroutine'] = Runtime::$enableCoroutine;
         return $build;
     }
 

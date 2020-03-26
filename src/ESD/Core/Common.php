@@ -67,7 +67,7 @@ const HOOK_ALL = SWOOLE_HOOK_ALL;
  */
 function enableRuntimeCoroutine(bool $enable = true, int $flags = HOOK_ALL ^ HOOK_FILE)
 {
-    if (Runtime::$enableCo) {
+    if (Runtime::$enableCoroutine) {
         \Swoole\Runtime::enableCoroutine($enable, $flags);
     }
 }
@@ -139,7 +139,7 @@ function addTimerAfter(int $msec, callable $callback, ... $params)
  */
 function goWithContext(callable $run)
 {
-    if (Runtime::$enableCo) {
+    if (Runtime::$enableCoroutine) {
         $context = getContext();
         return go(function () use ($run, $context) {
             $currentContext = getContext();

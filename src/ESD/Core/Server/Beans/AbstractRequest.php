@@ -12,6 +12,10 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
+/**
+ * Class AbstractRequest
+ * @package ESD\Core\Server\Beans
+ */
 abstract class AbstractRequest implements RequestInterface, ServerRequestInterface
 {
     const HEADER_HOST = "host";
@@ -311,8 +315,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * immutability of the message, and MUST return an instance that has the
      * updated query string arguments.
      *
-     * @param array $query Array of query string arguments, typically from
-     *                     $_GET.
+     * @param array $query Array of query string arguments, typically from $_GET.
      * @return static
      */
     public function withQueryParams(array $query)
@@ -362,8 +365,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * potential types MUST be arrays or objects only. A null value indicates
      * the absence of body content.
      *
-     * @return null|array|object The deserialized body parameters, if any.
-     *     These will typically be an array or object.
+     * @return null|array|object The deserialized body parameters, if any. These will typically be an array or object.
      */
     public function getParsedBody()
     {
@@ -404,11 +406,9 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * immutability of the message, and MUST return an instance that has the
      * updated body parameters.
      *
-     * @param null|array|object $data The deserialized body data. This will
-     *                                typically be in an array or object.
+     * @param null|array|object $data The deserialized body data. This will typically be in an array or object.
      * @return static
-     * @throws \InvalidArgumentException if an unsupported argument type is
-     *                                provided.
+     * @throws \InvalidArgumentException if an unsupported argument type is provided.
      */
     public function withParsedBody($data)
     {

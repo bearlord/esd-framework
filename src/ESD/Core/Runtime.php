@@ -13,5 +13,5 @@ class Runtime
      * Whether to enable coroutine
      * @var bool
      */
-    public static $enableCo = false;
+    public static $enableCoroutine = false;
 }
