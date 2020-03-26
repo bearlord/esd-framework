@@ -33,7 +33,7 @@ abstract class AbstractPlugin extends Order implements PluginInterface
     public function __construct()
     {
         $this->readyChannel = DIGet(Channel::class);
-        //注入DI
+
         Server::$instance->getContainer()->injectOn($this);
     }
 

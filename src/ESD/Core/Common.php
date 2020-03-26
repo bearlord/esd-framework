@@ -242,15 +242,15 @@ function getDeepContextValueByClassName($key)
  */
 function clearDir($path = null)
 {
-    if (is_dir($path)) {    //判断是否是目录
-        $p = scandir($path);     //获取目录下所有文件
+    if (is_dir($path)) {
+        $p = scandir($path);
         foreach ($p as $value) {
-            if ($value != '.' && $value != '..') {    //排除掉当./和../
+            if ($value != '.' && $value != '..') {
                 if (is_dir($path . '/' . $value)) {
-                    clearDir($path . '/' . $value);    //递归调用删除方法
-                    rmdir($path . '/' . $value);    //删除当前文件夹
+                    clearDir($path . '/' . $value);
+                    rmdir($path . '/' . $value);
                 } else {
-                    unlink($path . '/' . $value);    //删除当前文件
+                    unlink($path . '/' . $value);
                 }
             }
         }
