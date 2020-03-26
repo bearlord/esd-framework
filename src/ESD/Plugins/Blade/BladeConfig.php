@@ -1,13 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/17
- * Time: 14:52
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Plugins\Blade;
 
+namespace ESD\Plugins\Blade;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 

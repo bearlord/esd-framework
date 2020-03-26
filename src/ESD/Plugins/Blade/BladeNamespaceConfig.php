@@ -1,10 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/17
- * Time: 15:02
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
+
 
 namespace ESD\Plugins\Blade;
 

@@ -1,18 +1,19 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/17
- * Time: 14:51
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Blade;
-
 
 use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\Server\Server;
 
+/**
+ * Class BladePlugin
+ * @package ESD\Plugins\Blade
+ */
 class BladePlugin extends AbstractPlugin
 {
     /**
@@ -26,6 +27,7 @@ class BladePlugin extends AbstractPlugin
 
     /**
      * BladePlugin constructor.
+     *
      * @param BladeConfig|null $bladeConfig
      * @throws \ReflectionException
      * @throws \DI\DependencyException
@@ -39,7 +41,7 @@ class BladePlugin extends AbstractPlugin
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -48,7 +50,7 @@ class BladePlugin extends AbstractPlugin
     }
 
     /**
-     * 初始化
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      * @throws \DI\DependencyException
@@ -78,7 +80,7 @@ class BladePlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      */
