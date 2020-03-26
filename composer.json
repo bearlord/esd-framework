@@ -11,6 +11,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "php": ">=7.1.4",
         "monolog/monolog": "^1.24",
 		"symfony/console": "^4.2",
 		"symfony/yaml": "^4.2",
