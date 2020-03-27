@@ -104,7 +104,6 @@ abstract class Process
 
     /**
      * Process constructor.
-     *
      * @param Server $server
      * @param int $processId
      * @param string $name

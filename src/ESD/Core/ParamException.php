@@ -8,10 +8,14 @@ namespace ESD\Core;
 
 use Throwable;
 
+/**
+ * Class ParamException
+ * @package ESD\Core
+ */
 class ParamException extends Exception
 {
     /**
-     * RouteException constructor.
+     * ParamException constructor.
      * @param string $message
      * @param int $code
      * @param Throwable|null $previous

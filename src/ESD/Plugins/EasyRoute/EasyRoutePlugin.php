@@ -66,7 +66,7 @@ class EasyRoutePlugin extends AbstractPlugin
     /**
      * EasyRoutePlugin constructor.
      * @param RouteConfig|null $routeConfig
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function __construct(?RouteConfig $routeConfig = null)
     {

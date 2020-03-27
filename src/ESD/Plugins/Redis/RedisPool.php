@@ -26,7 +26,6 @@ class RedisPool
 
     /**
      * RedisPool constructor.
-     *
      * @param RedisOneConfig $redisConfig
      * @throws RedisException
      */

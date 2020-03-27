@@ -48,24 +48,25 @@ abstract class Server
     public static $instance;
 
     /**
-     * 是否启动
+     * Whether to start
      * @var bool
      */
     public static $isStart = false;
+
     /**
-     * 服务器配置
+     * server configuration
      * @var ServerConfig
      */
     protected $serverConfig;
 
     /**
-     * swoole的server
+     * Swoole server
      * @var \Swoole\WebSocket\Server
      */
     protected $server;
 
     /**
-     * 主要端口
+     * Server port
      * @var ServerPort
      */
     private $mainPort;
@@ -91,7 +92,7 @@ abstract class Server
     protected $basePlugManager;
 
     /**
-     * 是否已配置
+     * Is it configured
      * @var bool
      */
     private $configured = false;
@@ -108,6 +109,7 @@ abstract class Server
 
     /**
      * Server constructor.
+     *
      * @param ServerConfig $serverConfig
      * @param string $defaultPortClass
      * @param string $defaultProcessClass
@@ -118,14 +120,16 @@ abstract class Server
     {
         self::$instance = $this;
         $this->serverConfig = $serverConfig;
-        //获取DI容器
+        //Get DI container
         $this->container = DI::getInstance()->getContainer();
-        //设置默认Log
+
+        //Set the default Log
         DISet(LoggerInterface::class, new Log());
         $this->container->set(Server::class, $this);
         $this->container->set(ServerConfig::class, $this->serverConfig);
         date_default_timezone_set('Asia/Shanghai');
-        //注册Process的ContextBuilder
+
+        //Register the Process's ContextBuilder
         $contextBuilder = ContextManager::getInstance()->getContextBuilder(ContextBuilder::SERVER_CONTEXT,
             function () {
                 return new ServerContextBuilder($this);
@@ -802,5 +806,20 @@ abstract class Server
     public function getBasePlugManager(): PluginInterfaceManager
     {
         return $this->basePlugManager;
+    }
+
+    /**
+     * @param ServerConfig $serverConfig
+     */
+    public function setTimeZone(ServerConfig $serverConfig)
+    {
+        if (!empty($serverConfig->getTimeZone())) {
+            $timeZone = $serverConfig->timeZone;
+        } elseif (!empty(ini_get('date.timezone'))) {
+            $timeZone = ini_get('date.timezone');
+        } else {
+            $timeZone = "UTC";
+        }
+        date_default_timezone_set($timeZone);
     }
 }

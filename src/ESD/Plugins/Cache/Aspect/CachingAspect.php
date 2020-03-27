@@ -41,7 +41,6 @@ class CachingAspect extends OrderAspect
 
     /**
      * CachingAspect constructor.
-     *
      * @param CacheStorage $cacheStorage
      * @throws DependencyException
      * @throws NotFoundException

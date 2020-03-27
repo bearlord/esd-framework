@@ -22,6 +22,9 @@ class BladeConfig extends BaseConfig
      */
     protected $namespace = [];
 
+    /**
+     * BladeConfig constructor.
+     */
     public function __construct()
     {
         parent::__construct(self::key);

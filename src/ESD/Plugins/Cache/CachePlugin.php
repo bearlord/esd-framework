@@ -44,7 +44,6 @@ class CachePlugin extends AbstractPlugin
 
     /**
      * CachePlugin constructor.
-     *
      * @param CacheConfig|null $cacheConfig
      * @throws DependencyException
      * @throws NotFoundException

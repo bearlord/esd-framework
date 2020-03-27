@@ -28,7 +28,6 @@ class ProcessGroup
 
     /**
      * ProcessGroup constructor.
-     *
      * @param ProcessManager $processManager
      * @param string $groupName
      * @param array $processes

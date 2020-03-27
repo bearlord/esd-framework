@@ -38,11 +38,9 @@ class Blade
     protected $cachePath;
 
     /**
-     * Constructor.
-     *
-     * @param string $cachePath
-     * @param Container|ContainerInterface $container
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * Blade constructor.
+     * @param $cachePath
+     * @param ContainerInterface|null $container
      */
     public function __construct($cachePath, ContainerInterface $container = null)
     {

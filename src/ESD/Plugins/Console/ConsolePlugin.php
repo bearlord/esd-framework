@@ -49,7 +49,6 @@ class ConsolePlugin extends AbstractPlugin
 
     /**
      * ConsolePlugin constructor.
-     *
      * @param ConsoleConfig|null $config
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException

@@ -58,6 +58,9 @@ class ConsulServiceConfig extends BaseConfig
      */
     protected $checkConfig;
 
+    /**
+     * ConsulServiceConfig constructor.
+     */
     public function __construct()
     {
         parent::__construct(self::key);

@@ -36,9 +36,8 @@ class ServerConfig extends BaseConfig
      */
     protected $reactorNum;
 
-
     /**
-     * worker进程数,设置启动的Worker进程数量
+     * Number of worker processes, set the number of started worker processes
      * @var int
      */
     protected $workerNum;
@@ -269,6 +268,12 @@ class ServerConfig extends BaseConfig
              _| |__/ |   | \____) |    _| |_.' / 
             |________|    \______.'   |______.'  
                                                  ";
+
+    /**
+     * Time zone
+     * @var string
+     */
+    public $timeZone = 'Asia/Shanghai';
 
     /**
      * ServerConfig constructor.
@@ -833,6 +838,22 @@ class ServerConfig extends BaseConfig
     }
 
     /**
+     * @return string
+     */
+    public function getTimeZone(): string
+    {
+        return $this->timeZone;
+    }
+
+    /**
+     * @param string $timeZone
+     */
+    public function setTimeZone(string $timeZone): void
+    {
+        $this->timeZone = $timeZone;
+    }
+
+    /**
      * @return mixed
      */
     public function getName()
@@ -961,4 +982,5 @@ class ServerConfig extends BaseConfig
     {
         $this->debug = $debug;
     }
+
 }

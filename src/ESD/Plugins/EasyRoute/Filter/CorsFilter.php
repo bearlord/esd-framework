@@ -17,6 +17,10 @@ class CorsFilter extends AbstractFilter
      */
     private $corsConfig;
 
+    /**
+     * CorsFilter constructor.
+     * @param CorsConfig|null $corsConfig
+     */
     public function __construct(?CorsConfig $corsConfig = null)
     {
         if ($corsConfig == null) {

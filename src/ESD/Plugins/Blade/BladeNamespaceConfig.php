@@ -13,15 +13,20 @@ use ESD\Core\Plugins\Config\BaseConfig;
 class BladeNamespaceConfig extends BaseConfig
 {
     const key = "blade.namespace";
+
     /**
      * @var string
      */
     protected $name;
+
     /**
      * @var string
      */
     protected $path;
 
+    /**
+     * BladeNamespaceConfig constructor.
+     */
     public function __construct()
     {
         parent::__construct(self::key);

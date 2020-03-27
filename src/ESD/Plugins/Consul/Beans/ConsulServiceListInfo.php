@@ -19,6 +19,11 @@ class ConsulServiceListInfo
      */
     private $consulServiceInfos;
 
+    /**
+     * ConsulServiceListInfo constructor.
+     * @param string $serviceName
+     * @param array $consulServiceInfos
+     */
     public function __construct(string $serviceName, array $consulServiceInfos)
     {
         $this->serviceName = $serviceName;

@@ -44,6 +44,16 @@ class ServiceInfo
      */
     private $serviceTags;
 
+    /**
+     * ServiceInfo constructor.
+     * @param $serviceName
+     * @param $serviceId
+     * @param $serviceAddress
+     * @param $servicePort
+     * @param $serviceMeta
+     * @param $serviceTags
+     * @param $serviceAgreement
+     */
     public function __construct($serviceName, $serviceId, $serviceAddress, $servicePort, $serviceMeta, $serviceTags, $serviceAgreement)
     {
         $this->serviceName = $serviceName;

@@ -40,9 +40,11 @@ abstract class Server extends \ESD\Core\Server\Server
             AbstractRequest::class => new RequestFactory(),
             AbstractResponse::class => new ResponseFactory(),
         ];
+
         if ($serverConfig == null) {
             $serverConfig = new ServerConfig();
         }
+
         parent::__construct($serverConfig, $defaultPortClass, $defaultProcessClass);
     }
 
@@ -54,6 +56,7 @@ abstract class Server extends \ESD\Core\Server\Server
     public function configure()
     {
         parent::configure();
+
         $this->getLog()->debug("Print configuration:\n" . $this->getConfigContext()->getCacheContainYaml());
     }
 }

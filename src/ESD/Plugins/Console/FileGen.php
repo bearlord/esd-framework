@@ -25,6 +25,12 @@ class FileGen
 
     private $parser;
 
+    /**
+     * FileGen constructor.
+     * @param string $tplDir
+     * @param string $tplName
+     * @param string $tplSuffix
+     */
     public function __construct(string $tplDir, string $tplName, string $tplSuffix = '.stub')
     {
         $this->tplDir = $tplDir;
