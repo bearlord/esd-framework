@@ -51,7 +51,7 @@ function copy_dir($src, $dst, $force = false)
         }
     }
     closedir($dir);
-    print_f("已创建 %s目录\n", $dst);
+    printf("%S directory created\n", $dst);
     return true;
 }
 
