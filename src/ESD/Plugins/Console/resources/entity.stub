@@ -1,0 +1,43 @@
+<?php
+namespace {= namespace};
+
+use ESD\Plugins\Validate\Annotation\Filter;
+use ESD\Plugins\Validate\Annotation\Validated;
+
+/**
+ * {= tableComment}
+ *
+ * Class {= entityName}
+ */
+class {= entityName} extends {= extendClass}
+{
+
+{= properties | raw }
+
+    public function translates(): array
+    {
+        return [
+{= translates | raw }
+        ];
+    }
+
+    /**
+     * 获取数据库表名
+     *
+     * @return string
+     */
+    public static function getTableName(): string
+    {
+        return "{= tableName}";
+    }
+
+    /**
+     * 获取主键名
+     *
+     * @return string
+     */
+    public static function getPrimaryKey(): string
+    {
+        return "{= primaryKey}";
+    }
+}
