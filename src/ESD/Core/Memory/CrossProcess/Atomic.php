@@ -104,7 +104,7 @@ class Atomic
      * Wake up other processes in the wait state.
      * If the current atomic count is 0, it means that no process is waiting, wakeup will return true immediately
      * If the current atomic count is 1, it means that a process is currently waiting, wakeup will wake up the waiting process and return true
-     * If multiple processes are in the wait state at the same time, the $ n parameter can control the number of processes awakened
+     * If multiple processes are in the wait state at the same time, the $n parameter can control the number of processes awakened
      * After the awakened process returns, the atomic count will be set to 0, then you can call wakeup again to wake up other processes that are waiting
      *
      * @param int $n

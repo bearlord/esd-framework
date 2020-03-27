@@ -245,7 +245,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
     abstract public function end();
 
     /**
-     * Detach the response object. After using this method, the $ response object will not end automatically when it is destroyed.
+     * Detach the response object. After using this method, the $response object will not end automatically when it is destroyed.
      * It is used with Http \Response::create and Server::send.
      */
     abstract public function detach();

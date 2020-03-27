@@ -85,7 +85,7 @@ class ConfigContext
                 $this->conductConfig($value);
             }
             if (is_string($value)) {
-                //Handling the information contained in $ {}
+                //Handling the information contained in ${}
                 $result = [];
                 preg_match_all("/\\$\{([^\\$]*)\}/i", $value, $result);
                 foreach ($result[1] as &$needConduct) {

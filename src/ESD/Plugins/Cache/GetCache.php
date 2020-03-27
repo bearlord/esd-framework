@@ -1,26 +1,43 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: anythink
- * Date: 2019/5/31
- * Time: 5:04 PM
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
+
 namespace ESD\Plugins\Cache;
 
 use ESD\Core\Exception;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Coroutine\Co;
 
-trait  GetCache {
+/**
+ * Trait GetCache
+ * @package ESD\Plugins\Cache
+ */
+trait  GetCache
+{
     use GetLogger;
 
+    /**
+     * @return CacheStorage
+     * @throws \Exception
+     */
     public function Cache(): CacheStorage
     {
         return DIGet(CacheStorage::class);
     }
 
 
-    public function cacheable($key,callable $callable,$timeout=0, $namespace=null){
+    /**
+     * @param $key
+     * @param callable $callable
+     * @param int $timeout
+     * @param null $namespace
+     * @return mixed
+     * @throws \Exception
+     */
+    public function cacheable($key, callable $callable, $timeout = 0, $namespace = null)
+    {
         $data = $this->getCache($key, $namespace);
         if ($data != null) {
             $this->debug("cache Hit!");
@@ -32,8 +49,17 @@ trait  GetCache {
         return $result;
     }
 
-    public function cacheableWithLock($key,callable $callable, $timeout=0, $namespace=null){
-        $config =  DIget(CacheConfig::class);
+    /**
+     * @param $key
+     * @param callable $callable
+     * @param int $timeout
+     * @param null $namespace
+     * @return mixed
+     * @throws CacheException
+     */
+    public function cacheableWithLock($key, callable $callable, $timeout = 0, $namespace = null)
+    {
+        $config = DIget(CacheConfig::class);
         $data = $this->getCache($key, $namespace);
         if ($data != null) {
             $this->debug("cache Hit!");
@@ -42,7 +68,7 @@ trait  GetCache {
 
         if ($config->getLockTimeout() > 0) {
             if ($config->getLockAlive() < $config->getLockTimeout()) {
-                $this->alert('cache 缓存配置项 lockAlive 必须大于 lockTimeout, 请立即修正参数');
+                $this->alert("cache cache configuration item lockAlive must be greater than lockTimeout, please correct the parameters");
             }
 
             if ($token = $this->Cache()->lock($key, $config->getLockAlive())) {
@@ -54,14 +80,17 @@ trait  GetCache {
             } else {
                 $i = 0;
                 do {
-                    $result = $this->getCache($key, $cacheable);
-                    if ($result) break;
+                    $result = $this->getCache($key, $callable);
+                    if ($result) {
+                        break;
+                    }
+
                     Co::sleep($config->getLockWait() / 1000.0);
                     $i += $config->getLockWait();
                     if ($i >= $config->getLockTimeout()) {
-                        if($config->getLockThrowException()){
+                        if ($config->getLockThrowException()) {
                             throw new CacheException('cache key lock timeout' . $key);
-                        }else{
+                        } else {
                             $result = $callable();
                         }
                         $this->warn('lock wait timeout ' . $key . ',' . $i);
@@ -72,7 +101,7 @@ trait  GetCache {
                 } while ($i <= $config->getLockTimeout());
             }
         } else {
-            $this->info("lock_timeout 配置关闭，with lock 功能无效");
+            $this->info("lock_timeout configuration is off, with lock function is invalid");
             $result = $callable();
             $data = serverSerialize($result);
             $this->setCache($key, $data, $timeout, $namespace);
@@ -81,6 +110,12 @@ trait  GetCache {
     }
 
 
+    /**
+     * @param $key
+     * @param null $namespace
+     * @return mixed
+     * @throws \Exception
+     */
     public function getCache($key, $namespace = null)
     {
         if (is_null($namespace)) {
@@ -91,6 +126,13 @@ trait  GetCache {
         return $data;
     }
 
+    /**
+     * @param $key
+     * @param $data
+     * @param int $timeout
+     * @param null $namespace
+     * @throws \Exception
+     */
     public function setCache($key, $data, $timeout = 0, $namespace = null): void
     {
 

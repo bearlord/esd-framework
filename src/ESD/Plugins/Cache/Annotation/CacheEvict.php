@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/8
- * Time: 11:08
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Cache\Annotation;
@@ -17,27 +15,29 @@ use Doctrine\Common\Annotations\Annotation;
 class CacheEvict extends Annotation
 {
     /**
-     * 代表需要删除的命名空间下唯一的缓存key。
-     * 使用php语法，$p[0]获取对应参数
+     * Represents the unique cache key in the namespace to be deleted.
+     * Use php syntax, $p[0] to get the corresponding parameters
      * @var string
      */
     public $key = "";
 
     /**
-     * 命名空间
+     * Namespace
      * @var string
      */
     public $namespace = "";
 
     /**
-     * 标记是否删除命名空间下所有缓存，默认为false
+     * Flag whether to delete all caches in the namespace, default is false
      * @var bool
      */
     public $allEntries = false;
 
     /**
-     *  清除操作默认是在对应方法成功执行之后触发的，即方法如果因为抛出异常而未能成功返回时也不会触发清除操作。
-     *  使用beforeInvocation可以改变触发清除操作的时间，当我们指定该属性值为true时，会在调用该方法之前清除缓存中的指定元素。
+     * By default, the clear operation is triggered after the corresponding method is successfully executed, that is,
+     * if the method fails to return because of throwing an exception, the clear operation will not be triggered.
+     * Using beforeInvocation can change the time when the clear operation is triggered.
+     * When we specify the value of this property as true, the specified element in the cache will be cleared before calling this method.
      * @var bool
      */
     public $beforeInvocation = false;

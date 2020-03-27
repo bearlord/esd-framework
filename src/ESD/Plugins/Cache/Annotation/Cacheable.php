@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/8
- * Time: 11:08
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Cache\Annotation;
@@ -17,30 +15,31 @@ use Doctrine\Common\Annotations\Annotation;
 class Cacheable extends Annotation
 {
     /**
-     * 缓存时间0代表使用默认时间，-1代表无限时间,对有namespace的无效
+     * Cache time 0 means use default time, -1 means infinite time, invalid for namespace
      *
      * @var int
      */
     public $time = 0;
 
     /**
-     * 代表需要删除的命名空间下唯一的缓存key。
-     * 使用php语法，$p[0]获取对应参数
+     * Represents the unique cache key in the namespace to be deleted.
+     * Use php syntax, $p[0] to get the corresponding parameters
      * @var string
      */
     public $key = "";
 
     /**
-     * 有的时候我们可能并不希望缓存一个方法所有的返回结果。
-     * 通过condition属性可以实现这一功能。condition属性默认为空，表示将缓存所有的调用情形。
-     * 其值是通过PHP表达式来指定的，当为true时表示进行缓存处理；
-     * 当为false时表示不进行缓存处理，即每次调用该方法时该方法都会执行一次。
+     * Sometimes we may not want to cache all the results returned by a method.
+     * This function can be achieved through the condition attribute. The condition property is empty by default,
+     * which means that all call situations will be cached.
+     * The value is specified by a PHP expression. When true, it means cache processing;
+     * When false, it means no cache processing, that is, the method will be executed once each time the method is called.
      * @var string
      */
     public $condition = "";
 
     /**
-     * 命名空间
+     * Namespace
      * @var string
      */
     public $namespace = "";
