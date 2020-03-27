@@ -1,27 +1,38 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: administrato
- * Date: 2019/4/25
- * Time: 14:49
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Consul;
-
 
 use SensioLabs\Consul\Client;
 use SensioLabs\Consul\OptionsResolver;
 use SensioLabs\Consul\Services\KVInterface;
 
+/**
+ * Class KV
+ * @package ESD\Consul
+ */
 class KV implements KVInterface
 {
     private $client;
 
+    /**
+     * KV constructor.
+     * @param Client|null $client
+     */
     public function __construct(Client $client = null)
     {
         $this->client = $client ?: new Client();
     }
 
+    /**
+     * @param $key
+     * @param array $options
+     * @param int $timeout
+     * @return mixed
+     */
     public function get($key, array $options = array(), $timeout = 5)
     {
         $params = array(
@@ -32,6 +43,12 @@ class KV implements KVInterface
         return $this->client->get('v1/kv/' . $key, $params);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @param array $options
+     * @return mixed
+     */
     public function put($key, $value, array $options = array())
     {
         $params = array(
@@ -42,6 +59,11 @@ class KV implements KVInterface
         return $this->client->put('v1/kv/' . $key, $params);
     }
 
+    /**
+     * @param $key
+     * @param array $options
+     * @return mixed
+     */
     public function delete($key, array $options = array())
     {
         $params = array(

@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/25
- * Time: 13:56
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Consul;
@@ -17,6 +15,10 @@ use SensioLabs\Consul\Services\HealthInterface;
 use SensioLabs\Consul\Services\KVInterface;
 use SensioLabs\Consul\Services\SessionInterface;
 
+/**
+ * Class ServiceFactory
+ * @package ESD\Consul
+ */
 final class ServiceFactory
 {
     private static $services = array(
@@ -34,13 +36,25 @@ final class ServiceFactory
         KVInterface::SERVICE_NAME => KV::class,
     );
 
+    /**
+     * @var Client
+     */
     private $client;
 
+    /**
+     * ServiceFactory constructor.
+     * @param array $options
+     * @param LoggerInterface|null $logger
+     */
     public function __construct(array $options = array(), LoggerInterface $logger = null)
     {
         $this->client = new Client($options, $logger, new SaberClient($options));
     }
 
+    /**
+     * @param $service
+     * @return mixed
+     */
     public function get($service)
     {
         if (!array_key_exists($service, self::$services)) {
