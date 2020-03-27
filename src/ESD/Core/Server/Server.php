@@ -127,7 +127,9 @@ abstract class Server
         DISet(LoggerInterface::class, new Log());
         $this->container->set(Server::class, $this);
         $this->container->set(ServerConfig::class, $this->serverConfig);
-        date_default_timezone_set('Asia/Shanghai');
+
+        //Set time zone
+        $this->setTimeZone($this->serverConfig);
 
         //Register the Process's ContextBuilder
         $contextBuilder = ContextManager::getInstance()->getContextBuilder(ContextBuilder::SERVER_CONTEXT,
@@ -139,29 +141,34 @@ abstract class Server
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->basePlugManager = new PluginInterfaceManager($this);
-        //初始化默认插件添加Config/Logger/Event插件
+
+        //Initialize the default plugin and add the Config/Logger/Event plugin
         $this->basePlugManager->addPlug(new ConfigPlugin());
         $this->basePlugManager->addPlug(new LoggerPlugin());
         $this->basePlugManager->addPlug(new EventPlugin());
         $this->basePlugManager->order();
         $this->basePlugManager->init($this->context);
         $this->basePlugManager->beforeServerStart($this->context);
-        //合并ServerConfig配置
+
+        //Merge ServerConfig configuration
         $this->serverConfig->merge();
-        //配置DI容器
+
+        //Configure the DI container
         $this->container->set(Response::class, new ResponseProxy());
         $this->container->set(Request::class, new RequestProxy());
         set_exception_handler(function ($e) {
             $this->getLog()->error($e);
         });
-        print_r($serverConfig->getBanner() . "\n");
-        //获取上面这些后才能初始化plugManager
+        print($serverConfig->getBanner() . "\n");
+
+        //Only get the above to initialize the plugManager
         $this->plugManager = new PluginInterfaceManager($this);
         $this->container->set(PluginInterfaceManager::class, $this->getPlugManager());
     }
 
     /**
-     * 通过配置添加一个端口实例和用于初始化实例的class
+     * Add a port instance and a class to initialize the instance through configuration
+     *
      * @param string $name
      * @param PortConfig $portConfig
      * @param null $portClass
@@ -170,13 +177,14 @@ abstract class Server
     public function addPort(string $name, PortConfig $portConfig, $portClass = null)
     {
         if ($this->isConfigured()) {
-            throw new ConfigException("配置已锁定，请在调用configure前添加");
+            throw new ConfigException("Configuration is locked, please add before calling configure");
         }
         $this->portManager->addPortConfig($name, $portConfig, $portClass);
     }
 
     /**
-     * 添加一个进程
+     * Add process
+     *
      * @param string $name
      * @param null $processClass 不填写将用默认的
      * @param string $groupName
@@ -192,35 +200,42 @@ abstract class Server
     }
 
     /**
-     * 添加插件和添加配置只能在configure之前
-     * 配置服务
+     * Adding plugins and adding configuration can only occur before configure
+     *
      * @throws ConfigException
      * @throws \ESD\Core\Exception
      * @throws \ReflectionException
      */
     public function configure()
     {
-        //先生成部分配置
+        //First generate partial configuration
         $this->getPortManager()->mergeConfig();
         $this->getProcessManager()->mergeConfig();
-        //插件排序此时不允许添加插件了
+
+        //Plugin ordering is not allowed at this time
         $this->plugManager->order();
         $this->plugManager->init($this->context);
         $this->pluginInitialized();
-        //调用所有插件的beforeServerStart
+
+        //Call beforeServerStart of all plugins
         $this->plugManager->beforeServerStart($this->context);
-        //锁定配置
+
+        //Lock configuration
         $this->setConfigured(true);
-        //设置主要进程
+
+        //Setting up the main process
         $managerProcess = new ManagerProcess($this);
         $masterProcess = new MasterProcess($this);
         $this->processManager->setMasterProcess($masterProcess);
         $this->processManager->setManagerProcess($managerProcess);
-        //设置进程名称
+
+        //Set process name
         Process::setProcessTitle($this->serverConfig->getName());
-        //创建端口实例
+
+        //Create a port instance
         $this->getPortManager()->createPorts();
-        //主要端口
+
+        //Main port
         if ($this->portManager->hasWebSocketPort()) {
             foreach ($this->portManager->getPorts() as $serverPort) {
                 if ($serverPort->isWebSocket()) {
@@ -272,40 +287,42 @@ abstract class Server
         $serverConfigData = $this->serverConfig->buildConfig();
         $serverConfigData = array_merge($portConfigData, $serverConfigData);
         $this->server->set($serverConfigData);
-        //多个端口
+
+        //Multiple ports
         foreach ($this->portManager->getPorts() as $serverPort) {
             $serverPort->create();
         }
-        //配置回调
+
+        //Configure callback
         $this->server->on("start", [$this, "_onStart"]);
         $this->server->on("shutdown", [$this, "_onShutdown"]);
         $this->server->on("workerError", [$this, "_onWorkerError"]);
-        //bearlod 2019-12-26
         $this->server->on("workerExit", [$this, "_onWorkerExit"]);
-
         $this->server->on("managerStart", [$this, "_onManagerStart"]);
         $this->server->on("managerStop", [$this, "_onManagerStop"]);
         $this->server->on("workerStart", [$this, "_onWorkerStart"]);
         $this->server->on("pipeMessage", [$this, "_onPipeMessage"]);
         $this->server->on("workerStop", [$this, "_onWorkerStop"]);
-        //配置进程
+
+        //Configuration process
         $this->processManager->createProcess();
         $this->configureReady();
     }
 
     /**
-     * 插件初始化结束
+     * Plugin initialization is complete
      * @return mixed
      */
     abstract public function pluginInitialized();
+
     /**
-     * 所有的配置插件已初始化好
+     * All configuration plugins have been initialized
      * @return mixed
      */
     abstract public function configureReady();
 
     /**
-     * 启动
+     * On start
      */
     public function _onStart()
     {
@@ -321,7 +338,7 @@ abstract class Server
     }
 
     /**
-     * 关闭
+     * On shutdown
      */
     public function _onShutdown()
     {
@@ -335,11 +352,14 @@ abstract class Server
     }
 
     /**
+     * On worker error
+     *
      * @param $serv
      * @param int $worker_id
      * @param int $worker_pid
      * @param int $exit_code
      * @param int $signal
+     * @throws \Exception
      */
     public function _onWorkerError($serv, int $worker_id, int $worker_pid, int $exit_code, int $signal)
     {
@@ -352,6 +372,13 @@ abstract class Server
         }
     }
 
+    /**
+     * On worker exit
+     *
+     * @param $serv
+     * @param int $worker_id
+     * @return bool
+     */
     public function _onWorkerExit($serv, int $worker_id)
     {
         return true;
@@ -361,6 +388,11 @@ abstract class Server
         */
     }
 
+    /**
+     * On manager start
+     *
+     * @throws \Exception
+     */
     public function _onManagerStart()
     {
         Server::$isStart = true;
@@ -372,6 +404,11 @@ abstract class Server
         }
     }
 
+    /**
+     * On manager stop
+     *
+     * @throws \Exception
+     */
     public function _onManagerStop()
     {
         $this->processManager->getManagerProcess()->onProcessStop();
@@ -383,6 +420,8 @@ abstract class Server
     }
 
     /**
+     * On worker start
+     *
      * @param $server
      * @param int $worker_id
      */
@@ -393,16 +432,30 @@ abstract class Server
         $process->_onProcessStart();
     }
 
+    /**
+     * On pipe message
+     *
+     * @param $server
+     * @param int $srcWorkerId
+     * @param $message
+     */
     public function _onPipeMessage($server, int $srcWorkerId, $message)
     {
         $this->processManager->getCurrentProcess()->_onPipeMessage($message, $this->processManager->getProcessFromId($srcWorkerId));
     }
 
+    /**
+     * On worker stop
+     *
+     * @param $server
+     * @param int $worker_id
+     */
     public function _onWorkerStop($server, int $worker_id)
     {
         $process = $this->processManager->getProcessFromId($worker_id);
         $process->_onProcessStop();
     }
+
 
     public abstract function onStart();
 
@@ -677,6 +730,7 @@ abstract class Server
 
     /**
      * Close websocket client connection
+     * 
      * @param int $fd
      * @param int $code
      * @param string $reason

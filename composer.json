@@ -34,6 +34,9 @@
     "autoload": {
         "psr-4": {
             "ESD\\": "src/ESD"
-        }
+        },
+        "files": [
+            "src/ESD/Core/Common.php"
+        ]
     }
 }
