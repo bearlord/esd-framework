@@ -33,7 +33,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ESD\\": "src/"
+            "ESD\\": "src/ESD"
         }
     }
 }
