@@ -34,7 +34,7 @@ class CachePlugin extends AbstractPlugin
 
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -44,6 +44,7 @@ class CachePlugin extends AbstractPlugin
 
     /**
      * CachePlugin constructor.
+     *
      * @param CacheConfig|null $cacheConfig
      * @throws DependencyException
      * @throws NotFoundException
@@ -95,7 +96,7 @@ class CachePlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * @inheritDoc
      * @param Context $context
      */
     public function beforeServerStart(Context $context)
@@ -104,7 +105,7 @@ class CachePlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      */
     public function beforeProcessStart(Context $context)

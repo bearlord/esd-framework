@@ -1,14 +1,16 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: anythink
- * Date: 2019/5/31
- * Time: 5:54 PM
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 namespace ESD\Plugins\Cache;
 
 use ESD\Core\Exception;
 
+/**
+ * Class CacheException
+ * @package ESD\Plugins\Cache
+ */
 class CacheException extends Exception{
     
 }

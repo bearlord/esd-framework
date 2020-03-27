@@ -23,6 +23,7 @@ class CacheConfig extends BaseConfig
      * @var string
      */
     protected $db = "default";
+
     /**
      * @var string
      */

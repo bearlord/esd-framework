@@ -62,13 +62,13 @@ trait  GetCache
         $config = DIget(CacheConfig::class);
         $data = $this->getCache($key, $namespace);
         if ($data != null) {
-            $this->debug("cache Hit!");
+            $this->debug("Cache Hit!");
             return serverUnSerialize($data);
         }
 
         if ($config->getLockTimeout() > 0) {
             if ($config->getLockAlive() < $config->getLockTimeout()) {
-                $this->alert("cache cache configuration item lockAlive must be greater than lockTimeout, please correct the parameters");
+                $this->alert("Cache cache configuration item lockAlive must be greater than lockTimeout, please correct the parameters");
             }
 
             if ($token = $this->Cache()->lock($key, $config->getLockAlive())) {
@@ -80,7 +80,7 @@ trait  GetCache
             } else {
                 $i = 0;
                 do {
-                    $result = $this->getCache($key, $callable);
+                    $result = $this->getCache($key, $namespace);
                     if ($result) {
                         break;
                     }
@@ -89,14 +89,14 @@ trait  GetCache
                     $i += $config->getLockWait();
                     if ($i >= $config->getLockTimeout()) {
                         if ($config->getLockThrowException()) {
-                            throw new CacheException('cache key lock timeout' . $key);
+                            throw new CacheException('Cache key lock timeout' . $key);
                         } else {
                             $result = $callable();
                         }
-                        $this->warn('lock wait timeout ' . $key . ',' . $i);
+                        $this->warn('Lock wait timeout ' . $key . ',' . $i);
                         break;
                     } else {
-                        $this->debug('lock wait ' . $key . ',' . $i);
+                        $this->debug('Lock wait ' . $key . ',' . $i);
                     }
                 } while ($i <= $config->getLockTimeout());
             }
@@ -143,7 +143,7 @@ trait  GetCache
         }
 
         if (!$ret) {
-            $this->warn('cache key:' . $key . ' set fail ');
+            $this->warn(sprintf("Set cache key: %s error", $key));
         }
     }
 
