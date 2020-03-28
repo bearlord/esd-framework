@@ -32,7 +32,7 @@ class UidPlugin extends AbstractPlugin
     private $uid;
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -50,7 +50,7 @@ class UidPlugin extends AbstractPlugin
     public function __construct(?UidConfig $uidConfig = null)
     {
         parent::__construct();
-        //需要aop的支持，所以放在aop后加载
+        //Need aop support, so load after aop
         $this->atAfter(AopPlugin::class);
         if ($uidConfig == null) {
             $uidConfig = new UidConfig();
@@ -73,7 +73,7 @@ class UidPlugin extends AbstractPlugin
     /**
      * @param Context $context
      * @return mixed|void
- * @throws \ESD\Core\Exception
+     * @throws \ESD\Core\Exception
      */
     public function init(Context $context)
     {
@@ -86,10 +86,10 @@ class UidPlugin extends AbstractPlugin
     }
 
     /**
-     * 初始化
+     * @inheritDoc
      * @param Context $context
      * @return mixed
- * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ESD\Core\Plugins\Config\ConfigException
      * @throws \Exception
      */
     public function beforeServerStart(Context $context)
@@ -101,7 +101,7 @@ class UidPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      */

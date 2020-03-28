@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\Pack;
 
-
 use ESD\Core\Exception;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Context\Context;
@@ -35,12 +34,12 @@ class PackPlugin extends AbstractPlugin
     public function __construct()
     {
         parent::__construct();
-        //需要aop的支持，所以放在aop后加载
+        //Need aop support, so load after aop
         $this->atAfter(AopPlugin::class);
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -65,7 +64,7 @@ class PackPlugin extends AbstractPlugin
             $packConfig = new PackConfig();
             $packConfig->setName($key);
             $packConfig->buildFromConfig($value);
-            //处理packtool
+            //Handling packtool
             if($packConfig->getPackTool()!=null){
                 $class = $packConfig->getPackTool();
                 if(class_exists($class)){
@@ -98,7 +97,7 @@ class PackPlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      */
@@ -108,7 +107,7 @@ class PackPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      */
     public function beforeProcessStart(Context $context)

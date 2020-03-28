@@ -47,7 +47,7 @@ class ConsulPlugin extends AbstractPlugin
     public function __construct(ConsulConfig $consulConfig = null)
     {
         parent::__construct();
-        //需要ActuatorPlugin的支持，所以放在ActuatorPlugin后加载
+        //Requires ActuatorPlugin support, so load after ActuatorPlugin
         $this->atAfter(ActuatorPlugin::class);
         if ($consulConfig == null) {
             $consulConfig = new ConsulConfig(null);

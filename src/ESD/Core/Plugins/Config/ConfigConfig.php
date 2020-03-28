@@ -22,7 +22,7 @@ class ConfigConfig
     {
         $this->configDir = $configDir;
         if (!is_dir($configDir)) {
-            echo "RES_DIR不合法，将不加载配置文件\n";
+            echo "RES_DIR is not valid and will not load the configuration file\n";
         }
     }
 

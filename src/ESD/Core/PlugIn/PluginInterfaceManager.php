@@ -80,28 +80,29 @@ class PluginInterfaceManager implements PluginInterface
     }
 
     /**
-     * 初始化
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
+     * @throws \Exception
      */
     public function init(Context $context)
     {
         foreach ($this->orderList as $plug) {
             if ($plug instanceof PluginInterface) {
-                $this->debug("加载[{$plug->getName()}]插件");
+                $this->debug(sprintf("Load [%s] plugin", $plug->getName()));
                 $plug->init($context);
             }
         }
     }
 
     /**
-     * 在服务启动之前
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
      */
     public function beforeServerStart(Context $context)
     {
-        //发出PlugManagerEvent:PlugBeforeServerStartEvent事件
+        //Dispatch PlugManagerEvent: PlugBeforeServerStartEvent event
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeServerStartEvent, $this));
         }
@@ -110,20 +111,21 @@ class PluginInterfaceManager implements PluginInterface
                 $plug->beforeServerStart($context);
             }
         }
-        //发出PlugManagerEvent:PlugAfterServerStartEvent事件
+        //Dispatch PlugManagerEvent:PlugAfterServerStartEvent event
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAfterServerStartEvent, $this));
         }
     }
 
     /**
-     * 在进程启动之前
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
+     * @throws \Exception
      */
     public function beforeProcessStart(Context $context)
     {
-        //发出PlugManagerEvent:PlugBeforeProcessStartEvent事件
+        //Dispatch PlugManagerEvent:PlugBeforeProcessStartEvent event
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeProcessStartEvent, $this));
         }
@@ -133,12 +135,12 @@ class PluginInterfaceManager implements PluginInterface
                     $plug->beforeProcessStart($context);
                 } catch (\Throwable $e) {
                     $this->error($e);
-                    $this->error("{$plug->getName()}插件加载失败");
+                    $this->error(sprintf("%s plugin failed to load", $plug->getName()));
                     continue;
                 }
                 if (!$plug->getReadyChannel()->pop(5)) {
                     $plug->getReadyChannel()->close();
-                    $this->error("{$plug->getName()}插件加载失败");
+                    $this->error(sprintf("%s plugin failed to load", $plug->getName()));
                     if ($this->eventDispatcher != null) {
                         $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugFailEvent, $plug));
                     }
@@ -149,7 +151,7 @@ class PluginInterfaceManager implements PluginInterface
                 }
             }
         }
-        //发出PlugManagerEvent:PlugAfterProcessStartEvent事件
+        //Dispatch PlugManagerEvent:PlugAfterProcessStartEvent event
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAfterProcessStartEvent, $this));
         }
@@ -157,7 +159,7 @@ class PluginInterfaceManager implements PluginInterface
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -174,13 +176,14 @@ class PluginInterfaceManager implements PluginInterface
     }
 
     /**
-     * 等待
+     * Wait to ready
      */
     public function waitReady()
     {
         $this->readyChannel->pop();
         $this->readyChannel->close();
-        //发出PlugManagerEvent:PlugAllReadyEvent事件
+
+        //Dispatch PlugManagerEvent:PlugAllReadyEvent event
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAllReadyEvent, $this));
         }
