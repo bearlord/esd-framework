@@ -33,9 +33,9 @@ class ProcessEventDispatcher extends AbstractEventDispatcher
     public function handleEventFrom(Event $event)
     {
         if (Server::$instance == null || Server::$instance->getProcessManager() == null) {
-            $event->setFromInfo($this->getName(), -1);
+            $event->setSourceInfo($this->getName(), -1);
         } else {
-            $event->setFromInfo($this->getName(), Server::$instance->getProcessManager()->getCurrentProcessId());
+            $event->setSourceInfo($this->getName(), Server::$instance->getProcessManager()->getCurrentProcessId());
         }
     }
 
