@@ -15,6 +15,7 @@
         "ext-json": "*",
         "ext-swoole": ">=4.3.0",
         "filp/whoops": "^2.3",
+        "illuminate/view": "^5.8",
         "monolog/monolog": "^1.24",
         "ocramius/proxy-manager": "^2.1",
         "php": ">=7.1.4",
