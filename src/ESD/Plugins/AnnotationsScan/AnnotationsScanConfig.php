@@ -8,6 +8,10 @@ namespace ESD\Plugins\AnnotationsScan;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class AnnotationsScanConfig
+ * @package ESD\Plugins\AnnotationsScan
+ */
 class AnnotationsScanConfig extends BaseConfig
 {
     const key = "scan";

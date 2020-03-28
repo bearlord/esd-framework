@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/28
- * Time: 18:43
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Whoops;
@@ -19,13 +17,19 @@ use ESD\Plugins\Whoops\Aspect\WhoopsAspect;
 use ESD\Plugins\Whoops\Handler\WhoopsHandler;
 use Whoops\Run;
 
+/**
+ * Class WhoopsPlugin
+ * @package ESD\Plugins\Whoops
+ */
 class WhoopsPlugin extends AbstractPlugin
 {
     use GetLogger;
+
     /**
      * @var Run
      */
     private $whoops;
+
     /**
      * @var WhoopsConfig
      */
@@ -45,14 +49,16 @@ class WhoopsPlugin extends AbstractPlugin
             $whoopsConfig = new WhoopsConfig();
         }
         $this->whoopsConfig = $whoopsConfig;
-        //需要aop的支持，所以放在aop后加载
+
+        //Need aop support, so load after aop
         $this->atAfter(AopPlugin::class);
-        //由于Aspect排序问题需要在EasyRoutePlugin之前加载
+
+        //Due to Aspect sorting issues need to be loaded before EasyRoutePlugin
         $this->atBefore("ESD\Plugins\EasyRoute\EasyRoutePlugin");
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -61,6 +67,7 @@ class WhoopsPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
      * @return mixed|void
      * @throws \DI\DependencyException
@@ -78,11 +85,12 @@ class WhoopsPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * @throws \ESD\Core\Exception
+     * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ReflectionException
      */
     public function init(Context $context)
     {
@@ -102,12 +110,11 @@ class WhoopsPlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ReflectionException
      */
     public function beforeServerStart(Context $context)
     {
@@ -115,7 +122,7 @@ class WhoopsPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      */

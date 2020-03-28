@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: zhangjincheng
- * Date: 18-3-9
- * Time: 下午4:58
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Whoops\Handler;
@@ -19,6 +17,11 @@ use Whoops\Util\Misc;
 use Whoops\Util\TemplateHelper;
 use Symfony\Component\VarDumper\Cloner\AbstractCloner;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
+
+/**
+ * Class WhoopsHandler
+ * @package ESD\Plugins\Whoops\Handler
+ */
 class WhoopsHandler extends Handler
 {
     /**

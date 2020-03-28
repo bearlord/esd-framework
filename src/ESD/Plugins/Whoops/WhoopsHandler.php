@@ -1,16 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/28
- * Time: 18:44
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Whoops;
 
-
 use Whoops\Handler\PrettyPageHandler;
 
+/**
+ * Class WhoopsHandler
+ * @package ESD\Plugins\Whoops
+ */
 class WhoopsHandler extends PrettyPageHandler
 {
 
