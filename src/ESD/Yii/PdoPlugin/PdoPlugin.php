@@ -14,28 +14,39 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
 
     protected $configs;
 
+    /**
+     * PdoPlugin constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         $this->configs = new Configs();
     }
 
+    /**
+     * @inheritDoc
+     * @return string
+     */
     public function getName(): string
     {
         return 'esd-yii-pdo';
     }
 
+    /**
+     * @inheritDoc
+     * @param Context $context
+     * @return mixed|void
+     */
     public function init(Context $context)
     {
         return parent::init($context);
     }
 
     /**
-     * Before server start
-     *
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function beforeServerStart(Context $context)
     {
@@ -65,16 +76,14 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
             }
         }
 
-
         Application::instance();
     }
 
     /**
-     * Before process start
-     *
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
-     * @throws \ReflectionException
+     * @throws \ESD\Yii\Db\Exception
      */
     public function beforeProcessStart(Context $context)
     {

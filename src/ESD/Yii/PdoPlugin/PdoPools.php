@@ -2,9 +2,15 @@
 
 namespace ESD\Yii\PdoPlugin;
 
-
+/**
+ * Class PdoPools
+ * @package ESD\Yii\PdoPlugin
+ */
 class PdoPools
 {
+    /**
+     * @var array
+     */
     protected $poolList = [];
 
     /**
@@ -19,8 +25,7 @@ class PdoPools
     }
 
     /**
-     * 添加连接池
-     * @param Pool $pool
+     * @param PdoPool $pool
      */
     public function addPool(PdoPool $pool)
     {

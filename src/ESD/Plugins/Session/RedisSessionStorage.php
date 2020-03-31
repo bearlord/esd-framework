@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/7
- * Time: 17:09
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Session;
@@ -21,21 +19,41 @@ class RedisSessionStorage implements SessionStorage
 
     const prefix = "SESSION_";
 
+    /**
+     * RedisSessionStorage constructor.
+     * @param SessionConfig $sessionConfig
+     */
     public function __construct(SessionConfig $sessionConfig)
     {
         $this->sessionConfig = $sessionConfig;
     }
 
+    /**
+     * @param string $id
+     * @return bool|mixed|string
+     * @throws \ESD\Plugins\Redis\RedisException
+     */
     public function get(string $id)
     {
         return $this->redis($this->sessionConfig->getDb())->get(self::prefix . $id);
     }
 
+    /**
+     * @param string $id
+     * @param string $data
+     * @return mixed|void
+     * @throws \ESD\Plugins\Redis\RedisException
+     */
     public function set(string $id, string $data)
     {
         $this->redis($this->sessionConfig->getDb())->setex(self::prefix . $id, $this->sessionConfig->getTimeout(), $data);
     }
 
+    /**
+     * @param string $id
+     * @return mixed|void
+     * @throws \ESD\Plugins\Redis\RedisException
+     */
     public function remove(string $id)
     {
         $this->redis($this->sessionConfig->getDb())->del(self::prefix . $id);

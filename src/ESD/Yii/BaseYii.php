@@ -7,6 +7,7 @@
 
 namespace ESD\Yii;
 
+use ESD\Core\Server\Beans\Request;
 use ESD\Yii\Base\Application;
 use ESD\Yii\Di\Container;
 use ESD\Yii\Base\InvalidArgumentException;

@@ -61,6 +61,9 @@ class Application extends ServiceLocator
      */
     private static $_instances = [];
 
+    /**
+     * Application constructor.
+     */
     public function __construct()
     {
         Yii::$app = $this;
@@ -71,6 +74,7 @@ class Application extends ServiceLocator
      * Returns static class instance, which can be used to obtain meta information.
      * @param bool $refresh whether to re-create static instance even, if it is already cached.
      * @return static class instance.
+     * @throws InvalidConfigException
      */
     public static function instance($refresh = false)
     {
@@ -167,6 +171,7 @@ class Application extends ServiceLocator
     /**
      * @param string $name
      * @return mixed
+     * @throws \Exception
      */
     public function getDb($name = "default")
     {
@@ -214,7 +219,8 @@ class Application extends ServiceLocator
 
     /**
      * Returns the log dispatcher component.
-     * @return \yii\log\Dispatcher the log dispatcher application component.
+     * @return \ESD\Yii\Log\Dispatcher the log dispatcher application component.
+     * @throws InvalidConfigException
      */
     public function getLog()
     {
@@ -253,6 +259,7 @@ class Application extends ServiceLocator
     /**
      * Returns the internationalization (i18n) component
      * @return \ESD\Yii\I18n\I18N the internationalization application component.
+     * @throws InvalidConfigException
      */
     public function getI18n()
     {
@@ -262,6 +269,7 @@ class Application extends ServiceLocator
     /**
      * Returns the cache component.
      * @return \ESD\Yii\Caching\Cache the cache application component. Null if the component is not enabled.
+     * @throws InvalidConfigException
      */
     public function getCache()
     {
@@ -279,6 +287,34 @@ class Application extends ServiceLocator
             $session = new HttpSession();
         }
         return $session;
+    }
+
+
+    /**
+     * Returns the dynamic language
+     *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        /** @var Request $request */
+        $request = getDeepContextValueByClassName(Request::class);
+
+        /** @var string $inputLanguage */
+        $inputLanguage = $request->input('language');
+
+        /** @var string $cookieLanguage */
+        $cookieLanguage = $request->cookie('language');
+
+        if (!empty($inputLanguage)) {
+            $lang = $inputLanguage;
+        } else if(!empty($cookieLanguage)) {
+            $lang = $cookieLanguage;
+        } else {
+            $lang = static::$app->language;
+        }
+
+        return $lang;
     }
 
 

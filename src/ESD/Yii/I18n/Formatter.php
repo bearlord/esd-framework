@@ -390,7 +390,7 @@ class Formatter extends Component
             $this->timeZone = Yii::$app->timeZone;
         }
         if ($this->locale === null) {
-            $this->locale = Yii::$app->language;
+            $this->locale = Yii::$app->getLanguage();
         }
         if ($this->language === null) {
             $this->language = strtok($this->locale, '@');

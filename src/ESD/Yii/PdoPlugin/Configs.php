@@ -1,23 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: zzq
- * Date: 2019/10/17
- * Time: 13:47
- */
 
 namespace ESD\Yii\PdoPlugin;
-
 
 class Configs
 {
     /**
-     * @var PostgresqlOneConfig[]
+     * @var array
      */
     protected $configs;
 
     /**
-     * @return PostgresqlOneConfig[]
+     * @return array
      */
     public function getConfigs(): array
     {
@@ -25,13 +18,16 @@ class Configs
     }
 
     /**
-     * @param PostgresqlOneConfig[] $configs
+     * @param array $configs
      */
     public function setConfigs(array $configs): void
     {
         $this->configs = $configs;
     }
 
+    /**
+     * @param Config $buildFromConfig
+     */
     public function addConfig(Config $buildFromConfig)
     {
         $this->configs[$buildFromConfig->getName()] = $buildFromConfig;

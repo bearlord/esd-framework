@@ -3,11 +3,12 @@
 namespace ESD\Yii\PdoPlugin;
 
 use ESD\Core\Channel\Channel;
-use ESD\Yii\Base\Application;
 use ESD\Yii\Db\Connection;
-use ESD\Yii\Yii;
 
-
+/**
+ * Class PdoPool
+ * @package ESD\Yii\PdoPlugin
+ */
 class PdoPool
 {
     /**
@@ -92,6 +93,9 @@ class PdoPool
         $this->config = $config;
     }
 
+    /**
+     * @return Channel|mixed
+     */
     public function getPool()
     {
         return $this->pool;

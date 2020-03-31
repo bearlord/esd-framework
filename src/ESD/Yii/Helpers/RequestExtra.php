@@ -219,7 +219,7 @@ class RequestExtra
     public function getPreferredLanguage(array $languages = [])
     {
         if (empty($languages)) {
-            return Yii::$app->language;
+            return Yii::$app->getLanguage();
         }
         foreach ($this->getAcceptableLanguages() as $acceptableLanguage) {
             $acceptableLanguage = str_replace('_', '-', strtolower($acceptableLanguage));

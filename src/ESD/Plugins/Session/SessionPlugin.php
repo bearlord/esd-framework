@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/7
- * Time: 14:33
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Session;
@@ -13,6 +11,10 @@ use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\PlugIn\PluginInterfaceManager;
 use ESD\Plugins\Redis\RedisPlugin;
 
+/**
+ * Class SessionPlugin
+ * @package ESD\Plugins\Session
+ */
 class SessionPlugin extends AbstractPlugin
 {
 
@@ -42,6 +44,7 @@ class SessionPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
      * @return mixed|void
      * @throws \ESD\Core\Exception
@@ -53,7 +56,7 @@ class SessionPlugin extends AbstractPlugin
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -62,7 +65,7 @@ class SessionPlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      * @throws \ESD\Core\Plugins\Config\ConfigException
@@ -79,7 +82,7 @@ class SessionPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      */

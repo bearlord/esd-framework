@@ -4,11 +4,16 @@ namespace ESD\Yii\PdoPlugin;
 
 use ESD\Core\Server\Server;
 
+/**
+ * Trait GetPdo
+ * @package ESD\Yii\PdoPlugin]
+ */
 trait GetPdo
 {
     /**
      * @param string $name
      * @return mixed
+     * @throws \Exception
      */
     public function pdo($name = "default")
     {

@@ -227,7 +227,7 @@ class DateValidator extends Validator
             }
         }
         if ($this->locale === null) {
-            $this->locale = Yii::$app->language;
+            $this->locale = Yii::$app->getLanguage();
         }
         if ($this->timeZone === null) {
             $this->timeZone = Yii::$app->timeZone;

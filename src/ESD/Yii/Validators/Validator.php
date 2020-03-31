@@ -478,7 +478,7 @@ class Validator extends Component
     protected function formatMessage($message, $params)
     {
         if (Yii::$app !== null) {
-            return Yii::$app->getI18n()->format($message, $params, Yii::$app->language);
+            return Yii::$app->getI18n()->format($message, $params, Yii::$app->getLanguage());
         }
 
         $placeholders = [];

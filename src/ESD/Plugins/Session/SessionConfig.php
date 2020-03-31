@@ -1,19 +1,27 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/7
- * Time: 14:41
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Session;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class SessionConfig
+ * @package ESD\Plugins\Session
+ */
 class SessionConfig extends BaseConfig
 {
+    /**
+     * Key
+     */
     const key = "session";
+
+    /**
+     * Usage cookie
+     */
     const USAGE_COOKIE = 'cookie';
 
     /**
@@ -22,11 +30,15 @@ class SessionConfig extends BaseConfig
     const USEAGE_HEADER = 'header';
 
     /**
+     * Usage token
+     */
+    const USAGE_TOKEN = 'token';
+
+    /**
      * Header identify to identify session
      */
     const HEADER_IDENTIFY = 'sessionId';
 
-    const USAGE_TOKEN = 'token';
 
     /**
      * 销毁时间s
@@ -44,14 +56,15 @@ class SessionConfig extends BaseConfig
      */
     protected $sessionStorageClass = RedisSessionStorage::class;
 
-
+    /**
+     * @var string
+     */
     protected $sessionUsage = SessionConfig::USAGE_COOKIE;
 
     /**
      * @var string
      */
     protected $domain = '';
-
 
     /**
      * @var string
@@ -63,7 +76,6 @@ class SessionConfig extends BaseConfig
      */
     protected $sessionName = 'SESSIONID';
 
-
     /**
      * @var bool
      */
@@ -71,12 +83,14 @@ class SessionConfig extends BaseConfig
 
 
     /**
-     * 是否仅ssl
+     * Whether only ssl
      * @var bool
      */
     protected $secure = false;
 
-
+    /**
+     * SessionConfig constructor.
+     */
     public function __construct()
     {
         parent::__construct(self::key);
@@ -90,12 +104,17 @@ class SessionConfig extends BaseConfig
         return $this->timeout;
     }
 
-
+    /**
+     * @return string
+     */
     public function getSessionUsage(): string
     {
         return $this->sessionUsage;
     }
 
+    /**
+     * @param $usage
+     */
     public function setSessionUsage( $usage ): void {
         $this->sessionUsage = $usage;
     }
@@ -124,12 +143,17 @@ class SessionConfig extends BaseConfig
         $this->sessionStorageClass = $sessionStorageClass;
     }
 
-
+    /**
+     * @return bool
+     */
     public function getSecure(): bool
     {
         return $this->secure;
     }
 
+    /**
+     * @param bool $secure
+     */
     public function setSecure(bool $secure): void {
         $this->secure = $secure;
     }

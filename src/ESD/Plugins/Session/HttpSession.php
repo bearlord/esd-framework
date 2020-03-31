@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/7
- * Time: 14:48
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Session;
@@ -20,6 +18,9 @@ class HttpSession
      */
     protected $isNew;
 
+    /**
+     * @var array
+     */
     protected $attribute;
 
     /**
