@@ -106,16 +106,18 @@ class LoggerPlugin extends AbstractPlugin
     {
         $serverConfig = Server::$instance->getServerConfig();
         if (Server::$instance->getServerConfig()->isDaemonize()) {
-            //去除屏幕打印Handler
+            //Remove screen print handler
             $this->logger->popHandler();
-            //添加日志Handler
+
+            //Add a log handler
             $handler = new RotatingFileHandler($serverConfig->getBinDir() . "/logs/" . $this->loggerConfig->getName() . ".log",
                 $this->loggerConfig->getMaxFiles(),
                 $this->loggerConfig->getLevel());
             $this->logger->pushHandler($handler);
             $this->goSwooleProcessor->setColor(false);
         }
-        //监控配置更新
+
+        //Monitoring configuration updates
         goWithContext(function () use ($context) {
             $eventDispatcher = DIGet(EventDispatcher::class);
             $call = $eventDispatcher->listen(ConfigChangeEvent::ConfigChangeEvent);

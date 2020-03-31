@@ -89,7 +89,6 @@ class PluginInterfaceManager implements PluginInterface
     {
         foreach ($this->orderList as $plug) {
             if ($plug instanceof PluginInterface) {
-                $this->debug(sprintf("Load [%s] plugin", $plug->getName()));
                 $plug->init($context);
             }
         }
