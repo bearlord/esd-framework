@@ -24,7 +24,7 @@ trait OrderOwnerTrait
     protected $orderClassList = [];
 
     /**
-     * 添加Order
+     * Add order
      * @param Order $order
      */
     public function addOrder(Order $order)

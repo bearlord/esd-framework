@@ -45,7 +45,7 @@ class CoPoolFactory
     public static function addCoroutinePool(string $name, CoroutinePoolExecutor $coroutinePoolExecutor)
     {
         if (isset(self::$factory[$name])) {
-            throw new \Exception("协程池命名重复");
+            throw new \Exception("Coroutine pool names duplicate");
         }
         $coroutinePoolExecutor->setName($name);
         self::$factory[$name] = $coroutinePoolExecutor;

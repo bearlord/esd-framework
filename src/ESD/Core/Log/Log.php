@@ -6,9 +6,12 @@
 
 namespace ESD\Core\Log;
 
-
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class Log
+ * @package ESD\Core\Log
+ */
 class Log implements LoggerInterface
 {
 
@@ -25,7 +28,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 
     /**
@@ -44,7 +47,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 
     /**
@@ -62,7 +65,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 
     /**
@@ -79,7 +82,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 
     /**
@@ -114,7 +117,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 
     /**
@@ -132,7 +135,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 
     /**
@@ -148,7 +151,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 
     /**
@@ -165,6 +168,6 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message."\n");
+        printf($message."\n");
     }
 }

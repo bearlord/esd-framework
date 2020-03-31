@@ -120,6 +120,7 @@ abstract class Server
     {
         self::$instance = $this;
         $this->serverConfig = $serverConfig;
+
         //Get DI container
         $this->container = DI::getInstance()->getContainer();
 
@@ -142,6 +143,9 @@ abstract class Server
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->basePlugManager = new PluginInterfaceManager($this);
 
+        //Print banner
+        printf("%s\n", $serverConfig->getBanner());
+
         //Initialize the default plugin and add the Config/Logger/Event plugin
         $this->basePlugManager->addPlug(new ConfigPlugin());
         $this->basePlugManager->addPlug(new LoggerPlugin());
@@ -159,7 +163,6 @@ abstract class Server
         set_exception_handler(function ($e) {
             $this->getLog()->error($e);
         });
-        print($serverConfig->getBanner() . "\n");
 
         //Only get the above to initialize the plugManager
         $this->plugManager = new PluginInterfaceManager($this);

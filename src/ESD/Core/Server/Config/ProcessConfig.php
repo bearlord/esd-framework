@@ -11,7 +11,6 @@ use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Server\Process\Process;
 
 /**
- * 进程配置
  * Class ProcessConfig
  * @package ESD\Core\Server\Config
  */
@@ -24,11 +23,10 @@ class ProcessConfig extends BaseConfig
 
     /**
      * ProcessConfig constructor.
-     * @param $name
      * @param $className
+     * @param $name
      * @param string $groupName
      * @throws ConfigException
-     * @throws \ReflectionException
      */
     public function __construct($className = null, $name = null, $groupName = Process::DEFAULT_GROUP)
     {
