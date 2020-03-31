@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: administrato
- * Date: 2019/4/25
- * Time: 11:08
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\GuzzleSaber;
@@ -53,8 +51,7 @@ class SaberClient implements ClientInterface
      * Send an HTTP request.
      *
      * @param RequestInterface $request Request to send
-     * @param array $options Request options to apply to the given
-     *                                  request and to the transfer.
+     * @param array $options Request options to apply to the given request and to the transfer.
      *
      * @return ResponseInterface
      * @throws GuzzleException
@@ -63,12 +60,24 @@ class SaberClient implements ClientInterface
     {
         $config = ChangeOptions::change($options + $this->config);
         $saberRequest = SaberGM::psr($config);
-        if ($request->getRequestTarget() != null) $saberRequest->withRequestTarget($request->getRequestTarget());
-        if ($request->getBody() != null) $saberRequest->withBody($request->getBody());
-        if ($request->getMethod() != null) $saberRequest->withMethod($request->getMethod());
-        if ($request->getProtocolVersion() != null) $saberRequest->withProtocolVersion($request->getProtocolVersion());
-        if ($request->getHeaders() != null) $saberRequest->withHeaders($request->getHeaders());
-        if ($request->getUri() != null) $saberRequest->withUri($this->buildUri($request->getUri(), $options), $request->hasHeader('Host'));
+        if ($request->getRequestTarget() != null) {
+            $saberRequest->withRequestTarget($request->getRequestTarget());
+        }
+        if ($request->getBody() != null) {
+            $saberRequest->withBody($request->getBody());
+        }
+        if ($request->getMethod() != null) {
+            $saberRequest->withMethod($request->getMethod());
+        }
+        if ($request->getProtocolVersion() != null) {
+            $saberRequest->withProtocolVersion($request->getProtocolVersion());
+        }
+        if ($request->getHeaders() != null) {
+            $saberRequest->withHeaders($request->getHeaders());
+        }
+        if ($request->getUri() != null) {
+            $saberRequest->withUri($this->buildUri($request->getUri(), $options), $request->hasHeader('Host'));
+        }
         return $this->changeResponse($saberRequest->exec()->recv());
     }
 
@@ -76,10 +85,10 @@ class SaberClient implements ClientInterface
      * Asynchronously send an HTTP request.
      *
      * @param RequestInterface $request Request to send
-     * @param array $options Request options to apply to the given
-     *                                  request and to the transfer.
+     * @param array $options Request options to apply to the given request and to the transfer.
      *
-     * @return PromiseInterface
+     * @return void
+     * @throws \Exception
      */
     public function sendAsync(RequestInterface $request, array $options = [])
     {
@@ -125,7 +134,8 @@ class SaberClient implements ClientInterface
      * @param string|UriInterface $uri URI object or string.
      * @param array $options Request options to apply.
      *
-     * @return PromiseInterface
+     * @return void
+     * @throws \Exception
      */
     public function requestAsync($method, $uri, array $options = [])
     {
@@ -150,6 +160,12 @@ class SaberClient implements ClientInterface
             : (isset($this->config[$option]) ? $this->config[$option] : null);
     }
 
+
+    /**
+     * @param $uri
+     * @param array $config
+     * @return mixed
+     */
     private function buildUri($uri, array $config)
     {
         // for BC we accept null which would otherwise fail in uri_for
@@ -162,13 +178,16 @@ class SaberClient implements ClientInterface
         return $uri->getScheme() === '' && $uri->getHost() !== '' ? $uri->withScheme('http') : $uri;
     }
 
+    /**
+     * @param Response $response
+     * @return Psr7\Response
+     */
     public function changeResponse(Response $response): Psr7\Response
     {
-        $result = new Psr7\Response($response->getStatusCode(),
+        return new Psr7\Response($response->getStatusCode(),
             $response->getHeaders(),
             $response->getBody(),
             $response->getProtocolVersion(),
             $response->getReasonPhrase());
-        return $result;
     }
 }
