@@ -1,17 +1,18 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/9
- * Time: 10:17
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\ProcessRPC;
 
-
 use ESD\Core\Server\Process\Process;
 use ESD\Core\Server\Server;
 
+/**
+ * Class RPCProxy
+ * @package ESD\Plugins\ProcessRPC
+ */
 class RPCProxy
 {
     /**
@@ -36,6 +37,13 @@ class RPCProxy
      */
     protected $sessionId;
 
+    /**
+     * RPCProxy constructor.
+     * @param Process $process
+     * @param string $className
+     * @param bool $oneway
+     * @param float $timeOut
+     */
     public function __construct(Process $process, string $className, bool $oneway, float $timeOut = 0)
     {
         $this->process = $process;
@@ -76,7 +84,7 @@ class RPCProxy
     }
 
     /**
-     * 开启一个事务
+     * Start transaction
      * @param callable $call
      * @throws \Throwable
      */
@@ -103,7 +111,7 @@ class RPCProxy
     }
 
     /**
-     * 结束一个事务
+     * End transaction
      */
     protected function _endTransaction()
     {

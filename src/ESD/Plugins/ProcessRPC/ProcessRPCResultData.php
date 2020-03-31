@@ -1,14 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/9
- * Time: 10:59
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\ProcessRPC;
 
-
+/**
+ * Class ProcessRPCResultData
+ * @package ESD\Plugins\ProcessRPC
+ */
 class ProcessRPCResultData
 {
     /**
@@ -32,7 +33,14 @@ class ProcessRPCResultData
      */
     private $errorMessage;
 
-
+    /**
+     * ProcessRPCResultData constructor.
+     * @param int $token
+     * @param $result
+     * @param string|null $errorClass
+     * @param int|null $errorCode
+     * @param string|null $errorMessage
+     */
     public function __construct(int $token, $result,?string $errorClass,?int $errorCode,?string $errorMessage)
     {
         $this->token = $token;

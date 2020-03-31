@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/9
- * Time: 10:19
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\ProcessRPC;
@@ -13,6 +11,10 @@ use ESD\Core\Message\MessageProcessor;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 
+/**
+ * Class RpcMessageProcessor
+ * @package ESD\Plugins\ProcessRPC
+ */
 class RpcMessageProcessor extends MessageProcessor
 {
     use GetLogger;
@@ -28,17 +30,20 @@ class RpcMessageProcessor extends MessageProcessor
      */
     protected $cacheMessages = [];
 
+    /**
+     * RpcMessageProcessor constructor.
+     */
     public function __construct()
     {
         parent::__construct(self::type);
     }
 
     /**
-     * 处理消息
+     * @inheritDoc
+     * @inheritDoc
      * @param Message $message
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws \Exception
      */
     public function handler(Message $message): bool
     {

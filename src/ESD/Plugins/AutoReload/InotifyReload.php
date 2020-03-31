@@ -28,7 +28,7 @@ class InotifyReload
     public function __construct(AutoReloadConfig $autoReloadConfig)
     {
         if ($autoReloadConfig->isEnable()) {
-            $this->info("Code hot reload turned on");
+            $this->info("Hot-reload is enabled ");
             $this->monitor_dir = realpath($autoReloadConfig->getMonitorDir());
             if (!extension_loaded('inotify')) {
                 addTimerAfter(1000, [$this, 'unUseInotify']);

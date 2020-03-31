@@ -1,15 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/9
- * Time: 10:25
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\ProcessRPC;
 
 use ESD\Core\Message\Message;
 
+/**
+ * Class ProcessRPCCallMessage
+ * @package ESD\Plugins\ProcessRPC
+ */
 class ProcessRPCCallMessage extends Message
 {
     /**
@@ -24,6 +26,9 @@ class ProcessRPCCallMessage extends Message
         parent::__construct(RpcMessageProcessor::type, new ProcessRPCCallData($className, $name, $arguments, $oneway));
     }
 
+    /**
+     * @return ProcessRPCCallData
+     */
     public function getProcessRPCCallData(): ProcessRPCCallData
     {
         return $this->getData();

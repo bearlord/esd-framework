@@ -1,14 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/9
- * Time: 10:59
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\ProcessRPC;
 
-
+/**
+ * Class ProcessRPCCallData
+ * @package ESD\Plugins\ProcessRPC
+ */
 class ProcessRPCCallData
 {
     /**
@@ -32,6 +33,13 @@ class ProcessRPCCallData
      */
     private $oneway;
 
+    /**
+     * ProcessRPCCallData constructor.
+     * @param string $className
+     * @param string $name
+     * @param array $arguments
+     * @param bool $oneway
+     */
     public function __construct(string $className, string $name, array $arguments,bool $oneway)
     {
         $this->className = $className;
