@@ -8,6 +8,10 @@ namespace ESD\Core\Plugins\Config;
 
 use ESD\Core\Exception;
 
+/**
+ * Class ConfigException
+ * @package ESD\Core\Plugins\Config
+ */
 class ConfigException extends Exception
 {
     /**

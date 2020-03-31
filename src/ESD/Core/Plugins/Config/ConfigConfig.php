@@ -6,7 +6,10 @@
 
 namespace ESD\Core\Plugins\Config;
 
-
+/**
+ * Class ConfigConfig
+ * @package ESD\Core\Plugins\Config
+ */
 class ConfigConfig
 {
     /**

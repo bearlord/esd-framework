@@ -12,6 +12,10 @@ use ESD\Core\Plugins\Event\EventPlugin;
 use ESD\Core\Server\Server;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class ConfigPlugin
+ * @package ESD\Core\Plugins\Config
+ */
 class ConfigPlugin extends AbstractPlugin
 {
     //manually configuration

@@ -189,7 +189,7 @@ abstract class Server
      * Add process
      *
      * @param string $name
-     * @param null $processClass 不填写将用默认的
+     * @param null $processClass
      * @param string $groupName
      * @throws ConfigException
      * @throws \ReflectionException
@@ -197,7 +197,7 @@ abstract class Server
     public function addProcess(string $name, $processClass = null, string $groupName = Process::DEFAULT_GROUP)
     {
         if ($this->isConfigured()) {
-            throw new ConfigException("配置已锁定，请在调用configure前添加");
+            throw new ConfigException("Configuration is locked, please add before calling configure");
         }
         $this->processManager->addCustomProcessesConfig($name, $processClass, $groupName);
     }
@@ -330,7 +330,7 @@ abstract class Server
     public function _onStart()
     {
         Server::$isStart = true;
-        //发送ApplicationStartingEvent事件
+        //Send Application Starting Event
         $this->getEventDispatcher()->dispatchEvent(new ApplicationEvent(ApplicationEvent::ApplicationStartingEvent, $this));
         $this->processManager->getMasterProcess()->onProcessStart();
         try {
@@ -345,7 +345,7 @@ abstract class Server
      */
     public function _onShutdown()
     {
-        //发送ApplicationShutdownEvent事件
+        //Send Application Shutdown Event
         $this->getEventDispatcher()->dispatchEvent(new ApplicationEvent(ApplicationEvent::ApplicationShutdownEvent, $this));
         try {
             $this->onShutdown();
@@ -478,7 +478,7 @@ abstract class Server
     public function start()
     {
         if ($this->server == null) {
-            throw new \Exception("请先调用configure");
+            throw new \Exception("Please call configure first");
         }
         $this->server->start();
     }

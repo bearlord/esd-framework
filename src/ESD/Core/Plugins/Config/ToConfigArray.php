@@ -8,6 +8,10 @@ namespace ESD\Core\Plugins\Config;
 
 use ReflectionClass;
 
+/**
+ * Trait ToConfigArray
+ * @package ESD\Core\Plugins\Config
+ */
 trait ToConfigArray
 {
     protected $reflectionClass;
