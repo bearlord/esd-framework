@@ -80,24 +80,24 @@ class GoSwooleProcessor implements ProcessorInterface
      * Handle level name
      *
      * @param $level
-     * @param $level_name
+     * @param $levelName
      * @return string
      */
-    private function handleLevelName($level, $level_name)
+    private function handleLevelName($level, $levelName)
     {
-        $level_name = sprintf('%-7s', $level_name);
+        $levelName = sprintf('%-7s', $levelName);
         if ($this->color) {
             if ($level >= Logger::ERROR) {
-                $level_name = "\e[31m" . $level_name . "\e[0m";
+                $levelName = "\e[31m" . $levelName . "\e[0m";
             } elseif ($level >= Logger::WARNING) {
-                $level_name = "\e[33m" . $level_name . "\e[0m";
+                $levelName = "\e[33m" . $levelName . "\e[0m";
             } elseif ($level >= Logger::INFO) {
-                $level_name = "\e[32m" . $level_name . "\e[0m";
+                $levelName = "\e[32m" . $levelName . "\e[0m";
             } else {
-                $level_name = "\e[34m" . $level_name . "\e[0m";
+                $levelName = "\e[34m" . $levelName . "\e[0m";
             }
         }
-        return $level_name;
+        return $levelName;
     }
 
     /**
@@ -111,8 +111,7 @@ class GoSwooleProcessor implements ProcessorInterface
     private function handleProcess($processGroup, $processName, $cid)
     {
         $processName = sprintf('%10s', $processName);
-        $cid = sprintf('%4s', $cid);
-        $result = "[" . sprintf("%30s", "$processGroup|$processName|$cid") . "]";
+        $result = sprintf("[%15s|%15s|%4s]", $processGroup, $processName, $cid);
         if ($this->color) {
             return "\e[35m" . $result . "\e[0m";
         } else {
@@ -120,7 +119,7 @@ class GoSwooleProcessor implements ProcessorInterface
         }
     }
 
-    private $classNameMax = 40;
+    private $classNameMax = 50;
 
     /**
      * Handle class name
@@ -137,7 +136,7 @@ class GoSwooleProcessor implements ProcessorInterface
             $array = explode("\\", $class);
             foreach ($array as &$one) {
                 $countOne = strlen($one);
-//                $one = strtolower($one[0]);
+                //$one = strtolower($one[0]);
                 $count = $count - $countOne + 1;
                 if ($count <= $maxLength) break;
             }
