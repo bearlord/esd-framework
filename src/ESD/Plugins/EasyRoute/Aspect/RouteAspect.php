@@ -142,10 +142,10 @@ class RouteAspect extends OrderAspect
                     $this->controllers[$controllerName] = $controller;
                     return $controller;
                 } else {
-                    throw new RouteException("类{$controllerName}应该继承IController");
+                    throw new RouteException(sprintf("Class %s should extend IController", $controllerName));
                 }
             } else {
-                throw new RouteException("没有找到类$controllerName");
+                throw new RouteException(sprintf("%s Not found", $controllerName));
             }
         } else {
             return $this->controllers[$controllerName];
@@ -187,7 +187,7 @@ class RouteAspect extends OrderAspect
             $this->autoBoostSend($clientData->getFd(), $clientData->getResponseRaw());
         } catch (\Throwable $e) {
             try {
-                //这里的错误会移交给IndexController处理
+                //The errors here will be handed over to the IndexController
                 $controllerInstance = $this->getController($this->routeConfig->getErrorControllerName());
                 $controllerInstance->initialization($routeTool->getControllerName(), $routeTool->getMethodName());
                 $controllerInstance->onExceptionHandle($e);

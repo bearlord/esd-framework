@@ -25,6 +25,10 @@ use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Validate\Annotation\ValidatedFilter;
 use FastRoute\Dispatcher;
 
+/**
+ * Class AnnotationRoute
+ * @package ESD\Plugins\EasyRoute\RouteTool
+ */
 class AnnotationRoute implements IRoute
 {
     use GetLogger;
@@ -42,6 +46,8 @@ class AnnotationRoute implements IRoute
      * @throws MethodNotAllowedException
      * @throws ParamException
      * @throws RouteException
+     * @throws \ESD\Plugins\Validate\ValidationException
+     * @throws \ReflectionException
      */
     public function handleClientData(ClientData $data, EasyRouteConfig $easyRouteConfig): bool
     {

@@ -6,23 +6,31 @@
 
 namespace ESD\Plugins\EasyRoute;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Core\Server\Server;
 use ReflectionException;
 
+/**
+ * Class RouteConfig
+ * @package ESD\Plugins\EasyRoute
+ */
 class RouteConfig extends BaseConfig
 {
     const key = "route";
+
     /**
      * @var string
      */
     protected $errorControllerName = NormalErrorController::class;
+
     /**
      * @var RouteRoleConfig[]
      */
     protected $routeRoles = [];
 
+    /**
+     * RouteConfig constructor.
+     */
     public function __construct()
     {
         parent::__construct(self::key);
@@ -38,7 +46,6 @@ class RouteConfig extends BaseConfig
 
     /**
      * @param RouteRoleConfig[] $routeRoles
-     * @throws ReflectionException
      */
     public function setRouteRoles(array $routeRoles): void
     {
@@ -54,16 +61,17 @@ class RouteConfig extends BaseConfig
         }
     }
 
+    /**
+     * @param RouteRoleConfig $roleConfig
+     * @throws \Exception
+     */
     public function addRouteRole(RouteRoleConfig $roleConfig)
     {
         if (array_key_exists($roleConfig->getName(), $this->routeRoles)) {
-
             $routeRoles = $this->routeRoles[$roleConfig->getName()];
-
             if ($routeRoles) {
-
                 if (!empty(array_intersect($routeRoles->getPortNames(), $roleConfig->getPortNames()))) {
-                    Server::$instance->getLog()->warning("重复的路由：{$roleConfig->getName()}");
+                    Server::$instance->getLog()->warning("Duplicate route：{$roleConfig->getName()}");
                 }
             }
         }

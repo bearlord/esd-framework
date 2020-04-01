@@ -6,14 +6,21 @@
 
 namespace ESD\Plugins\EasyRoute\Filter;
 
-
 use ESD\Core\Order\OrderOwnerTrait;
 use ESD\Plugins\Pack\ClientData;
 
+/**
+ * Class EveryFilterManager
+ * @package ESD\Plugins\EasyRoute\Filter
+ */
 class EveryFilterManager
 {
     use OrderOwnerTrait;
 
+    /**
+     * @param ClientData $clientData
+     * @return int
+     */
     public function filter(ClientData $clientData): int
     {
         /** @var AbstractFilter $order */

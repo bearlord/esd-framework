@@ -6,31 +6,41 @@
 
 namespace ESD\Plugins\EasyRoute\Filter;
 
-
+/**
+ * Class CorsConfig
+ * @package ESD\Plugins\EasyRoute\Filter
+ */
 class CorsConfig
 {
     /**
-     * 表示的是访问服务端的ip地址及端口号，也可以设置为*表示所有域都可以通过；
+     * Represents the IP address and port number of the access server,
+     * and can also be set to * to indicate that all domains can pass;
      * @var string
      */
     protected $allowOrigin = "*";
+
     /**
-     * 表示的是跨域的ajax中可以携带cookie，此时第一项设置不能为*，需指定域名；
+     * It means that cross-domain Ajax can carry cookies.
+     * At this time, the first setting cannot be *, you need to specify the domain name;
      * @var bool
      */
     protected $allowCredentials = false;
+
     /**
-     * 表示的是允许跨域的请求方法；
+     * Represents a request method that allows cross-domain
      * @var string
      */
     protected $allowMethods = "*";
+
     /**
-     * 表示的是允许跨域请求包含content-type头；
+     * Indicates that cross-domain requests are allowed to include content-type headers;
      * @var string
      */
     protected $allowHeaders = "*";
+
     /**
-     * 表示的是在3628800秒内，不需要再发送预检验请求，可以缓存该结果，一般默认。
+     * It means that within 3628800 seconds, no pre-inspection request needs to be sent again,
+     * and the result can be cached, which is generally the default.
      * @var int
      */
     protected $allowMaxAge = 3628800;

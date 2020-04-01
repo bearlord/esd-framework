@@ -6,18 +6,27 @@
 
 namespace ESD\Plugins\EasyRoute\Filter;
 
-
 use ESD\Core\Server\Beans\Http\HttpStream;
 use ESD\Plugins\Pack\ClientData;
 
+/**
+ * Class JsonResponseFilter
+ * @package ESD\Plugins\EasyRoute\Filter
+ */
 class JsonResponseFilter extends AbstractFilter
 {
-
+    /**
+     * @return mixed|string
+     */
     public function getType()
     {
         return AbstractFilter::FILTER_ROUTE;
     }
 
+    /**
+     * @param ClientData $clientData
+     * @return int
+     */
     public function filter(ClientData $clientData): int
     {
         $data = $clientData->getResponseRaw();
@@ -40,6 +49,10 @@ class JsonResponseFilter extends AbstractFilter
         return "JsonResponseFilter";
     }
 
+    /**
+     * @param ClientData $clientData
+     * @return bool|mixed
+     */
     public function isEnable(ClientData $clientData)
     {
         return $this->isHttp($clientData);

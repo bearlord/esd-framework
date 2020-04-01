@@ -6,12 +6,14 @@
 
 namespace ESD\Plugins\EasyRoute\Filter;
 
-
 use ESD\Plugins\Pack\ClientData;
 
+/**
+ * Class CorsFilter
+ * @package ESD\Plugins\EasyRoute\Filter
+ */
 class CorsFilter extends AbstractFilter
 {
-
     /**
      * @var CorsConfig|null
      */
@@ -29,11 +31,18 @@ class CorsFilter extends AbstractFilter
         $this->corsConfig = $corsConfig;
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getType()
     {
         return AbstractFilter::FILTER_PRE;
     }
 
+    /**
+     * @param ClientData $clientData
+     * @return int
+     */
     public function filter(ClientData $clientData): int
     {
         if($this->corsConfig->getAllowOrigin() == '*'){
@@ -62,6 +71,10 @@ class CorsFilter extends AbstractFilter
         return "CorsFilter";
     }
 
+    /**
+     * @param ClientData $clientData
+     * @return bool|mixed
+     */
     public function isEnable(ClientData $clientData)
     {
         return $this->isHttp($clientData);

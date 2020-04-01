@@ -6,14 +6,18 @@
 
 namespace ESD\Plugins\EasyRoute;
 
-
 use ESD\Plugins\EasyRoute\Controller\EasyController;
 
+/**
+ * Class NormalErrorController
+ * @package ESD\Plugins\EasyRoute
+ */
 class NormalErrorController extends EasyController
 {
 
     /**
-     * 找不到方法时调用
+     * Called when no method is found
+     *
      * @param $methodName
      * @return mixed
      * @throws RouteException

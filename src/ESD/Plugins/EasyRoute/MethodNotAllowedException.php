@@ -8,10 +8,13 @@
 
 namespace ESD\Plugins\EasyRoute;
 
-
 use ESD\Core\Exception;
 use Throwable;
 
+/**
+ * Class MethodNotAllowedException
+ * @package ESD\Plugins\EasyRoute
+ */
 class MethodNotAllowedException extends Exception
 {
     /**

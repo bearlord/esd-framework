@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\EasyRoute\Annotation;
 
-
 use Doctrine\Common\Annotations\Annotation;
 
 /**

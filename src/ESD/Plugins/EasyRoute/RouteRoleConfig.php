@@ -6,48 +6,60 @@
 
 namespace ESD\Plugins\EasyRoute;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class RouteRoleConfig
+ * @package ESD\Plugins\EasyRoute
+ */
 class RouteRoleConfig extends BaseConfig
 {
     const key = "route.role";
     /**
-     * 名称
+     * Name
      * @var string
      */
     protected $name;
+
     /**
-     * 路由
+     * Route
      * @var string
      */
     protected $route;
+
     /**
-     * 控制器类名
+     * Controller
      * @var string
      */
     protected $controller;
+
     /**
-     * 控制器方法名
+     * Method
      * @var string
      */
     protected $method;
+
     /**
-     * 访问类型，GET，POST
+     * Type
      * @var string
      */
     protected $type;
+
     /**
-     * 放行端口类型
+     * Allowed port types
      * @var array
      */
     protected $portTypes = [];
+
     /**
-     * 放行端口名
+     * Allow port names
      * @var array
      */
     protected $portNames = [];
 
+    /**
+     * RouteRoleConfig constructor.
+     */
     public function __construct()
     {
         parent::__construct(self::key, true, "name");
@@ -68,7 +80,6 @@ class RouteRoleConfig extends BaseConfig
     {
         $this->name = $name;
     }
-
 
     /**
      * @return mixed

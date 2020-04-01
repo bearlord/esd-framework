@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\EasyRoute;
 
-
 use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\PlugIn\PluginInterfaceManager;
@@ -33,9 +32,14 @@ use ReflectionClass;
 use ReflectionMethod;
 use function FastRoute\simpleDispatcher;
 
+/**
+ * Class EasyRoutePlugin
+ * @package ESD\Plugins\EasyRoute
+ */
 class EasyRoutePlugin extends AbstractPlugin
 {
     public static $instance;
+
     /**
      * @var EasyRouteConfig[]
      */
@@ -45,14 +49,17 @@ class EasyRoutePlugin extends AbstractPlugin
      * @var RouteConfig
      */
     private $routeConfig;
+
     /**
      * @var RouteAspect
      */
     private $routeAspect;
+
     /**
      * @var Dispatcher
      */
     private $dispatcher;
+
     /**
      * @var ScanClass
      */
@@ -84,7 +91,7 @@ class EasyRoutePlugin extends AbstractPlugin
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -133,9 +140,10 @@ class EasyRoutePlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * @inheritDoc
      * @param Context $context
      * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ReflectionException
      */
     public function beforeServerStart(Context $context)
     {
@@ -146,9 +154,10 @@ class EasyRoutePlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ReflectionException
      */
     public function beforeProcessStart(Context $context)
     {
@@ -159,13 +168,14 @@ class EasyRoutePlugin extends AbstractPlugin
         $this->scanClass = DIget(ScanClass::class);
         $reflectionMethods = $this->scanClass->findMethodsByAnn(RequestMapping::class);
         $this->dispatcher = simpleDispatcher(function (RouteCollector $r) use ($reflectionMethods) {
-            //添加配置里的
+            //Add route in configuration
             foreach ($this->routeConfig->getRouteRoles() as $routeRole) {
                 $reflectionClass = new ReflectionClass($routeRole->getController());
                 $reflectionMethod = new ScanReflectionMethod($reflectionClass, new ReflectionMethod($routeRole->getController(), $routeRole->getMethod()));
                 $this->addRoute($routeRole, $r, $reflectionClass, $reflectionMethod);
             }
-            //添加注解里的
+
+            //Add route in the comment
             foreach ($reflectionMethods as $reflectionMethod) {
                 $reflectionClass = $reflectionMethod->getParentReflectClass();
                 if ($this->scanClass->getCachedReader()->getClassAnnotation($reflectionClass, Controller::class) == null) continue;
@@ -239,10 +249,11 @@ class EasyRoutePlugin extends AbstractPlugin
                 $couldPortNames[] = $easyRouteConfig->getName();
             }
         }
-        //取并集
+        //Array intersect
         if (!empty($routeRole->getPortNames())) {
             $couldPortNames = array_intersect($couldPortNames, $routeRole->getPortNames());
         }
+
         foreach ($couldPortNames as $portName) {
             $type = strtoupper($routeRole->getType());
             $port = Server::$instance->getPortManager()->getPortConfigs()[$portName]->getPort();

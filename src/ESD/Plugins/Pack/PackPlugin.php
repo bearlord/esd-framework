@@ -16,6 +16,10 @@ use ESD\Plugins\Aop\AopConfig;
 use ESD\Plugins\Aop\AopPlugin;
 use ESD\Plugins\Pack\Aspect\PackAspect;
 
+/**
+ * Class PackPlugin
+ * @package ESD\Plugins\Pack
+ */
 class PackPlugin extends AbstractPlugin
 {
     /**

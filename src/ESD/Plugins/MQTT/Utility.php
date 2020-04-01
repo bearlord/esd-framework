@@ -160,6 +160,7 @@ class Utility
      *
      * @param int $length
      * @return string
+     * @throws MqttException
      */
     static public function EncodeLength($length)
     {

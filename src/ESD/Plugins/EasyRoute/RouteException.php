@@ -6,10 +6,13 @@
 
 namespace ESD\Plugins\EasyRoute;
 
-
 use ESD\Core\Exception;
 use Throwable;
 
+/**
+ * Class RouteException
+ * @package ESD\Plugins\EasyRoute
+ */
 class RouteException extends Exception
 {
     /**

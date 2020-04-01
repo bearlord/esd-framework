@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\EasyRoute\Controller;
 
-
 use DI\Annotation\Inject;
 use ESD\Core\ParamException;
 use ESD\Core\Server\Beans\Request;
@@ -16,6 +15,10 @@ use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\Pack\ClientData;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class EasyController
+ * @package ESD\Plugins\EasyRoute\Controller
+ */
 abstract class EasyController implements IController
 {
     /**
@@ -23,29 +26,35 @@ abstract class EasyController implements IController
      * @var Request
      */
     protected $request;
+
     /**
      * @Inject()
      * @var Response
      */
     protected $response;
+
     /**
      * @Inject()
      * @var ClientData
      */
     protected $clientData;
+
     /**
      * @Inject()
      * @var LoggerInterface
      */
     protected $log;
 
+    /**
+     * EasyController constructor.
+     */
     public function __construct()
     {
 
     }
 
     /**
-     * 调用方法
+     * @inheritDoc
      * @param string|null $controllerName
      * @param string|null $methodName
      * @param array|null $params
@@ -81,7 +90,8 @@ abstract class EasyController implements IController
     }
 
     /**
-     * 每次请求都会调用
+     * Called on every request
+     *
      * @param string|null $controllerName
      * @param string|null $methodName
      * @return mixed
@@ -92,14 +102,14 @@ abstract class EasyController implements IController
     }
 
     /**
-     * 找不到方法时调用
+     * @inheritDoc
      * @param $methodName
      * @return mixed
      */
     abstract protected function defaultMethod(?string $methodName);
 
     /**
-     * 处理异常
+     * @inheritDoc
      * @param $e
      * @return mixed
      * @throws \Throwable
