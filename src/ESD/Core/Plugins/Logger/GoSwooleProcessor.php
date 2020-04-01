@@ -137,7 +137,7 @@ class GoSwooleProcessor implements ProcessorInterface
             $array = explode("\\", $class);
             foreach ($array as &$one) {
                 $countOne = strlen($one);
-                $one = strtolower($one[0]);
+//                $one = strtolower($one[0]);
                 $count = $count - $countOne + 1;
                 if ($count <= $maxLength) break;
             }

@@ -76,8 +76,7 @@ class AutoReloadPlugin extends AbstractPlugin
      * @inheritDoc
      * @param Context $context
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws \Exception
      */
     public function beforeProcessStart(Context $context)
     {
