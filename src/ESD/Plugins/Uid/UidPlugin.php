@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/21
- * Time: 15:39
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Uid;
@@ -16,6 +14,10 @@ use ESD\Plugins\Aop\AopConfig;
 use ESD\Plugins\Aop\AopPlugin;
 use ESD\Plugins\Uid\Aspect\UidAspect;
 
+/**
+ * Class UidPlugin
+ * @package ESD\Plugins\Uid
+ */
 class UidPlugin extends AbstractPlugin
 {
     /**

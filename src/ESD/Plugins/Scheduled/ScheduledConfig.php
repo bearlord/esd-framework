@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/28
- * Time: 14:39
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Scheduled;
@@ -15,6 +13,10 @@ use ESD\Plugins\Scheduled\Event\ScheduledAddEvent;
 use ESD\Plugins\Scheduled\Event\ScheduledRemoveEvent;
 use ESD\Server\Co\Server;
 
+/**
+ * Class ScheduledConfig
+ * @package ESD\Plugins\Scheduled
+ */
 class ScheduledConfig extends BaseConfig
 {
     const key = "scheduled";

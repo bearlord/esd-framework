@@ -1,12 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/8
- * Time: 16:03
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Security\Beans;
+
+/**
+ * Class Principal
+ * @package ESD\Plugins\Security\Beans
+ */
 class Principal
 {
     /**

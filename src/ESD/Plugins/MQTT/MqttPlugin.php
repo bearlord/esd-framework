@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/6/13
- * Time: 9:36
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
@@ -16,6 +14,10 @@ use ESD\Plugins\Pack\PackPlugin;
 use ESD\Plugins\Topic\TopicPlugin;
 use ESD\Plugins\Uid\UidPlugin;
 
+/**
+ * Class MqttPlugin
+ * @package ESD\Plugins\MQTT
+ */
 class MqttPlugin extends AbstractPlugin
 {
     /**
@@ -40,6 +42,7 @@ class MqttPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
      * @return mixed|void
      * @throws \DI\DependencyException
@@ -56,6 +59,7 @@ class MqttPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
      * @throws \ReflectionException
@@ -71,6 +75,7 @@ class MqttPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -79,7 +84,7 @@ class MqttPlugin extends AbstractPlugin
     }
 
     /**
-     * 初始化
+     * @inheritDoc
      * @param Context $context
      */
     public function beforeServerStart(Context $context)
@@ -88,7 +93,7 @@ class MqttPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      */
     public function beforeProcessStart(Context $context)

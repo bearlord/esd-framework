@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/21
- * Time: 15:46
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Topic\Aspect;
@@ -16,15 +14,22 @@ use ESD\Plugins\Uid\GetUid;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Before;
 
+/**
+ * Class TopicAspect
+ * @package ESD\Plugins\Topic\Aspect
+ */
 class TopicAspect extends OrderAspect
 {
     use GetLogger;
     use GetTopic;
     use GetUid;
 
+    /**
+     * TopicAspect constructor.
+     */
     public function __construct()
     {
-        //要在UidAspect之前执行，不然uid就被清除了
+        //To be executed before UidAspect, otherwise the uid will be cleared
         $this->atBefore(UidAspect::class);
     }
 
@@ -46,7 +51,8 @@ class TopicAspect extends OrderAspect
     protected function afterTcpClose(MethodInvocation $invocation)
     {
         list($fd, $reactorId) = $invocation->getArguments();
-        //这里是跨进程调用，所以用uid，不用fd，避免时序错误
+
+        //This is a cross-process call, so use uid instead of fd to avoid timing errors
         $uid = $this->getFdUid($fd);
         if ($uid != null) {
             $this->clearUidSub($uid);
@@ -54,7 +60,7 @@ class TopicAspect extends OrderAspect
     }
 
     /**
-     * around onTcpReceive
+     * Around onTcpReceive
      *
      * @param MethodInvocation $invocation Invocation
      * @throws \Throwable

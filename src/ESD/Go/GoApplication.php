@@ -129,7 +129,7 @@ class GoApplication extends Server
      */
     public function configureReady()
     {
-        $this->info("configureReady");
+        $this->info("Configure ready");
     }
 
     /**
@@ -138,7 +138,7 @@ class GoApplication extends Server
      */
     public function onStart()
     {
-        $this->info("onStart");
+        $this->info("On start");
     }
 
     /**
@@ -147,7 +147,7 @@ class GoApplication extends Server
      */
     public function onShutdown()
     {
-        $this->info("onShutdown");
+        $this->info("On shutdown");
     }
 
     /**
@@ -167,7 +167,7 @@ class GoApplication extends Server
      */
     public function onManagerStart()
     {
-        $this->info("onManagerStart");
+        $this->info("On manager start");
     }
 
     /**
@@ -176,12 +176,13 @@ class GoApplication extends Server
      */
     public function onManagerStop()
     {
-        $this->info("onManagerStop");
+        $this->info("On manager stop");
     }
 
     /**
      * Plugin initialization is complete
      * @return mixed
+     * @throws \Exception
      */
     public function pluginInitialized()
     {

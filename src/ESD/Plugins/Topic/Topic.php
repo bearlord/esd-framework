@@ -1,13 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/22
- * Time: 11:17
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Topic;
-
 
 use Ds\Set;
 use ESD\Core\Memory\CrossProcess\Table;
@@ -15,20 +12,30 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Pack\GetBoostSend;
 use ESD\Plugins\Uid\GetUid;
 
+/**
+ * Class Topic
+ * @package ESD\Plugins\Topic
+ */
 class Topic
 {
     use GetBoostSend;
     use GetUid;
     use GetLogger;
+
     protected $subArr = [];
+
     /**
      * @var Table
      */
     private $topicTable;
 
+    /**
+     * Topic constructor.
+     * @param Table $topicTable
+     */
     public function __construct(Table $topicTable)
     {
-        //先读table，因为进程有可能会重启
+        //Read the table first, because the process may restart
         $this->topicTable = $topicTable;
         foreach ($this->topicTable as $value) {
             $this->addSubFormTable($value['topic'], $value['uid']);
@@ -61,10 +68,12 @@ class Topic
     }
 
     /**
-     * 添加订阅
+     * Add subscription
+     *
      * @param $topic
      * @param $uid
      * @throws BadUTF8
+     * @throws \ESD\Core\Exception
      */
     public function addSub($topic, $uid)
     {
@@ -75,8 +84,10 @@ class Topic
     }
 
     /**
-     * 清除Fd的订阅
+     * Clear fd's subscription
+     *
      * @param $fd
+     * @throws \Exception
      */
     public function clearFdSub($fd)
     {
@@ -86,8 +97,10 @@ class Topic
     }
 
     /**
-     * 清除Uid的订阅
+     * Clear uid's subscription
+     *
      * @param $uid
+     * @throws \Exception
      */
     public function clearUidSub($uid)
     {
@@ -98,9 +111,10 @@ class Topic
     }
 
     /**
-     * 移除订阅
+     * Remove subscription
      * @param $topic
      * @param $uid
+     * @throws \Exception
      */
     public function removeSub($topic, $uid)
     {
@@ -116,7 +130,8 @@ class Topic
     }
 
     /**
-     * 删除主题
+     * Delete subscription
+     *
      * @param $topic
      */
     public function delTopic($topic)
@@ -129,6 +144,8 @@ class Topic
     }
 
     /**
+     * Publish subscription
+     *
      * @param $topic
      * @param $data
      * @param array $excludeUidList
@@ -148,7 +165,8 @@ class Topic
     }
 
     /**
-     * 构建订阅树,只允许5层
+     * Build a subscription tree, allowing only 5 layers
+     *
      * @param $topic
      * @return Set
      */
@@ -178,7 +196,7 @@ class Topic
             for ($i = 0; $i < $count_a; $i++) {
                 $temp = [];
                 foreach ($arr as $one) {
-                    $this->help_replace_plus($one, $temp, $result, $complete, $isSYS);
+                    $this->helpReplacePlus($one, $temp, $result, $complete, $isSYS);
                 }
                 $arr = $temp;
             }
@@ -186,7 +204,14 @@ class Topic
         return $result;
     }
 
-    private function help_replace_plus($arr, &$temp, &$result, $complete, $isSYS)
+    /**
+     * @param $arr
+     * @param $temp
+     * @param $result
+     * @param $complete
+     * @param $isSYS
+     */
+    private function helpReplacePlus($arr, &$temp, &$result, $complete, $isSYS)
     {
         $count = count($arr);
         $m = 0;
@@ -205,6 +230,8 @@ class Topic
     }
 
     /**
+     * Publish subscription to uid
+     *
      * @param $uid
      * @param $data
      * @param $topic

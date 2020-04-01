@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/24
- * Time: 17:57
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Saber;
@@ -12,6 +10,10 @@ use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\AbstractPlugin;
 use Swlib\SaberGM;
 
+/**
+ * Class SaberPlugin
+ * @package ESD\Plugins\Saber
+ */
 class SaberPlugin extends AbstractPlugin
 {
     /**
@@ -36,7 +38,7 @@ class SaberPlugin extends AbstractPlugin
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -45,11 +47,10 @@ class SaberPlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * @inheritDoc
      * @param Context $context
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ReflectionException
      */
     public function beforeServerStart(Context $context)
     {

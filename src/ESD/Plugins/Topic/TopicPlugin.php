@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/22
- * Time: 10:13
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Topic;
@@ -18,21 +16,29 @@ use ESD\Plugins\Topic\Aspect\TopicAspect;
 use ESD\Plugins\Uid\UidConfig;
 use ESD\Plugins\Uid\UidPlugin;
 
+/**
+ * Class TopicPlugin
+ * @package ESD\Plugins\Topic
+ */
 class TopicPlugin extends AbstractPlugin
 {
     const processGroupName = "HelperGroup";
+
     /**
      * @var Table
      */
     protected $topicTable;
+
     /**
      * @var TopicConfig
      */
     private $topicConfig;
+
     /**
      * @var Topic
      */
     private $topic;
+
     /**
      * @var TopicAspect
      */
@@ -55,6 +61,7 @@ class TopicPlugin extends AbstractPlugin
      * @param PluginInterfaceManager $pluginInterfaceManager
      * @return mixed|void
      * @throws \ESD\Core\Exception
+     * @throws \ReflectionException
      */
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
@@ -63,8 +70,10 @@ class TopicPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param Context $context
      * @return mixed|void
+     * @throws \Exception
      */
     public function init(Context $context)
     {
@@ -75,7 +84,7 @@ class TopicPlugin extends AbstractPlugin
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -84,11 +93,11 @@ class TopicPlugin extends AbstractPlugin
     }
 
     /**
-     * 初始化
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      * @throws \ESD\Core\Plugins\Config\ConfigException
-     *
+     * @throws \ReflectionException
      */
     public function beforeServerStart(Context $context)
     {
@@ -98,13 +107,13 @@ class TopicPlugin extends AbstractPlugin
         $this->topicTable->column("topic", Table::TYPE_STRING, $this->topicConfig->getTopicMaxLength());
         $this->topicTable->column("uid", Table::TYPE_STRING, $uidConfig->getUidMaxLength());
         $this->topicTable->create();
-        //添加一个TopicProcess进程
+
         Server::$instance->addProcess($this->topicConfig->getProcessName(), TopicProcess::class, self::processGroupName);
         return;
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      * @throws \Exception
@@ -112,7 +121,6 @@ class TopicPlugin extends AbstractPlugin
     public function beforeProcessStart(Context $context)
     {
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == $this->topicConfig->getProcessName()) {
-            //topic进程
             $this->topic = new Topic($this->topicTable);
             $this->setToDIContainer(Topic::class, $this->topic);
         }

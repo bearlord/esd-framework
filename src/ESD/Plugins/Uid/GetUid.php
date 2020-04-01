@@ -1,17 +1,18 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/21
- * Time: 16:03
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Uid;
 
-
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Server\Server;
 
+/**
+ * Trait GetUid
+ * @package ESD\Plugins\Uid
+ */
 trait GetUid
 {
     /**

@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/23
- * Time: 10:49
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Uid;
@@ -12,6 +10,10 @@ use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 
+/**
+ * Class UidBean
+ * @package ESD\Plugins\Uid
+ */
 class UidBean
 {
     use GetLogger;

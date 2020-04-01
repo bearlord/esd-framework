@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: zzq
- * Date: 2019/10/25
- * Time: 13:34
+ * ESD framework
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Yii\Helpers;
@@ -12,6 +10,10 @@ use ESD\Core\Server\Beans\Http\Cookie;
 use ESD\Yii\Yii;
 use ESD\Core\Server\Beans\Request;
 
+/**
+ * Class RequestExtra
+ * @package ESD\Yii\Helpers
+ */
 class RequestExtra
 {
 
@@ -69,7 +71,9 @@ class RequestExtra
      */
     public $methodParam = '_method';
 
-
+    /**
+     * @return RequestExtra
+     */
     public static function instance()
     {
         if (empty(self::$_instance)) {

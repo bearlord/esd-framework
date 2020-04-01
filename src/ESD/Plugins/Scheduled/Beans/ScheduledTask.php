@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/28
- * Time: 14:41
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Scheduled\Beans;
@@ -11,6 +9,10 @@ namespace ESD\Plugins\Scheduled\Beans;
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Plugins\Scheduled\Cron\CronExpression;
 
+/**
+ * Class ScheduledTask
+ * @package ESD\Plugins\Scheduled\Beans
+ */
 class ScheduledTask extends BaseConfig
 {
     const key = "scheduled.task";

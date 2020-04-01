@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/23
- * Time: 13:50
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Scheduled;
@@ -11,11 +9,15 @@ namespace ESD\Plugins\Scheduled;
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
 
+/**
+ * Class HelperScheduledProcess
+ * @package ESD\Plugins\Scheduled
+ */
 class HelperScheduledProcess extends Process
 {
 
     /**
-     * 在onProcessStart之前，用于初始化成员变量
+     * @inheritDoc
      * @return mixed
      */
     public function init()
@@ -23,16 +25,30 @@ class HelperScheduledProcess extends Process
 
     }
 
+    /**
+     * @inheritDoc
+     * @return mixed|void
+     */
     public function onProcessStart()
     {
 
     }
 
+    /**
+     * @inheritDoc
+     * @return mixed|void
+     */
     public function onProcessStop()
     {
 
     }
 
+    /**
+     * @inheritDoc
+     * @param Message $message
+     * @param Process $fromProcess
+     * @return mixed|void
+     */
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
 

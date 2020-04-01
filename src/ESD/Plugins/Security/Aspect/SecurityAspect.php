@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/8
- * Time: 17:36
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Security\Aspect;
@@ -15,6 +13,10 @@ use ESD\Plugins\Security\Annotation\PreAuthorize;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
 
+/**
+ * Class SecurityAspect
+ * @package ESD\Plugins\Security\Aspect
+ */
 class SecurityAspect extends OrderAspect
 {
     /**

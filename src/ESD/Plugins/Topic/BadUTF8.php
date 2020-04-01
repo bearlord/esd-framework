@@ -1,16 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/22
- * Time: 10:18
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Topic;
 
-
 use ESD\Core\Exception;
 
+/**
+ * Class BadUTF8
+ * @package ESD\Plugins\Topic
+ */
 class BadUTF8 extends Exception
 {
 

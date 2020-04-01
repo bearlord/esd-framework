@@ -1,15 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: administrato
- * Date: 2019/5/22
- * Time: 11:52
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Topic;
 
 use ESD\Plugins\ProcessRPC\GetProcessRpc;
 
+/**
+ * Trait GetTopic
+ * @package ESD\Plugins\Topic
+ */
 trait GetTopic
 {
     use GetProcessRpc;
@@ -46,6 +48,7 @@ trait GetTopic
 
     /**
      * @return TopicConfig|mixed
+     * @throws \Exception
      */
     protected function getTopicConfig()
     {
@@ -56,7 +59,8 @@ trait GetTopic
     }
 
     /**
-     * 添加订阅
+     * Add subscription
+     *
      * @param $topic
      * @param $uid
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
@@ -72,7 +76,8 @@ trait GetTopic
     }
 
     /**
-     * 移除订阅
+     * Clear uid's subscription
+     *
      * @param $topic
      * @param $uid
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
@@ -88,7 +93,8 @@ trait GetTopic
     }
 
     /**
-     * 清除Fd的订阅
+     * Clear fd's subscription
+     *
      * @param $fd
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
@@ -103,7 +109,7 @@ trait GetTopic
     }
 
     /**
-     * 清除Uid的订阅
+     * Clear uid's subscription
      * @param $uid
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
@@ -118,6 +124,8 @@ trait GetTopic
     }
 
     /**
+     * Publish subscription
+     *
      * @param $topic
      * @param $data
      * @param array $excludeUidList

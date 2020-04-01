@@ -1,13 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/6/13
- * Time: 9:40
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
-
 
 use DI\Annotation\Inject;
 use ESD\Core\Server\Config\PortConfig;
@@ -33,6 +30,10 @@ use ESD\Plugins\Pack\PackTool\IPack;
 use ESD\Plugins\Topic\GetTopic;
 use ESD\Plugins\Uid\GetUid;
 
+/**
+ * Class MqttPack
+ * @package ESD\Plugins\MQTT
+ */
 class MqttPack implements IPack, IMqtt
 {
     use GetUid;
@@ -55,18 +56,27 @@ class MqttPack implements IPack, IMqtt
      */
     private $handler;
 
-
+    /**
+     * MqttPack constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         Server::$instance->getContainer()->injectOn($this);
         $this->handler = DIGet($this->mqttConfig->getMessageHandleClass());
     }
 
+    /**
+     * @param string $buffer
+     */
     public function encode(string $buffer)
     {
 
     }
 
+    /**
+     * @param string $buffer
+     */
     public function decode(string $buffer)
     {
 
@@ -265,11 +275,18 @@ class MqttPack implements IPack, IMqtt
         return Message::Create($message_type, $this);
     }
 
+    /**
+     * @return int|mixed
+     */
     public function version()
     {
         return MQTT::VERSION_3_1_1;
     }
 
+    /**
+     * @param PortConfig $portConfig
+     * @throws \Exception
+     */
     public static function changePortConfig(PortConfig $portConfig)
     {
         if ($portConfig->isOpenMqttProtocol()) {

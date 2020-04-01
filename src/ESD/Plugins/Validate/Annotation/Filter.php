@@ -1,13 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/17
- * Time: 11:53
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Validate\Annotation;
-
 
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\CachedReader;
@@ -15,120 +12,143 @@ use Inhere\Validate\Filter\Filtration;
 use ReflectionClass;
 
 /**
- * 过滤器
  * @Annotation
  * @Target("PROPERTY")
+ * Class Filter
+ * @package ESD\Plugins\Validate\Annotation
  */
 class Filter extends Annotation
 {
     protected static $cache = [];
+
     /**
-     * 返回绝对值
+     * Absolute value
      * @var bool
      */
     public $abs = false;
+
     /**
-     * 过滤非法字符并转换为int类型 支持数组
+     * Filter illegal characters and convert to int
      * @var bool
      */
     public $integer = false;
+
     /**
-     * 转换为 bool
+     * Convert to bool
      * @var bool
      */
     public $boolean = false;
+
     /**
-     * 过滤非法字符,保留float格式的数据
+     * Filter illegal characters and retain data in float format
      * @var bool
      */
     public $float = false;
+
     /**
-     * 过滤非法字符并转换为string类型
+     * Filter illegal characters and convert to string
      * @var bool
      */
     public $string = false;
+
     /**
-     * 去除首尾空白字符，支持数组。
+     * Remove leading and trailing whitespace characters, support for arrays.
      * @var bool
      */
     public $trim = false;
+
     /**
-     * 转换 \n \r\n \r 为 <br/>
+     * Convert \n \r \n \r to <br/>
      * @var bool
      */
     public $nl2br = false;
+
     /**
-     * 字符串转换为小写
+     * Convert string to lower case
      * @var bool
      */
     public $lowercase = false;
+
     /**
-     * 字符串转换为大写
+     * String to uppercase
      * @var bool
      */
     public $uppercase = false;
+
     /**
-     * 字符串转换为蛇形风格
+     * Convert string to snake style
      * @var bool
      */
     public $snakeCase = false;
+
     /**
-     * 字符串转换为驼峰风格
+     * Convert string to camel style
      * @var bool
      */
     public $camelCase = false;
+
     /**
-     * 字符串日期转换时间戳
+     * Convert string to time
      * @var bool
      */
     public $strToTime = false;
+
     /**
-     * URL 过滤,移除所有不符合 URL 的字符
+     * URL filtering, removing all characters that do not match the URL
      * @var bool
      */
     public $url = false;
+
     /**
-     * 字符串转数组 'tag0,tag1' -> ['tag0', 'tag1']
+     * String to array 'tag0, tag1'-> ['tag0', 'tag1']
      * @var bool
      */
     public $str2array = false;
+
     /**
-     * 去除数组中的重复值(by array_unique())
+     * Remove duplicate values from an array (by array_unique ())
      * @var bool
      */
     public $unique = false;
+
     /**
-     * email 过滤,移除所有不符合 email 的字符
+     * email filtering, remove all characters that do not match email
      * @var bool
      */
     public $email = false;
+
     /**
-     * 去除 URL 编码不需要的字符,与 urlencode() 函数很类似
+     * Removes characters not needed for URL encoding, similar to urlencode () function
      * @var bool
      */
     public $encoded = false;
+
     /**
-     * 清理空格
+     * Clear spaces
      * @var bool
      */
     public $clearSpace = false;
+
     /**
-     * 清理换行符
+     * Clean up newlines
      * @var bool
      */
     public $clearNewline = false;
+
     /**
-     * 相当于使用 strip_tags()
+     * Equivalent to using strip_tags()
      * @var bool
      */
     public $stripTags = false;
+
     /**
-     * 相当于使用 htmlspecialchars() 转义数据
+     * Equivalent to escaping data using htmlspecialchars()
      * @var bool
      */
     public $escape = false;
+
     /**
-     * 应用 addslashes() 转义数据
+     * Apply addslashes() to escape data
      * @var bool
      */
     public $quotes = false;

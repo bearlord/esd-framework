@@ -1,26 +1,29 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/6/13
- * Time: 10:48
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
-
 
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Plugins\MQTT\Auth\EasyMqttAuth;
 use ESD\Plugins\MQTT\Handler\NonHandler;
 
+/**
+ * Class MqttPluginConfig
+ * @package ESD\Plugins\MQTT
+ */
 class MqttPluginConfig extends BaseConfig
 {
     const key = "mqtt";
+
     /**
-     * 允许匿名登录
+     * Is Allowed anonymous access
      * @var bool
      */
     protected $allowAnonymousAccess = true;
+
     /**
      * 服务器发出消息的服务等级
      * @var int

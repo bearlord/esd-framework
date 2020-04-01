@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: anythink-wx
- * Date: 2019/5/30
- * Time: 10:45
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\EasyRoute;

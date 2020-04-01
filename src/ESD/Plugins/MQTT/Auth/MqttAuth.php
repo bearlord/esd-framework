@@ -1,18 +1,14 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/6/13
- * Time: 10:41
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Auth;
 
-
 interface MqttAuth
 {
     /**
-     * 返回结果[$isAuth,$uid]
      * @param $fd
      * @param $username
      * @param $password

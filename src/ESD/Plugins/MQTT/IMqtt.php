@@ -1,15 +1,19 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: zhangjincheng
- * Date: 17-8-31
- * Time: 下午3:28
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
 
-
+/**
+ * Interface IMqtt
+ * @package ESD\Plugins\MQTT
+ */
 interface IMqtt
 {
+    /**
+     * @return mixed
+     */
     public function version();
 }

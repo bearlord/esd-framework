@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: zzq
- * Date: 2019/10/11
- * Time: 16:08
+ * ESD framework
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Yii\Base;

@@ -82,7 +82,7 @@ class EasyRoutePlugin extends AbstractPlugin
             $routeConfig = new RouteConfig();
         }
         $this->routeConfig = $routeConfig;
-        //需要插件支持
+
         $this->atAfter(AnnotationsScanPlugin::class);
         $this->atAfter(ValidatePlugin::class);
         $this->atAfter(PackPlugin::class);
@@ -169,6 +169,7 @@ class EasyRoutePlugin extends AbstractPlugin
         $reflectionMethods = $this->scanClass->findMethodsByAnn(RequestMapping::class);
         $this->dispatcher = simpleDispatcher(function (RouteCollector $r) use ($reflectionMethods) {
             //Add route in configuration
+            var_dump($this->routeConfig->getRouteRoles());
             foreach ($this->routeConfig->getRouteRoles() as $routeRole) {
                 $reflectionClass = new ReflectionClass($routeRole->getController());
                 $reflectionMethod = new ScanReflectionMethod($reflectionClass, new ReflectionMethod($routeRole->getController(), $routeRole->getMethod()));
@@ -178,7 +179,10 @@ class EasyRoutePlugin extends AbstractPlugin
             //Add route in the comment
             foreach ($reflectionMethods as $reflectionMethod) {
                 $reflectionClass = $reflectionMethod->getParentReflectClass();
-                if ($this->scanClass->getCachedReader()->getClassAnnotation($reflectionClass, Controller::class) == null) continue;
+
+                if ($this->scanClass->getCachedReader()->getClassAnnotation($reflectionClass, Controller::class) == null) {
+                    continue;
+                }
                 $route = "/";
                 $requestMapping = $this->scanClass->getClassAndInterfaceAnnotation($reflectionClass, RequestMapping::class);
                 $controller = $this->scanClass->getCachedReader()->getClassAnnotation($reflectionClass, Controller::class);

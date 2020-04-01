@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/21
- * Time: 15:46
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Uid\Aspect;
@@ -15,6 +13,10 @@ use ESD\Plugins\Uid\UidBean;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\After;
 
+/**
+ * Class UidAspect
+ * @package ESD\Plugins\Uid\Aspect
+ */
 class UidAspect extends OrderAspect
 {
     use GetLogger;
@@ -24,9 +26,8 @@ class UidAspect extends OrderAspect
      */
     protected $uid;
 
-
     /**
-     * around onTcpReceive
+     * Around onTcpReceive
      *
      * @param MethodInvocation $invocation Invocation
      * @throws \Throwable
@@ -39,7 +40,7 @@ class UidAspect extends OrderAspect
     }
 
     /**
-     * around onTcpReceive
+     * Around onTcpReceive
      *
      * @param MethodInvocation $invocation Invocation
      * @throws \Throwable

@@ -1,17 +1,18 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/5
- * Time: 11:53
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Validate;
 
-
 use ESD\Core\Exception;
 use Throwable;
 
+/**
+ * Class ValidationException
+ * @package ESD\Plugins\Validate
+ */
 class ValidationException extends Exception
 {
     /**

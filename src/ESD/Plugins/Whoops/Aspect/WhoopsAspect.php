@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/24
- * Time: 14:54
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Whoops\Aspect;
@@ -16,6 +14,10 @@ use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
 use Whoops\Run;
 
+/**
+ * Class WhoopsAspect
+ * @package ESD\Plugins\Whoops\Aspect
+ */
 class WhoopsAspect extends OrderAspect
 {
     /**
@@ -35,7 +37,7 @@ class WhoopsAspect extends OrderAspect
     }
 
     /**
-     * around onHttpRequest
+     * Around onHttpRequest
      *
      * @param MethodInvocation $invocation Invocation
      * @Around("within(ESD\Core\Server\Port\IServerPort+) && execution(public **->onHttpRequest(*))")

@@ -1,13 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/17
- * Time: 11:36
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Validate;
-
 
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
@@ -15,6 +12,10 @@ use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Plugins\AnnotationsScan\AnnotationsScanPlugin;
 use ESD\Plugins\Validate\Annotation\Validated;
 
+/**
+ * Class ValidatePlugin
+ * @package ESD\Plugins\Validate
+ */
 class ValidatePlugin extends AbstractPlugin
 {
     /**
@@ -22,6 +23,10 @@ class ValidatePlugin extends AbstractPlugin
      * @var string
      */
     public $test;
+
+    /**
+     * ValidatePlugin constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -42,7 +47,7 @@ class ValidatePlugin extends AbstractPlugin
     }
 
     /**
-     * 获取插件名字
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -51,7 +56,7 @@ class ValidatePlugin extends AbstractPlugin
     }
 
     /**
-     * 初始化
+     * @inheritDoc
      * @param Context $context
      */
     public function beforeServerStart(Context $context)
@@ -60,7 +65,7 @@ class ValidatePlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      */
     public function beforeProcessStart(Context $context)

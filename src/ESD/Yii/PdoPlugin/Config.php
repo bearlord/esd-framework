@@ -1,13 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: zzq
- * Date: 2019/10/17
- * Time: 10:47
+ * ESD framework
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Yii\PdoPlugin;
-
 
 use ESD\Core\Plugins\Config\BaseConfig;
 

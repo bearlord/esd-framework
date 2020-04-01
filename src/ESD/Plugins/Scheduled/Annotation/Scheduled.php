@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: administrato
- * Date: 2019/5/14
- * Time: 15:48
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Scheduled\Annotation;

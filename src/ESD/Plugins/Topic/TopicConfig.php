@@ -1,16 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/22
- * Time: 10:56
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Topic;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class TopicConfig
+ * @package ESD\Plugins\Topic
+ */
 class TopicConfig extends BaseConfig
 {
     const key = "topic";

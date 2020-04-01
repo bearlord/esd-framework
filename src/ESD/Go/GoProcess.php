@@ -33,7 +33,7 @@ class GoProcess extends Process
      */
     public function onProcessStart()
     {
-        $this->log->info("onProcessStart");
+        $this->log->info("On process start");
     }
 
     /**
@@ -42,7 +42,7 @@ class GoProcess extends Process
      */
     public function onProcessStop()
     {
-        $this->log->info("onProcessStop");
+        $this->log->info("On process stop");
     }
 
     /**

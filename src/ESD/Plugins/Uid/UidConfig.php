@@ -1,16 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/5/21
- * Time: 17:05
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Uid;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class UidConfig
+ * @package ESD\Plugins\Uid
+ */
 class UidConfig extends BaseConfig
 {
     const key = "uid";
