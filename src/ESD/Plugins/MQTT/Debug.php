@@ -82,7 +82,7 @@ class Debug
 
         if ($priority <= self::$priority) {
             if (Server::$instance == null) {
-                print_r($message . "\n");
+                printf("%s\n", $message);
             } else {
                 Server::$instance->getLog()->warning($message);
             }

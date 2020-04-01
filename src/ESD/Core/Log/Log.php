@@ -101,7 +101,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        print_r($message . "\n");
+        printf("%s\n", $message);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 $path = getcwd();
-print_r("The project will be created at the current location, are you sure (y/n)?\n");
+printf("The project will be created at the current location, are you sure (y/n)?\n");
 if (count($argv) < 2 || $argv[1] != '-y') {
     $read = read();
     if (strtolower($read) != 'y') {
@@ -16,7 +16,7 @@ updateComposer();
 
 
 exec("composer dump", $output);
-print_r("Start_server.php in the root directory is the startup file, have fun!.\n");
+printf("Start_server.php in the root directory is the startup file, have fun!.\n");
 exit();
 
 function read()
