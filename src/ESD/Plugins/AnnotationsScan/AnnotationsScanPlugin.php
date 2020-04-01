@@ -228,13 +228,13 @@ class AnnotationsScanPlugin extends AbstractPlugin
                             foreach ($annotations as $annotation) {
                                 $annotationClass = get_class($annotation);
                                 if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                    $this->debug("Find a class annotation $annotationClass in $class");
+                                    $this->debug("Class annotation $annotationClass in $class");
                                 }
                                 $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                 $annotationClass = get_parent_class($annotation);
                                 if ($annotationClass != Annotation::class) {
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                        $this->debug("Find a class annotation $annotationClass in $class");
+                                        $this->debug("Class annotation $annotationClass in $class");
                                     }
                                     $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                 }
@@ -247,13 +247,13 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                 foreach ($annotations as $annotation) {
                                     $annotationClass = get_class($annotation);
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                        $this->debug("Find a class annotation $annotationClass in $class");
+                                        $this->debug("Class annotation $annotationClass in $class");
                                     }
                                     $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                     $annotationClass = get_parent_class($annotation);
                                     if ($annotationClass != Annotation::class) {
                                         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                            $this->debug("Find a class annotation $annotationClass in $class");
+                                            $this->debug("Class annotation $annotationClass in $class");
                                         }
                                         $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                     }
@@ -275,13 +275,13 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                         foreach ($annotations as $annotation) {
                                             $annotationClass = get_class($annotation);
                                             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                                $this->debug("Find a method annotation $annotationClass in $class::$reflectionMethod->name");
+                                                $this->debug("Method annotation $annotationClass in $class::$reflectionMethod->name");
                                             }
                                             $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
                                             $annotationClass = get_parent_class($annotation);
                                             if ($annotationClass != Annotation::class) {
                                                 if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                                    $this->debug("Find a method annotation $annotationClass in $class::$reflectionMethod->name");
+                                                    $this->debug("Method annotation $annotationClass in $class::$reflectionMethod->name");
                                                 }
                                                 $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
                                             }
@@ -293,13 +293,13 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                 foreach ($annotations as $annotation) {
                                     $annotationClass = get_class($annotation);
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                        $this->debug("Find a method annotation $annotationClass in $class::$reflectionMethod->name");
+                                        $this->debug("Method annotation $annotationClass in $class::$reflectionMethod->name");
                                     }
                                     $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
                                     $annotationClass = get_parent_class($annotation);
                                     if ($annotationClass != Annotation::class) {
                                         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                            $this->debug("Find a method annotation $annotationClass in $class::$reflectionMethod->name");
+                                            $this->debug("Method annotation $annotationClass in $class::$reflectionMethod->name");
                                         }
                                         $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
                                     }
