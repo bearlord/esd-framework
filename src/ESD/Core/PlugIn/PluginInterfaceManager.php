@@ -154,7 +154,7 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAfterProcessStartEvent, $this));
         }
-        $this->readyChannel->push("ready");
+        $this->readyChannel->push("Ready");
     }
 
     /**

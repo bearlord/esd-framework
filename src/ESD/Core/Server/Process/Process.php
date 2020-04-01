@@ -278,7 +278,7 @@ abstract class Process
             $this->server->getPlugManager()->waitReady();
             $this->setIsReady(true);
             $this->init();
-            $this->log->info("ready");
+            $this->log->info("Ready");
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
                 Process::signal(SIGTERM, [$this, '_onProcessStop']);

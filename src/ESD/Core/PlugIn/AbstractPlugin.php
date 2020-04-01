@@ -63,7 +63,7 @@ abstract class AbstractPlugin extends Order implements PluginInterface
      */
     public function ready()
     {
-        $this->readyChannel->push("ready");
+        $this->readyChannel->push("Ready");
     }
 
     /**
