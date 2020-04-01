@@ -6,9 +6,12 @@
 
 namespace ESD\Plugins\Redis;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class RedisOneConfig
+ * @package ESD\Plugins\Redis
+ */
 class RedisOneConfig extends BaseConfig
 {
     const key = "redis";
@@ -140,10 +143,10 @@ class RedisOneConfig extends BaseConfig
             throw new RedisException("PoolMaxNumber must be greater than 1");
         }
         if (empty($this->name)) {
-            throw new RedisException("name must be set");
+            throw new RedisException("Name must be set");
         }
         if (empty($this->host)) {
-            throw new RedisException("host must be set");
+            throw new RedisException("Host must be set");
         }
     }
 

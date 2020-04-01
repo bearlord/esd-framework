@@ -6,7 +6,10 @@
 
 namespace ESD\Plugins\Redis;
 
-
+/**
+ * Trait GetRedis
+ * @package ESD\Plugins\Redis
+ */
 trait GetRedis
 {
     /**

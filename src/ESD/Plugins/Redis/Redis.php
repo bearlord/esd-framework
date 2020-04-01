@@ -6,9 +6,12 @@
 
 namespace ESD\Plugins\Redis;
 
-
 use ESD\Psr\DB\DBInterface;
 
+/**
+ * Class Redis
+ * @package ESD\Plugins\Redis
+ */
 class Redis implements DBInterface
 {
     /**

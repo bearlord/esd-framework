@@ -11,6 +11,10 @@ use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 
+/**
+ * Class RedisPlugin
+ * @package ESD\Plugins\Redis
+ */
 class RedisPlugin extends AbstractPlugin
 {
     use GetLogger;
@@ -49,7 +53,6 @@ class RedisPlugin extends AbstractPlugin
     public function beforeServerStart(Context $context)
     {
         ini_set('default_socket_timeout', '-1');
-        //所有配置合併
         foreach ($this->redisConfig->getRedisConfigs() as $config) {
             $config->merge();
         }
@@ -81,7 +84,7 @@ class RedisPlugin extends AbstractPlugin
         foreach ($this->redisConfig->getRedisConfigs() as $key => $value) {
             $redisPool = new RedisPool($value);
             $redisManyPool->addPool($redisPool);
-            $this->debug(sprintf("已添加名为 %s 的Redis连接池", $value->getName()));
+            $this->debug(sprintf("Added Redis connection pool named %s", $value->getName()));
         }
         $context->add("redisPool", $redisManyPool);
         $this->setToDIContainer(RedisManyPool::class, $redisManyPool);

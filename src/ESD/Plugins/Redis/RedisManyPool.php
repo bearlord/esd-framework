@@ -8,6 +8,10 @@ namespace ESD\Plugins\Redis;
 
 use Redis;
 
+/**
+ * Class RedisManyPool
+ * @package ESD\Plugins\Redis
+ */
 class RedisManyPool
 {
     protected $poolList = [];
