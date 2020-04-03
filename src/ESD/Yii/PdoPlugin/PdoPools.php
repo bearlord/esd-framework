@@ -1,4 +1,8 @@
 <?php
+/**
+ * ESD Yii pdo plugin
+ * @author bearlord <565364226@qq.com>
+ */
 
 namespace ESD\Yii\PdoPlugin;
 

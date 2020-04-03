@@ -1,6 +1,6 @@
 <?php
 /**
- * ESD framework
+ * ESD Yii pdo plugin
  * @author bearlord <565364226@qq.com>
  */
 
@@ -8,6 +8,10 @@ namespace ESD\Yii\PdoPlugin;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class Config
+ * @package ESD\Yii\PdoPlugin
+ */
 class Config extends BaseConfig
 {
     const key = "pdo";
@@ -277,6 +281,7 @@ class Config extends BaseConfig
      * Build config from array
      *
      * @param $array
+     * @return Config
      */
     public function buildFromArray($array)
     {
@@ -303,9 +308,7 @@ class Config extends BaseConfig
     public function getDriverName()
     {
         if (($pos = strpos($this->dsn, ':')) !== false) {
-            $driverName = strtolower(substr($this->dsn, 0, $pos));
+            return strtolower(substr($this->dsn, 0, $pos));
         }
-
-        return $driverName;
     }
 }

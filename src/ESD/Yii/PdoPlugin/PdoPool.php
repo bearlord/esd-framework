@@ -1,4 +1,8 @@
 <?php
+/**
+ * ESD Yii pdo plugin
+ * @author bearlord <565364226@qq.com>
+ */
 
 namespace ESD\Yii\PdoPlugin;
 
@@ -28,7 +32,6 @@ class PdoPool
     public function __construct(Config $config)
     {
         $this->config = $config;
-        $_config = $config->buildConfig();
 
         $this->pool = DIGet(Channel::class, [$config->getPoolMaxNumber()]);
 
@@ -39,8 +42,7 @@ class PdoPool
     }
 
     /**
-     * Connect
-     * @param Config $config
+     * @param $config
      * @return Connection
      * @throws \ESD\Yii\Db\Exception
      */
@@ -60,8 +62,7 @@ class PdoPool
     }
 
     /**
-     * @return \ESD\Yii\Db\Connection
-     * @throws \ESD\BaseServer\Exception
+     * @return mixed
      */
     public function db()
     {
@@ -80,15 +81,15 @@ class PdoPool
     /**
      * @return PdoOneConfig
      */
-    public function getconfig()
+    public function getConfig()
     {
         return $this->config;
     }
 
     /**
-     * @param PdoOneConfig $config
+     * @param Config $config
      */
-    public function setconfig($config)
+    public function setConfig($config)
     {
         $this->config = $config;
     }

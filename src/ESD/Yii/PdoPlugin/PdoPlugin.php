@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * ESD Yii pdo plugin
+ * @author bearlord <565364226@qq.com>
+ */
+
 namespace ESD\Yii\PdoPlugin;
 
 use ESD\Core\Plugins\Logger\GetLogger;
@@ -8,6 +13,10 @@ use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\PluginInterfaceManager;
 use ESD\Yii\Base\Application;
 
+/**
+ * Class PdoPlugin
+ * @package ESD\Yii\PdoPlugin
+ */
 class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
 {
     use GetLogger;
@@ -91,14 +100,14 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
 
         $configs = $this->configs->getConfigs();
         if (empty($configs)) {
-            $this->warn("没有PDO配置");
+            $this->warn("No PDO configuration");
             return false;
         }
 
         foreach ($configs as $key => $config) {
             $pool = new PdoPool($config);
             $pools->addPool($pool);
-            $this->debug(sprintf("已添加名为 %s 的 %s 连接池", $config->getName(), $config->getDriverName()));
+            $this->debug(sprintf("Added %s connection pool named %s", $config->getName(), $config->getDriverName()));
         }
 
         $context->add("PdoPool", $pools);
