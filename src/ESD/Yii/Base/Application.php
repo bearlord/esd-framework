@@ -309,7 +309,7 @@ class Application extends ServiceLocator
         } else if(!empty($cookieLanguage)) {
             $lang = $cookieLanguage;
         } else {
-            $lang = static::$app->language;
+            $lang = $this->language;
         }
 
         return $lang;
