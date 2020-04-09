@@ -29,7 +29,7 @@ trait GetTopic
     public function hasTopic($topic, $uid)
     {
         if (empty($uid)) {
-            $this->warn("uid is empty");
+            $this->warn("Uid is empty");
             return false;
         }
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class);
@@ -68,7 +68,7 @@ trait GetTopic
     public function addSub($topic, $uid)
     {
         if (empty($uid)) {
-            $this->warn("uid is empty");
+            $this->warn("Uid is empty");
             return;
         }
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
@@ -85,7 +85,7 @@ trait GetTopic
     public function removeSub($topic, $uid)
     {
         if (empty($uid)) {
-            $this->warn("uid is empty");
+            $this->warn("Uid is empty");
             return;
         }
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
@@ -101,7 +101,7 @@ trait GetTopic
     public function clearFdSub($fd)
     {
         if (empty($fd)) {
-            $this->warn("fd is empty");
+            $this->warn("Fd is empty");
             return;
         }
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
@@ -116,7 +116,7 @@ trait GetTopic
     public function clearUidSub($uid)
     {
         if (empty($uid)) {
-            $this->warn("uid is empty");
+            $this->warn("Uid is empty");
             return;
         }
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);

@@ -48,7 +48,9 @@ class Topic
      */
     private function addSubFormTable($topic, $uid)
     {
-        if (empty($uid)) return;
+        if (empty($uid)) {
+            return;
+        }
         if (!isset($this->subArr[$topic])) {
             $this->subArr[$topic] = new Set();
         }
@@ -62,8 +64,10 @@ class Topic
      */
     public function hasTopic($topic, $uid)
     {
-        $set = $this->subArr[$topic] ?? null;
-        if ($set == null) return false;
+        $set = !empty($this->subArr[$topic]) ? $this->subArr[$topic] : null;
+        if ($set == null) {
+            return false;
+        }
         return $set->contains($uid);
     }
 
@@ -91,7 +95,9 @@ class Topic
      */
     public function clearFdSub($fd)
     {
-        if (empty($fd)) return;
+        if (empty($fd)) {
+            return;
+        }
         $uid = $this->getFdUid($fd);
         $this->clearUidSub($uid);
     }
@@ -104,7 +110,9 @@ class Topic
      */
     public function clearUidSub($uid)
     {
-        if (empty($uid)) return;
+        if (empty($uid)) {
+            return;
+        }
         foreach ($this->subArr as $topic => $sub) {
             $this->removeSub($topic, $uid);
         }
@@ -118,7 +126,9 @@ class Topic
      */
     public function removeSub($topic, $uid)
     {
-        if (empty($uid)) return;
+        if (empty($uid)) {
+            return;
+        }
         if (isset($this->subArr[$topic])) {
             $this->subArr[$topic]->remove($uid);
             if ($this->subArr[$topic]->count() == 0) {
@@ -136,7 +146,7 @@ class Topic
      */
     public function delTopic($topic)
     {
-        $uidArr = $this->subArr[$topic] ?? [];
+        $uidArr = !empty($this->subArr[$topic]) ? $this->subArr[$topic] : [];
         unset($this->subArr[$topic]);
         foreach ($uidArr as $uid) {
             $this->topicTable->del($topic . $uid);
@@ -239,7 +249,9 @@ class Topic
     private function pubToUid($uid, $data, $topic)
     {
         $fd = $this->getUidFd($uid);
-        if (empty($uid)) return;
+        if (empty($uid)) {
+            return;
+        }
         $this->autoBoostSend($fd, $data, $topic);
     }
 }

@@ -52,7 +52,9 @@ class TopicPlugin extends AbstractPlugin
     public function __construct(?TopicConfig $topicConfig = null)
     {
         parent::__construct();
-        if ($topicConfig == null) $topicConfig = new TopicConfig();
+        if ($topicConfig == null) {
+            $topicConfig = new TopicConfig();
+        }
         $this->topicConfig = $topicConfig;
         $this->atAfter(UidPlugin::class);
     }

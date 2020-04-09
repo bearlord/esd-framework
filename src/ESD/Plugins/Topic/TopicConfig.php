@@ -24,7 +24,7 @@ class TopicConfig extends BaseConfig
      */
     protected $topicMaxLength = 256;
     /**
-     * 默认在helper进程，可设置其他名字，将新建进程
+     * In the helper process by default, other names can be set, and a new process will be created
      * @var string
      */
     protected $processName = "helper";
