@@ -47,7 +47,15 @@ class Application extends ServiceLocator
      */
     public $sourceLanguage = 'en-US';
 
+    /**
+     * @var string Default time zone
+     */
     public $timeZone = 'Asia/Shanghai';
+
+    /**
+     * @var string Cookie validation key
+     */
+    public $cookieValidationKey = 'esd-yii';
 
     /**
      * @var string the root directory of the application.

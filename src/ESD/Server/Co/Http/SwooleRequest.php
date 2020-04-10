@@ -38,7 +38,8 @@ class SwooleRequest extends Request
 
         $this->files = $this->swooleRequest->files ?? [];
         $this->fd = $this->swooleRequest->fd;
-        $this->streamId = isset($this->swooleRequest->streamId) ? $this->swooleRequest->streamId : 0;
+
+        $this->streamId = property_exists($this->swooleRequest, "streamId") ? $this->swooleRequest->streamId : 0;
 
         $this->stream = new HttpStream($this->swooleRequest->rawContent());
 
