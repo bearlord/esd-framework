@@ -19,13 +19,12 @@ class SwooleRequest extends Request
     protected $swooleRequest;
 
     /**
-     * 加载
      * @param null $realObject
      * @throws Exception
      */
     public function load($realObject = null)
     {
-        if (! $realObject instanceof \Swoole\Http\Request) {
+        if (!$realObject instanceof \Swoole\Http\Request) {
             throw new Exception("object must be instance of Swoole\\Request");
         }
         $this->swooleRequest = $realObject;
@@ -39,19 +38,19 @@ class SwooleRequest extends Request
 
         $this->files = $this->swooleRequest->files ?? [];
         $this->fd = $this->swooleRequest->fd;
-        $this->streamId = $this->swooleRequest->streamId;
+        $this->streamId = isset($this->swooleRequest->streamId) ? $this->swooleRequest->streamId : 0;
 
         $this->stream = new HttpStream($this->swooleRequest->rawContent());
 
         $this->method = strtoupper($this->server[self::SERVER_REQUEST_METHOD]);
-        $queryString =  '';
+        $queryString = '';
         if (!empty($this->queryParams)) {
-            $queryString = "?".http_build_query($this->queryParams);
+            $queryString = "?" . http_build_query($this->queryParams);
         }
         $this->uri = new Uri(sprintf("http://%s%s%s",
-            $this->headers['host'][0],
-            $this->server[self::SERVER_REQUEST_URI],
-            $queryString)
+                $this->headers['host'][0],
+                $this->server[self::SERVER_REQUEST_URI],
+                $queryString)
         );
     }
 }
