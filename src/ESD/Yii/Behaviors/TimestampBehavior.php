@@ -9,6 +9,7 @@ namespace ESD\Yii\Behaviors;
 
 use ESD\Yii\Base\InvalidCallException;
 use ESD\Yii\Db\ActiveRecord;
+use ESD\Yii\Db\BaseActiveRecord;
 
 /**
  * TimestampBehavior automatically fills the specified attributes with the current timestamp.
