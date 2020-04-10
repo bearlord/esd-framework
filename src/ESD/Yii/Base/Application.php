@@ -295,6 +295,16 @@ class Application extends ServiceLocator
         return $session;
     }
 
+    /**
+     * Returns the security component.
+     * @return Security the security application component.
+     * @throws InvalidConfigException
+     */
+    public function getSecurity()
+    {
+        return $this->get('security');
+    }
+
 
     /**
      * Returns the dynamic language
