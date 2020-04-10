@@ -261,7 +261,8 @@ class EasyRoutePlugin extends AbstractPlugin
             $type = strtoupper($routeRole->getType());
             $port = Server::$instance->getPortManager()->getPortConfigs()[$portName]->getPort();
             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                Server::$instance->getLog()->info("Mapping $port:{$type} {$routeRole->getRoute()} to $reflectionClass->name::$reflectionMethod->name");
+                $info = sprintf("Mapping %s:%-7s %s to %s::%s", $port, $type, $routeRole->getRoute(), $reflectionClass->name, $reflectionMethod->name);
+                Server::$instance->getLog()->info($info);
             }
             $r->addRoute("$port:{$type}", $routeRole->getRoute(), [$reflectionClass, $reflectionMethod]);
         }
