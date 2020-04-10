@@ -541,12 +541,8 @@ class User extends Component
         if ($value !== null) {
             $data = json_decode($value, true);
             if (is_array($data) && isset($data[2])) {
-                $cookie = Yii::createObject(array_merge($this->identityCookie, [
-                    'class' => 'yii\web\Cookie',
-                    'value' => $value,
-                    'expire' => time() + (int)$data[2],
-                ]));
-                Yii::$app->getResponse()->getCookies()->add($cookie);
+                $cookie = new Cookie($this->identityCookie['name'], $value, time() + (int)$data[2]);
+                Yii::$app->getResponse()->withCookie($cookie);
             }
         }
     }
@@ -558,6 +554,7 @@ class User extends Component
      * information in the cookie.
      * @param IdentityInterface $identity
      * @param int $duration number of seconds that the user can remain in logged-in status.
+     * @throws InvalidConfigException
      * @see loginByCookie()
      */
     protected function sendIdentityCookie($identity, $duration)
