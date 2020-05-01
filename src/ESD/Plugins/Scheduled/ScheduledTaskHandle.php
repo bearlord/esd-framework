@@ -30,8 +30,7 @@ class ScheduledTaskHandle
     /**
      * 执行调度
      * @param ScheduledTask $scheduledTask
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws \Exception
      */
     public function execute(ScheduledTask $scheduledTask)
     {
