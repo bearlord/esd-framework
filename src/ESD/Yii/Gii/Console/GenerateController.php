@@ -27,7 +27,20 @@ class GenerateController extends Controller
         /** @var \ESD\Yii\Gii\Generator | \ESD\Yii\Gii\Generators\Model\Generator $generatorObject */
         $this->generator = Yii::createObject(array_merge($generator, $options));
 
-        $this->generateCode();
+        if ($this->generator->validate()) {
+            $this->generateCode();
+        } else {
+            $this->displayValidationErrors();
+        }
+    }
+
+    protected function displayValidationErrors()
+    {
+        $this->stdout("Code not generated. Please fix the following errors:\n\n", Console::FG_RED);
+        foreach ($this->generator->errors as $attribute => $errors) {
+            echo ' - ' . $this->ansiFormat($attribute, Console::FG_CYAN) . ': ' . implode('; ', $errors) . "\n";
+        }
+        echo "\n";
     }
 
     public function generateCode()
@@ -85,7 +98,7 @@ class GenerateController extends Controller
             return;
         }
 
-        if ($this->generator->save($files, (array) $answers, $results)) {
+        if ($this->generator->save($files, (array)$answers, $results)) {
             $this->stdout("\nFiles were generated successfully!\n", Console::FG_GREEN);
         } else {
             $this->stdout("\nSome errors occurred while generating the files.", Console::FG_RED);

@@ -769,12 +769,16 @@ class Generator extends \ESD\Yii\Gii\Generator
      */
     public function validateDb()
     {
+        return true;
+        /*
         if (!Yii::$app->has($this->db)) {
             $this->addError('db', 'There is no application component named "db".');
         } elseif (!Yii::$app->get($this->db) instanceof Connection) {
             $this->addError('db', 'The "db" application component must be a DB connection instance.');
         }
+        */
     }
+
 
     /**
      * Validates the namespace.
@@ -934,6 +938,7 @@ class Generator extends \ESD\Yii\Gii\Generator
         } else {
             $this->classNames[$fullTableName] = Inflector::id2camel($schemaName.$className, '_');
         }
+
 
         if ($this->singularize) {
             $this->classNames[$fullTableName] = Inflector::singularize($this->classNames[$fullTableName]);

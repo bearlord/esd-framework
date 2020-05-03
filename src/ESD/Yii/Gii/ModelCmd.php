@@ -41,7 +41,8 @@ class ModelCmd extends Command
         $this->addOption('tableName', null, InputOption::VALUE_REQUIRED, 'table name?', '');
         $this->addOption('namespace', 'nc', InputOption::VALUE_OPTIONAL, 'namespace?', 'App\Model');
         $this->addOption('modelClass', 'mc', InputOption::VALUE_OPTIONAL, 'model class?', '');
-        $this->addOption('generateLabelsFromComments', 'lc', InputOption::VALUE_OPTIONAL, 'Generate labels from comments?', true);
+        $this->addOption('standardizeCapitals', null, InputOption::VALUE_OPTIONAL, 'standardize capitals?', 0);
+        $this->addOption('singularize', null, InputOption::VALUE_OPTIONAL, 'singularize?', 0);
     }
 
     /**
@@ -59,21 +60,42 @@ class ModelCmd extends Command
         $tableName = $input->getOption("tableName");
         $namespace = $input->getOption('namespace');
         $modelClass = $input->getOption('modelClass');
-        $generateLabelsFromComments = $input->getOption('generateLabelsFromComments');
+        $standardizeCapitals = $input->getOption('standardizeCapitals');
+        $singularize = $input->getOption('singularize');
+
+        if (strcmp($standardizeCapitals, "true") === 0) {
+            $standardizeCapitals = true;
+        } else {
+            $standardizeCapitals = false;
+        }
+
+        if (strcmp($singularize, "true") === 0) {
+            $singularize = true;
+        } else {
+            $singularize = false;
+        }
+
+        $generateLabelsFromComments = true;
+        $useTablePrefix = true;
 
         $tablePrefix = Server::$instance->getConfigContext()->get("esd-yii.db.default.tablePrefix");
 
+        /*
         if (empty($modelClass)) {
             $modelClass = ltrim($tableName, $tablePrefix);
             $modelClass = Inflector::camelize($modelClass);
         }
+        */
 
         $controller = new GenerateController();
         $controller->runAction("model", [
             'tableName' => $tableName,
             'ns' => $namespace,
             'modelClass' => $modelClass,
-            'generateLabelsFromComments' => $generateLabelsFromComments
+            'generateLabelsFromComments' => $generateLabelsFromComments,
+            'useTablePrefix' => $useTablePrefix,
+            'standardizeCapitals' => $standardizeCapitals,
+            'singularize' => $singularize,
         ]);
         return ConsolePlugin::SUCCESS_EXIT;
 
