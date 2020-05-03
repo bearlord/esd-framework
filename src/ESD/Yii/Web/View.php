@@ -41,7 +41,7 @@ use ESD\Yii\Helpers\Html;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class View extends \yii\base\View
+class View extends \ESD\Yii\Base\View
 {
     /**
      * @event Event an event that is triggered by [[beginBody()]].

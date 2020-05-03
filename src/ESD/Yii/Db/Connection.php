@@ -1004,7 +1004,6 @@ class Connection extends Component
      */
     public function getMasterPdo()
     {
-//        $this->open();
         return $this->pdo;
     }
 

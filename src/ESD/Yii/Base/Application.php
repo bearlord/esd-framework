@@ -98,7 +98,7 @@ class Application extends ServiceLocator
     {
         $config = Server::$instance->getConfigContext()->get('esd-yii');
 
-        $this->setBasePath(Server::$instance->getServerConfig()->getRootDir());
+        $this->setBasePath(Server::$instance->getServerConfig()->getSrcDir());
 
         // merge core components with custom components
         $newConfig = $config;
@@ -146,6 +146,8 @@ class Application extends ServiceLocator
         } else {
             throw new InvalidParamException("The directory does not exist: $path");
         }
+        Yii::setAlias('@app', $this->getBasePath());
+        Yii::setAlias('@App', $this->getBasePath());
     }
 
     private $_runtimePath;
@@ -210,17 +212,39 @@ class Application extends ServiceLocator
         }
 
         $db = getContextValue($contextKey);
+
         if ($db == null) {
             /** @var PdoPools $pdoPools */
             $pdoPools = getDeepContextValueByClassName(PdoPools::class);
-            $pool = $pdoPools->getPool($poolKey);
-            if ($pool == null) {
-                throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+            if (!empty($pdoPools)) {
+                $pool = $pdoPools->getPool($poolKey);
+                if ($pool == null) {
+                    throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+                }
+                return $pool->db();
+            } else {
+                return $this->getDbOnce();
             }
-            return $pool->db();
+
         } else {
             return $db;
         }
+    }
+
+    public function getDbOnce()
+    {
+        $config = Server::$instance->getConfigContext()->get("esd-yii.db.default");
+        $db = new Connection();
+        $db->dsn = $config['dsn'];
+        $db->username = $config['username'];
+        $db->password = $config['password'];
+        $db->charset = $config['charset'] ?? 'utf8';
+        $db->tablePrefix = $config['tablePrefix'];
+        $db->enableSchemaCache = $config['enableSchemaCache'];
+        $db->schemaCacheDuration = $config['schemaCacheDuration'];
+        $db->schemaCache = $config['schemaCache'];
+        $db->open();
+        return $db;
     }
 
     /**

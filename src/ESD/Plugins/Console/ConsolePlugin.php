@@ -9,11 +9,11 @@ namespace ESD\Plugins\Console;
 use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Plugins\Console\Command\EntityCmd;
-use ESD\Plugins\Console\Command\ModelCmd;
 use ESD\Plugins\Console\Command\ReloadCmd;
 use ESD\Plugins\Console\Command\RestartCmd;
 use ESD\Plugins\Console\Command\StartCmd;
 use ESD\Plugins\Console\Command\StopCmd;
+use ESD\Yii\Gii\ModelCmd;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -64,6 +64,8 @@ class ConsolePlugin extends AbstractPlugin
         $this->config = $config;
         $this->application = new Application("ESD-YII");
         $this->application->setAutoExit(false);
+
+        \ESD\Yii\Base\Application::instance();
     }
 
     /**
@@ -83,7 +85,6 @@ class ConsolePlugin extends AbstractPlugin
         $this->config->addCmdClass(RestartCmd::class);
         $this->config->addCmdClass(StartCmd::class);
         $this->config->addCmdClass(StopCmd::class);
-//        $this->config->addCmdClass(EntityCmd::class);
         $this->config->addCmdClass(ModelCmd::class);
         $this->config->merge();
         $cmds = [];

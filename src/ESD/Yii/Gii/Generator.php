@@ -12,7 +12,7 @@ use ReflectionClass;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Base\Model;
 use ESD\Yii\Helpers\VarDumper;
-use  yii\web\View;
+use ESD\Yii\Web\View;
 
 /**
  * This is the base class for all generator classes.
