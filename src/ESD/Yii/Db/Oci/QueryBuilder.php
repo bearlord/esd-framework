@@ -58,8 +58,8 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     protected function defaultExpressionBuilders()
     {
         return array_merge(parent::defaultExpressionBuilders(), [
-            'yii\db\conditions\InCondition' => 'yii\db\oci\conditions\InConditionBuilder',
-            'yii\db\conditions\LikeCondition' => 'yii\db\oci\conditions\LikeConditionBuilder',
+            'ESD\Yii\Db\Conditions\InCondition' => 'ESD\Yii\Db\Oci\Conditions\InConditionBuilder',
+            'ESD\Yii\Db\Conditions\LikeCondition' => 'ESD\Yii\Db\Oci\conditions\LikeConditionBuilder',
         ]);
     }
 

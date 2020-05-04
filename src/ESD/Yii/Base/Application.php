@@ -340,15 +340,17 @@ class Application extends ServiceLocator
         /** @var Request $request */
         $request = getDeepContextValueByClassName(Request::class);
 
-        /** @var string $inputLanguage */
-        $inputLanguage = $request->input('language');
-
-        /** @var string $cookieLanguage */
-        $cookieLanguage = $request->cookie('language');
+        $inputLanguage = $cookieLanguage = '';
+        if (!empty($request)) {
+            /** @var string $inputLanguage */
+            $inputLanguage = $request->input('language');
+            /** @var string $cookieLanguage */
+            $cookieLanguage = $request->cookie('language');
+        }
 
         if (!empty($inputLanguage)) {
             $lang = $inputLanguage;
-        } else if(!empty($cookieLanguage)) {
+        } else if (!empty($cookieLanguage)) {
             $lang = $cookieLanguage;
         } else {
             $lang = $this->language;

@@ -55,7 +55,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     protected function defaultExpressionBuilders()
     {
         return array_merge(parent::defaultExpressionBuilders(), [
-            'yii\db\conditions\LikeCondition' => 'yii\db\cubrid\conditions\LikeConditionBuilder',
+            'ESD\Yii\Db\Conditions\LikeCondition' => 'ESD\Yii\Db\Cubrid\Conditions\LikeConditionBuilder',
         ]);
     }
 
