@@ -256,11 +256,10 @@ trait MessageTrait
     {
         $this->headerNames = $this->headers = [];
         foreach ($headers as $header => $value) {
-            if (!is_array($value)) {
-                $value = [$value];
+            if (is_array($value)) {
+                $value = $this->trimHeaderValues($value);
             }
 
-            $value = $this->trimHeaderValues($value);
             $normalized = strtolower($header);
             if (isset($this->headerNames[$normalized])) {
                 $header = $this->headerNames[$normalized];
