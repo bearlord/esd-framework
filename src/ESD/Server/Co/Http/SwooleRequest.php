@@ -49,7 +49,7 @@ class SwooleRequest extends Request
             $queryString = "?" . http_build_query($this->queryParams);
         }
         $this->uri = new Uri(sprintf("http://%s%s%s",
-                $this->headers['host'],
+                $this->headers['host'][0],
                 $this->server[self::SERVER_REQUEST_URI],
                 $queryString)
         );
