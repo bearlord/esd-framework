@@ -180,9 +180,7 @@ class Cache extends \ESD\Yii\Caching\Cache
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
         }
 
-        $expire = (int) ($expire * 1000);
-
-        return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire]);
+        return (bool) $this->redis->executeCommand('SET', [$key, $value, ['EX' => $expire]]);
     }
 
     /**
@@ -226,11 +224,9 @@ class Cache extends \ESD\Yii\Caching\Cache
     protected function addValue($key, $value, $expire)
     {
         if ($expire == 0) {
-            return (bool) $this->redis->executeCommand('SET', [$key, $value, 'NX']);
+            return (bool) $this->redis->executeCommand('SET', [$key, $value]);
         } else {
-            $expire = (int) ($expire * 1000);
-
-            return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire, 'NX']);
+            return (bool) $this->redis->executeCommand('SET', [$key, $value, ['NX', 'EX' => $expire]]);
         }
     }
 
