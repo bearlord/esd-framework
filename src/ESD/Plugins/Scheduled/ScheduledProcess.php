@@ -13,24 +13,38 @@ class ScheduledProcess extends Process
 {
 
     /**
-     * 在onProcessStart之前，用于初始化成员变量
-     * @return mixed
+     * @inheritDoc
+     * @return mixed|void
      */
     public function init()
     {
 
     }
 
+    /**
+     * @inheritDoc
+     * @return mixed|void
+     */
     public function onProcessStart()
     {
 
     }
 
+    /**
+     * @inheritDoc
+     * @return mixed|void
+     */
     public function onProcessStop()
     {
 
     }
 
+    /**
+     * @inheritDoc
+     * @param Message $message
+     * @param Process $fromProcess
+     * @return mixed|void
+     */
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
 

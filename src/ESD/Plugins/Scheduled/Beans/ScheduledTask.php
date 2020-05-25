@@ -54,7 +54,6 @@ class ScheduledTask extends BaseConfig
      * @param $className
      * @param $functionName
      * @param string $processGroup
-     * @throws \ReflectionException
      */
     public function __construct($name, $expression, $className, $functionName, $processGroup = ScheduledTask::GroupName)
     {

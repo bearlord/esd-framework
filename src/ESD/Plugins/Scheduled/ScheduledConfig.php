@@ -22,13 +22,13 @@ class ScheduledConfig extends BaseConfig
     const key = "scheduled";
 
     /**
-     * 最小间隔时间
+     * Minimum interval
      * @var int
      */
     protected $minIntervalTime;
 
     /**
-     * 任务进程数量
+     * Task processes count
      * @var int
      */
     protected $taskProcessCount = 1;
@@ -60,18 +60,17 @@ class ScheduledConfig extends BaseConfig
     }
 
     /**
-     * 添加调度
+     * Add Scheduled
      * @param ScheduledTask $scheduledTask
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws \Exception
      */
     public function addScheduled(ScheduledTask $scheduledTask)
     {
         if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::processName) {
-            //调度进程可以直接添加
+            //The scheduled process can directly add tasks
             $this->scheduledTasks[$scheduledTask->getName()] = $scheduledTask;
         } else {
-            //非调度进程需要动态添加，借助于Event
+            //Non-scheduled processes need to be added dynamically, with the help of Event
             Server::$instance->getEventDispatcher()->dispatchProcessEvent(
                 new ScheduledAddEvent($scheduledTask),
                 Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::processName)
@@ -80,10 +79,9 @@ class ScheduledConfig extends BaseConfig
     }
 
     /**
-     * 移除调度
+     * Remove scheduled
      * @param String $scheduledTaskName
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws \Exception
      */
     public function removeScheduled(String $scheduledTaskName)
     {

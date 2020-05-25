@@ -18,17 +18,16 @@ use ESD\Plugins\Scheduled\Beans\ScheduledTask;
 class Scheduled extends Annotation
 {
     /**
-     * 名称
      * @var string
      */
     public $name;
+
     /**
-     * corn语法
      * @var string
      */
     public $cron;
+
     /**
-     * 进程组
      * @var string
      */
     public $processGroup = ScheduledTask::GroupName;

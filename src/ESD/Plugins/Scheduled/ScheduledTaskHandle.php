@@ -16,7 +16,7 @@ class ScheduledTaskHandle
 
     public function __construct()
     {
-        //监听任务事件的执行
+        //Listen the execution of task events
         goWithContext(function () {
             $call = Server::$instance->getEventDispatcher()->listen(ScheduledExecuteEvent::ScheduledExecuteEvent);
             $call->call(function (ScheduledExecuteEvent $event){
@@ -28,7 +28,8 @@ class ScheduledTaskHandle
     }
 
     /**
-     * 执行调度
+     * Execute scheduled task
+     *
      * @param ScheduledTask $scheduledTask
      * @throws \Exception
      */
@@ -37,6 +38,6 @@ class ScheduledTaskHandle
         $className = $scheduledTask->getClassName();
         $taskInstance = Server::$instance->getContainer()->get($className);
         call_user_func([$taskInstance, $scheduledTask->getFunctionName()]);
-        $this->debug("执行{$scheduledTask->getName()}任务");
+        $this->debug(sprintf("Execute scheduled task: %s", $scheduledTask->getName()));
     }
 }

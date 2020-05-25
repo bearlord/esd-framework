@@ -32,7 +32,7 @@ class ScheduledPlugin extends AbstractPlugin
     private $scheduledConfig;
 
     /**
-     * 进程任务调度次数
+     * Process scheduled count
      * @var array
      */
     private $processScheduledCount = [];
@@ -56,6 +56,7 @@ class ScheduledPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
      * @return mixed|void
      * @throws \DI\DependencyException
@@ -70,7 +71,6 @@ class ScheduledPlugin extends AbstractPlugin
     }
 
     /**
-     * 获取插件名字
      * @return string
      */
     public function getName(): string
@@ -79,7 +79,7 @@ class ScheduledPlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * Before server start
      * @param Context $context
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
@@ -88,17 +88,18 @@ class ScheduledPlugin extends AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
-        //添加一个helper进程
+        //Add helper process
         $this->scheduledConfig->merge();
         Server::$instance->addProcess(self::processName, HelperScheduledProcess::class, self::processGroupName);
-        //添加任务进程
+        //Add scheduled process
         for ($i = 0; $i < $this->scheduledConfig->getTaskProcessCount(); $i++) {
             Server::$instance->addProcess("scheduled-$i", ScheduledProcess::class, ScheduledTask::GroupName);
         }
     }
 
     /**
-     * 在进程启动前
+     * Before process start
+     *
      * @param Context $context
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
@@ -107,9 +108,10 @@ class ScheduledPlugin extends AbstractPlugin
     public function beforeProcessStart(Context $context)
     {
         new ScheduledTaskHandle();
-        //Help进程
+
+        //Help process
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::processName) {
-            //查看注解
+            //Scan annotation
             $scanClass = Server::$instance->getContainer()->get(ScanClass::class);
             $reflectionMethods = $scanClass->findMethodsByAnn(Scheduled::class);
             foreach ($reflectionMethods as $reflectionMethod) {
@@ -120,7 +122,7 @@ class ScheduledPlugin extends AbstractPlugin
                         $scheduled->name = $reflectionClass->getName() . "::" . $reflectionMethod->getName();
                     }
                     if (empty($scheduled->cron)) {
-                        $this->warn("{$scheduled->name}任务没有设置cron，已忽略");
+                        $this->warn(sprintf("The %s task is not set to cron and has been ignored", $scheduled->name));
                         continue;
                     }
                     $scheduledTask = new ScheduledTask(
@@ -133,11 +135,12 @@ class ScheduledPlugin extends AbstractPlugin
                 }
             }
 
-            //初始化计数器
+            //Initialize the counter
             foreach (Server::$instance->getProcessManager()->getProcesses() as $process) {
                 $this->processScheduledCount[$process->getProcessId()] = 0;
             }
-            //监听动态添加/移除的任务事件
+
+            //Listen to dynamically added/removed task events
             goWithContext(function () {
                 $call = Server::$instance->getEventDispatcher()->listen(ScheduledAddEvent::ScheduledAddEvent);
                 Server::$instance->getEventDispatcher()->listen(ScheduledRemoveEvent::ScheduledRemoveEvent, $call);
@@ -149,11 +152,12 @@ class ScheduledPlugin extends AbstractPlugin
                     }
                 });
             });
-            //添加定时器调度
+
+            //Add timer scheduled task
             addTimerTick($this->scheduledConfig->getMinIntervalTime(), function () {
                 foreach ($this->scheduledConfig->getScheduledTasks() as $scheduledTask) {
                     if ($scheduledTask->getCron()->isDue()) {
-                        //按执行次数从小到大排列
+                        //Sort by the number of executions from small to large
                         asort($this->processScheduledCount);
                         $process = null;
                         foreach ($this->processScheduledCount as $id => $value) {
@@ -171,7 +175,7 @@ class ScheduledPlugin extends AbstractPlugin
                             $this->processScheduledCount[$process->getProcessId()]++;
                             Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ScheduledExecuteEvent($scheduledTask), $process);
                         } else {
-                            $this->warn("{$scheduledTask->getName()}任务没有找到可以调度的进程");
+                            $this->warn(sprintf("The %s task did not find a scheduled process", $scheduledTask->getName()));
                         }
                     }
                 }
