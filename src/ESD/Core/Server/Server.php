@@ -384,11 +384,8 @@ abstract class Server
      */
     public function _onWorkerExit($serv, int $worker_id)
     {
+        \Swoole\Timer::clearAll();
         return true;
-        /*
-        $process = $this->processManager->getProcessFromId($worker_id);
-        $process->_onProcessStop();
-        */
     }
 
     /**
