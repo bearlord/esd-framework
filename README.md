@@ -58,7 +58,7 @@ SQL Server默认配置，SELECT * FROM table_a，数据表2条测试数据。
 
 
 
-QPS：大约6000。
+QPS：大约6000。截图见 images/help_001.png、images/help_002.png
 
   ![](E:\AMPServer\Swoole\esd-framework\images\help_001.png)
 
@@ -73,4 +73,3 @@ QPS：大约6000。
 原有的ESD坑也不多。
 
 笔者菜鸟，对提出问题，也未必能解决。本仓库主要用于维护已上线的老旧项目，以及新开发私人项目。不特意推广，怕被骂娘。
-
