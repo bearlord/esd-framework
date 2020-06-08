@@ -780,7 +780,7 @@ class PortConfig extends BaseConfig
             !$this->isOpenEofCheck() &&
             !$this->isOpenEofSplit() &&
             !$this->isOpenLengthCheck()) {
-            throw new ConfigException("PortConfig中没有指定端口协议");
+            throw new ConfigException("No port protocol specified");
         }
         $count = 0;
         if ($this->isOpenHttpProtocol()) {

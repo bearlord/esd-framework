@@ -103,7 +103,6 @@ class ProcessManager
      *
      * @return array
      * @throws \ESD\Core\Plugins\Config\ConfigException
-     * @throws \ReflectionException
      */
     public function getCustomProcessConfigs(): array
     {
@@ -142,7 +141,6 @@ class ProcessManager
      * Create process
      *
      * @throws \ESD\Core\Plugins\Config\ConfigException
-     * @throws \ReflectionException
      */
     public function createProcess()
     {
@@ -303,7 +301,7 @@ class ProcessManager
     {
         $group = $this->getProcessGroup($groupName);
         if ($group == null) {
-            throw new \Exception("没有$groupName 进程组");
+            throw new \Exception(sprintf("No %s process group", $groupName));
         }
         $group->sendMessageToGroup($message);
     }
