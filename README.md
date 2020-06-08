@@ -1,7 +1,7 @@
 # ESD Framework
 ESD Framework 克隆自
 
-[EasySwooleDistributed]: https://github.com/esd-projects/esd-server	"EasySwooleDistributed"
+[EasySwooleDistributed](https://github.com/esd-projects/esd-server)
 
 原仓库地址：https://github.com/esd-projects/esd-server
 
