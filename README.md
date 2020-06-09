@@ -23,7 +23,7 @@ ESD协议：Apache License 2.0，YII2协议：BSD 3-Clause。
 
 ## 帮助文档：
 
-保留了ESD原有的用法，文档地址：https://www.kancloud.cn/tmtbe/goswoole/1067764。
+保留了ESD原有的用法，文档地址：https://www.kancloud.cn/tmtbe/goswoole/1067764 。
 
 
 
@@ -50,25 +50,22 @@ php ./vendor/bearlord/esd-framework/src/ESD/Install/Install.php
 
 ## 性能测试：
 
-ThinkPad P53笔记本，I7 9850H，电源最大性能，频率保持 4.0GHz 左右。
+ThinkPad P53笔记本，电源最大性能，频率保持 4.0GHz 左右。
 
 Vmware 4核心 8G内存。
 
-SQL Server默认配置，SELECT * FROM table_a。
+- SQL Server默认配置，SELECT * FROM table_a，RPS：6000；TPS:  无实时图表工具，无记录。
+- PostgreSQl默认配置，SELECT * FROM table_a，RPS：4000，TPS: 12500。
 
-
-
-RPS：6000。截图见 images/help_001.png、images/help_002.png
+截图见 images/help_001.png、images/help_002.png
 
   ![](E:\AMPServer\Swoole\esd-framework\images\help_001.png)
 
 ![](E:\AMPServer\Swoole\esd-framework\images\help_002.png)
 
 
-PostgreSQL默认配置，SELECT * FROM table_a。
-链接池125个链接。
 
-RPS: 4000，TPS: 12500。
+
 
 ## 关于问题：
 
