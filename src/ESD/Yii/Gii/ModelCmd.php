@@ -36,7 +36,7 @@ class ModelCmd extends Command
      */
     protected function configure()
     {
-        $this->setName('model')->setDescription("model generator");
+        $this->setName('model')->setDescription("Model generator");
 
         $this->addOption('tableName', null, InputOption::VALUE_REQUIRED, 'table name?', '');
         $this->addOption('namespace', 'nc', InputOption::VALUE_OPTIONAL, 'namespace?', 'App\Model');
