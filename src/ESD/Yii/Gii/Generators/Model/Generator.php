@@ -47,6 +47,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     public $queryClass;
     public $queryBaseClass = 'ESD\Yii\Db\ActiveQuery';
 
+    public static $dbInstance;
 
     /**
      * {@inheritdoc}
@@ -966,7 +967,12 @@ class Generator extends \ESD\Yii\Gii\Generator
      */
     protected function getDbConnection()
     {
-        return Yii::$app->getDb();
+        if (self::$dbInstance) {
+            return self::$dbInstance;
+        }
+
+        self::$dbInstance = Yii::$app->getDb();
+        return self::$dbInstance;
     }
 
     /**

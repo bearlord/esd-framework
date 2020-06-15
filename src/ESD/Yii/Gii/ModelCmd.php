@@ -78,9 +78,9 @@ class ModelCmd extends Command
         $generateLabelsFromComments = true;
         $useTablePrefix = true;
 
-        $tablePrefix = Server::$instance->getConfigContext()->get("esd-yii.db.default.tablePrefix");
-
         /*
+         *
+        $tablePrefix = Server::$instance->getConfigContext()->get("esd-yii.db.default.tablePrefix");
         if (empty($modelClass)) {
             $modelClass = ltrim($tableName, $tablePrefix);
             $modelClass = Inflector::camelize($modelClass);
