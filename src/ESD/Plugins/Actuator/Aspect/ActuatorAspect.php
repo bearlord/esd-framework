@@ -59,12 +59,12 @@ class ActuatorAspect extends OrderAspect
             case Dispatcher::METHOD_NOT_ALLOWED:
                 $response->withStatus(405);
                 $response->withHeader("Content-Type", "text/html; charset=utf-8");
-                $response->withContent("不支持的请求方法");
+                $response->withContent("The request method is not supported");
                 return null;
 
-            case Dispatcher::FOUND: // 找到对应的方法
+            case Dispatcher::FOUND:
                 $className = $routeInfo[1];
-                $vars = $routeInfo[2]; // 获取请求参数
+                $vars = $routeInfo[2];
                 $response->withHeader("Content-Type", "application/json; charset=utf-8");
                 $response->withContent(call_user_func([$this->actuatorController, $className], $vars));
                 return null;

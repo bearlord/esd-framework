@@ -17,5 +17,5 @@ class AnyMapping extends RequestMapping
     /**
      * @var array
      */
-    public $method = ["get","post","delete","put","options","head","trace","connect"];
+    public $method = ["get", "post", "delete", "put", "options", "head", "trace", "connect"];
 }

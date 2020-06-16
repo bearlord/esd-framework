@@ -24,6 +24,6 @@ class NormalErrorController extends EasyController
      */
     protected function defaultMethod(?string $methodName)
     {
-        throw new RouteException("404 method $methodName can not find");
+        throw new RouteException("404 method $methodName cannot be found");
     }
 }
