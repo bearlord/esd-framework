@@ -12,6 +12,7 @@ use ESD\Plugins\Console\Command\EntityCmd;
 use ESD\Plugins\Console\Command\ReloadCmd;
 use ESD\Plugins\Console\Command\RestartCmd;
 use ESD\Plugins\Console\Command\StartCmd;
+use ESD\Plugins\Console\Command\StatusCmd;
 use ESD\Plugins\Console\Command\StopCmd;
 use ESD\Yii\Gii\ModelCmd;
 use Symfony\Component\Console\Application;
@@ -84,6 +85,7 @@ class ConsolePlugin extends AbstractPlugin
         $this->config->addCmdClass(ReloadCmd::class);
         $this->config->addCmdClass(RestartCmd::class);
         $this->config->addCmdClass(StartCmd::class);
+        $this->config->addCmdClass(StatusCmd::class);
         $this->config->addCmdClass(StopCmd::class);
         $this->config->addCmdClass(ModelCmd::class);
         $this->config->merge();

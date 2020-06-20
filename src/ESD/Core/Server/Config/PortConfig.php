@@ -179,6 +179,12 @@ class PortConfig extends BaseConfig
     protected $packageLengthOffset;
 
     /**
+     * SSL key file
+     * @var string
+     */
+    protected $sslKeyFile;
+
+    /**
      * SSL cert file
      * @var string
      */
@@ -458,6 +464,22 @@ class PortConfig extends BaseConfig
     public function setPackageLengthOffset(int $packageLengthOffset)
     {
         $this->packageLengthOffset = $packageLengthOffset;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSslKeyFile()
+    {
+        return $this->sslKeyFile;
+    }
+
+    /**
+     * @param string $sslKeyFile
+     */
+    public function setSslKeyFile($sslKeyFile)
+    {
+        $this->sslKeyFile = $sslKeyFile;
     }
 
     /**
@@ -753,7 +775,9 @@ class PortConfig extends BaseConfig
         ConfigException::AssertNull($this, "port", $this->getPort());
         ConfigException::AssertNull($this, "sockType", $this->getSockType());
         if ($this->isEnableSsl()) {
+            ConfigException::AssertNull($this, "sslKeyFile", $this->getSslKeyFile());
             ConfigException::AssertNull($this, "sslCertFile", $this->getSslCertFile());
+            $build['ssl_key_file'] = $this->getSslKeyFile();
             $build['ssl_cert_file'] = $this->getSslCertFile();
             if ($this->getSslCiphers() != null) {
                 $build['ssl_ciphers'] = $this->getSslCiphers();
@@ -774,6 +798,7 @@ class PortConfig extends BaseConfig
             $build['ssl_verify_peer'] = $this->isSslVerifyPeer();
             $build['ssl_client_cert_file'] = $this->getSSlClientCertFile();
         }
+
         if (!$this->isOpenHttpProtocol() &&
             !$this->isOpenWebsocketProtocol() &&
             !$this->isOpenMqttProtocol() &&
@@ -831,7 +856,7 @@ class PortConfig extends BaseConfig
     }
 
     /**
-     * 获取类型名称
+     * Get type name
      */
     public function getTypeName()
     {
@@ -906,7 +931,7 @@ class PortConfig extends BaseConfig
     }
 
     /**
-     * 获取基础类型
+     * Get base Type
      * @return string
      * @throws ConfigException
      */

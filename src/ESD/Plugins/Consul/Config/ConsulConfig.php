@@ -99,19 +99,19 @@ class ConsulConfig extends BaseConfig
         if (empty($this->getServiceConfigs())) {
             //If ServiceConfigs is not configured then the configuration will be populated automatically
             foreach (Server::$instance->getPortManager()->getPortConfigs() as $portConfig) {
-                $agreement = "http";
+                $protocol = "http";
                 if ($portConfig->isOpenHttpProtocol()) {
-                    $agreement = "http";
+                    $protocol = "http";
                     if ($portConfig->isEnableSsl()) {
-                        $agreement = "https";
+                        $protocol = "https";
                     }
                 } elseif ($portConfig->isOpenWebsocketProtocol()) {
-                    $agreement = "ws";
+                    $protocol = "ws";
                     if ($portConfig->isEnableSsl()) {
-                        $agreement = "wss";
+                        $protocol = "wss";
                     }
                 } elseif ($portConfig->getSockType() == PortConfig::SWOOLE_SOCK_TCP || $portConfig->getSockType() == PortConfig::SWOOLE_SOCK_TCP6) {
-                    $agreement = "tcp";
+                    $protocol = "tcp";
                 }
                 //Set up a service config
                 $consulServiceConfig = new ConsulServiceConfig();
@@ -119,7 +119,7 @@ class ConsulConfig extends BaseConfig
                 $consulServiceConfig->setId($normalName . "-" . $ip . "-" . $portConfig->getPort());
                 $consulServiceConfig->setAddress($ip);
                 $consulServiceConfig->setPort($portConfig->getPort());
-                $consulServiceConfig->setMeta(["server" => "esd", "agreement" => $agreement]);
+                $consulServiceConfig->setMeta(["server" => "esd", "protocol" => $protocol]);
                 $consulCheckConfig = new ConsulCheckConfig();
                 $consulCheckConfig->setInterval("10s");
                 $consulCheckConfig->setTlsSkipVerify(true);
@@ -127,11 +127,11 @@ class ConsulConfig extends BaseConfig
                 $consulCheckConfig->setStatus("passing");
                 $consulServiceConfig->setCheckConfig($consulCheckConfig);
                 if ($portConfig->isOpenHttpProtocol() || $portConfig->isOpenWebsocketProtocol()) {
-                    $consulCheckConfig->setHttp("$agreement://$ip:{$portConfig->getPort()}/actuator/health");
+                    $consulCheckConfig->setHttp("$protocol://$ip:{$portConfig->getPort()}/actuator/health");
                     $this->addServiceConfig($consulServiceConfig);
-                } elseif ($agreement == "tcp") {
+                } elseif ($protocol == "tcp") {
                     $consulCheckConfig = new ConsulCheckConfig();
-                    $consulCheckConfig->setTcp("$agreement://$ip:{$portConfig->getPort()}");
+                    $consulCheckConfig->setTcp("$protocol://$ip:{$portConfig->getPort()}");
                     $this->addServiceConfig($consulServiceConfig);
                 }
             }
@@ -139,7 +139,7 @@ class ConsulConfig extends BaseConfig
         //Modify global configuration
         foreach ($this->getServiceConfigs() as $consulServiceConfig) {
             if (empty($consulServiceConfig->getName())) {
-                throw new ConfigException("ConsulServiceConfig缺少name字段");
+                throw new ConfigException("Consul service config missing name field");
             }
             if (!empty($this->getDefaultTags())) {
                 $consulServiceConfig->setTags($this->getDefaultTags());

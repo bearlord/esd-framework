@@ -25,32 +25,29 @@ class MqttPluginConfig extends BaseConfig
     protected $allowAnonymousAccess = true;
 
     /**
-     * Service qos
+     * 服务器发出消息的服务等级
      * @var int
      */
     protected $serverQos = 0;
-
     /**
-     * authorization class
+     * 连接验证类
      * @var string
      */
     protected $mqttAuthClass = EasyMqttAuth::class;
-
     /**
-     * When useRoute is set to true, it will no longer have the function of mqtt,
-     * and the topic field will be treated as the routing path
+     * 当useRoute被设置为true时，将不再具有mqtt的功能，topic字段将被当做路由的path处理
      * @var bool
      */
     protected $useRoute = false;
 
     /**
-     * Only valid when useRoute is set to true, the topic name used in the message returned to the client
+     * 当useRoute被设置为true时才有效，返回给客户端消息所使用的topic名称
      * @var string
      */
     protected $serverTopic = '$SERVER_RPC';
 
     /**
-     * Only valid when useRoute is set to true, the message unpacking class
+     * 当useRoute被设置为true时才有效，消息的解包类
      * @var string
      */
     protected $messageHandleClass = NonHandler::class;

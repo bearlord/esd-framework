@@ -91,9 +91,9 @@ class ConsulPlugin extends AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
-        //添加一个helper进程
+        //Add a helper process
         Server::$instance->addProcess(self::processName, HelperConsulProcess::class, self::processGroupName);
-        //自动配置
+        //Auto config
         $this->consulConfig->autoConfig();
         $this->consulConfig->merge();
     }
@@ -109,26 +109,26 @@ class ConsulPlugin extends AbstractPlugin
         $call = Server::$instance->getEventDispatcher()->listen(ConsulLeaderChangeEvent::ConsulLeaderChangeEvent);
         $call->call(function (ConsulLeaderChangeEvent $event) {
             $leaderStatus = $event->isLeader() ? "true" : "false";
-            $this->debug("收到Leader变更事件：$leaderStatus");
+            $this->debug(sprintf("Receive Leader changed event: %s", $leaderStatus));
             Leader::$isLeader = $event->isLeader();
         });
 
         //Each process listens to Service changes
         $call = Server::$instance->getEventDispatcher()->listen(ConsulServiceChangeEvent::ConsulServiceChangeEvent);
         $call->call(function (ConsulServiceChangeEvent $event) {
-            $this->debug("收到Service变更事件：{$event->getConsulServiceListInfo()->getServiceName()}");
+            $this->debug(sprintf("Receive Service changed event: %s", $event->getConsulServiceListInfo()->getServiceName());
             Services::modifyServices($event);
         });
 
         //Helper process
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::processName) {
             $this->consul = new Consul($this->consulConfig);
-            //进程监听关服信息
+            //Process monitoring server information
             $call = Server::$instance->getEventDispatcher()->listen(ProcessEvent::ProcessStopEvent, null, true);
             $call->call(function () {
-                //同步请求释放leader，关服操作无法使用协程
+                //Synchronous request to release the leader
                 $this->consul->releaseLeader(false);
-                //同步请求注销service
+                //Synchronous request to cancel service
                 $this->consul->deregisterService(false);
             });
         }

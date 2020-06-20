@@ -59,7 +59,7 @@ class SaberPlugin extends AbstractPlugin
     }
 
     /**
-     * @inheritDoc
+     * 在进程启动前
      * @param Context $context
      */
     public function beforeProcessStart(Context $context)

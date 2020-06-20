@@ -79,7 +79,7 @@ class RpcMessageProcessor extends MessageProcessor
                     }
                 }
             } else {
-                //Transaction id does not match, message will be cached
+                //事务id不匹配,将消息缓存了
                 $this->cacheMessages[$rpcCallData->getClassName()][] = $message;
                 return true;
             }
@@ -89,7 +89,7 @@ class RpcMessageProcessor extends MessageProcessor
                     Server::$instance->getProcessManager()->getProcessFromId($message->getFromProcessId())
                 );
             }
-            //Handling cache
+            //处理缓存
             if (!isset($this->sessions[$rpcCallData->getClassName()])) {
                 $cacheMessages = $this->cacheMessages[$rpcCallData->getClassName()] ?? null;
                 if (!empty($cacheMessages)) {

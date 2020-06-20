@@ -351,8 +351,6 @@ abstract class Target extends Component
         $session = Yii::$app->has('session', true) ? Yii::$app->get('session') : null;
         $sessionID = $session && $session->getIsActive() ? $session->getId() : '-';
 
-
-        var_dump("[$ip][$userID][$sessionID]");
         return "[$ip][$userID][$sessionID]";
     }
 
