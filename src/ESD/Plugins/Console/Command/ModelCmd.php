@@ -1,10 +1,11 @@
 <?php
 
-namespace ESD\Plugins\Console\Command;
+namespace ESD\Yii\Gii;
 
 use ESD\Core\Context\Context;
 use ESD\Core\Server\Server;
 use ESD\Plugins\Console\ConsolePlugin;
+use ESD\Yii\Gii\Console\GenerateController;
 use ESD\Yii\Helpers\Inflector;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,12 +36,13 @@ class ModelCmd extends Command
      */
     protected function configure()
     {
-        $this->setName('model')->setDescription("model generator");
+        $this->setName('model')->setDescription("Model generator");
 
-
-        $this->addOption('table_name', null, InputOption::VALUE_REQUIRED, 'table name?', '');
+        $this->addOption('tableName', null, InputOption::VALUE_REQUIRED, 'table name?', '');
         $this->addOption('namespace', 'nc', InputOption::VALUE_OPTIONAL, 'namespace?', 'App\Model');
-        $this->addOption('model_class', 'mc', InputOption::VALUE_OPTIONAL, 'model class?', '');
+        $this->addOption('modelClass', 'mc', InputOption::VALUE_OPTIONAL, 'model class?', '');
+        $this->addOption('standardizeCapitals', null, InputOption::VALUE_OPTIONAL, 'standardize capitals?', 0);
+        $this->addOption('singularize', null, InputOption::VALUE_OPTIONAL, 'singularize?', 0);
     }
 
     /**
@@ -55,20 +57,47 @@ class ModelCmd extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $tableName = $input->getOption("table_name");
+        $tableName = $input->getOption("tableName");
         $namespace = $input->getOption('namespace');
-        $modelClass = $input->getOption('model_class');
+        $modelClass = $input->getOption('modelClass');
+        $standardizeCapitals = $input->getOption('standardizeCapitals');
+        $singularize = $input->getOption('singularize');
+
+        if (strcmp($standardizeCapitals, "true") === 0) {
+            $standardizeCapitals = true;
+        } else {
+            $standardizeCapitals = false;
+        }
+
+        if (strcmp($singularize, "true") === 0) {
+            $singularize = true;
+        } else {
+            $singularize = false;
+        }
+
+        $generateLabelsFromComments = true;
+        $useTablePrefix = true;
 
         $tablePrefix = Server::$instance->getConfigContext()->get("esd-yii.db.default.tablePrefix");
 
-        var_dump($tablePrefix);
-
+        /*
         if (empty($modelClass)) {
             $modelClass = ltrim($tableName, $tablePrefix);
             $modelClass = Inflector::camelize($modelClass);
         }
+        */
 
-        var_dump($tableName, $namespace, $modelClass);
-//        return ConsolePlugin::SUCCESS_EXIT;
+        $controller = new GenerateController();
+        $controller->runAction("model", [
+            'tableName' => $tableName,
+            'ns' => $namespace,
+            'modelClass' => $modelClass,
+            'generateLabelsFromComments' => $generateLabelsFromComments,
+            'useTablePrefix' => $useTablePrefix,
+            'standardizeCapitals' => $standardizeCapitals,
+            'singularize' => $singularize,
+        ]);
+        return ConsolePlugin::SUCCESS_EXIT;
+
     }
 }
