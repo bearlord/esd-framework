@@ -53,7 +53,7 @@ class StatusCmd extends Command
 
         $server_name = $this->config->get('esd.server.name') ?? 'ESD-Framework';
         $master_pid = exec("ps -ef | grep $server_name-master | grep -v 'grep ' | awk '{print $2}'");
-        $io->title('WELCOME TO ESD-FRAMEWORK, ESD-YII Version!');
+        $io->title('WELCOME TO ESD-FRAMEWORK, ESD-YII VERSION!');
         $io->table(
             [
                 "System",
