@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Controller;
+
+use DI\Annotation\Inject;
+use ESD\Go\GoController;
 use ESD\Plugins\EasyRoute\Annotation\GetMapping;
 use ESD\Plugins\EasyRoute\Annotation\RestController;
-use DI\Annotation\Inject;
 use ESD\Plugins\Blade\Blade;
 
 /**
@@ -10,7 +13,7 @@ use ESD\Plugins\Blade\Blade;
  * Class Index
  * @package ESD\Plugins\EasyRoute
  */
-class Index extends Base
+class Index extends GoController
 {
 
     /**
@@ -18,6 +21,7 @@ class Index extends Base
      * @var Blade
      */
     protected $blade;
+
     /**
      * @GetMapping("/")
      * @return string

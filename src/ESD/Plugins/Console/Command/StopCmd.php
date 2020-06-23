@@ -69,7 +69,8 @@ class StopCmd extends Command
             $io->warning("Cancel by user");
             return ConsolePlugin::SUCCESS_EXIT;
         }
-        if ($input->getOption('kill')) {//kill -9
+        if ($input->getOption('kill')) {
+            //kill -9
             exec("ps -ef|grep $serverName|grep -v grep|cut -c 9-15|xargs kill -9");
             return ConsolePlugin::SUCCESS_EXIT;
         }
@@ -85,7 +86,7 @@ class StopCmd extends Command
             if ($masterIsAlive) {
                 // Timeout?
                 if (time() - $startTime >= $timeout) {
-                    $io->warning("server $serverName stop fail");
+                    $io->warning("Server $serverName stop fail");
                     return ConsolePlugin::FAIL_EXIT;
                 }
                 // Waiting amoment.
@@ -93,7 +94,7 @@ class StopCmd extends Command
                 continue;
             }
             // Stop success.
-            $io->success("server $serverName stop success");
+            $io->success("Server $serverName stop success");
             break;
         }
         return ConsolePlugin::SUCCESS_EXIT;

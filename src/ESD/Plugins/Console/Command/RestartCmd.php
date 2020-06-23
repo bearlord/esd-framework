@@ -61,7 +61,7 @@ class RestartCmd extends Command
         $serverName = $serverConfig->getName();
         $masterPid = exec("ps -ef | grep $serverName-master | grep -v 'grep ' | awk '{print $2}'");
         if (empty($masterPid)) {
-            $io->warning("$serverName server not running");
+            $io->warning(sprintf("Server %s is not running", $serverName));
             return ConsolePlugin::SUCCESS_EXIT;
         }
 

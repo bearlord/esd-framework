@@ -4,3 +4,54 @@ blade:
   namespace:
     app:
       path: ${ROOT_DIR}/src/Views
+
+redis:
+  default:
+    host: 'localhost'
+
+session:
+  timeout: 3600
+  db: default
+  sessionStorageClass: 'ESD\Plugins\Session\RedisSessionStorage'
+  sessionUsage: 'header'
+  headerIdentity: 'sessionId'
+  domain: ''
+  path: '/'
+  httpOnly: true
+  secure: false
+
+esd-yii:
+  components:
+    log:
+      traceLevel: 0
+      targets:
+        -
+          class: 'ESD\Yii\Log\FileTarget'
+          levels:
+            - error
+    #            - warning
+    #            - info
+    #            - trace
+    #            - profile
+
+    cache:
+      class: 'ESD\Yii\Redis\Cache'
+      redis:
+    #        database: 2
+
+    formatter:
+      sizeFormatBase: 1000
+
+  language: 'zh-CN'
+  db:
+    default:
+      dsn: 'pgsql:host=192.168.108.130;dbname=esd'
+      username: 'postgres'
+      password: '123456'
+      tablePrefix: 'n_'
+      poolMaxNumber: 10
+      enableSchemaCache: false
+      schemaCacheDuration: 3600
+      schemaCache: cache
+
+

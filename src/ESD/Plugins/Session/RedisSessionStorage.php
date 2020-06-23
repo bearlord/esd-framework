@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\Session;
 
-
 use ESD\Plugins\Redis\GetRedis;
 
 class RedisSessionStorage implements SessionStorage

@@ -8,7 +8,6 @@ namespace ESD\Plugins\EasyRoute;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Core\Server\Server;
-use ReflectionException;
 
 /**
  * Class RouteConfig
@@ -71,7 +70,7 @@ class RouteConfig extends BaseConfig
             $routeRoles = $this->routeRoles[$roleConfig->getName()];
             if ($routeRoles) {
                 if (!empty(array_intersect($routeRoles->getPortNames(), $roleConfig->getPortNames()))) {
-                    Server::$instance->getLog()->warning("Duplicate route：{$roleConfig->getName()}");
+                    Server::$instance->getLog()->warning(sprintf("Duplicate route： %s", $roleConfig->getName()));
                 }
             }
         }

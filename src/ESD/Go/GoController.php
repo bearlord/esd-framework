@@ -146,7 +146,10 @@ class GoController extends EasyController
             } else {
                 $this->response->withHeaders($header);
             }
-            return json_encode(['data' => $data, 'code' => 0]);
+            return json_encode([
+                'data' => $data,
+                'code' => 0
+            ]);
         } else {
             if (!empty($header)) {
                 $this->response->withHeaders($header);
@@ -177,7 +180,11 @@ class GoController extends EasyController
             } else {
                 $this->response->withHeaders($header);
             }
-            return json_encode(['code' => $code, 'msg' => $msg, 'data' => null]);
+            return json_encode([
+                'code' => $code,
+                'message' => $msg,
+                'data' => null
+            ]);
         } else {
             if (!empty($header)) {
                 $this->response->withHeaders($header);

@@ -81,7 +81,7 @@ class StartCmd extends Command
         if ($input->getOption('daemonize')) {
             $serverConfig = Server::$instance->getServerConfig();
             $serverConfig->setDaemonize(true);
-            $io->note("Input php Start.php stop to quit. Start success.");
+            $io->note("Input php server.php stop to quit. Start success.");
         } else {
             $io->note("Press Ctrl-C to quit. Start success.");
         }

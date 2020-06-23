@@ -57,12 +57,12 @@ class ReloadCmd extends Command
         $io = new SymfonyStyle($input, $output);
 
         $serverConfig = Server::$instance->getServerConfig();
-        $server_name = $serverConfig->getName();
+        $serverName = $serverConfig->getName();
 
-        $masterPid = exec("ps -ef | grep $server_name-master | grep -v 'grep ' | awk '{print $2}'");
-        $managerPid = exec("ps -ef | grep $server_name-manager | grep -v 'grep ' | awk '{print $2}'");
+        $masterPid = exec("ps -ef | grep $serverName-master | grep -v 'grep ' | awk '{print $2}'");
+        $managerPid = exec("ps -ef | grep $serverName-manager | grep -v 'grep ' | awk '{print $2}'");
         if (empty($masterPid)) {
-            $io->warning("server $server_name not run");
+            $io->warning(sprintf("Server %s not run", $serverName));
             return ConsolePlugin::SUCCESS_EXIT;
         }
 
@@ -82,7 +82,7 @@ class ReloadCmd extends Command
         }
 
         posix_kill($managerPid, SIGUSR1);
-        $io->success(sprintf("server %s reload", $server_name));
+        $io->success(sprintf("Server %s reload", $serverName));
         return ConsolePlugin::SUCCESS_EXIT;
     }
 }
