@@ -34,6 +34,7 @@ use ESD\Plugins\Uid\UidPlugin;
 use ESD\Plugins\Whoops\WhoopsPlugin;
 use ESD\Server\Co\Server;
 use ESD\Yii\PdoPlugin\PdoPlugin;
+use ESD\Yii\Yii;
 
 /**
  * Class GoApplication
@@ -131,7 +132,8 @@ class GoApplication extends Server
      */
     public function configureReady()
     {
-        $this->info("Configure ready");
+        $message = Yii::t('esd', 'Configure ready');
+        $this->info($message);
     }
 
     /**
@@ -140,7 +142,8 @@ class GoApplication extends Server
      */
     public function onStart()
     {
-        $this->info("On start");
+        $message = Yii::t('esd', 'On start');
+        $this->info($message);
     }
 
     /**
@@ -149,7 +152,8 @@ class GoApplication extends Server
      */
     public function onShutdown()
     {
-        $this->info("On shutdown");
+        $message = Yii::t('esd', 'On shutdown');
+        $this->info($message);
     }
 
     /**
@@ -169,7 +173,8 @@ class GoApplication extends Server
      */
     public function onManagerStart()
     {
-        $this->info("On manager start");
+        $message = Yii::t('esd', 'On manager start');
+        $this->info($message);
     }
 
     /**
@@ -178,7 +183,8 @@ class GoApplication extends Server
      */
     public function onManagerStop()
     {
-        $this->info("On manager stop");
+        $message = Yii::t('esd', 'On manager stop');
+        $this->info($message);
     }
 
     /**

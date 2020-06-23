@@ -10,6 +10,7 @@ use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
+use ESD\Yii\Yii;
 
 /**
  * Class RedisPlugin
@@ -79,12 +80,14 @@ class RedisPlugin extends AbstractPlugin
         ini_set('default_socket_timeout', '-1');
         $redisManyPool = new RedisManyPool();
         if (empty($this->redisConfig->getRedisConfigs())) {
-            $this->warn("No redis configuration");
+            $this->warn(Yii::t('esd', 'No redis configuration'));
         }
         foreach ($this->redisConfig->getRedisConfigs() as $key => $value) {
             $redisPool = new RedisPool($value);
             $redisManyPool->addPool($redisPool);
-            $this->debug(sprintf("Added Redis connection pool named %s", $value->getName()));
+            $this->debug(Yii::t('esd', 'Added redis connection pool named {name}', [
+                'name' => $value->getName()
+            ]));
         }
         $context->add("redisPool", $redisManyPool);
         $this->setToDIContainer(RedisManyPool::class, $redisManyPool);

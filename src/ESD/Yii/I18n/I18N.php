@@ -70,6 +70,14 @@ class I18N extends Component
                 'basePath' => '@app/Messages',
             ];
         }
+
+        if (!isset($this->translations['esd']) && !isset($this->translations['esd*'])) {
+            $this->translations['esd'] = [
+                'class' => 'ESD\Yii\I18n\PhpMessageSource',
+                'sourceLanguage' => 'en-US',
+                'basePath' => '@yii/Messages',
+            ];
+        }
     }
 
     /**

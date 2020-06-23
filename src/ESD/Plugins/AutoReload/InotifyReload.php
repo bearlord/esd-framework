@@ -9,6 +9,7 @@ namespace ESD\Plugins\AutoReload;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Process\Process;
 use ESD\Core\Server\Server;
+use ESD\Yii\Yii;
 
 /**
  * Class InotifyReload
@@ -28,7 +29,7 @@ class InotifyReload
     public function __construct(AutoReloadConfig $autoReloadConfig)
     {
         if ($autoReloadConfig->isEnable()) {
-            $this->info("Hot reload is enabled ");
+            $this->info(Yii::t('esd', 'Hot reload is enabled'));
             $this->monitor_dir = realpath($autoReloadConfig->getMonitorDir());
             if (!extension_loaded('inotify')) {
                 addTimerAfter(1000, [$this, 'unUseInotify']);

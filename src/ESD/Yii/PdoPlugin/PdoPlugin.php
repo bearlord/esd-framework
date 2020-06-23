@@ -12,6 +12,7 @@ use ESD\Core\Server\Server;
 use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\PluginInterfaceManager;
 use ESD\Yii\Base\Application;
+use ESD\Yii\Yii;
 
 /**
  * Class PdoPlugin
@@ -100,14 +101,17 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
 
         $configs = $this->configs->getConfigs();
         if (empty($configs)) {
-            $this->warn("No PDO configuration");
+            $this->warn(Yii::t('esd', 'No PDO configuration'));
             return false;
         }
 
         foreach ($configs as $key => $config) {
             $pool = new PdoPool($config);
             $pools->addPool($pool);
-            $this->debug(sprintf("Added %s connection pool named %s", $config->getName(), $config->getDriverName()));
+            $this->debug(Yii::t('esd', 'Added {driverName} connection pool named {name}', [
+                'driverName' => $config->getDriverName(),
+                'name' => $config->getName()
+            ]));
         }
 
         $context->add("PdoPool", $pools);
