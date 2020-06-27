@@ -229,19 +229,19 @@ class AnnotationsScanPlugin extends AbstractPlugin
                             foreach ($annotations as $annotation) {
                                 $annotationClass = get_class($annotation);
                                 if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                    $this->debug('esd', 'Class annotation {annotationClass} in {class}', [
-                                       'annotationClass' => basename($annotationClass),
-                                       'class' => $class
-                                    ]);
+                                    $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
+                                        'annotationClass' => basename($annotationClass),
+                                        'class' => $class
+                                    ]));
                                 }
                                 $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                 $annotationClass = get_parent_class($annotation);
                                 if ($annotationClass != Annotation::class) {
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                        $this->debug('esd', 'Class annotation {annotationClass} in {class}', [
+                                        $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
                                             'annotationClass' => basename($annotationClass),
                                             'class' => $class
-                                        ]);
+                                        ]));
                                     }
                                     $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                 }
@@ -254,19 +254,19 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                 foreach ($annotations as $annotation) {
                                     $annotationClass = get_class($annotation);
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                        $this->debug('esd', 'Class annotation {annotationClass} in {class}', [
+                                        $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
                                             'annotationClass' => basename($annotationClass),
                                             'class' => $class
-                                        ]);
+                                        ]));
                                     }
                                     $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                     $annotationClass = get_parent_class($annotation);
                                     if ($annotationClass != Annotation::class) {
                                         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                                            $this->debug('esd', 'Class annotation {annotationClass} in {class}', [
+                                            $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
                                                 'annotationClass' => basename($annotationClass),
                                                 'class' => $class
-                                            ]);
+                                            ]));
                                         }
                                         $this->scanClass->addAnnotationClass($annotationClass, $reflectionClass);
                                     }
