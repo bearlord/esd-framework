@@ -14,6 +14,7 @@ use ESD\Core\Message\Message;
 use ESD\Core\Message\MessageProcessor;
 use ESD\Core\Plugins\Event\EventDispatcher;
 use ESD\Core\Server\Server;
+use ESD\Yii\Yii;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -278,7 +279,9 @@ abstract class Process
             $this->server->getPlugManager()->waitReady();
             $this->setIsReady(true);
             $this->init();
-            $this->log->info("Ready");
+
+            $this->log->info(Yii::t('esd', 'Process ready'));
+
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
                 Process::signal(SIGTERM, [$this, '_onProcessStop']);

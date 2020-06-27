@@ -18,7 +18,7 @@ trait GetProcessRpc
     /**
      * @param Process $process
      * @param string $className
-     * @param bool $oneway 是否单向
+     * @param bool $oneway Whether one way
      * @param float $timeOut
      * @return RPCProxy
      * @throws ProcessRPCException

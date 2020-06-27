@@ -8,6 +8,7 @@ namespace ESD\Plugins\ProcessRPC;
 
 use ESD\Core\Server\Process\Process;
 use ESD\Core\Server\Server;
+use ESD\Yii\Yii;
 
 /**
  * Class RPCProxy
@@ -78,7 +79,7 @@ class RPCProxy
                     return $result->getResult();
                 }
             } else {
-                throw new ProcessRPCException("超时");
+                throw new ProcessRPCException(Yii::t('esd', 'Time out'));
             }
         }
     }

@@ -12,6 +12,7 @@ use ESD\Plugins\Scheduled\Beans\ScheduledTask;
 use ESD\Plugins\Scheduled\Event\ScheduledAddEvent;
 use ESD\Plugins\Scheduled\Event\ScheduledRemoveEvent;
 use ESD\Server\Co\Server;
+use ESD\Yii\Yii;
 
 /**
  * Class ScheduledConfig
@@ -55,7 +56,7 @@ class ScheduledConfig extends BaseConfig
         parent::__construct(self::key);
         $this->minIntervalTime = $minIntervalTime;
         if ($minIntervalTime < 1000) {
-            throw new ConfigException("定时调度任务的最小时间单位为1s");
+            throw new ConfigException(Yii::t('esd', 'The minimum time unit for scheduled tasks is 1s'));
         }
     }
 
@@ -86,10 +87,10 @@ class ScheduledConfig extends BaseConfig
     public function removeScheduled(String $scheduledTaskName)
     {
         if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::processName) {
-            //调度进程可以直接移除
+            //The scheduling process can be removed directly
             unset($this->scheduledTasks[$scheduledTaskName]);
         } else {
-            //非调度进程需要动态移除，借助于Event
+            //Non-scheduled processes need to be removed dynamically, with the help of Event
             Server::$instance->getEventDispatcher()->dispatchProcessEvent(
                 new ScheduledRemoveEvent($scheduledTaskName),
                 Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::processName)

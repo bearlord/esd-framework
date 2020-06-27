@@ -9,6 +9,7 @@ namespace ESD\Go;
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
 use ESD\Server\Co\Server;
+use ESD\Yii\Yii;
 
 /**
  * Class GoProcess
@@ -33,7 +34,7 @@ class GoProcess extends Process
      */
     public function onProcessStart()
     {
-        $this->log->info("On process start");
+        $this->log->info(Yii::t('esd', 'On process start'));
     }
 
     /**
@@ -42,7 +43,7 @@ class GoProcess extends Process
      */
     public function onProcessStop()
     {
-        $this->log->info("On process stop");
+        $this->log->info(Yii::t('esd', 'On process stop'));
     }
 
     /**

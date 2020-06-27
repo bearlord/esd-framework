@@ -80,7 +80,7 @@ class SecurityPlugin extends AbstractPlugin
     }
 
     /**
-     * 在服务启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      * @throws \DI\DependencyException
@@ -93,7 +93,7 @@ class SecurityPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      */

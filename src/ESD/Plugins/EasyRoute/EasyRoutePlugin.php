@@ -26,6 +26,7 @@ use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\ClientDataProxy;
 use ESD\Plugins\Pack\PackPlugin;
 use ESD\Plugins\Validate\ValidatePlugin;
+use ESD\Yii\Yii;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use ReflectionClass;
@@ -261,8 +262,12 @@ class EasyRoutePlugin extends AbstractPlugin
             $type = strtoupper($routeRole->getType());
             $port = Server::$instance->getPortManager()->getPortConfigs()[$portName]->getPort();
             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
-                $info = sprintf("Mapping %s:%-7s %s to %s::%s", $port, $type, $routeRole->getRoute(), $reflectionClass->name, $reflectionMethod->name);
-                Server::$instance->getLog()->info($info);
+                $message = sprintf("{Mapping} %s:%-7s %s {onto} %s::%s", $port, $type, $routeRole->getRoute(), $reflectionClass->name, $reflectionMethod->name);
+                $message = Yii::t('esd', $message, [
+                   'Mapping' => '映射',
+                   'onto' => '至'
+                ]);
+                Server::$instance->getLog()->info($message);
             }
             $r->addRoute("$port:{$type}", $routeRole->getRoute(), [$reflectionClass, $reflectionMethod]);
         }

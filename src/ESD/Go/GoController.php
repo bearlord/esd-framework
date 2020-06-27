@@ -20,6 +20,7 @@ use ESD\Plugins\Session\HttpSession;
 use ESD\Plugins\Topic\GetTopic;
 use ESD\Plugins\Uid\GetUid;
 use ESD\Plugins\Whoops\WhoopsConfig;
+use ESD\Yii\Yii;
 
 /**
  * Class GoController
@@ -154,7 +155,7 @@ class GoController extends EasyController
             if (!empty($header)) {
                 $this->response->withHeaders($header);
             }
-            return $this->msg('System Message', $data, $wait, $url);
+            return $this->msg(Yii::t('esd', 'System Message'), $data, $wait, $url);
         }
     }
 
@@ -189,7 +190,7 @@ class GoController extends EasyController
             if (!empty($header)) {
                 $this->response->withHeaders($header);
             }
-            return $this->msg('错误消息', $msg, $wait, $url);
+            return $this->msg(Yii::t('Error Message'), $msg, $wait, $url);
         }
     }
 

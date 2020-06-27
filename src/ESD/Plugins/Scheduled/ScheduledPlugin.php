@@ -19,6 +19,7 @@ use ESD\Plugins\Scheduled\Event\ScheduledAddEvent;
 use ESD\Plugins\Scheduled\Event\ScheduledExecuteEvent;
 use ESD\Plugins\Scheduled\Event\ScheduledRemoveEvent;
 use ESD\Server\Co\Server;
+use ESD\Yii\Yii;
 
 class ScheduledPlugin extends AbstractPlugin
 {
@@ -122,7 +123,9 @@ class ScheduledPlugin extends AbstractPlugin
                         $scheduled->name = $reflectionClass->getName() . "::" . $reflectionMethod->getName();
                     }
                     if (empty($scheduled->cron)) {
-                        $this->warn(sprintf("The %s task is not set to cron and has been ignored", $scheduled->name));
+                        $this->warn(Yii::t('esd', 'The {name} task is not set to cron and has been ignored', [
+                            'name' => $scheduledTask->name
+                        ]));
                         continue;
                     }
                     $scheduledTask = new ScheduledTask(
@@ -175,7 +178,9 @@ class ScheduledPlugin extends AbstractPlugin
                             $this->processScheduledCount[$process->getProcessId()]++;
                             Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ScheduledExecuteEvent($scheduledTask), $process);
                         } else {
-                            $this->warn(sprintf("The %s task did not find a scheduled process", $scheduledTask->getName()));
+                            $this->warn('esd', 'The {name} task did not find a scheduled process', [
+                                'name' => $scheduledTask->getName()
+                            ]);
                         }
                     }
                 }

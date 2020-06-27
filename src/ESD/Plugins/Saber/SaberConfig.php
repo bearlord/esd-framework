@@ -17,85 +17,85 @@ class SaberConfig extends BaseConfig
 {
     const key = "saber";
     /**
-     * 基础路径
+     * Base url
      * @var string|null
      */
     protected $baseUri;
 
     /**
-     * 用户代理
+     * User agent
      * @var string|null
      */
     protected $useragent;
 
     /**
-     * 来源地址
+     * Referer
      * @var string|null
      */
     protected $referer;
 
     /**
-     * 重定向次数
+     * Redirect count
      * @var int
      */
     protected $redirect = 3;
 
     /**
-     * 发送的内容编码类型
+     * Content type
      * @var string
      */
     protected $contentType = ContentType::JSON;
 
     /**
-     * 是否保持连接
+     * Whether to keep alive
      * @var bool
      */
     protected $keepAlive = true;
 
     /**
-     * 默认5s, 支持毫秒级超时
+     * Time out, default is 5s, support millisecond
      * @var float
      */
     protected $timeout = 5;
 
     /**
-     * 代理,支持http和socks5
+     * Proxy, support http and sockes5
      * @var string
      */
     protected $proxy;
 
     /**
-     * 验证服务器端证书
+     * Verify server's ssl certificate
      * @var bool
      */
     protected $sslVerifyPeer = false;
 
     /**
-     * 允许自签名证书
+     * Allow self-signed certificates
      * @var bool
      */
     protected $sslAllowSelfSigned = true;
 
     /**
-     * 异常报告级别
+     * Exception reporting level
      * @var int
      */
     protected $exceptionReport = HttpExceptionMask::E_NONE;
 
     /**
-     * 自动重试次数
+     * Retry time
      * @var int
      */
     protected $retryTime = 3;
 
     /**
-     * 拦截器
+     * Interceptor
      * @var string[]
      */
     protected $interceptors = [];
 
     /**
-     * 连接池 bool|int
+     * Whether to use pool
      * @var bool
      */
     protected $usePool = true;
@@ -110,7 +110,7 @@ class SaberConfig extends BaseConfig
     }
 
     /**
-     * 添加Saber全局拦截器
+     * Add Saber global interceptor
      * @param string $interceptor
      */
     public function addInterceptorClass(string $interceptor)
