@@ -3,6 +3,7 @@ return [
     'onto' => '至',
     'Added {driverName} connection pool named {name}' => '添加 {driverName} {name} 的连接池',
     'Added redis connection pool named {name}' => '添加 Redis {name} 的连接池',
+    'Before process start' => '进程启动前',
     'Configure ready' => '准备就绪',
     'Error Message' => '错误信息',
     'Hot reload is enabled' => '热重载已开启',

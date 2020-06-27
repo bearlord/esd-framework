@@ -18,6 +18,7 @@ use ESD\Plugins\Actuator\Aspect\CountAspect;
 use ESD\Plugins\Aop\AopConfig;
 use ESD\Plugins\Aop\AopPlugin;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
+use ESD\Yii\Yii;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
 
@@ -149,7 +150,7 @@ class ActuatorPlugin extends AbstractPlugin
         addTimerTick(86400 * 1000, function (){
             $this->updateCount('num_86400');
         });
-        $this->debug('beforeProcessStart');
+        $this->debug(Yii::t('esd', 'Before process start'));
         $this->ready();
     }
 
