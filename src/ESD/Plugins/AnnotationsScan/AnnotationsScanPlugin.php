@@ -290,7 +290,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                                 $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
                                                     'annotationClass' => basename($annotationClass),
-                                                    'method' => $class::$reflectionMethod->name
+                                                    'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                                 ]));
                                             }
                                             $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
@@ -299,7 +299,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                                 if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                                     $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
                                                         'annotationClass' => basename($annotationClass),
-                                                        'method' => $class::$reflectionMethod->name
+                                                        'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                                     ]));
                                                 }
                                                 $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
@@ -314,7 +314,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                         $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
                                             'annotationClass' => basename($annotationClass),
-                                            'method' => $class::$reflectionMethod->name
+                                            'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                         ]));
                                     }
                                     $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
@@ -323,7 +323,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                             $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
                                                 'annotationClass' => basename($annotationClass),
-                                                'method' => $class::$reflectionMethod->name
+                                                'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                             ]));
                                         }
                                         $this->scanClass->addAnnotationMethod($annotationClass, $scanReflectionMethod);
