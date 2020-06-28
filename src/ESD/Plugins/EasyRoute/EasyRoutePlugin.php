@@ -264,8 +264,8 @@ class EasyRoutePlugin extends AbstractPlugin
             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                 $message = sprintf("{Mapping} %s:%-7s %s {onto} %s::%s", $port, $type, $routeRole->getRoute(), $reflectionClass->name, $reflectionMethod->name);
                 $message = Yii::t('esd', $message, [
-                   'Mapping' => '映射',
-                   'onto' => '至'
+                   'Mapping' => Yii::t('esd', 'Mapping'),
+                   'onto' => Yii::t('esd', 'onto'),
                 ]);
                 Server::$instance->getLog()->info($message);
             }
