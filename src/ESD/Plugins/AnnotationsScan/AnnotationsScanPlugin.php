@@ -20,6 +20,7 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Plugins\AnnotationsScan\Annotation\Component;
 use ESD\Plugins\Aop\AopPlugin;
+use ESD\Yii\Helpers\StringHelper;
 use ESD\Yii\Yii;
 use ReflectionClass;
 use ReflectionException;
@@ -230,7 +231,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                 $annotationClass = get_class($annotation);
                                 if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                     $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
-                                        'annotationClass' => basename($annotationClass),
+                                        'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                         'class' => $class
                                     ]));
                                 }
@@ -239,7 +240,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                 if ($annotationClass != Annotation::class) {
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                         $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
-                                            'annotationClass' => basename($annotationClass),
+                                            'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                             'class' => $class
                                         ]));
                                     }
@@ -255,7 +256,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                     $annotationClass = get_class($annotation);
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                         $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
-                                            'annotationClass' => basename($annotationClass),
+                                            'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                             'class' => $class
                                         ]));
                                     }
@@ -264,7 +265,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                     if ($annotationClass != Annotation::class) {
                                         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                             $this->debug(Yii::t('esd', 'Class annotation {annotationClass} in {class}', [
-                                                'annotationClass' => basename($annotationClass),
+                                                'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                                 'class' => $class
                                             ]));
                                         }
@@ -289,7 +290,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                             $annotationClass = get_class($annotation);
                                             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                                 $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
-                                                    'annotationClass' => basename($annotationClass),
+                                                    'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                                     'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                                 ]));
                                             }
@@ -298,7 +299,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                             if ($annotationClass != Annotation::class) {
                                                 if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                                     $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
-                                                        'annotationClass' => basename($annotationClass),
+                                                        'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                                         'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                                     ]));
                                                 }
@@ -313,7 +314,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                     $annotationClass = get_class($annotation);
                                     if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                         $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
-                                            'annotationClass' => basename($annotationClass),
+                                            'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                             'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                         ]));
                                     }
@@ -322,7 +323,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                                     if ($annotationClass != Annotation::class) {
                                         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                                             $this->debug(Yii::t('esd', 'Method annotation {annotationClass} in {method}', [
-                                                'annotationClass' => basename($annotationClass),
+                                                'annotationClass' => sprintf("@%s", StringHelper::basename($annotationClass)),
                                                 'method' => sprintf("%s::%s", $class, $reflectionMethod->name)
                                             ]));
                                         }
