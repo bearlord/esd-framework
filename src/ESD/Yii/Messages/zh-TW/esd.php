@@ -3,6 +3,8 @@ return [
     'onto' => '->',
     'Added {driverName} connection pool named {name}' => '添加 {driverName} {name} 的連接池',
     'Added redis connection pool named {name}' => '添加 Redis {name} 的連接池',
+    'Application start' => '程序啓動',
+    'Application shutdown' => '程序關閉',
     'Before process start' => '進程啓動前',
     'Class annotation {annotationClass} in {class}' => '類注解 {annotationClass} -> {class}',
     'Configure ready' => '準備就緒',
@@ -17,6 +19,8 @@ return [
     'Process ready' => '進程準備就緒',
     'Method annotation {annotationClass} in {method}' => '方法注解 {annotationClass} -> {method}',
     'Memory exhausted' => '内存超出限制',
+    'Manager Process start' => '管理進程啓動',
+    'Manager Process stop' => '管理進程關閉',
     'No redis configuration' => '沒有 Redis 配置',
     'No PDO configuration' => '沒有 PDO 配置',
     'The minimum time for scheduled tasks is 1s' => '定時調度任務的最小時間為1秒'

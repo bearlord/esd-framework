@@ -132,8 +132,7 @@ class GoApplication extends Server
      */
     public function configureReady()
     {
-        $message = Yii::t('esd', 'Configure ready');
-        $this->info($message);
+        $this->info(Yii::t('esd', 'Configure ready'));
     }
 
     /**
@@ -142,8 +141,7 @@ class GoApplication extends Server
      */
     public function onStart()
     {
-        $message = Yii::t('esd', 'On start');
-        $this->info($message);
+        $this->info(Yii::t('esd', 'Application start'));
     }
 
     /**
@@ -152,8 +150,7 @@ class GoApplication extends Server
      */
     public function onShutdown()
     {
-        $message = Yii::t('esd', 'On shutdown');
-        $this->info($message);
+        $this->info(Yii::t('esd', 'Application shutdown'));
     }
 
     /**
@@ -173,8 +170,7 @@ class GoApplication extends Server
      */
     public function onManagerStart()
     {
-        $message = Yii::t('esd', 'On manager start');
-        $this->info($message);
+        $this->info(Yii::t('esd', 'Manager Process start'));
     }
 
     /**
@@ -183,8 +179,7 @@ class GoApplication extends Server
      */
     public function onManagerStop()
     {
-        $message = Yii::t('esd', 'On manager stop');
-        $this->info($message);
+        $this->info(Yii::t('esd', 'Manager Process stop'));
     }
 
     /**

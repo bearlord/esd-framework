@@ -38,7 +38,7 @@ class StopCmd extends Command
     protected function configure()
     {
         $this->setName('stop')->setDescription("Stop(Kill) server");
-        $this->addOption('kill', "k", InputOption::VALUE_NONE, 'Who do you want kill server?');
+        $this->addOption('kill', "k", InputOption::VALUE_NONE, 'Kill server?');
     }
 
     /**
@@ -59,16 +59,6 @@ class StopCmd extends Command
             return ConsolePlugin::SUCCESS_EXIT;
         }
 
-        if ($input->getOption('kill')) {
-            $result = $io->confirm("Kill the $serverName server?", false);
-        } else {
-            $result = $io->confirm("Stop the $serverName server?", false);
-        }
-
-        if (!$result) {
-            $io->warning("Cancel by user");
-            return ConsolePlugin::SUCCESS_EXIT;
-        }
         if ($input->getOption('kill')) {
             //kill -9
             exec("ps -ef|grep $serverName|grep -v grep|cut -c 9-15|xargs kill -9");

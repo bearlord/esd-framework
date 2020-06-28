@@ -9,6 +9,7 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Scheduled\Beans\ScheduledTask;
 use ESD\Plugins\Scheduled\Event\ScheduledExecuteEvent;
 use ESD\Server\Co\Server;
+use ESD\Yii\Yii;
 
 class ScheduledTaskHandle
 {
@@ -38,6 +39,8 @@ class ScheduledTaskHandle
         $className = $scheduledTask->getClassName();
         $taskInstance = Server::$instance->getContainer()->get($className);
         call_user_func([$taskInstance, $scheduledTask->getFunctionName()]);
-        $this->debug(sprintf("Execute scheduled task: %s", $scheduledTask->getName()));
+        $this->debug(Yii::t('esd', 'Execute scheduled task {name}', [
+            'name' => $scheduledTask->getName()
+        ]));
     }
 }
