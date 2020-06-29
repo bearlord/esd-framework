@@ -30,8 +30,8 @@ interface IController extends TracingInterface
     public function initialization(?string $controllerName, ?string $methodName);
 
     /**
-     * @param \Throwable $e
+     * @param \Throwable $exception
      * @return mixed
      */
-    public function onExceptionHandle(\Throwable $e);
+    public function onExceptionHandle(\Throwable $exception);
 }

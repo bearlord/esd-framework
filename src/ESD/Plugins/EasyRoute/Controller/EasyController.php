@@ -110,22 +110,22 @@ abstract class EasyController implements IController
 
     /**
      * @inheritDoc
-     * @param $e
+     * @param $exception
      * @return mixed
      * @throws \Throwable
      */
-    public function onExceptionHandle(\Throwable $e)
+    public function onExceptionHandle(\Throwable $exception)
     {
         if ($this->clientData->getResponse() != null) {
             $this->response->withStatus(404);
             $this->response->withHeader("Content-Type", "text/html;charset=UTF-8");
 
-            if ($e instanceof RouteException) {
-                $msg = '404 Not found / ' . $e->getMessage();
-            } elseif ($e instanceof ParamException) {
+            if ($exception instanceof RouteException) {
+                $msg = '404 Not found / ' . $exception->getMessage();
+            } elseif ($exception instanceof ParamException) {
                 $this->response->withStatus(400);
-                $msg = '400 Bad request / ' . $e->getMessage();
-            } else if ($e instanceof MethodNotAllowedException) {
+                $msg = '400 Bad request / ' . $exception->getMessage();
+            } else if ($exception instanceof MethodNotAllowedException) {
                 $this->response->withStatus(405);
                 $msg = '405 method not allowed';
             } else {
@@ -134,7 +134,7 @@ abstract class EasyController implements IController
             }
             return $msg;
         } else {
-            return $e->getMessage();
+            return $exception->getMessage();
         }
     }
 }

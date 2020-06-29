@@ -83,6 +83,7 @@ class PackAspect extends OrderAspect
         $abstractServerPort = $invocation->getThis();
         $packConfig = $this->packConfigs[$abstractServerPort->getPortConfig()->getPort()];
         $packTool = $this->packTools[$packConfig->getPackTool()];
+
         $clientData = $packTool->unPack($fd, $data, $packConfig);
         if ($clientData == null) return;
         setContextValue("ClientData", $clientData);

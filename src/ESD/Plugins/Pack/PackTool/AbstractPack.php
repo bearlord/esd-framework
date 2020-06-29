@@ -8,7 +8,12 @@ namespace ESD\Plugins\Pack\PackTool;
 
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Plugins\Pack\PackException;
+use ESD\Yii\Yii;
 
+/**
+ * Class AbstractPack
+ * @package ESD\Plugins\Pack\PackTool
+ */
 abstract class AbstractPack implements IPack
 {
     /**
@@ -51,7 +56,7 @@ abstract class AbstractPack implements IPack
             case "N":
                 return 4;
             default:
-                throw new PackException('Wrong type');
+                throw new PackException(Yii::t('esd', 'Wrong Packet type'));
         }
     }
 }

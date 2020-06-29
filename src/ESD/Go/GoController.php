@@ -208,31 +208,31 @@ class GoController extends EasyController
     }
 
     /**
-     * @param \Throwable $e
+     * @param \Throwable $exception
      * @return false|mixed|string
      * @throws \Throwable
      */
-    public function onExceptionHandle(\Throwable $e)
+    public function onExceptionHandle(\Throwable $exception)
     {
         if ($this->clientData->getResponse() != null) {
             $this->response->withStatus(404);
             $this->response->withHeader("Content-Type", "text/html;charset=UTF-8");
-            if ($e instanceof RouteException) {
-                $msg = '404 Not found / ' . $e->getMessage();
+            if ($exception instanceof RouteException) {
+                $msg = '404 Not found / ' . $exception->getMessage();
                 return $msg;
-            } else if ($e instanceof AccessDeniedException) {
+            } else if ($exception instanceof AccessDeniedException) {
                 $this->response->withStatus(401);
-                $msg = '401 Access denied / ' . $e->getMessage();
+                $msg = '401 Access denied / ' . $exception->getMessage();
                 return $msg;
-            } else if ($e instanceof ResponseException) {
+            } else if ($exception instanceof ResponseException) {
                 $this->response->withStatus(200);
-                return $this->errorResponse($e->getMessage(), $e->getCode());
-            } else if ($e instanceof AlertResponseException) {
+                return $this->errorResponse($exception->getMessage(), $exception->getCode());
+            } else if ($exception instanceof AlertResponseException) {
                 $this->response->withStatus(500);
-                return $this->errorResponse($e->getMessage(), $e->getCode());
+                return $this->errorResponse($exception->getMessage(), $exception->getCode());
             }
         }
-        return parent::onExceptionHandle($e);
+        return parent::onExceptionHandle($exception);
     }
 
     /**

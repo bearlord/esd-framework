@@ -10,12 +10,16 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Server;
 use ESD\Plugins\Pack\ClientData;
+use ESD\Yii\Helpers\Json;
+use ESD\Yii\Yii;
 
 class NonJsonPack implements IPack
 {
     use GetLogger;
 
     /**
+     * Packet pack
+     *
      * @param $data
      * @param PortConfig $portConfig
      * @param string|null $topic
@@ -23,10 +27,12 @@ class NonJsonPack implements IPack
      */
     public function pack($data, PortConfig $portConfig, ?string $topic = null)
     {
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
+        return Json::encode($data);
     }
 
     /**
+     * Packet unpack
+     *
      * @param int $fd
      * @param string $data
      * @param PortConfig $portConfig
@@ -37,27 +43,42 @@ class NonJsonPack implements IPack
     {
         $value = json_decode($data, true);
         if (empty($value)) {
-            $this->warn('json unPack 失败');
+            $this->warn(Yii::t('esd', 'Packet unpack failed'));
             return null;
         }
         $clientData = new ClientData($fd, $portConfig->getBaseType(), $value['p'], $value);
         return $clientData;
     }
 
+    /**
+     * Packet encode
+     * @param string $buffer
+     */
     public function encode(string $buffer)
     {
         return;
     }
 
+    /**
+     * Packet decode
+     *
+     * @param string $buffer
+     */
     public function decode(string $buffer)
     {
         return;
     }
 
+    /**
+     * Change port config
+     *
+     * @param PortConfig $portConfig
+     * @throws \Exception
+     */
     public static function changePortConfig(PortConfig $portConfig)
     {
         if ($portConfig->isOpenWebsocketProtocol()) {
-            return;
+            return true;
         } else {
             Server::$instance->getLog()->warning("NonJsonPack is used but WebSocket protocol is not enabled ,we are automatically turn on WebsocketProtocol for you.");
             $portConfig->setOpenWebsocketProtocol(true);

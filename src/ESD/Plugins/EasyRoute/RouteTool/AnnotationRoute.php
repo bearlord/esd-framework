@@ -8,6 +8,7 @@ namespace ESD\Plugins\EasyRoute\RouteTool;
 
 use ESD\Core\ParamException;
 use ESD\Core\Plugins\Logger\GetLogger;
+use ESD\Core\Server\Server;
 use ESD\Plugins\EasyRoute\Annotation\ModelAttribute;
 use ESD\Plugins\EasyRoute\Annotation\PathVariable;
 use ESD\Plugins\EasyRoute\Annotation\RequestBody;
@@ -23,6 +24,8 @@ use ESD\Plugins\EasyRoute\MethodNotAllowedException;
 use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Validate\Annotation\ValidatedFilter;
+use ESD\Yii\Helpers\Json;
+use ESD\Yii\Yii;
 use FastRoute\Dispatcher;
 
 /**
@@ -58,6 +61,27 @@ class AnnotationRoute implements IRoute
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
+                $debug = Server::$instance->getConfigContext()->get("esd.server.debug");
+                if (!$debug) {
+                    $_contentType = $this->clientData->getRequest()->getHeader('content-type');
+                    if (!empty($_contentType)) {
+                        $contentType = strtolower($_contentType[0]);
+                        if (in_array($contentType, ['application/json'])) {
+                            $this->clientData->getResponse()->withHeader("Content-Type", $contentType);
+                            $message = Yii::t('esd', '{path} 404 Not Found', [
+                                'path' => $this->clientData->getPath()
+                            ]);
+                            $exceptionJson = Json::encode([
+                                'code' => 400,
+                                'data' => [],
+                                'message' => $message
+                            ]);
+                            $this->clientData->getResponse()->withContent($exceptionJson)->end();
+                        }
+                        return true;
+                    }
+                }
+
                 throw new RouteException("{$this->clientData->getPath()} 404 Not found");
                 break;
 

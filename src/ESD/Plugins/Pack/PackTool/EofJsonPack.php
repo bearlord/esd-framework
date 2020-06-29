@@ -10,15 +10,19 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Server;
 use ESD\Plugins\Pack\ClientData;
+use ESD\Yii\Yii;
 
+/**
+ * Class EofJsonPack
+ * @package ESD\Plugins\Pack\PackTool
+ */
 class EofJsonPack extends AbstractPack
 {
     use GetLogger;
-    protected $last_data = null;
-    protected $last_data_result = null;
 
     /**
-     * 数据包编码
+     * Packet encode
+     *
      * @param $buffer
      * @return string
      */
@@ -28,7 +32,8 @@ class EofJsonPack extends AbstractPack
     }
 
     /**
-     * 数据包解码
+     * Packet decode
+     *
      * @param $buffer
      * @return string
      */
@@ -39,7 +44,8 @@ class EofJsonPack extends AbstractPack
     }
 
     /**
-     * 数据包打包
+     * Data pack
+     *
      * @param $data
      * @param PortConfig $portConfig
      * @param string|null $topic
@@ -52,7 +58,8 @@ class EofJsonPack extends AbstractPack
     }
 
     /**
-     * 数据包解包
+     * Packet unpack
+     *
      * @param int $fd
      * @param string $data
      * @param PortConfig $portConfig
@@ -64,19 +71,25 @@ class EofJsonPack extends AbstractPack
         $this->portConfig = $portConfig;
         $value = json_decode($this->decode($data), true);
         if (empty($value)) {
-            $this->warn('json unPack fail');
+            $this->warn(Yii::t('esd', 'Packet unpack failed'));
             return null;
         }
         $clientData = new ClientData($fd, $portConfig->getBaseType(), $value['p'], $value);
         return $clientData;
     }
 
+    /**
+     * Change port config
+     *
+     * @param PortConfig $portConfig
+     * @throws \Exception
+     */
     public static function changePortConfig(PortConfig $portConfig)
     {
         if ($portConfig->isOpenEofCheck() || $portConfig->isOpenEofSplit()) {
-            return;
+            return true;
         } else {
-            Server::$instance->getLog()->warning("EofJsonPack is used but EOF protocol is not enabled ,we are automatically turn on EofSplit for you.");
+            Server::$instance->getLog()->warning(Yii::t('esd', 'Packet used EofJsonPack but EOF protocol is not enabled, Enable open_eof_split automatically'));
             $portConfig->setOpenEofSplit(true);
         }
     }

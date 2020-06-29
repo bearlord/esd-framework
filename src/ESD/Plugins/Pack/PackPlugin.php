@@ -82,6 +82,7 @@ class PackPlugin extends AbstractPlugin
             $this->packConfigs[$packConfig->getPort()] = $packConfig;
         }
         $serverConfig = Server::$instance->getServerConfig();
+        /** @var AopConfig $aopConfig */
         $aopConfig = DIget(AopConfig::class);
         $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd/base-server");
         $this->packAspect = new PackAspect($this->packConfigs);

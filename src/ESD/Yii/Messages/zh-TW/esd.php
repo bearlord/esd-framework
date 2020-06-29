@@ -1,5 +1,6 @@
 <?php
 return [
+    '{path} 404 Not Found' => '{path} 404 請求未找到',
     'onto' => '->',
     'Added {driverName} connection pool named {name}' => '添加 {driverName} {name} 的連接池',
     'Added redis connection pool named {name}' => '添加 Redis {name} 的連接池',
