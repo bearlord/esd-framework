@@ -542,7 +542,7 @@ class User extends Component
             $data = json_decode($value, true);
             if (is_array($data) && isset($data[2])) {
                 $cookie = Yii::createObject(array_merge($this->identityCookie, [
-                    'class' => 'yii\web\Cookie',
+                    'class' => 'ESD\Yii\Web\Cookie',
                     'value' => $value,
                     'expire' => time() + (int)$data[2],
                 ]));

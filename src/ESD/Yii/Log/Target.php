@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Log;
 
+use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
@@ -151,7 +152,7 @@ abstract class Target extends Component
 
         if ($count > 0 && ($final || $this->exportInterval > 0 && $count >= $this->exportInterval)) {
             if (($context = $this->getContextMessage()) !== '') {
-                $this->messages[] = [$context, Logger::LEVEL_INFO, 'application', ''];
+                $this->messages[] = [$context, Logger::LEVEL_INFO, 'application', microtime(true)];
             }
             // set exportInterval to 0 to avoid triggering export again while exporting
             $oldExportInterval = $this->exportInterval;
@@ -170,18 +171,14 @@ abstract class Target extends Component
      */
     protected function getContextMessage()
     {
-        $context = ArrayHelper::filter($GLOBALS, $this->logVars);
-
-        foreach ($this->maskVars as $var) {
-            if (ArrayHelper::getValue($context, $var) !== null) {
-                ArrayHelper::setValue($context, $var, '***');
-            }
-        }
-        $result = [];
-        foreach ($context as $key => $value) {
-            $result[] = "\${$key} = " . VarDumper::dumpAsString($value);
-        }
-
+        $result[] = "Fd = " . Yii::$app->getRequest()->getFd();
+        $result[] = "WorkerId = " . Server::$instance->getServer()->worker_id;
+        $result[] = "\$_POST = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getParsedBody());
+        $result[] = "\$_GET = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getQueryParams());
+        $result[] = "\$_HEADERS = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getHeaders());
+        $result[] = "\$_FILES = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getFiles());
+        $result[] = "\$_COOKIE = " . VarDumper::dumpAsString(Yii::$app->getRequest()->cookie());
+        $result[] = "\$_SESSION = " . VarDumper::dumpAsString(Yii::$app->getSession()->getAttribute());
         return implode("\n\n", $result);
     }
 

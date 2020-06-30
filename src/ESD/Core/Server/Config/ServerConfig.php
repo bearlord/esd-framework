@@ -923,6 +923,17 @@ class ServerConfig extends BaseConfig
     }
 
     /**
+     * Get log dir
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getLogDir()
+    {
+        return $this->getBinDir() . DIRECTORY_SEPARATOR . "logs";
+    }
+
+    /**
      * Get src directory
      *
      * @return string

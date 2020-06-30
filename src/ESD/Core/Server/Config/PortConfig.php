@@ -827,6 +827,7 @@ class PortConfig extends BaseConfig
             ConfigException::AssertNull($this, "packageEof", $this->getPackageEof());
             $build['package_eof'] = $this->getPackageEof();
         }
+
         if ($this->isOpenEofSplit()) {
             $count++;
             $build['open_eof_split'] = $this->isOpenEofSplit();

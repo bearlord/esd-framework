@@ -110,7 +110,7 @@ class LoggerPlugin extends AbstractPlugin
             $this->logger->popHandler();
 
             //Add a log handler
-            $handler = new RotatingFileHandler($serverConfig->getBinDir() . "/logs/" . $this->loggerConfig->getName() . ".log",
+            $handler = new RotatingFileHandler($serverConfig->getLogDir() . DIRECTORY_SEPARATOR . $this->loggerConfig->getName() . ".log",
                 $this->loggerConfig->getMaxFiles(),
                 $this->loggerConfig->getLevel());
             $this->logger->pushHandler($handler);

@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Log;
 
+use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Helpers\FileHelper;
@@ -81,7 +82,7 @@ class FileTarget extends Target
     {
         parent::init();
         if ($this->logFile === null) {
-            $this->logFile = Yii::$app->getRuntimePath() . '/logs/app.log';
+            $this->logFile = Server::$instance->getServerConfig()->getLogDir() . '/app.log';
         } else {
             $this->logFile = Yii::getAlias($this->logFile);
         }
