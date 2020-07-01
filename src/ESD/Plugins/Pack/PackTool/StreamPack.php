@@ -72,11 +72,8 @@ class StreamPack extends AbstractPack
     public function unPack(int $fd, string $data, PortConfig $portConfig): ?ClientData
     {
         $this->portConfig = $portConfig;
+        //Value can be empty
         $value = $this->decode($data);
-        if (empty($value)) {
-            $this->warn(Yii::t('esd', 'Packet unpack failed'));
-            return null;
-        }
         $clientData = new ClientData($fd, $portConfig->getBaseType(), 'tcp', $value);
         return $clientData;
     }

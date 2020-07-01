@@ -7,6 +7,7 @@
 namespace ESD\Yii\PdoPlugin;
 
 use ESD\Core\Channel\Channel;
+use ESD\Coroutine\Co;
 use ESD\Yii\Db\Connection;
 
 /**
@@ -68,8 +69,11 @@ class PdoPool
     {
         $contextKey = "Pdo:{$this->getConfig()->getName()}";
         $db = getContextValue($contextKey);
+ 
         if ($db == null) {
+            /** @var Connection $db */
             $db = $this->pool->pop();
+
             defer(function () use ($db) {
                 $this->pool->push($db);
             });

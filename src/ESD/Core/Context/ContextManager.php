@@ -27,6 +27,7 @@ class ContextManager
     }
 
     /**
+     * Register context
      * @param ContextBuilder $contextBuilder
      */
     public function registerContext(ContextBuilder $contextBuilder)
@@ -35,6 +36,10 @@ class ContextManager
         krsort($this->contextStack);
     }
 
+    /**
+     * Instance
+     * @return ContextManager
+     */
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -44,6 +49,7 @@ class ContextManager
     }
 
     /**
+     * Get context builder
      * @param $deep
      * @param callable|null $register
      * @return ContextBuilder
@@ -59,7 +65,7 @@ class ContextManager
     }
 
     /**
-     * 获取当前上下文
+     * Get context
      * @return Context|null
      */
     public function getContext()

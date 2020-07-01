@@ -8,6 +8,7 @@
 namespace ESD\Yii\Log;
 
 use ESD\Core\Server\Server;
+use ESD\Plugins\Pack\ClientData;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
@@ -171,14 +172,25 @@ abstract class Target extends Component
      */
     protected function getContextMessage()
     {
-        $result[] = "Fd = " . Yii::$app->getRequest()->getFd();
+        /** @var ClientData $clientData */
+        $clientData = getContextValueByClassName(ClientData::class);
+        if (!$clientData) {
+            return false;
+        }
+
+        $result[] = "Fd = " . $clientData->getFd();
         $result[] = "WorkerId = " . Server::$instance->getServer()->worker_id;
-        $result[] = "\$_POST = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getParsedBody());
-        $result[] = "\$_GET = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getQueryParams());
-        $result[] = "\$_HEADERS = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getHeaders());
-        $result[] = "\$_FILES = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getFiles());
-        $result[] = "\$_COOKIE = " . VarDumper::dumpAsString(Yii::$app->getRequest()->cookie());
-        $result[] = "\$_SESSION = " . VarDumper::dumpAsString(Yii::$app->getSession()->getAttribute());
+        $result[] = "ClientData = " . VarDumper::dumpAsString($clientData);
+
+        $request = $clientData->getRequest();
+        if (!empty($request)) {
+            $result[] = "\$_POST = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getParsedBody());
+            $result[] = "\$_GET = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getQueryParams());
+            $result[] = "\$_HEADERS = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getHeaders());
+            $result[] = "\$_FILES = " . VarDumper::dumpAsString(Yii::$app->getRequest()->getFiles());
+            $result[] = "\$_COOKIE = " . VarDumper::dumpAsString(Yii::$app->getRequest()->cookie());
+            $result[] = "\$_SESSION = " . VarDumper::dumpAsString(Yii::$app->getSession()->getAttribute());
+        }
         return implode("\n\n", $result);
     }
 
