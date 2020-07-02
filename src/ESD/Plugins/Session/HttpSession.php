@@ -61,15 +61,15 @@ class HttpSession
         setContextValue("HttpSession", $this);
         $this->request = getDeepContextValueByClassName(Request::class);
         $this->response = getDeepContextValueByClassName(Response::class);
-        if($this->config->getSessionUsage() == SessionConfig::USAGE_COOKIE) {
+        if ($this->config->getSessionUsage() == SessionConfig::USAGE_COOKIE) {
             $this->id = $this->request->getCookieParams()[$this->config->getSessionName()] ?? null;
         } elseif ($this->config->getSessionUsage() == SessionConfig::USEAGE_HEADER) {
             /** @var array $_sesionIdentify */
             $_sesionIdentify = $this->request->getHeader(SessionConfig::HEADER_IDENTIFY);
             $this->id = !empty($_sesionIdentify[0]) ? $_sesionIdentify[0] : null;
-        } else{
-            $authorization = explode(' ',$this->request->getHeaderLine('authorization'));
-            if(isset($authorization[1])){
+        } else {
+            $authorization = explode(' ', $this->request->getHeaderLine('authorization'));
+            if (isset($authorization[1])) {
                 $this->id = $authorization[1];
             }
         }
@@ -160,11 +160,11 @@ class HttpSession
     public function refresh(): void
     {
         $id = $this->getId();
-        if($id!=null) {
+        if ($id != null) {
             $this->sessionStorage->remove($id);
         }
         $this->id = $this->gid();
-        if($this->config->getSessionUsage() == SessionConfig::USAGE_COOKIE){
+        if ($this->config->getSessionUsage() == SessionConfig::USAGE_COOKIE) {
             $this->response->withCookie(new Cookie($this->config->getSessionName(), $this->id,
                 time() + $this->config->getTimeout(), $this->config->getPath(),
                 $this->config->getDomain(), $this->config->getSecure(), $this->config->getHttpOnly()));
@@ -175,8 +175,8 @@ class HttpSession
                 $sesionIdentify = $_sesionIdentify[0];
                 $this->response->withHeader(SessionConfig::HEADER_IDENTIFY, $sesionIdentify);
             }
-        } else{
-            $this->response->withHeader('Authorization', 'Bearer ' .$this->id);
+        } else {
+            $this->response->withHeader('Authorization', 'Bearer ' . $this->id);
         }
         $this->setAttribute("createTime", time());
         $this->setAttribute("expireTime", time() + $this->config->getTimeout());
@@ -187,7 +187,7 @@ class HttpSession
     /**
      * @return int
      */
-    public function getExpireTime() : int {
+    public function getExpireTime(): int  {
         return $this->getAttribute('expireTime');
     }
 
@@ -197,9 +197,9 @@ class HttpSession
      * @param string $key
      * @return mixed
      */
-    public function getAttribute( $key = null )
+    public function getAttribute($key = null)
     {
-        if($key == null){
+        if ($key == null) {
             return $this->attribute;
         }
         return $this->attribute[$key] ?? null;
@@ -221,7 +221,7 @@ class HttpSession
     {
         if ($this->id != null) {
             $this->sessionStorage->remove($this->id);
-            $this->response->withCookie(new Cookie($this->config->getSessionName(), null,time()-1));
+            $this->response->withCookie(new Cookie($this->config->getSessionName(), null, time() - 1));
         }
         $this->id = null;
         $this->attribute = [];
@@ -230,7 +230,8 @@ class HttpSession
     /**
      * Destroy
      */
-    public function destroy(){
+    public function destroy()
+    {
         $this->invalidate();
     }
 
