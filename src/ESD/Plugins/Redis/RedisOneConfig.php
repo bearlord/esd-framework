@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Redis;
 
 use ESD\Core\Plugins\Config\BaseConfig;
+use ESD\Yii\Yii;
 
 /**
  * Class RedisOneConfig
@@ -19,51 +20,41 @@ class RedisOneConfig extends BaseConfig
     /**
      * @var string
      */
-    protected $name;
+    protected $name = "";
 
     /**
      * @var int
      */
-    protected $poolMaxNumber;
+    protected $poolMaxNumber = 10;
 
     /**
      * @var string
      */
-    protected $host;
+    protected $host = "";
 
     /**
      * @var string
      */
-    protected $password;
+    protected $password = "";
 
     /**
      * @var int
      */
-    protected $selectDb;
+    protected $database = 0;
 
     /**
      * @var int
      */
-    protected $port;
+    protected $port = 6379;
 
     /**
      * RedisOneConfig constructor.
-     * @param string $host
-     * @param string $password
-     * @param int $selectDb
-     * @param int|null $port
      * @param string $name
-     * @param int $poolMaxNumber
      */
-    public function __construct(string $host, string $password = "", int $selectDb = 0, $port = 6379, string $name = "default", int $poolMaxNumber = 10)
+    public function __construct(string $name)
     {
         parent::__construct(self::key, true, "name");
-        $this->name = $name;
-        $this->poolMaxNumber = $poolMaxNumber;
-        $this->host = $host;
-        $this->password = $password;
-        $this->selectDb = $selectDb;
-        $this->port = $port;
+        $this->setName($name);
     }
 
     /**
@@ -137,16 +128,16 @@ class RedisOneConfig extends BaseConfig
     public function buildConfig()
     {
         if (!extension_loaded('redis')) {
-            throw new RedisException("Lack of redis expansion");
+            throw new RedisException(Yii::t('esd', 'Redis extension is not loaded'));
         }
         if ($this->poolMaxNumber < 1) {
-            throw new RedisException("PoolMaxNumber must be greater than 1");
+            throw new RedisException(Yii::t('esd', 'Redis poolMaxNumber must be greater than 1'));
         }
         if (empty($this->name)) {
-            throw new RedisException("Name must be set");
+            throw new RedisException(Yii::t('esd', 'Redis name must be set'));
         }
         if (empty($this->host)) {
-            throw new RedisException("Host must be set");
+            throw new RedisException(Yii::t('esd', 'Redis host must be set'));
         }
     }
 
@@ -169,16 +160,16 @@ class RedisOneConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getSelectDb(): int
+    public function getDatabase(): int
     {
-        return $this->selectDb;
+        return $this->database;
     }
 
     /**
-     * @param int $selectDb
+     * @param int $database
      */
-    public function setSelectDb(int $selectDb): void
+    public function setDatabase(int $database): void
     {
-        $this->selectDb = $selectDb;
+        $this->database = $database;
     }
 }

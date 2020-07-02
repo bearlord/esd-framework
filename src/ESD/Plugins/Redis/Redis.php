@@ -73,7 +73,7 @@ class Redis implements DBInterface
      * @param callable|null $call
      * @return mixed
      */
-    public function execute($name,callable $call = null)
+    public function execute($name, callable $call = null)
     {
         if ($call != null) {
             return $call();

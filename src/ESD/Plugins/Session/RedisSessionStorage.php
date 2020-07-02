@@ -8,6 +8,10 @@ namespace ESD\Plugins\Session;
 
 use ESD\Plugins\Redis\GetRedis;
 
+/**
+ * Class RedisSessionStorage
+ * @package ESD\Plugins\Session
+ */
 class RedisSessionStorage implements SessionStorage
 {
     use GetRedis;

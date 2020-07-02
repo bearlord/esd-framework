@@ -46,27 +46,32 @@ class RedisPool
      */
     public function db(): Redis
     {
-        $db = getContextValue("Redis:{$this->getRedisConfig()->getName()}");
+        $contextKey = sprintf("Redis:%s", $this->getRedisConfig()->getName());
+        $db = getContextValue($contextKey);
         if ($db == null) {
+            /** @var Redis|\Redis $db */
             $db = $this->pool->pop();
-            if($db instanceof Redis){
-               if(!$db->isConnected()){
-                   if(!$db->connect($this->redisConfig->getHost(),$this->redisConfig->getPort())){
-                       throw new RedisException($db->getLastError());
-                   }
-                   $db->setOption(\Redis::OPT_READ_TIMEOUT, -1);
-                   if(!empty($this->redisConfig->getPassword())){
-                       if(!$db->auth($this->redisConfig->getPassword())){
-                           throw new RedisException($db->getLastError());
-                       }
-                   }
-                   $db->select($this->redisConfig->getSelectDb());
-               }
+            if ($db instanceof Redis) {
+                if (!$db->isConnected()) {
+                    if (!$db->connect($this->redisConfig->getHost(), $this->redisConfig->getPort())) {
+                        throw new RedisException($db->getLastError());
+                    }
+
+                    $db->setOption(\Redis::OPT_READ_TIMEOUT, -1);
+
+                    if (!empty($this->redisConfig->getPassword())) {
+                        if (!$db->auth($this->redisConfig->getPassword())) {
+                            throw new RedisException($db->getLastError());
+                        }
+                    }
+
+                    $db->select($this->redisConfig->getDatabase());
+                }
             }
             defer(function () use ($db) {
                 $this->pool->push($db);
             });
-            setContextValue("Redis:{$this->getRedisConfig()->getName()}", $db);
+            setContextValue($contextKey, $db);
         }
         return $db;
     }

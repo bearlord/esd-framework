@@ -88,7 +88,7 @@ class HttpSession
     }
 
     /**
-     * refresh 别名
+     * Create
      */
     public function create(): void
     {
@@ -96,7 +96,7 @@ class HttpSession
     }
 
     /**
-     * 是否可用
+     * Is available
      * @return bool
      */
     public function isAvailable(): bool
@@ -105,7 +105,7 @@ class HttpSession
     }
 
     /**
-     * 是否过期
+     * Is overdue
      * @return bool
      */
     public function isOverdue(): bool
@@ -118,7 +118,7 @@ class HttpSession
     }
 
     /**
-     * 是否存在
+     * Is exist
      * @return bool
      */
     public function isExist(): bool
@@ -136,6 +136,7 @@ class HttpSession
     }
 
     /**
+     * Set attribute
      * @param string $key
      * @param string $value
      */
@@ -145,6 +146,7 @@ class HttpSession
     }
 
     /**
+     * Remove attribute
      * @param string $key
      */
     public function removeAttribute(string $key): void
@@ -152,6 +154,9 @@ class HttpSession
         unset($this->attribute[$key]);
     }
 
+    /**
+     * Refresh
+     */
     public function refresh(): void
     {
         $id = $this->getId();
@@ -179,12 +184,16 @@ class HttpSession
         $this->isNew = true;
     }
 
+    /**
+     * @return int
+     */
     public function getExpireTime() : int {
         return $this->getAttribute('expireTime');
     }
 
 
     /**
+     * Get attriubute
      * @param string $key
      * @return mixed
      */
@@ -205,8 +214,9 @@ class HttpSession
         return $this->id;
     }
 
-
-
+    /**
+     * Invalidate
+     */
     public function invalidate()
     {
         if ($this->id != null) {
@@ -218,13 +228,15 @@ class HttpSession
     }
 
     /**
-     * invalidate 别名
+     * Destroy
      */
     public function destroy(){
         $this->invalidate();
     }
 
-
+    /**
+     * Save
+     */
     private function save()
     {
         if (!empty($this->attribute) && $this->id != null) {
@@ -232,6 +244,10 @@ class HttpSession
         }
     }
 
+    /**
+     * Generate id
+     * @return string
+     */
     private function gid()
     {
         return session_create_id();

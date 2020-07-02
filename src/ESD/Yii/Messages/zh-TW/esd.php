@@ -3,7 +3,7 @@ return [
     '{path} 404 Not Found' => '{path} 404 請求未找到',
     'onto' => '->',
     'Added {driverName} connection pool named {name}' => '添加 {driverName} {name} 的連接池',
-    'Added redis connection pool named {name}' => '添加 Redis {name} 的連接池',
+    'Redis connection pool named {name} added' => '添加 Redis {name} 的連接池',
     'Application start' => '程序啓動',
     'Application shutdown' => '程序關閉',
     'Before process start' => '進程啓動前',

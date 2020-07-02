@@ -18,67 +18,55 @@ class Config extends BaseConfig
     /**
      * @var string
      */
-    protected $name;
+    protected $name = "default";
     /**
      * @var int
      */
-    protected $poolMaxNumber;
+    protected $poolMaxNumber = 5;
     /**
      * @var string
      */
-    protected $dsn;
+    protected $dsn = "";
     /**
      * @var username
      */
-    protected $username;
+    protected $username = "";
     /**
      * @var password
      */
-    protected $password;
+    protected $password = "";
     /**
      * @var table prefix
      */
-    protected $tablePrefix;
+    protected $tablePrefix = "";
     /**
      * @var string
      */
-    protected $charset;
+    protected $charset = "utf8";
 
     /**
      * @var Enable schema cache
      */
-    protected $enableSchemaCache;
+    protected $enableSchemaCache = false;
 
     /**
      * @var Schema cache duration
      */
-    protected $schemaCacheDuration;
+    protected $schemaCacheDuration = false;
 
     /**
      * @var Schema cache component
      */
-    protected $schemaCache;
+    protected $schemaCache = "";
 
     /**
      * Config constructor.
-     * @param string $dsn
-     * @param string $username
-     * @param string $password
-     * @param string $tablePrefix
-     * @param string $charset
-     * @param string $name
-     * @param int $poolMaxNumber
+     * @param $name
      */
-    public function __construct(string $dsn = '', string $username = '', string $password = '', string $tablePrefix = '', string $charset = "utf8", string $name = "default", $poolMaxNumber = 10)
+    public function __construct($name)
     {
         parent::__construct(self::key, true, "name");
-        $this->name = $name;
-        $this->poolMaxNumber = $poolMaxNumber;
-        $this->dsn = $dsn;
-        $this->username = $username;
-        $this->password = $password;
-        $this->tablePrefix = $tablePrefix;
-        $this->charset = $charset;
+        $this->setName($name);
     }
 
     /**
@@ -210,8 +198,8 @@ class Config extends BaseConfig
     }
 
     /**
- * @return string
- */
+     * @return string
+     */
     public function getEnableSchemaCache(): string
     {
         return $this->enableSchemaCache;

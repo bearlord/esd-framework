@@ -59,8 +59,7 @@ class RedisPlugin extends AbstractPlugin
         }
         $configs = Server::$instance->getConfigContext()->get(RedisOneConfig::key, []);
         foreach ($configs as $key => $value) {
-            $redisOneConfig = new RedisOneConfig("");
-            $redisOneConfig->setName($key);
+            $redisOneConfig = new RedisOneConfig($key);
             $this->redisConfig->addRedisOneConfig($redisOneConfig->buildFromConfig($value));
         }
         $redisProxy = new RedisProxy();
@@ -85,7 +84,7 @@ class RedisPlugin extends AbstractPlugin
         foreach ($this->redisConfig->getRedisConfigs() as $key => $value) {
             $redisPool = new RedisPool($value);
             $redisManyPool->addPool($redisPool);
-            $this->debug(Yii::t('esd', 'Added redis connection pool named {name}', [
+            $this->debug(Yii::t('esd', 'Redis connection pool named {name} added', [
                 'name' => $value->getName()
             ]));
         }

@@ -8,6 +8,6 @@ return [
     'No redis configuration' => 'Keine Redis-Konfiguration',
     'No PDO configuration' => 'Keine PDO-Konfiguration',
     'Added {driverName} connection pool named {name}' => 'Verbindungspool {driverName} mit dem Namen {name} hinzugefügt',
-    'Added redis connection pool named {name}' => 'Redis-Verbindungspool mit dem Namen {name} hinzugefügt' ,
+    'Redis connection pool named {name} added' => 'Redis-Verbindungspool mit dem Namen {name} hinzugefügt' ,
 
 ];

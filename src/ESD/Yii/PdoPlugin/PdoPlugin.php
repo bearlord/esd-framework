@@ -63,15 +63,14 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
         $configs = Server::$instance->getConfigContext()->get("esd-yii.db");
 
         foreach ($configs as $key => $config) {
-            $configObject = new Config();
-            $configObject->setName($key);
+            $configObject = new Config($key);
             $this->configs->addConfig($configObject->buildFromConfig($config));
 
             $slaveConfigs = $this->getSlaveConfigs($config);
             if (!empty($slaveConfigs)) {
                 foreach ($slaveConfigs as $slaveKey => $slaveConfig) {
-                    $slaveConfigObject = new Config();
-                    $slaveConfigObject->setName(sprintf("%s.slave.%s", $key, $slaveKey));
+                    $_salveKey = sprintf("%s.slave.%s", $key, $slaveKey);
+                    $slaveConfigObject = new Config($_salveKey);
                     $this->configs->addConfig($slaveConfigObject->buildFromConfig($slaveConfig));
                 }
             }
@@ -79,8 +78,8 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
             $masterConfigs = $this->getMasterConfigs($config);
             if (!empty($masterConfigs)) {
                 foreach ($masterConfigs as $masterKey => $masterConfig) {
-                    $masterConfigObject = new Config();
-                    $masterConfigObject->setName(sprintf("%s.master.%s", $key, $slaveKey));
+                    $_masterKey = sprintf("%s.master.%s", $key, $slaveKey);
+                    $masterConfigObject = new Config($_masterKey);
                     $this->configs->addConfig($masterConfigObject->buildFromConfig($masterConfigs));
                 }
             }

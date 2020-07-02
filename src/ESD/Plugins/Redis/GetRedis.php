@@ -6,6 +6,9 @@
 
 namespace ESD\Plugins\Redis;
 
+use ESD\Core\Exception;
+use ESD\Yii\Yii;
+
 /**
  * Trait GetRedis
  * @package ESD\Plugins\Redis
@@ -23,8 +26,12 @@ trait GetRedis
         if ($db == null) {
             /** @var RedisManyPool $redisPool */
             $redisPool = getDeepContextValueByClassName(RedisManyPool::class);
+
             $pool = $redisPool->getPool($name);
-            if ($pool == null) throw new RedisException("Redis connection pool named {$name} was not found");
+
+            if ($pool == null) {
+                throw new Exception('Redis connection pool named {name} not found');
+            }
             return $pool->db();
         } else {
             return $db;

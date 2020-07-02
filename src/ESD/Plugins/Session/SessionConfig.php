@@ -49,7 +49,7 @@ class SessionConfig extends BaseConfig
     /**
      * @var string
      */
-    protected $db = "default";
+    protected $database = "default";
 
     /**
      * @var string
@@ -229,16 +229,16 @@ class SessionConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getDb(): string
+    public function getDatabase(): string
     {
-        return $this->db;
+        return $this->database;
     }
 
     /**
-     * @param string $db
+     * @param string $database
      */
-    public function setDb(string $db): void
+    public function setDatabase(string $database): void
     {
-        $this->db = $db;
+        $this->database = $database;
     }
 }
