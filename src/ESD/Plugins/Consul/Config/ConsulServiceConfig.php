@@ -161,10 +161,10 @@ class ConsulServiceConfig extends BaseConfig
      */
     public function setCheckConfig($checkConfig): void
     {
-        if (is_array($checkConfig)){
+        if (is_array($checkConfig)) {
             $this->checkConfig = new ConsulCheckConfig();
             $this->checkConfig->buildFromConfig($checkConfig);
-        }elseif($checkConfig instanceof ConsulCheckConfig){
+        } elseif ($checkConfig instanceof ConsulCheckConfig) {
             $this->checkConfig = $checkConfig;
         }
     }

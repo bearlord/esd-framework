@@ -49,7 +49,7 @@ class EventDispatcher
     public function listen($type, ?EventCall $eventCall = null, $once = false): EventCall
     {
         if (!array_key_exists($type, $this->eventCalls)) {
-            $this->eventCalls [$type] = [];
+            $this->eventCalls[$type] = [];
         }
         if ($eventCall == null) {
             $eventCall = DIGet(EventCall::class, [$this, $type, $once]);
@@ -66,15 +66,17 @@ class EventDispatcher
      */
     public function remove($type, EventCall $eventCall)
     {
-        if ($eventCall != null) $eventCall->destroy();
+        if ($eventCall != null) {
+            $eventCall->destroy();
+        }
         if (array_key_exists($type, $this->eventCalls)) {
-            $index = array_search($eventCall, $this->eventCalls [$type]);
+            $index = array_search($eventCall, $this->eventCalls[$type]);
             if ($index !== null) {
-                unset ($this->eventCalls [$type] [$index]);
+                unset ($this->eventCalls[$type][$index]);
             }
-            $numListeners = count($this->eventCalls [$type]);
+            $numListeners = count($this->eventCalls[$type]);
             if ($numListeners == 0) {
-                unset ($this->eventCalls [$type]);
+                unset ($this->eventCalls[$type]);
             }
         }
     }
@@ -88,7 +90,7 @@ class EventDispatcher
     public function removeAll($type = null)
     {
         if ($type) {
-            unset ($this->eventCalls [$type]);
+            unset ($this->eventCalls[$type]);
         } else {
             $this->eventCalls = array();
         }
@@ -138,7 +140,7 @@ class EventDispatcher
      * @param Event $event
      * @param Process ...$toProcess
      */
-    public function dispatchProcessEvent(Event $event, Process ... $toProcess)
+    public function dispatchProcessEvent(Event $event, Process ...$toProcess)
     {
         $pids = [];
         foreach ($toProcess as $process) {
