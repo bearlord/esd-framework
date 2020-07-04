@@ -9,6 +9,7 @@ namespace ESD\Plugins\Actor;
 use ESD\Core\Server\Server;
 use ESD\Plugins\ProcessRPC\ProcessRPCCallMessage;
 use ESD\Plugins\ProcessRPC\RPCProxy;
+use ESD\Yii\Yii;
 
 /**
  * Class ActorRPCProxy
@@ -27,7 +28,9 @@ class ActorRPCProxy extends RPCProxy
     {
         $actorInfo = ActorManager::getInstance()->getActorInfo($actorName);
         if ($actorInfo == null) {
-            throw new ActorException("actor:$actorName not exist");
+            throw new ActorException(Yii::t('esd', 'Actor {actor} not exist', [
+                '{actor}' => $actorName
+            ]));
         }
         parent::__construct($actorInfo->getProcess(), $actorInfo->getClassName() . ":" . $actorInfo->getName(), $oneway, $timeOut);
     }

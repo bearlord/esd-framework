@@ -2,6 +2,10 @@
 return [
     '{path} 404 Not Found' => '{path} 404 请求未找到',
     'onto' => '->',
+    'Add aspect {name}' => '增加切片{name}',
+    'Actor {actor} not exist' => 'Actor {actor} 不存在',
+    'Actor {actor} created timeout' => '创建 Actor {actor} 超时',
+    'Add a actor {actor}' => '添加Actor {actor}',
     'Added {driverName} connection pool named {name}' => '添加 {driverName} {name} 的连接池',
 
     'Application start' => '程序启动',
@@ -19,6 +23,7 @@ return [
     'On manager stop' => '管理进程结束',
     'On process start' => '进程启动',
     'On process stop' => '进程结束',
+    'Print configuration' => '打印配置文件',
     'Redis connection pool named {name} added' => '添加 Redis {name} 的连接池',
     'Redis connection pool named {name} not found' => '没有 Redis {name} 的连接池',
     'Redis extension is not loaded' => 'Redis 扩展没有加载',

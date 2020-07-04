@@ -76,7 +76,7 @@ class Event
      */
     public function getProcessId(): ?int
     {
-        return $this->getFromInfo(ProcessEventDispatcher::type);
+        return $this->getSourceInfo(ProcessEventDispatcher::type);
     }
 
     /**

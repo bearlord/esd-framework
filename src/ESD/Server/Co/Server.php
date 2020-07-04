@@ -17,6 +17,7 @@ use ESD\Coroutine\Co;
 use ESD\Coroutine\Event\EventCallFactory;
 use ESD\Server\Co\Http\Factory\RequestFactory;
 use ESD\Server\Co\Http\Factory\ResponseFactory;
+use ESD\Yii\Yii;
 
 /**
  * Class Server
@@ -57,6 +58,6 @@ abstract class Server extends \ESD\Core\Server\Server
     {
         parent::configure();
 
-        $this->getLog()->debug("Print configuration:\n" . $this->getConfigContext()->getCacheContainYaml());
+        $this->getLog()->debug(Yii::t("esd", "Print configuration") . ":\n" . $this->getConfigContext()->getCacheContainYaml());
     }
 }

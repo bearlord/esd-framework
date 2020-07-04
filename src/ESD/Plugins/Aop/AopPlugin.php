@@ -14,6 +14,7 @@ use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
+use ESD\Yii\Yii;
 use rabbit\aop\Aop;
 use rabbit\aop\AopAspectKernel;
 use rabbit\aop\GoAspectContainer;
@@ -110,7 +111,9 @@ class AopPlugin extends AbstractPlugin
         }
         $this->order();
         foreach ($this->orderList as $aspect) {
-            $this->debug("Add aspect {$aspect->getName()}");
+            $this->debug(Yii::t('esd', 'Add aspect {name}', [
+                'name' => $aspect->getName()
+            ]));
         }
         if (!$this->aopConfig->isFileCache()) {
             $this->options['annotationCache'] = new ArrayCache();

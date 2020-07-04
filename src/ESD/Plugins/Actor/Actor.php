@@ -117,25 +117,25 @@ abstract class Actor
      */
     public static function create(string $actorName, $data = null, $waitCreate = true, $timeOut = 5)
     {
-        if (static::class == Actor::class) {
-            throw new ActorException(Yii::t('esd', 'Actor is abstract class'));
-        }
-
         $processes = Server::$instance->getProcessManager()->getProcessGroup(ActorConfig::groupName);
+
         $nowProcess = ActorManager::getInstance()->getAtomic()->add();
         $index = $nowProcess % count($processes->getProcesses());
 
         Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorCreateEvent(
             ActorCreateEvent::ActorCreateEvent,
             [
-                static::class, $actorName, $data
+                $actorName, $actorName, $data
             ]), $processes->getProcesses()[$index]);
+
         if ($waitCreate) {
             if (!ActorManager::getInstance()->hasActor($actorName)) {
                 $call = Server::$instance->getEventDispatcher()->listen(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actorName, null, true);
                 $result = $call->wait($timeOut);
                 if ($result == null) {
-                    throw new ActorException("wait actor create timeout");
+                    throw new ActorException(Yii::t('esd', 'Actor {actor} created timeout', [
+                        '{actor}' => $actorName
+                    ]));
                 }
             }
         }

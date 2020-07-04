@@ -10,6 +10,7 @@ use ESD\Core\Memory\CrossProcess\Atomic;
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Server\Co\Server;
+use ESD\Yii\Yii;
 
 class ActorManager
 {
@@ -93,7 +94,10 @@ class ActorManager
     public function getActorInfo(string $actorName): ?ActorInfo
     {
         $data = $this->actorTable->get($actorName);
-        if (empty($data)) return null;
+        if (empty($data)) {
+            return null;
+        }
+
         $className = $this->actorIdClassNameTable->get($data["classId"], "className");
         $actorInfo = new ActorInfo();
         $actorInfo->setName($actorName);
@@ -110,10 +114,10 @@ class ActorManager
     public function addActor(Actor $actor)
     {
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getGroupName() != ActorConfig::groupName) {
-            throw new ActorException("do not new a actor,use Actor::create()");
+            throw new ActorException("Do not new a actor, use Actor::create()");
         }
         if ($this->actorTable->exist($actor->getName())) {
-            throw new ActorException("has same actor name :{$actor->getName()}");
+            throw new ActorException("Has same actor name :{$actor->getName()}");
         }
         $className = get_class($actor);
         $actorClassNameId = $this->actorClassNameIdTable->get($className);
@@ -131,7 +135,9 @@ class ActorManager
             "classId" => $id
         ]);
         DISet($className . ":" . $actor->getName(), $actor);
-        $this->debug("Add a actor:{$actor->getName()}");
+        $this->debug(Yii::t('esd', 'Add a actor {actor}', [
+            'actor' => $actor->getName()
+        ]));
     }
 
     /**
@@ -159,7 +165,9 @@ class ActorManager
     public function hasActor(string $actorName)
     {
         $data = $this->actorTable->get($actorName);
-        if (empty($data)) return false;
+        if (empty($data)) {
+            return false;
+        }
         return true;
     }
 }

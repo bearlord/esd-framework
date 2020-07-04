@@ -118,7 +118,10 @@ class EventDispatcher
 
         //Send message
         $start = false;
-        if (empty($event->getProgress())) $start = true;
+        if (empty($event->getProgress())) {
+            $start = true;
+        }
+
         foreach ($this->orderList as $order) {
             if ($order instanceof AbstractEventDispatcher) {
                 if ($start == false && $event->getProgress() == $order->getName()) {
