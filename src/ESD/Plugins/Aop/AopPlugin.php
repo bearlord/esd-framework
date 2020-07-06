@@ -82,11 +82,18 @@ class AopPlugin extends AbstractPlugin
         $this->aopConfig->merge();
 
         $serverConfig = Server::$instance->getServerConfig();
-
         //Add src directory automatically
         $this->aopConfig->addIncludePath($serverConfig->getSrcDir());
-
         $this->aopConfig->addIncludePath($serverConfig->getVendorDir() . "/bearlord");
+
+        //Exclude paths
+        $excludePaths = Server::$instance->getConfigContext()->get("esd.aop.excludePaths");
+        if (!empty($excludePaths)) {
+            foreach ($excludePaths as $excludePath) {
+                $this->aopConfig->addExcludePath($excludePath);
+            }
+        }
+
         $this->aopConfig->setCacheDir($cacheDir);
         $this->aopConfig->merge();
     }
@@ -100,12 +107,18 @@ class AopPlugin extends AbstractPlugin
     {
         $serverConfig = Server::$instance->getServerConfig();
         $this->options = [
-            'debug' => $serverConfig->isDebug(), // use 'false' for production mode
-            'appDir' => $serverConfig->getRootDir(), // Application root directory
-            'cacheDir' => $this->aopConfig->getCacheDir(), // Cache directory
+            //Use 'false' for production mode
+            'debug' => $serverConfig->isDebug(),
+            //Application root directory
+            'appDir' => $serverConfig->getRootDir(),
+            //Cache directory
+            'cacheDir' => $this->aopConfig->getCacheDir(),
+            //Include paths
             'includePaths' => $this->aopConfig->getIncludePaths(),
+            //Exclude paths
             'excludePaths' => $this->aopConfig->getExcludePaths()
         ];
+
         foreach ($this->aopConfig->getAspects() as $aspect) {
             $this->addOrder($aspect);
         }

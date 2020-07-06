@@ -96,12 +96,17 @@ class AopConfig extends BaseConfig
     public function addIncludePath(string $includePath)
     {
         $includePath = realpath($includePath);
-        if ($includePath === false) return;
+        if ($includePath === false) {
+            return;
+        }
         $key = str_replace(realpath(ROOT_DIR), "", $includePath);
         $key = str_replace("/", ".", $key);
         $this->includePaths[$key] = $includePath;
     }
 
+    /**
+     * @param OrderAspect $param
+     */
     public function addAspect(OrderAspect $param)
     {
         $this->aspects[] = $param;
@@ -164,7 +169,9 @@ class AopConfig extends BaseConfig
     public function addExcludePath(string $excludePath)
     {
         $excludePath = realpath($excludePath);
-        if ($excludePath === false) return;
+        if ($excludePath === false) {
+            return;
+        }
         $key = str_replace(realpath(ROOT_DIR), "", $excludePath);
         $key = str_replace("/", ".", $key);
         $this->excludePaths[$key] = $excludePath;
