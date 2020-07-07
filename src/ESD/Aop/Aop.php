@@ -7,7 +7,6 @@
 
 namespace ESD\Aop;
 
-use ESD\Yii\Helpers\FileHelper;
 use Go\Instrument\Transformer\StreamMetaData;
 
 /**
@@ -24,13 +23,15 @@ class Aop
      */
     public function __construct(string $kernel, array $aspects, array $options)
     {
-        /** @var AbstractAopKernel kernel */
+        /** @var AbstractAopKernel $kernelInstance */
         $kernelInstance = $kernel::getInstance();
+
         $kernelInstance->setAspects($aspects);
         if (!isset($options['cacheDir'])) {
             $options['cacheDir'] = sys_get_temp_dir();
         }
         $kernelInstance->init($options);
+
         $this->bootStrap($options['cacheDir']);
     }
 
@@ -41,42 +42,48 @@ class Aop
      */
     private function bootStrap(string $cacheDir): void
     {
+        return;
         $loaders = spl_autoload_functions();
         foreach ($loaders as $loader) {
+            /** @var AopComposerLoader $item */
             foreach ($loader as $item) {
-                if ($item instanceof AopComposerLoader) {
-                    if ($item->getIncludePath()) {
-                        foreach ($item->getEnumerator()->enumerate() as $file) {
-                            $contents = file_get_contents($file);
-                            $class = $this->getClassByString($contents);
-                            if (!empty($class)) {
-                                $aopFile = $item->findFile($class);
-                                if (strpos($aopFile, 'php://') === 0) {
-                                    if (($fp = fopen($file, 'r')) === false) {
-                                        throw new \InvalidArgumentException("Unable to open file: {$fileName}");
-                                    }
-                                    $context = fread($fp, filesize($file));
-                                    $metadata = new StreamMetaData($fp, $context);
-                                    fclose($fp);
-                                    SourceTransformingLoader::transformCode($metadata);
-                                    $context = $metadata->source;
-                                    $aopClass = $this->getClassByString($context);
-                                    if (strpos($aopClass, '__AopProxied') !== false) {
-                                        $dir = $cacheDir . '/' . $file->getPathname();
-                                        self::createDirectory(dirname($dir), 0777);
-                                        $len = file_put_contents(
-                                            $dir,
-                                            $context
-                                        );
-                                        if (!$len) {
-                                            new \InvalidArgumentException("Unable to write file: {$dir}");
-                                        }
-                                    }
-                                }
+                if (($item instanceof AopComposerLoader) === false) {
+                    continue;
+                }
+
+                if (empty($item->getIncludePath())) {
+                    continue;
+                }
+
+                foreach ($item->getEnumerator()->enumerate() as $file) {
+                    $contents = file_get_contents($file);
+                    $class = $this->getClassByString($contents);
+                    if (empty($class)) {
+                        continue;
+                    }
+
+                    $aopFile = $item->findFile($class);
+                    if (strpos($aopFile, 'php://') === 0) {
+                        if (($fp = fopen($file, 'r')) === false) {
+                            throw new \InvalidArgumentException("Unable to open file: {$fileName}");
+                        }
+                        $context = fread($fp, filesize($file));
+                        $metadata = new StreamMetaData($fp, $context);
+                        fclose($fp);
+                        SourceTransformingLoader::transformCode($metadata);
+                        $context = $metadata->source;
+                        $aopClass = $this->getClassByString($context);
+                        if (strpos($aopClass, '__AopProxied') !== false) {
+                            $cacheFile = $cacheDir . '/' . $file->getPathname();
+                            self::createDirectory(dirname($cacheFile), 0777);
+
+                            if (!file_put_contents($cacheFile, $context)) {
+                                new \InvalidArgumentException("Unable to write file: {$cacheFile}");
                             }
                         }
                     }
                 }
+
             }
         }
     }
@@ -91,22 +98,22 @@ class Aop
         $namespace = $class = "";
 
         //Set helper values to know that we have found the namespace/class token and need to collect the string values after them
-        $getting_namespace = $getting_class = false;
+        $gettingNamespace = $gettingClass = false;
 
         //Go through each token and evaluate it as necessary
         foreach (token_get_all($contents) as $token) {
             //If this token is the namespace declaring, then flag that the next tokens will be the namespace name
             if (is_array($token) && $token[0] == T_NAMESPACE) {
-                $getting_namespace = true;
+                $gettingNamespace = true;
             }
 
             //If this token is the class declaring, then flag that the next tokens will be the class name
             if (is_array($token) && $token[0] == T_CLASS) {
-                $getting_class = true;
+                $gettingClass = true;
             }
 
             //While we're grabbing the namespace name...
-            if ($getting_namespace === true) {
+            if ($gettingNamespace === true) {
                 //If the token is a string or the namespace separator...
                 if (is_array($token) && in_array($token[0], [T_STRING, T_NS_SEPARATOR])) {
                     //Append the token's value to the name of the namespace
@@ -114,13 +121,13 @@ class Aop
                 } else {
                     if ($token === ';') {
                         //If the token is the semicolon, then we're done with the namespace declaration
-                        $getting_namespace = false;
+                        $gettingNamespace = false;
                     }
                 }
             }
 
             //While we're grabbing the class name...
-            if ($getting_class === true) {
+            if ($gettingClass === true) {
                 //If the token is a string, it's the name of the class
                 if (is_array($token) && $token[0] == T_STRING) {
                     //Store the token's value as the class name

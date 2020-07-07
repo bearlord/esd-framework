@@ -40,6 +40,9 @@ abstract class AbstractAopKernel extends AspectKernel
         return $this;
     }
 
+    /**
+     * @param array $options
+     */
     public function init(array $options = [])
     {
         if ($this->wasInitialized) {

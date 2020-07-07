@@ -8,7 +8,6 @@ namespace ESD\Plugins\Aop;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Core\Plugins\Config\ConfigException;
-use ESD\Yii\Yii;
 
 /**
  * Class AopConfig
@@ -128,9 +127,7 @@ class AopConfig extends BaseConfig
     public function buildConfig()
     {
         if (empty($this->includePaths)) {
-            throw new ConfigException(Yii::t('esd', '{name} cannot be empty', [
-                'name' => 'includePaths'
-            ]));
+            throw new ConfigException("includePaths cannot be empty");
         }
     }
 
