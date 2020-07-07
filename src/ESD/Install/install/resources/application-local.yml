@@ -8,6 +8,7 @@ blade:
 redis:
   default:
     host: 'localhost'
+    database: 1
 
 session:
   timeout: 3600
@@ -25,19 +26,18 @@ esd-yii:
     log:
       traceLevel: 0
       targets:
-        -
-          class: 'ESD\Yii\Log\FileTarget'
+        - class: 'ESD\Yii\Log\FileTarget'
           levels:
             - error
-    #            - warning
-    #            - info
-    #            - trace
-    #            - profile
+              - warning
+              - info
+              - trace
+              - profile
 
     cache:
       class: 'ESD\Yii\Redis\Cache'
       redis:
-    #        database: 2
+        database: 2
 
     formatter:
       sizeFormatBase: 1000

@@ -1,18 +1,25 @@
 esd:
+  aop:
+    excludePaths:
+      - src/Libs
+      - src/Filters
+      - src/Views
+
   logger:
-    level: INFO
+    level: DEBUG
+
   profiles:
     active: local
+
   server:
     name: esd-server
-    worker_num: 4
-    max_conn: 1024
-    debug: true
-    reloadAsync: true
+    workerNum: 4
+    maxConn: 10240
+    debug: false
+
   port:
     http:
       host: 0.0.0.0
       port: 8080
       open_http_protocol: true
       sock_type: 1
-      package_max_length: 0x1400000
