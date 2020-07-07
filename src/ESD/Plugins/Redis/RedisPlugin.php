@@ -79,12 +79,12 @@ class RedisPlugin extends AbstractPlugin
         ini_set('default_socket_timeout', '-1');
         $redisManyPool = new RedisManyPool();
         if (empty($this->redisConfig->getRedisConfigs())) {
-            $this->warn(Yii::t('esd', 'No redis configuration'));
+            $this->warn(Yii::t('esd', 'Redis configuration not found'));
         }
         foreach ($this->redisConfig->getRedisConfigs() as $key => $value) {
             $redisPool = new RedisPool($value);
             $redisManyPool->addPool($redisPool);
-            $this->debug(Yii::t('esd', 'Redis connection pool named {name} added', [
+            $this->debug(Yii::t('esd', 'Redis connection pool named {name} created', [
                 'name' => $value->getName()
             ]));
         }

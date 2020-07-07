@@ -100,14 +100,14 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
 
         $configs = $this->configs->getConfigs();
         if (empty($configs)) {
-            $this->warn(Yii::t('esd', 'No PDO configuration'));
+            $this->warn(Yii::t('esd', 'PDO configuration not found'));
             return false;
         }
 
         foreach ($configs as $key => $config) {
             $pool = new PdoPool($config);
             $pools->addPool($pool);
-            $this->debug(Yii::t('esd', 'Added {driverName} connection pool named {name}', [
+            $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
                 'driverName' => $config->getDriverName(),
                 'name' => $config->getName()
             ]));
