@@ -135,7 +135,7 @@ class ActorManager
             "classId" => $id
         ]);
         DISet($className . ":" . $actor->getName(), $actor);
-        $this->debug(Yii::t('esd', 'Add a actor {actor}', [
+        $this->debug(Yii::t('esd', 'Actor {actor} created', [
             'actor' => $actor->getName()
         ]));
     }

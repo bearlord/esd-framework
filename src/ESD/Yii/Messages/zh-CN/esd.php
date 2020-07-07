@@ -1,13 +1,13 @@
 <?php
 return [
+    '{name} cannot be empty' => '{name}不能为空',
     '{path} 404 Not Found' => '{path} 404 请求未找到',
     'onto' => '->',
-    'Add aspect {name}' => '增加切片{name}',
+    'Aspect {name} created' => '创建切片{name}',
     'Actor {actor} not exist' => 'Actor {actor} 不存在',
     'Actor {actor} created timeout' => '创建 Actor {actor} 超时',
-    'Add a actor {actor}' => '添加Actor {actor}',
+    'Actor {actor} created' => '添加Actor {actor}',
     'Added {driverName} connection pool named {name}' => '添加 {driverName} {name} 的连接池',
-
     'Application start' => '程序启动',
     'Application shutdown' => '程序关闭',
     'Before process start' => '进程启动前',

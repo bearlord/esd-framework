@@ -15,9 +15,9 @@ use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
-use rabbit\aop\Aop;
-use rabbit\aop\AopAspectKernel;
-use rabbit\aop\GoAspectContainer;
+use ESD\Aop\Aop;
+use ESD\Aop\AopAspectKernel;
+use ESD\Aop\GoAspectContainer;
 
 /**
  * Class AopPlugin
@@ -82,18 +82,11 @@ class AopPlugin extends AbstractPlugin
         $this->aopConfig->merge();
 
         $serverConfig = Server::$instance->getServerConfig();
+
         //Add src directory automatically
         $this->aopConfig->addIncludePath($serverConfig->getSrcDir());
+
         $this->aopConfig->addIncludePath($serverConfig->getVendorDir() . "/bearlord");
-
-        //Exclude paths
-        $excludePaths = Server::$instance->getConfigContext()->get("esd.aop.excludePaths");
-        if (!empty($excludePaths)) {
-            foreach ($excludePaths as $excludePath) {
-                $this->aopConfig->addExcludePath($excludePath);
-            }
-        }
-
         $this->aopConfig->setCacheDir($cacheDir);
         $this->aopConfig->merge();
     }
@@ -107,27 +100,28 @@ class AopPlugin extends AbstractPlugin
     {
         $serverConfig = Server::$instance->getServerConfig();
         $this->options = [
-            //Use 'false' for production mode
+            // use 'false' for production mode
             'debug' => $serverConfig->isDebug(),
-            //Application root directory
+            // Application root directory
             'appDir' => $serverConfig->getRootDir(),
-            //Cache directory
+            // Cache directory
             'cacheDir' => $this->aopConfig->getCacheDir(),
-            //Include paths
             'includePaths' => $this->aopConfig->getIncludePaths(),
-            //Exclude paths
             'excludePaths' => $this->aopConfig->getExcludePaths()
         ];
 
         foreach ($this->aopConfig->getAspects() as $aspect) {
             $this->addOrder($aspect);
         }
+
         $this->order();
+
         foreach ($this->orderList as $aspect) {
-            $this->debug(Yii::t('esd', 'Add aspect {name}', [
+            $this->debug(Yii::t('esd', 'Aspect {name} created', [
                 'name' => $aspect->getName()
             ]));
         }
+
         if (!$this->aopConfig->isFileCache()) {
             $this->options['annotationCache'] = new ArrayCache();
             $this->options['containerClass'] = new GoAspectContainer();
