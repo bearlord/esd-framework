@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Widgets;
 
-use yii\web\AssetBundle;
+use ESD\Yii\Web\AssetBundle;
 
 /**
  * The asset bundle for the [[ActiveForm]] widget.

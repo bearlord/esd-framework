@@ -56,7 +56,7 @@ use ESD\Yii\Di\Instance;
  * @author Alexander Zhuravlev <axelhex@gmail.com>
  * @since 2.0.6
  */
-class Mutex extends \yii\mutex\Mutex
+class Mutex extends \ESD\Yii\Mutex\Mutex
 {
     /**
      * @var int the number of seconds in which the lock will be auto released.

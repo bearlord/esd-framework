@@ -27,7 +27,7 @@ namespace ESD\Yii\Helpers;
  * @author Klimov Paul <klimov.paul@gmail.com>
  * @since 2.0
  */
-class Security extends Component
+class Security
 {
     /**
      * @var string The cipher to use for encryption and decryption.

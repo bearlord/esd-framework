@@ -371,7 +371,7 @@ SQL;
     }
 
     /**
-     * @Overrides method in class 'Schema'
+     * Overrides method in class 'Schema'
      * @see https://secure.php.net/manual/en/function.PDO-lastInsertId.php -> Oracle does not support this
      *
      * Returns the ID of the last inserted row or sequence value.

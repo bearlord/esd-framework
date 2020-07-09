@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Validators;
 
-use yii\web\AssetBundle;
+use ESD\Yii\Web\AssetBundle;
 
 /**
  * This asset bundle provides the javascript files for client validation.

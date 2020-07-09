@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Rbac;
 
-use yii\base\Component;
+use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Base\InvalidValueException;

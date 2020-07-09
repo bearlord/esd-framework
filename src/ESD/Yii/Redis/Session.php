@@ -53,7 +53,7 @@ use ESDyii\base\InvalidConfigException;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
-class Session extends \yii\web\Session
+class Session extends \ESD\Yii\Web\Session
 {
     /**
      * @var Connection|string|array the Redis [[Connection]] object or the application component ID of the Redis [[Connection]].
