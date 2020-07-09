@@ -74,17 +74,19 @@ class AopPlugin extends AbstractPlugin
         parent::init($context);
         //File operations must close the global RuntimeCoroutine
         enableRuntimeCoroutine(false);
-
         $cacheDir = $this->aopConfig->getCacheDir() ?? Server::$instance->getServerConfig()->getBinDir() . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR . "aop";
         if (!file_exists($cacheDir)) {
             mkdir($cacheDir, 0777, true);
         }
+        $this->aopConfig->merge();
+
+        //Add src directory automatically
+        $serverConfig = Server::$instance->getServerConfig();
+        $this->aopConfig->addIncludePath($serverConfig->getSrcDir());
+        $this->aopConfig->addIncludePath($serverConfig->getVendorDir() . "/bearlord/esd-framework");
+        $this->aopConfig->setCacheDir($cacheDir);
 
         $serverConfig = Server::$instance->getServerConfig();
-        //Add src directory automatically
-        $this->aopConfig->addIncludePath($serverConfig->getSrcDir());
-        $this->aopConfig->addIncludePath($serverConfig->getVendorDir() . "/bearlord");
-
         //Exclude paths
         $excludePaths = Server::$instance->getConfigContext()->get("esd.aop.excludePaths");
         if (!empty($excludePaths)) {
@@ -93,12 +95,26 @@ class AopPlugin extends AbstractPlugin
             }
         }
 
-        //File cache
-        $fileCache = (bool)Server::$instance->getConfigContext()->get("esd.aop.fileCache");
-        $this->aopConfig->setFileCache($fileCache);
-
-        $this->aopConfig->setCacheDir($cacheDir);
         $this->aopConfig->merge();
+
+        $this->applicationAspectKernel = ApplicationAspectKernel::getInstance();
+        $this->applicationAspectKernel->setConfig($this->aopConfig);
+        $this->options = [
+            //Use 'false' for production mode
+            'debug' => $serverConfig->isDebug(),
+            //Application root directory
+            'appDir' => $serverConfig->getRootDir(),
+            //Cache directory
+            'cacheDir' => $this->aopConfig->getCacheDir(),
+            //Include paths
+            'includePaths' => $this->aopConfig->getIncludePaths(),
+            //Exclude paths
+            'excludePaths' => $this->aopConfig->getExcludePaths()
+        ];
+        if (!$this->aopConfig->isFileCache()) {
+            $this->options['annotationCache'] = new ArrayCache();
+        }
+        $this->applicationAspectKernel->initContainer($this->options);
     }
 
     /**
@@ -122,22 +138,7 @@ class AopPlugin extends AbstractPlugin
             'excludePaths' => $this->aopConfig->getExcludePaths()
         ];
 
-        foreach ($this->aopConfig->getAspects() as $aspect) {
-            $this->addOrder($aspect);
-        }
-        $this->order();
-        foreach ($this->orderList as $aspect) {
-            $this->debug(Yii::t('esd', 'Aspect {name} created', [
-                'name' => $aspect->getName()
-            ]));
-        }
-        if (!$this->aopConfig->isFileCache()) {
-            $this->options['annotationCache'] = new ArrayCache();
-            $this->options['containerClass'] = new GoAspectContainer();
-            new Aop(AopAspectKernel::class, $this->orderList, $this->options);
-        } else {
-            new Aop(FileCacheAspectKernel::class, $this->orderList, $this->options);
-        }
+        $this->applicationAspectKernel->init($this->options);
 
     }
 
