@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "bearlord/aop": "~0.1",
+        "bearlord/aop": "^0.1",
         "cebe/markdown": "^1.2.1",
         "doctrine/annotations": "^1.6",
         "ext-json": "*",
