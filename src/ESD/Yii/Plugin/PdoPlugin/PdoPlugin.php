@@ -5,7 +5,7 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\PdoPlugin;
+namespace ESD\Yii\Plugin\PdoPlugin;
 
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
@@ -16,7 +16,7 @@ use ESD\Yii\Yii;
 
 /**
  * Class PdoPlugin
- * @package ESD\Yii\PdoPlugin
+ * @package ESD\Yii\Plugin\PdoPlugin
  */
 class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
 {

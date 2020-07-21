@@ -33,7 +33,7 @@ use ESD\Plugins\Topic\TopicPlugin;
 use ESD\Plugins\Uid\UidPlugin;
 use ESD\Plugins\Whoops\WhoopsPlugin;
 use ESD\Server\Co\Server;
-use ESD\Yii\PdoPlugin\PdoPlugin;
+use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Yii;
 
 /**
@@ -89,7 +89,7 @@ class GoApplication extends Server
     protected function addNormalPlugs()
     {
         $this->addPlug(new ConsolePlugin());
-        $this->addPlug(new PdoPlugin());
+        $this->addPlug(new YiiPlugin());
         $routeConfig = new RouteConfig();
         $routeConfig->setErrorControllerName(GoController::class);
 

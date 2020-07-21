@@ -4,7 +4,7 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\PdoPlugin;
+namespace ESD\Yii\Plugin\PdoPlugin;
 
 use ESD\Core\Channel\Channel;
 use ESD\Coroutine\Co;
@@ -12,7 +12,7 @@ use ESD\Yii\Db\Connection;
 
 /**
  * Class PdoPool
- * @package ESD\Yii\PdoPlugin
+ * @package ESD\Yii\Plugin\PdoPlugin
  */
 class PdoPool
 {

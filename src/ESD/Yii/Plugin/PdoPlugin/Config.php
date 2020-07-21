@@ -4,13 +4,13 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\PdoPlugin;
+namespace ESD\Yii\Plugin\PdoPlugin;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 
 /**
  * Class Config
- * @package ESD\Yii\PdoPlugin
+ * @package ESD\Yii\Plugin\PdoPlugin
  */
 class Config extends BaseConfig
 {
