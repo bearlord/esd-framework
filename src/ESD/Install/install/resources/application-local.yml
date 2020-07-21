@@ -21,7 +21,7 @@ session:
   httpOnly: true
   secure: false
 
-esd-yii:
+yii:
   components:
     log:
       traceLevel: 0

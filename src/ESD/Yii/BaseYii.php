@@ -368,7 +368,7 @@ class BaseYii
      */
     public static function debug($message, $category = 'application')
     {
-        $debug = Server::$instance->getConfigContext()->get('esd-yii.debug');
+        $debug = Server::$instance->getConfigContext()->get('yii.debug');
         if ($debug) {
             static::getLogger()->log($message, Logger::LEVEL_TRACE, $category);
         }

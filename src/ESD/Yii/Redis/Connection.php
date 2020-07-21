@@ -504,7 +504,7 @@ class Connection extends Component
     private function sendCommandInternal($command, $params)
     {
         $redisHandle= $this->redis();
-        $database  = Server::$instance->getConfigContext()->get('esd-yii.components.cache.redis.database');
+        $database  = Server::$instance->getConfigContext()->get('yii.components.cache.redis.database');
         $redisHandle->select($database);
 
         $redisCommand = strtoupper(Inflector::camel2words($command, false));
@@ -527,7 +527,7 @@ class Connection extends Component
     public function __call($name, $params)
     {
         $redisHandle= $this->redis();
-        $database  = Server::$instance->getConfigContext()->get('esd-yii.components.cache.redis.database');
+        $database  = Server::$instance->getConfigContext()->get('yii.components.cache.redis.database');
         $redisHandle->select($database);
 
         $redisCommand = strtoupper(Inflector::camel2words($name, false));

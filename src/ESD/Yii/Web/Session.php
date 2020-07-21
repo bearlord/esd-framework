@@ -135,7 +135,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
 
         $this->setCookieParamsInternal();
 
-        $debug = Server::$instance->getConfigContext()->get('esd-yii.debug');
+        $debug = Server::$instance->getConfigContext()->get('yii.debug');
         $debug ? session_start() : @session_start();
 
         if ($this->getIsActive()) {
@@ -154,7 +154,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      */
     protected function registerSessionHandler()
     {
-        $debug = Server::$instance->getConfigContext()->get('esd-yii.debug');
+        $debug = Server::$instance->getConfigContext()->get('yii.debug');
         if ($this->handler !== null) {
             if (!is_object($this->handler)) {
                 $this->handler = Yii::createObject($this->handler);
@@ -296,7 +296,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      */
     public function regenerateID($deleteOldSession = false)
     {
-        $debug = Server::$instance->getConfigContext()->get('esd-yii.debug');
+        $debug = Server::$instance->getConfigContext()->get('yii.debug');
         if ($this->getIsActive()) {
             // add @ to inhibit possible warning due to race condition
             // https://github.com/yiisoft/yii2/pull/1812
@@ -960,7 +960,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      */
     protected function unfreeze()
     {
-        $debug = Server::$instance->getConfigContext()->get('esd-yii.debug');
+        $debug = Server::$instance->getConfigContext()->get('yii.debug');
         if (null !== $this->frozenSessionData) {
 
             $debug ? session_start() : @session_start();

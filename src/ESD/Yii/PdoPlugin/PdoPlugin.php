@@ -39,7 +39,7 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
      */
     public function getName(): string
     {
-        return 'esd-yii-pdo';
+        return 'YiiPdo';
     }
 
     /**
@@ -60,7 +60,7 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
-        $configs = Server::$instance->getConfigContext()->get("esd-yii.db");
+        $configs = Server::$instance->getConfigContext()->get("yii.db");
 
         foreach ($configs as $key => $config) {
             $configObject = new Config($key);

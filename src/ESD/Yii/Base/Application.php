@@ -55,7 +55,7 @@ class Application extends ServiceLocator
     /**
      * @var string Cookie validation key
      */
-    public $cookieValidationKey = 'esd-yii';
+    public $cookieValidationKey = 'yii';
 
     /**
      * @var string the root directory of the application.
@@ -96,7 +96,7 @@ class Application extends ServiceLocator
      */
     public function preInit()
     {
-        $config = Server::$instance->getConfigContext()->get('esd-yii');
+        $config = Server::$instance->getConfigContext()->get('yii');
 
         $this->setBasePath(Server::$instance->getServerConfig()->getSrcDir());
 
@@ -187,7 +187,7 @@ class Application extends ServiceLocator
             $poolKey = "default";
             $contextKey = "Pdo:default";
         } elseif ($name === "slave") {
-            $slaveConfigs = Server::$instance->getConfigContext()->get("esd-yii.db.default.slaves");
+            $slaveConfigs = Server::$instance->getConfigContext()->get("yii.db.default.slaves");
             if (empty($slaveConfigs)) {
                 $poolKey = "default";
                 $contextKey = "Pdo:default";
@@ -199,7 +199,7 @@ class Application extends ServiceLocator
             }
 
         } elseif ($name === "master") {
-            $masterConfigs = Server::$instance->getConfigContext()->get("esd-yii.db.default.masters");
+            $masterConfigs = Server::$instance->getConfigContext()->get("yii.db.default.masters");
             if (empty($masterConfigs)) {
                 $poolKey = "default";
                 $contextKey = "Pdo:default";
@@ -233,7 +233,7 @@ class Application extends ServiceLocator
 
     public function getDbOnce()
     {
-        $config = Server::$instance->getConfigContext()->get("esd-yii.db.default");
+        $config = Server::$instance->getConfigContext()->get("yii.db.default");
         $db = new Connection();
         $db->dsn = $config['dsn'];
         $db->username = $config['username'];

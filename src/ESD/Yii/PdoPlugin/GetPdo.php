@@ -25,7 +25,7 @@ trait GetPdo
             $poolKey = "default";
             $contextKey = "Pdo:default";
         } elseif ($name === "slave") {
-            $slaveConfigs = Server::$instance->getConfigContext()->get("esd-yii.db.default.slaves");
+            $slaveConfigs = Server::$instance->getConfigContext()->get("yii.db.default.slaves");
             if (empty($slaveConfigs)) {
                 $poolKey = "default";
                 $contextKey = "Pdo:default";
@@ -37,7 +37,7 @@ trait GetPdo
             }
 
         } elseif ($name === "master") {
-            $masterConfigs = Server::$instance->getConfigContext()->get("esd-yii.db.default.masters");
+            $masterConfigs = Server::$instance->getConfigContext()->get("yii.db.default.masters");
             if (empty($masterConfigs)) {
                 $poolKey = "default";
                 $contextKey = "Pdo:default";

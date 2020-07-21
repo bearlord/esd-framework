@@ -80,7 +80,7 @@ class ModelCmd extends Command
 
         /*
          *
-        $tablePrefix = Server::$instance->getConfigContext()->get("esd-yii.db.default.tablePrefix");
+        $tablePrefix = Server::$instance->getConfigContext()->get("yii.db.default.tablePrefix");
         if (empty($modelClass)) {
             $modelClass = ltrim($tableName, $tablePrefix);
             $modelClass = Inflector::camelize($modelClass);
