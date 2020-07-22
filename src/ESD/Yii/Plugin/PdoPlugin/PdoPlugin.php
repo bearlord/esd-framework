@@ -12,6 +12,7 @@ use ESD\Core\Server\Server;
 use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\PluginInterfaceManager;
 use ESD\Yii\Base\Application;
+use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Yii;
 
 /**
@@ -30,6 +31,7 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
     public function __construct()
     {
         parent::__construct();
+        $this->atAfter(YiiPlugin::class);
         $this->configs = new Configs();
     }
 
@@ -84,8 +86,6 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
                 }
             }
         }
-
-        Application::instance();
     }
 
     /**

@@ -8,9 +8,9 @@
 namespace ESD\Yii\Console;
 
 use ESD\Yii\Yii;
-use yii\base\Action;
-use yii\base\InlineAction;
-use yii\base\InvalidRouteException;
+use ESD\Yii\Base\Action;
+use ESD\Yii\Base\InlineAction;
+use ESD\Yii\Base\InvalidRouteException;
 use ESD\Yii\Helpers\Console;
 use ESD\Yii\Helpers\Inflector;
 
