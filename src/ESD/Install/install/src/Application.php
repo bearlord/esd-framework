@@ -17,7 +17,6 @@ class Application
     public static function main()
     {
         $goApp = new GoApplication();
-        $goApp->addPlug(new PdoPlugin());
         $goApp->run(Application::class);
     }
 }

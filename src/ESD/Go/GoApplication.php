@@ -57,6 +57,20 @@ class GoApplication extends Server
     public function __construct()
     {
         parent::__construct(new ServerConfig(), GoPort::class, GoProcess::class);
+        $this->prepareNormalPlugs();
+    }
+
+    /**
+     * Prepare normal plug
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \ESD\Core\Exception
+     * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ReflectionException
+     */
+    protected function prepareNormalPlugs()
+    {
+        $this->addNormalPlugs();
     }
 
     /**
@@ -71,7 +85,6 @@ class GoApplication extends Server
      */
     public function run($mainClass)
     {
-        $this->addNormalPlugs();
         $this->configure();
         $this->getContainer()->get($mainClass);
         $this->start();
@@ -170,7 +183,7 @@ class GoApplication extends Server
      */
     public function onManagerStart()
     {
-        $this->info(Yii::t('esd', 'Manager Process start'));
+        $this->info(Yii::t('esd', 'Manager process start'));
     }
 
     /**
@@ -179,7 +192,7 @@ class GoApplication extends Server
      */
     public function onManagerStop()
     {
-        $this->info(Yii::t('esd', 'Manager Process stop'));
+        $this->info(Yii::t('esd', 'Manager process stop'));
     }
 
     /**

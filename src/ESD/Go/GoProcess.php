@@ -34,7 +34,7 @@ class GoProcess extends Process
      */
     public function onProcessStart()
     {
-        $this->log->info(Yii::t('esd', 'On process start'));
+        $this->log->info(Yii::t('esd', 'Process start'));
     }
 
     /**
@@ -43,7 +43,7 @@ class GoProcess extends Process
      */
     public function onProcessStop()
     {
-        $this->log->info(Yii::t('esd', 'On process stop'));
+        $this->log->info(Yii::t('esd', 'Process stop'));
     }
 
     /**

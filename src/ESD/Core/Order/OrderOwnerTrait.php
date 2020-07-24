@@ -16,7 +16,7 @@ trait OrderOwnerTrait
     /**
      * @var Order[]
      */
-    protected $orderList = [];
+    public $orderList = [];
 
     /**
      * @var Order[]

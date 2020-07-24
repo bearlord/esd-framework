@@ -313,7 +313,7 @@ abstract class Process
     }
 
     /**
-     * On process start
+     * Process start
      *
      * @return mixed
      */
@@ -382,7 +382,7 @@ abstract class Process
     }
 
     /**
-     * On process start
+     * Process start
      *
      * @return mixed
      */

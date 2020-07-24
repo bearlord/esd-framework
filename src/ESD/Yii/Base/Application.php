@@ -111,11 +111,9 @@ class Application extends ServiceLocator
                 $newConfig['components'][$id]['class'] = $component['class'];
             }
         }
-        var_dump($newConfig, $newConfig['components']);
-//        Component::__construct($newConfig);
+
         $this->setComponents($newConfig['components']);
         unset($newConfig);
-        $this->getLog();
     }
 
     /**
