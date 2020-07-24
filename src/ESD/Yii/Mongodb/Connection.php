@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Mongodb;
 
+use ESD\Core\Server\Server;
 use MongoDB\Driver\Manager;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
@@ -181,6 +182,12 @@ class Connection extends Component
      */
     private $_fileStreamWrapperRegistered = false;
 
+    /**
+     * @var string the common prefix or suffix for table names. If a table name is given
+     * as `{{%TableName}}`, then the percentage character `%` will be replaced with this
+     * property value. For example, `{{%post}}` becomes `{{tbl_post}}`.
+     */
+    public $tablePrefix = '';
 
     /**
      * Sets default database name.
@@ -343,7 +350,6 @@ class Connection extends Component
      */
     public function open()
     {
-
         if ($this->manager === null) {
             if (empty($this->dsn)) {
                 throw new InvalidConfigException($this->className() . '::dsn cannot be empty.');
@@ -352,7 +358,7 @@ class Connection extends Component
             try {
                 Yii::trace($token, __METHOD__);
                 Yii::beginProfile($token, __METHOD__);
-                $options = $this->options;
+                $options = $this->options ?: [];
                 $this->manager = new Manager($this->dsn, $options, $this->driverOptions);
                 $this->manager->selectServer($this->manager->getReadPreference());
 

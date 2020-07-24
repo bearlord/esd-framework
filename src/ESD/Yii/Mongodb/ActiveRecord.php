@@ -33,7 +33,7 @@ abstract class ActiveRecord extends BaseActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('mongodb');
+        return Yii::$app->getMongodb();
     }
 
     /**

@@ -5,7 +5,7 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\Plugin\PdoPlugin;
+namespace ESD\Yii\Plugin\Pdo;
 
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
@@ -17,7 +17,7 @@ use ESD\Yii\Yii;
 
 /**
  * Class PdoPlugin
- * @package ESD\Yii\Plugin\PdoPlugin
+ * @package ESD\Yii\Plugin\Pdo
  */
 class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
 {
@@ -108,7 +108,7 @@ class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
             $pool = new PdoPool($config);
             $pools->addPool($pool);
             $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
-                'driverName' => $config->getDriverName(),
+                'driverName' => sprintf("Pdo.%s", $config->getDriverName()),
                 'name' => $config->getName()
             ]));
         }

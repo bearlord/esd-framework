@@ -4,7 +4,7 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\Plugin\PdoPlugin;
+namespace ESD\Yii\Plugin\Pdo;
 
 use ESD\Core\Channel\Channel;
 use ESD\Coroutine\Co;
@@ -12,7 +12,7 @@ use ESD\Yii\Db\Connection;
 
 /**
  * Class PdoPool
- * @package ESD\Yii\Plugin\PdoPlugin
+ * @package ESD\Yii\Plugin\Pdo
  */
 class PdoPool
 {
@@ -20,9 +20,8 @@ class PdoPool
      * @var Channel
      */
     protected $pool;
-    /**
-     * @var PdoOneConfig
-     */
+
+    /** @var Config  */
     protected $config;
 
     /**
@@ -33,9 +32,7 @@ class PdoPool
     public function __construct(Config $config)
     {
         $this->config = $config;
-
         $this->pool = DIGet(Channel::class, [$config->getPoolMaxNumber()]);
-
         for ($i = 0; $i < $config->getPoolMaxNumber(); $i++) {
             $db = $this->connect($config);
             $this->pool->push($db);

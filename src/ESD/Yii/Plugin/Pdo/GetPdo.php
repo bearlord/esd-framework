@@ -4,13 +4,13 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\Plugin\PdoPlugin;
+namespace ESD\Yii\Plugin\Pdo;
 
 use ESD\Core\Server\Server;
 
 /**
  * Trait GetPdo
- * @package ESD\Yii\Plugin\PdoPlugin]
+ * @package ESD\Yii\Plugin\Pdo]
  */
 trait GetPdo
 {

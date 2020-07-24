@@ -4,11 +4,11 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\Plugin\PdoPlugin;
+namespace ESD\Yii\Plugin\Pdo;
 
 /**
  * Class PdoPools
- * @package ESD\Yii\Plugin\PdoPlugin
+ * @package ESD\Yii\Plugin\Pdo
  */
 class PdoPools
 {

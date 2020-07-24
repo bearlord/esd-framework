@@ -10,6 +10,7 @@ use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
 use ESD\Plugins\Session\HttpSession;
 use ESD\Yii\Di\ServiceLocator;
+use ESD\Yii\Plugin\Mongodb\MongodbPools;
 use ESD\Yii\Yii;
 use DI\Container;
 use ESD\Core\DI\DI;
@@ -231,6 +232,11 @@ class Application extends ServiceLocator
         }
     }
 
+    /**
+     * Get db once
+     * @return Connection
+     * @throws \ESD\Yii\Db\Exception
+     */
     public function getDbOnce()
     {
         $config = Server::$instance->getConfigContext()->get("yii.db.default");
@@ -259,7 +265,7 @@ class Application extends ServiceLocator
 
     /**
      * Returns the request component.
-     * @return \yii\web\Request|\yii\console\Request | \ESD\Core\Server\Beans\Request the request component.
+     * @return \ESD\Core\Server\Beans\Request the request component.
      */
     public function getRequest()
     {
@@ -269,7 +275,7 @@ class Application extends ServiceLocator
 
     /**
      * Returns the response component.
-     * @return \yii\web\Response|\yii\console\Response | \ESD\Core\Server\Beans\Response the response component.
+     * @return \ESD\Core\Server\Beans\Response the response component.
      */
     public function getResponse()
     {
@@ -279,7 +285,7 @@ class Application extends ServiceLocator
 
     /**
      * Returns the formatter component.
-     * @return \yii\i18n\Formatter the formatter application component.
+     * @return \ESD\Yii\I18n\Formatter the formatter application component.
      */
     public function getFormatter()
     {
@@ -358,6 +364,57 @@ class Application extends ServiceLocator
 
         return $lang;
     }
+
+    /**
+     * @return Connection|mixed
+     * @throws \ESD\Yii\Db\Exception
+     */
+    public function getMongodb()
+    {
+        $poolKey = "default";
+        $contextKey = "Mongodb:default";
+
+        $db = getContextValue($contextKey);
+
+        if ($db == null) {
+            /** @var MongodbPools $pdoPools */
+            $pdoPools = getDeepContextValueByClassName(MongodbPools::class);
+            if (!empty($pdoPools)) {
+                $pool = $pdoPools->getPool($poolKey);
+                if ($pool == null) {
+                    throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+                }
+                return $pool->db();
+            } else {
+                return $this->getDbOnce();
+            }
+
+        } else {
+            return $db;
+        }
+    }
+
+    /**
+     * Get db once
+     * @return Connection
+     * @throws \ESD\Yii\Mongodb\Exception
+     */
+    public function getMongodbOnce()
+    {
+        $config = Server::$instance->getConfigContext()->get("yii.db.mongodb");
+        $db = new \ESD\Yii\Mongodb\Connection();
+        $db->dsn = $config['dsn'];
+        $db->username = $config['username'];
+        $db->password = $config['password'];
+        $db->options = $config['options'] ?? [];
+        $db->tablePrefix = $config['tablePrefix'];
+        $db->enableSchemaCache = $config['enableSchemaCache'];
+        $db->schemaCacheDuration = $config['schemaCacheDuration'];
+        $db->schemaCache = $config['schemaCache'];
+        $db->open();
+        return $db;
+    }
+
 
 
     /**
