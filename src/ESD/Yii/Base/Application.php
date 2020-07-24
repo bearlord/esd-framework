@@ -16,7 +16,7 @@ use DI\Container;
 use ESD\Core\DI\DI;
 use ESD\Core\Server\Server;
 use ESD\Yii\Db\Connection;
-use ESD\Yii\PdoPlugin\PdoPools;
+use ESD\Yii\Plugin\Pdo\PdoPools;
 
 /**
  * Class Application
