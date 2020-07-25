@@ -59,8 +59,8 @@ class SecurityPlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new AopPlugin());
-        $pluginInterfaceManager->addPlug(new SessionPlugin());
+        $pluginInterfaceManager->addPlugin(new AopPlugin());
+        $pluginInterfaceManager->addPlugin(new SessionPlugin());
     }
 
 

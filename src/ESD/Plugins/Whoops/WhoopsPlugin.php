@@ -80,7 +80,7 @@ class WhoopsPlugin extends AbstractPlugin
         parent::onAdded($pluginInterfaceManager);
         $aopPlugin = $pluginInterfaceManager->getPlug(AopPlugin::class);
         if ($aopPlugin == null) {
-            $pluginInterfaceManager->addPlug(new AopPlugin());
+            $pluginInterfaceManager->addPlugin(new AopPlugin());
         }
     }
 

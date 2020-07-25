@@ -53,9 +53,9 @@ class MqttPlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new UidPlugin());
-        $pluginInterfaceManager->addPlug(new TopicPlugin());
-        $pluginInterfaceManager->addPlug(new PackPlugin());
+        $pluginInterfaceManager->addPlugin(new UidPlugin());
+        $pluginInterfaceManager->addPlugin(new TopicPlugin());
+        $pluginInterfaceManager->addPlugin(new PackPlugin());
     }
 
     /**

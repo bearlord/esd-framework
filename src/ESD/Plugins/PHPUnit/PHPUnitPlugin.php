@@ -51,7 +51,7 @@ class PHPUnitPlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new ConsolePlugin());
+        $pluginInterfaceManager->addPlugin(new ConsolePlugin());
         //添加一个cmd
         $console = new ConsoleConfig();
         $console->addCmdClass(TestCmd::class);

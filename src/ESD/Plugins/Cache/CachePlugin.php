@@ -71,8 +71,8 @@ class CachePlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new RedisPlugin());
-        $pluginInterfaceManager->addPlug(new AopPlugin());
+        $pluginInterfaceManager->addPlugin(new RedisPlugin());
+        $pluginInterfaceManager->addPlugin(new AopPlugin());
     }
 
     /**

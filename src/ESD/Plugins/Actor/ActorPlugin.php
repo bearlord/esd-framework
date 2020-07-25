@@ -53,7 +53,7 @@ class ActorPlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new ProcessRPCPlugin());
+        $pluginInterfaceManager->addPlugin(new ProcessRPCPlugin());
     }
 
     /**

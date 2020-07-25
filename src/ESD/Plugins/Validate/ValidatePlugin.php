@@ -43,7 +43,7 @@ class ValidatePlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new AnnotationsScanPlugin());
+        $pluginInterfaceManager->addPlugin(new AnnotationsScanPlugin());
     }
 
     /**

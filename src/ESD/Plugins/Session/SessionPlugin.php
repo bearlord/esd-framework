@@ -52,7 +52,7 @@ class SessionPlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new RedisPlugin());
+        $pluginInterfaceManager->addPlugin(new RedisPlugin());
     }
 
     /**

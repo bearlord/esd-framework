@@ -135,9 +135,9 @@ class EasyRoutePlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new AnnotationsScanPlugin());
-        $pluginInterfaceManager->addPlug(new ValidatePlugin());
-        $pluginInterfaceManager->addPlug(new PackPlugin());
+        $pluginInterfaceManager->addPlugin(new AnnotationsScanPlugin());
+        $pluginInterfaceManager->addPlugin(new ValidatePlugin());
+        $pluginInterfaceManager->addPlugin(new PackPlugin());
     }
 
     /**

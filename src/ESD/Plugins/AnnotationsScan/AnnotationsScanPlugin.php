@@ -71,7 +71,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new AopPlugin());
+        $pluginInterfaceManager->addPlugin(new AopPlugin());
     }
 
     /**

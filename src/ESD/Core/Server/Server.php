@@ -152,9 +152,9 @@ abstract class Server
         printf("%s\n", $serverConfig->getBanner());
 
         //Initialize the default plugin and add the Config/Logger/Event plugin
-        $this->basePlugManager->addPlug(new ConfigPlugin());
-        $this->basePlugManager->addPlug(new LoggerPlugin());
-        $this->basePlugManager->addPlug(new EventPlugin());
+        $this->basePlugManager->addPlugin(new ConfigPlugin());
+        $this->basePlugManager->addPlugin(new LoggerPlugin());
+        $this->basePlugManager->addPlugin(new EventPlugin());
         $this->basePlugManager->order();
         $this->basePlugManager->init($this->context);
         $this->basePlugManager->beforeServerStart($this->context);

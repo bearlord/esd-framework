@@ -54,23 +54,23 @@ class GoApplication extends Server
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function __construct()
+    public function __construct(ServerConfig $serverConfig = null)
     {
-        parent::__construct(new ServerConfig(), GoPort::class, GoProcess::class);
-        $this->prepareNormalPlugs();
+        parent::__construct($serverConfig, GoPort::class, GoProcess::class);
+        $this->prepareNormalPlugins();
     }
 
     /**
-     * Prepare normal plug
+     * Prepare normal plugins
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \ESD\Core\Exception
      * @throws \ESD\Core\Plugins\Config\ConfigException
      * @throws \ReflectionException
      */
-    protected function prepareNormalPlugs()
+    public function prepareNormalPlugins()
     {
-        $this->addNormalPlugs();
+        $this->addNormalPlugins();
     }
 
     /**
@@ -85,6 +85,7 @@ class GoApplication extends Server
      */
     public function run($mainClass)
     {
+
         $this->configure();
         $this->getContainer()->get($mainClass);
         $this->start();
@@ -99,29 +100,29 @@ class GoApplication extends Server
      * @throws \ESD\Core\Plugins\Config\ConfigException
      * @throws \ReflectionException
      */
-    protected function addNormalPlugs()
+    protected function addNormalPlugins()
     {
-        $this->addPlug(new ConsolePlugin());
-        $this->addPlug(new YiiPlugin());
+        $this->addPlugin(new ConsolePlugin());
+        $this->addPlugin(new YiiPlugin());
         $routeConfig = new RouteConfig();
         $routeConfig->setErrorControllerName(GoController::class);
 
-        $this->addPlug(new EasyRoutePlugin($routeConfig));
-        $this->addPlug(new ScheduledPlugin());
-        $this->addPlug(new RedisPlugin());
-        $this->addPlug(new AutoreloadPlugin());
-        $this->addPlug(new AopPlugin());
-        $this->addPlug(new SaberPlugin());
-        $this->addPlug(new ActuatorPlugin());
-        $this->addPlug(new WhoopsPlugin());
-        $this->addPlug(new SessionPlugin());
-        $this->addPlug(new CachePlugin());
-        $this->addPlug(new SecurityPlugin());
-        $this->addPlug(new PHPUnitPlugin());
-        $this->addPlug(new ProcessRPCPlugin());
-        $this->addPlug(new UidPlugin());
-        $this->addPlug(new TopicPlugin());
-        $this->addPlug(new BladePlugin());
+        $this->addPlugin(new EasyRoutePlugin($routeConfig));
+        $this->addPlugin(new ScheduledPlugin());
+        $this->addPlugin(new RedisPlugin());
+        $this->addPlugin(new AutoreloadPlugin());
+        $this->addPlugin(new AopPlugin());
+        $this->addPlugin(new SaberPlugin());
+        $this->addPlugin(new ActuatorPlugin());
+        $this->addPlugin(new WhoopsPlugin());
+        $this->addPlugin(new SessionPlugin());
+        $this->addPlugin(new CachePlugin());
+        $this->addPlugin(new SecurityPlugin());
+        $this->addPlugin(new PHPUnitPlugin());
+        $this->addPlugin(new ProcessRPCPlugin());
+        $this->addPlugin(new UidPlugin());
+        $this->addPlugin(new TopicPlugin());
+        $this->addPlugin(new BladePlugin());
 
         //Add aop of Go namespace by default
         $aopConfig = new AopConfig(__DIR__);
@@ -132,9 +133,9 @@ class GoApplication extends Server
      * @param AbstractPlugin $plugin
      * @throws \ESD\Core\Exception
      */
-    public function addPlug(AbstractPlugin $plugin)
+    public function addPlugin(AbstractPlugin $plugin)
     {
-        $this->getPlugManager()->addPlug($plugin);
+        $this->getPlugManager()->addPlugin($plugin);
     }
 
     /**

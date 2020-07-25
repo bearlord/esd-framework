@@ -68,7 +68,7 @@ class ConsulPlugin extends AbstractPlugin
         $actuatorPlugin = $pluginInterfaceManager->getPlug(ActuatorPlugin::class);
         if ($actuatorPlugin == null) {
             $actuatorPlugin = new ActuatorPlugin();
-            $pluginInterfaceManager->addPlug($actuatorPlugin);
+            $pluginInterfaceManager->addPlugin($actuatorPlugin);
         }
     }
 

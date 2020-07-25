@@ -54,13 +54,13 @@ class PluginInterfaceManager implements PluginInterface
     /**
      * Add plug
      *
-     * @param AbstractPlugin $plug
+     * @param AbstractPlugin $plugin
      * @throws Exception
      */
-    public function addPlug(AbstractPlugin $plug)
+    public function addPlugin(AbstractPlugin $plugin)
     {
-        $this->addOrder($plug);
-        $plug->onAdded($this);
+        $this->addOrder($plugin);
+        $plugin->onAdded($this);
     }
 
     /**
@@ -71,9 +71,9 @@ class PluginInterfaceManager implements PluginInterface
      */
     public function getPlug(String $className)
     {
-        $plug = $this->orderClassList[$className] ?? null;
-        if ($plug instanceof PluginInterface) {
-            return $plug;
+        $plugin = $this->orderClassList[$className] ?? null;
+        if ($plugin instanceof PluginInterface) {
+            return $plugin;
         } else {
             return null;
         }
@@ -87,9 +87,9 @@ class PluginInterfaceManager implements PluginInterface
      */
     public function init(Context $context)
     {
-        foreach ($this->orderList as $plug) {
-            if ($plug instanceof PluginInterface) {
-                $plug->init($context);
+        foreach ($this->orderList as $plugin) {
+            if ($plugin instanceof PluginInterface) {
+                $plugin->init($context);
             }
         }
     }
@@ -105,9 +105,9 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeServerStartEvent, $this));
         }
-        foreach ($this->orderList as $plug) {
-            if ($plug instanceof PluginInterface) {
-                $plug->beforeServerStart($context);
+        foreach ($this->orderList as $plugin) {
+            if ($plugin instanceof PluginInterface) {
+                $plugin->beforeServerStart($context);
             }
         }
         //Dispatch PlugManagerEvent:PlugAfterServerStartEvent event
@@ -128,24 +128,24 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeProcessStartEvent, $this));
         }
-        foreach ($this->orderList as $plug) {
-            if ($plug instanceof PluginInterface) {
+        foreach ($this->orderList as $plugin) {
+            if ($plugin instanceof PluginInterface) {
                 try {
-                    $plug->beforeProcessStart($context);
+                    $plugin->beforeProcessStart($context);
                 } catch (\Throwable $e) {
                     $this->error($e);
-                    $this->error(sprintf("%s plugin failed to load", $plug->getName()));
+                    $this->error(sprintf("%s plugin failed to load", $plugin->getName()));
                     continue;
                 }
-                if (!$plug->getReadyChannel()->pop(5)) {
-                    $plug->getReadyChannel()->close();
-                    $this->error(sprintf("%s plugin failed to load", $plug->getName()));
+                if (!$plugin->getReadyChannel()->pop(5)) {
+                    $plugin->getReadyChannel()->close();
+                    $this->error(sprintf("%s plugin failed to load", $plugin->getName()));
                     if ($this->eventDispatcher != null) {
-                        $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugFailEvent, $plug));
+                        $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugFailEvent, $plugin));
                     }
                 } else {
                     if ($this->eventDispatcher != null) {
-                        $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugSuccessEvent, $plug));
+                        $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PluginSuccessEvent, $plugin));
                     }
                 }
             }

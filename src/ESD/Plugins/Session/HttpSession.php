@@ -53,9 +53,9 @@ class HttpSession
      */
     public function __construct()
     {
-        $plug = Server::$instance->getPlugManager()->getPlug(SessionPlugin::class);
-        if ($plug instanceof SessionPlugin) {
-            $this->sessionStorage = $plug->getSessionStorage();
+        $plugin = Server::$instance->getPlugManager()->getPlug(SessionPlugin::class);
+        if ($plugin instanceof SessionPlugin) {
+            $this->sessionStorage = $plugin->getSessionStorage();
         }
         $this->config = DIGet(SessionConfig::class);
         setContextValue("HttpSession", $this);

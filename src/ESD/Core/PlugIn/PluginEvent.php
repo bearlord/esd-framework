@@ -14,7 +14,7 @@ class PluginEvent extends Event
     /**
      * Plugin success event
      */
-    const PlugSuccessEvent = "PlugSuccessEvent";
+    const PluginSuccessEvent = "PluginSuccessEvent";
 
     /**
      * Plugin fail event

@@ -60,7 +60,7 @@ class ActuatorPlugin extends AbstractPlugin
         $aopPlugin = $pluginInterfaceManager->getPlug(AopPlugin::class);
         if ($aopPlugin == null) {
             $aopPlugin = new AopPlugin();
-            $pluginInterfaceManager->addPlug($aopPlugin);
+            $pluginInterfaceManager->addPlugin($aopPlugin);
         }
     }
 

@@ -68,7 +68,7 @@ class TopicPlugin extends AbstractPlugin
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         parent::onAdded($pluginInterfaceManager);
-        $pluginInterfaceManager->addPlug(new UidPlugin());
+        $pluginInterfaceManager->addPlugin(new UidPlugin());
     }
 
     /**
