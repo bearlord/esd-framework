@@ -20,6 +20,11 @@ class RedisSessionStorage implements SessionStorage
      */
     private $sessionConfig;
 
+    /**
+     * @var array
+     */
+    private $redisConfig;
+
     const prefix = "SESSION_";
 
     /**
@@ -38,7 +43,9 @@ class RedisSessionStorage implements SessionStorage
      */
     public function get(string $id)
     {
-        return $this->redis($this->sessionConfig->getDatabase())->get(self::prefix . $id);
+        $redis = $this->redis();
+        $redis->select($this->sessionConfig->getDatabase());
+        return $redis->get(self::prefix . $id);
     }
 
     /**
@@ -49,7 +56,9 @@ class RedisSessionStorage implements SessionStorage
      */
     public function set(string $id, string $data)
     {
-        $this->redis($this->sessionConfig->getDatabase())->setex(self::prefix . $id, $this->sessionConfig->getTimeout(), $data);
+        $redis = $this->redis();
+        $redis->select($this->sessionConfig->getDatabase());
+        return $redis->setex(self::prefix . $id, $this->sessionConfig->getTimeout(), $data);
     }
 
     /**
@@ -59,6 +68,8 @@ class RedisSessionStorage implements SessionStorage
      */
     public function remove(string $id)
     {
-        $this->redis($this->sessionConfig->getDatabase())->del(self::prefix . $id);
+        $redis = $this->redis();
+        $redis->select($this->sessionConfig->getDatabase());
+        return $redis->del(self::prefix . $id);
     }
 }
