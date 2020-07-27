@@ -86,7 +86,7 @@ class GoPort extends ServerPort
 
     /**
      * @param Request $request
-     * @return bool
+     * @return bool|void
      */
     public function onWsPassCustomHandshake(Request $request): bool
     {

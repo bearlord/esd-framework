@@ -7,8 +7,8 @@
 namespace ESD\Plugins\EasyRoute;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
-use ESD\Core\PlugIn\PluginInterfaceManager;
+use ESD\Core\Plugin\AbstractPlugin;
+use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Process\Process;
 use ESD\Core\Server\Server;

@@ -7,7 +7,7 @@
 namespace ESD\Core\Plugins\Logger;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Config\ConfigChangeEvent;
 use ESD\Core\Plugins\Config\ConfigPlugin;
 use ESD\Core\Plugins\Event\EventDispatcher;

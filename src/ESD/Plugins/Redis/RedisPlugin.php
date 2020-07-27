@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Redis;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Yii\Yii;

@@ -10,7 +10,7 @@ namespace ESD\Yii\Plugin\Mongodb;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\PluginInterfaceManager;
+use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Yii\Base\Application;
 use ESD\Yii\Plugin\Mongodb\MongodbPool;
 use ESD\Yii\Plugin\YiiPlugin;
@@ -20,7 +20,7 @@ use ESD\Yii\Yii;
  * Class MongodbPlugin
  * @package ESD\Yii\Plugin\Mongodb
  */
-class MongodbPlugin extends \ESD\Core\PlugIn\AbstractPlugin
+class MongodbPlugin extends \ESD\Core\Plugin\AbstractPlugin
 {
     use GetLogger;
 
