@@ -6,7 +6,7 @@
 
 namespace ESD\Go;
 
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Config\ServerConfig;
 use ESD\Core\Server\Process\Process;

@@ -4,7 +4,7 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Core\PlugIn;
+namespace ESD\Core\Plugin;
 
 use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;

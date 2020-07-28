@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Console;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Plugins\Console\Command\ReloadCmd;
 use ESD\Plugins\Console\Command\RestartCmd;
 use ESD\Plugins\Console\Command\StartCmd;

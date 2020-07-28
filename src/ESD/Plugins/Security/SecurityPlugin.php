@@ -7,8 +7,8 @@
 namespace ESD\Plugins\Security;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
-use ESD\Core\PlugIn\PluginInterfaceManager;
+use ESD\Core\Plugin\AbstractPlugin;
+use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Plugins\Aop\AopConfig;
 use ESD\Plugins\Aop\AopPlugin;
 use ESD\Plugins\Security\Aspect\SecurityAspect;

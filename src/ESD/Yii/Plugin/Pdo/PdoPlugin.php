@@ -10,7 +10,7 @@ namespace ESD\Yii\Plugin\Pdo;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\PluginInterfaceManager;
+use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Yii\Base\Application;
 use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Yii;
@@ -19,7 +19,7 @@ use ESD\Yii\Yii;
  * Class PdoPlugin
  * @package ESD\Yii\Plugin\Pdo
  */
-class PdoPlugin extends \ESD\Core\PlugIn\AbstractPlugin
+class PdoPlugin extends \ESD\Core\Plugin\AbstractPlugin
 {
     use GetLogger;
 

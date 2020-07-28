@@ -4,13 +4,13 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Core\PlugIn;
+namespace ESD\Core\Plugin;
 
 use ESD\Core\Plugins\Event\Event;
 
 /**
  * Class PluginManagerEvent
- * @package ESD\Core\PlugIn
+ * @package ESD\Core\Plugin
  */
 class PluginManagerEvent extends Event
 {

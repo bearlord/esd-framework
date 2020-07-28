@@ -10,7 +10,7 @@ use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
 use ESD\Core\Message\Message;
 use ESD\Core\Message\MessageProcessor;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 
 /**
  * Class EventPlugin

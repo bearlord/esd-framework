@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Blade;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Server\Server;
 
 /**

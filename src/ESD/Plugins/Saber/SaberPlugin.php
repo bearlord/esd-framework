@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Saber;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use Swlib\SaberGM;
 
 /**

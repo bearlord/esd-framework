@@ -7,7 +7,7 @@
 namespace ESD\Core\Plugins\Config;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Event\EventPlugin;
 use ESD\Core\Server\Server;
 use Symfony\Component\Yaml\Yaml;

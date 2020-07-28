@@ -12,7 +12,7 @@ use ESD\Core\Context\ContextBuilder;
 use ESD\Core\Context\ContextManager;
 use ESD\Core\DI\DI;
 use ESD\Core\Log\Log;
-use ESD\Core\PlugIn\PluginInterfaceManager;
+use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Plugins\Config\ConfigContext;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Config\ConfigPlugin;

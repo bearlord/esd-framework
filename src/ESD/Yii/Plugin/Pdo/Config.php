@@ -40,7 +40,7 @@ class Config extends BaseConfig
      */
     protected $tablePrefix = "";
     /**
-     * @var string
+     * @var string charset
      */
     protected $charset = "utf8";
 

@@ -7,8 +7,8 @@
 namespace ESD\Plugins\MQTT;
 
 use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
-use ESD\Core\PlugIn\PluginInterfaceManager;
+use ESD\Core\Plugin\AbstractPlugin;
+use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Plugins\MQTT\Auth\MqttAuth;
 use ESD\Plugins\Pack\PackPlugin;
 use ESD\Plugins\Topic\TopicPlugin;

@@ -10,7 +10,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use ESD\Core\Context\Context;
 use ESD\Core\Exception;
 use ESD\Core\Order\OrderOwnerTrait;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;

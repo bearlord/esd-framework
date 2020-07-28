@@ -7,7 +7,7 @@ namespace ESD\Plugins\ProcessRPC;
 
 use ESD\Core\Context\Context;
 use ESD\Core\Message\MessageProcessor;
-use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Plugin\AbstractPlugin;
 
 /**
  * Class ProcessRPCPlugin
