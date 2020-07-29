@@ -37,24 +37,23 @@ class SessionConfig extends BaseConfig
     /**
      * Header identify to identify session
      */
-    const HEADER_IDENTIFY = 'sessionId';
-
-
-    /**
-     * 销毁时间s
-     * @var int
-     */
-    protected $timeout = 30 * 60;
-
-    /**
-     * @var string
-     */
-    protected $database = "default";
+    const HEADER_IDENTIFY = 'SESSIONID';
 
     /**
      * @var string
      */
     protected $sessionStorageClass = RedisSessionStorage::class;
+
+    /**
+     * Redis name
+     * @var string
+     */
+    protected $redisName = 'default';
+
+    /**
+     * @var int
+     */
+    protected $database = 0;
 
     /**
      * @var string
@@ -77,10 +76,14 @@ class SessionConfig extends BaseConfig
     protected $sessionName = 'SESSIONID';
 
     /**
+     * @var int
+     */
+    protected $timeout = 30 * 60;
+
+    /**
      * @var bool
      */
     protected $httpOnly = true;
-
 
     /**
      * Whether only ssl
@@ -94,37 +97,6 @@ class SessionConfig extends BaseConfig
     public function __construct()
     {
         parent::__construct(self::key);
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimeout(): int
-    {
-        return $this->timeout;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSessionUsage(): string
-    {
-        return $this->sessionUsage;
-    }
-
-    /**
-     * @param $usage
-     */
-    public function setSessionUsage( $usage ): void {
-        $this->sessionUsage = $usage;
-    }
-
-    /**
-     * @param int $timeout
-     */
-    public function setTimeout(int $timeout): void
-    {
-        $this->timeout = $timeout;
     }
 
     /**
@@ -144,25 +116,57 @@ class SessionConfig extends BaseConfig
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function getSecure(): bool
+    public function getRedisName(): string
     {
-        return $this->secure;
+        return $this->redisName;
     }
 
     /**
-     * @param bool $secure
+     * @param string $redisName
      */
-    public function setSecure(bool $secure): void {
-        $this->secure = $secure;
+    public function setRedisName(string $redisName): void
+    {
+        $this->redisName = $redisName;
     }
 
+    /**
+     * @return int
+     */
+    public function getDatabase(): int
+    {
+        return $this->database;
+    }
+
+    /**
+     * @param int $database
+     */
+    public function setDatabase(int $database): void
+    {
+        $this->database = $database;
+    }
 
     /**
      * @return string
      */
-    public function getDomain():string
+    public function getSessionUsage(): string
+    {
+        return $this->sessionUsage;
+    }
+
+    /**
+     * @param string $sessionUsage
+     */
+    public function setSessionUsage(string $sessionUsage): void
+    {
+        $this->sessionUsage = $sessionUsage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain(): string
     {
         return $this->domain;
     }
@@ -186,29 +190,10 @@ class SessionConfig extends BaseConfig
     /**
      * @param string $path
      */
-    public function setPath(string $path) :void
+    public function setPath(string $path): void
     {
         $this->path = $path;
     }
-
-
-    /**
-     * @return bool
-     */
-    public function getHttpOnly():bool
-    {
-        return $this->httpOnly;
-    }
-
-
-    /**
-     * @param bool $bool
-     */
-    public function setHttpOnly(bool $bool): void
-    {
-        $this->httpOnly = $bool;
-    }
-
 
     /**
      * @return string
@@ -219,26 +204,58 @@ class SessionConfig extends BaseConfig
     }
 
     /**
-     * @param string $name
+     * @param string $sessionName
      */
-    public function setSessionName(string $name): void
+    public function setSessionName(string $sessionName): void
     {
-        $this->sessionName = $name;
+        $this->sessionName = $sessionName;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getDatabase(): string
+    public function getTimeout(): int
     {
-        return $this->database;
+        return $this->timeout;
     }
 
     /**
-     * @param string $database
+     * @param int $timeout
      */
-    public function setDatabase(string $database): void
+    public function setTimeout(int $timeout): void
     {
-        $this->database = $database;
+        $this->timeout = $timeout;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHttpOnly(): bool
+    {
+        return $this->httpOnly;
+    }
+
+    /**
+     * @param bool $httpOnly
+     */
+    public function setHttpOnly(bool $httpOnly): void
+    {
+        $this->httpOnly = $httpOnly;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSecure(): bool
+    {
+        return $this->secure;
+    }
+
+    /**
+     * @param bool $secure
+     */
+    public function setSecure(bool $secure): void
+    {
+        $this->secure = $secure;
     }
 }
