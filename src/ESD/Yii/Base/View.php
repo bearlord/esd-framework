@@ -9,9 +9,9 @@ namespace ESD\Yii\Base;
 
 use ESD\Yii\Yii;
 use ESD\Yii\Helpers\FileHelper;
-use yii\widgets\Block;
-use yii\widgets\ContentDecorator;
-use yii\widgets\FragmentCache;
+use ESD\Yii\Widgets\Block;
+use ESD\Yii\Widgets\ContentDecorator;
+use ESD\Yii\Widgets\FragmentCache;
 
 /**
  * View represents a view object in the MVC pattern.
@@ -108,6 +108,8 @@ class View extends Component implements DynamicContentAwareInterface
      */
     private $_viewFiles = [];
 
+    protected $layoutPath = "";
+
 
     /**
      * Initializes the view component.
@@ -123,6 +125,33 @@ class View extends Component implements DynamicContentAwareInterface
         } elseif (is_string($this->theme)) {
             $this->theme = Yii::createObject($this->theme);
         }
+    }
+
+    /**
+     * @param $view
+     * @param $context
+     */
+    public function setLayoutPath($view, $context)
+    {
+        if ($context instanceof Controller) {
+            if (!empty($context->moduleName)) {
+                $moduleName = $controller->moduleName;
+            } else {
+                $array = explode("/", $view);
+                $moduleName = $array[0];
+            }
+
+            $this->layoutPath = $context->getViewPath() . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'layouts';
+        }
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getLayoutPath()
+    {
+        return $this->layoutPath;
     }
 
     /**
@@ -152,6 +181,7 @@ class View extends Component implements DynamicContentAwareInterface
      */
     public function render($view, $params = [], $context = null)
     {
+        $this->setLayoutPath($view, $context);
         $viewFile = $this->findViewFile($view, $context);
         return $this->renderFile($viewFile, $params, $context);
     }
@@ -177,11 +207,7 @@ class View extends Component implements DynamicContentAwareInterface
             $file = Yii::$app->getViewPath() . DIRECTORY_SEPARATOR . ltrim($view, '/');
         } elseif (strncmp($view, '/', 1) === 0) {
             // e.g. "/site/index"
-            if (Yii::$app->controller !== null) {
-                $file = Yii::$app->controller->module->getViewPath() . DIRECTORY_SEPARATOR . ltrim($view, '/');
-            } else {
-                throw new InvalidCallException("Unable to locate view file for view '$view': no active controller.");
-            }
+            $file = $context->getViewPath() . DIRECTORY_SEPARATOR . ltrim($view, '/');
         } elseif ($context instanceof ViewContextInterface) {
             $file = $context->getViewPath() . DIRECTORY_SEPARATOR . $view;
         } elseif (($currentViewFile = $this->getRequestedViewFile()) !== false) {
@@ -346,6 +372,9 @@ class View extends Component implements DynamicContentAwareInterface
         extract($_params_, EXTR_OVERWRITE);
         try {
             require $_file_;
+            $content = ob_get_contents();
+            ob_clean();
+            return $content;
             return ob_get_clean();
         } catch (\Exception $e) {
             while (ob_get_level() > $_obInitialLevel_) {

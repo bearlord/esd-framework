@@ -335,6 +335,14 @@ class Application extends ServiceLocator
         return $this->get('security');
     }
 
+    /**
+     * Returns the view object.
+     * @return View|\ESD\Yii\Web\View the view application component that is used to render various view files.
+     */
+    public function getView()
+    {
+        return $this->get('view');
+    }
 
     /**
      * Returns the dynamic language
@@ -427,7 +435,8 @@ class Application extends ServiceLocator
             'formatter' => ['class' => '\ESD\Yii\I18n\Formatter'],
             'i18n' => ['class' => 'ESD\Yii\I18n\I18N'],
             'log' => ['class' => 'ESD\Yii\Log\Dispatcher'],
-            'security' => ['class' => 'ESD\Yii\Base\Security']
+            'security' => ['class' => 'ESD\Yii\Base\Security'],
+            'view' => ['class' => 'ESD\Yii\Web\View']
         ];
     }
 }

@@ -49,7 +49,7 @@ class Controller extends Component implements ViewContextInterface
      * Defaults to null, meaning the actual layout value should inherit that from [[module]]'s layout value.
      * If false, no layout will be applied.
      */
-    public $layout;
+    public $layout = 'main';
     /**
      * @var Action the action that is currently being executed. This property will be set
      * by [[run()]] when it is called by [[Application]] to run an action.
@@ -64,6 +64,11 @@ class Controller extends Component implements ViewContextInterface
      * @var string the root directory that contains view files for this controller.
      */
     private $_viewPath;
+
+    /**
+     * @var string the module name
+     */
+    public $moduleName;
 
     /**
      * Controller constructor.
@@ -115,10 +120,6 @@ class Controller extends Component implements ViewContextInterface
         }
 
         Yii::debug('Route to run: ' . $action->getUniqueId(), __METHOD__);
-
-        if (Yii::$app->requestedAction === null) {
-            Yii::$app->requestedAction = $action;
-        }
 
         $oldAction = $this->action;
         $this->action = $action;
@@ -449,7 +450,7 @@ class Controller extends Component implements ViewContextInterface
     public function getViewPath()
     {
         if ($this->_viewPath === null) {
-            $this->_viewPath = $this->module->getViewPath() . DIRECTORY_SEPARATOR . $this->id;
+            $this->setViewPath('@app/Views');
         }
 
         return $this->_viewPath;
@@ -475,16 +476,8 @@ class Controller extends Component implements ViewContextInterface
      */
     public function findLayoutFile($view)
     {
-        $module = $this->module;
         if (is_string($this->layout)) {
             $layout = $this->layout;
-        } elseif ($this->layout === null) {
-            while ($module !== null && $module->layout === null) {
-                $module = $module->module;
-            }
-            if ($module !== null && is_string($module->layout)) {
-                $layout = $module->layout;
-            }
         }
 
         if (!isset($layout)) {
@@ -496,7 +489,7 @@ class Controller extends Component implements ViewContextInterface
         } elseif (strncmp($layout, '/', 1) === 0) {
             $file = Yii::$app->getLayoutPath() . DIRECTORY_SEPARATOR . substr($layout, 1);
         } else {
-            $file = $module->getLayoutPath() . DIRECTORY_SEPARATOR . $layout;
+            $file = $this->view->getLayoutPath($this->moduleName, $this) . DIRECTORY_SEPARATOR . $layout;
         }
 
         if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
