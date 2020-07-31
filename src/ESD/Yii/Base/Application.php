@@ -366,8 +366,31 @@ class Application extends ServiceLocator
     }
 
     /**
+<<<<<<< .mine
      * Returns the URL manager for this application.
      * @return \yii\web\UrlManager the URL manager for this application.
+
+
+
+
+
+
+
+
+
+=======
+     * Returns the URL manager for this application.
+     * @return \yii\web\UrlManager the URL manager for this application.
+     */
+    public function getUrlManager()
+    {
+        return $this->get('urlManager');
+    }
+
+    /**
+     * Returns the session component.
+     * @return HttpSession the session component.
+>>>>>>> .theirs
      */
     public function getUrlManager()
     {
@@ -506,10 +529,17 @@ class Application extends ServiceLocator
             'formatter' => ['class' => '\ESD\Yii\I18n\Formatter'],
             'i18n' => ['class' => 'ESD\Yii\I18n\I18N'],
             'log' => ['class' => 'ESD\Yii\Log\Dispatcher'],
+<<<<<<< .mine
             'security' => ['class' => 'ESD\Yii\Base\Security'],
             'view' => ['class' => 'ESD\Yii\Web\View'],
             'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager'],
             'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager'],
+=======
+            'security' => ['class' => 'ESD\Yii\Base\Security'],
+            'view' => ['class' => 'ESD\Yii\Web\View'],
+            'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager']
+
+>>>>>>> .theirs
         ];
     }
 }
