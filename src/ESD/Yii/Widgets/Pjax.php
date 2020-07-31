@@ -168,8 +168,6 @@ class Pjax extends Widget
         $response->format = Response::FORMAT_HTML;
         $response->content = $content;
         $response->headers->setDefault('X-Pjax-Url', Yii::$app->request->url);
-
-        Yii::$app->end();
     }
 
     /**

@@ -375,7 +375,6 @@ class View extends Component implements DynamicContentAwareInterface
             $content = ob_get_contents();
             ob_clean();
             return $content;
-            return ob_get_clean();
         } catch (\Exception $e) {
             while (ob_get_level() > $_obInitialLevel_) {
                 if (!@ob_end_clean()) {
