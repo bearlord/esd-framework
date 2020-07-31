@@ -1,11 +1,12 @@
 <?php
-
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
 
 namespace ESD\Server\Co\Http;
 
-
 use ESD\Core\Exception;
-
 use ESD\Core\Server\Beans\Http\HttpStream;
 use ESD\Core\Server\Beans\Http\Uri;
 use ESD\Core\Server\Beans\Request;
@@ -53,7 +54,8 @@ class SwooleRequest extends Request
             throw new \Exception("Headers parsing error");
         }
 
-        $this->uri = new Uri(sprintf("http://%s%s%s",
+        $this->uri = new Uri(sprintf("%s://%s%s%s",
+                $this->getScheme(),
                 $this->headers['host'][0],
                 $this->server[self::SERVER_REQUEST_URI],
                 $queryString)

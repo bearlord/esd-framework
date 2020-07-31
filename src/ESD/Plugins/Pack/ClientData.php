@@ -107,7 +107,7 @@ class ClientData
     public function getMethodName(): ?string
     {
         if ($this->methodName != null) {
-            return strtoupper($this->methodName);
+            return $this->methodName;
         }
         return null;
     }
@@ -224,7 +224,7 @@ class ClientData
      */
     public function getRequestMethod(): string
     {
-        return strtoupper($this->requestMethod);
+        return $this->requestMethod;
     }
 
     /**

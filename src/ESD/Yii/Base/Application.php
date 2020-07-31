@@ -99,9 +99,24 @@ class Application extends ServiceLocator
     {
         $config = Server::$instance->getConfigContext()->get('yii');
 
-        $this->setBasePath(Server::$instance->getServerConfig()->getSrcDir());
+        //Set base path
+        $srcDir = Server::$instance->getServerConfig()->getSrcDir();
+        $this->setBasePath($srcDir);
 
-        // merge core components with custom components
+        //Set vendor path
+        $vendorPath =  realpath(dirname($srcDir) . '/vendor');
+        $this->setVendorPath($vendorPath);
+
+        //Set web path
+        if (Server::$instance->getServerConfig()->isEnableStaticHandler()) {
+            $documentRoot = Server::$instance->getServerConfig()->getDocumentRoot();
+            if (empty($documentRoot)) {
+                $documentRoot = realpath(dirname($srcDir) . '/web');
+            }
+            $this->setWebPath(Server::$instance->getServerConfig()->getDocumentRoot());
+        }
+
+        //Merge core components with custom components
         $newConfig = $config;
         unset($newConfig['db']);
 
@@ -149,6 +164,44 @@ class Application extends ServiceLocator
         }
         Yii::setAlias('@app', $this->getBasePath());
         Yii::setAlias('@App', $this->getBasePath());
+    }
+
+    private $_vendorPath;
+
+    /**
+     * Returns the directory that stores vendor files.
+     * @return string the directory that stores vendor files.
+     * Defaults to "vendor" directory under [[basePath]].
+     */
+    public function getVendorPath()
+    {
+        if ($this->_vendorPath === null) {
+            $this->setVendorPath($this->getBasePath() . DIRECTORY_SEPARATOR . 'vendor');
+        }
+
+        return $this->_vendorPath;
+    }
+
+    /**
+     * Sets the directory that stores vendor files.
+     * @param string $path the directory that stores vendor files.
+     */
+    public function setVendorPath($path)
+    {
+        $this->_vendorPath = Yii::getAlias($path);
+        Yii::setAlias('@vendor', $this->_vendorPath);
+        Yii::setAlias('@bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'bower-asset');
+        Yii::setAlias('@npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'npm-asset');
+    }
+
+    /**
+     * Sets the web and webroot path
+     * @param $path
+     */
+    public function setWebPath($path)
+    {
+        Yii::setAlias('@webroot', $path);
+        Yii::setAlias('@web', '/');
     }
 
     private $_runtimePath;
@@ -313,16 +366,21 @@ class Application extends ServiceLocator
     }
 
     /**
-     * Returns the session component.
-     * @return HttpSession the session component.
+     * Returns the URL manager for this application.
+     * @return \yii\web\UrlManager the URL manager for this application.
      */
-    public function getSession()
+    public function getUrlManager()
     {
-        $session = getDeepContextValueByClassName(HttpSession::class);
-        if ($session == null) {
-            $session = new HttpSession();
-        }
-        return $session;
+        return $this->get('urlManager');
+    }
+
+    /**
+     * Returns the asset manager.
+     * @return \yii\web\AssetManager the asset manager application component.
+     */
+    public function getAssetManager()
+    {
+        return $this->get('assetManager');
     }
 
     /**
@@ -335,6 +393,27 @@ class Application extends ServiceLocator
         return $this->get('security');
     }
 
+    /**
+     * Returns the view object.
+     * @return View|\ESD\Yii\Web\View the view application component that is used to render various view files.
+     */
+    public function getView()
+    {
+        return $this->get('view');
+    }
+
+    /**
+     * Returns the session component.
+     * @return HttpSession the session component.
+     */
+    public function getSession()
+    {
+        $session = getDeepContextValueByClassName(HttpSession::class);
+        if ($session == null) {
+            $session = new HttpSession();
+        }
+        return $session;
+    }
 
     /**
      * Returns the dynamic language
@@ -427,7 +506,10 @@ class Application extends ServiceLocator
             'formatter' => ['class' => '\ESD\Yii\I18n\Formatter'],
             'i18n' => ['class' => 'ESD\Yii\I18n\I18N'],
             'log' => ['class' => 'ESD\Yii\Log\Dispatcher'],
-            'security' => ['class' => 'ESD\Yii\Base\Security']
+            'security' => ['class' => 'ESD\Yii\Base\Security'],
+            'view' => ['class' => 'ESD\Yii\Web\View'],
+            'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager'],
+            'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager'],
         ];
     }
 }

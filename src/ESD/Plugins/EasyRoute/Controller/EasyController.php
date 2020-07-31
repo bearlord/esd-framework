@@ -13,14 +13,26 @@ use ESD\Core\Server\Beans\Response;
 use ESD\Plugins\EasyRoute\MethodNotAllowedException;
 use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\Pack\ClientData;
+use ESD\Yii\Base\ActionEvent;
+use ESD\Yii\Base\Controller;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class EasyController
  * @package ESD\Plugins\EasyRoute\Controller
  */
-abstract class EasyController implements IController
+abstract class EasyController extends Controller implements IController
 {
+    /**
+     * @event ActionEvent an event raised right before executing a controller action.
+     * You may set [[ActionEvent::isValid]] to be false to cancel the action execution.
+     */
+    const EVENT_BEFORE_ACTION = 'beforeAction';
+    /**
+     * @event ActionEvent an event raised right after executing a controller action.
+     */
+    const EVENT_AFTER_ACTION = 'afterAction';
+
     /**
      * @Inject()
      * @var Request
@@ -69,23 +81,17 @@ abstract class EasyController implements IController
             $callMethodName = $methodName;
         }
         try {
-            $result = $this->initialization($controllerName, $methodName);
-            if ($result != null) {
-                return $result;
+            $action = $this->createAction($methodName);
+
+            if ($this->beforeAction($action)) {
+                // run the action
+                $result = $action->runWithParams($params);
+                $result = $this->afterAction($action, $result);
             }
-            if ($params == null) {
-                if ($callMethodName == "defaultMethod") {
-                    return $this->defaultMethod($methodName);
-                } else {
-                    return call_user_func([$this, $callMethodName]);
-                }
-            } else {
-                $params = array_values($params);
-                return call_user_func_array([$this, $callMethodName], $params);
-            }
-        } catch (\Throwable $e) {
-            setContextValue("lastException", $e);
-            return $this->onExceptionHandle($e);
+            return $result;
+        } catch (\Throwable $exception) {
+            setContextValue("lastException", $exception);
+            return $this->onExceptionHandle($exception);
         }
     }
 

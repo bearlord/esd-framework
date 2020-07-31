@@ -78,7 +78,26 @@ class PortManager
     }
 
     /**
-     * Port config
+     * Get port config
+     * @param $port
+     * @return PortConfig
+     * @throws \Exception
+     */
+    public function getPortConfig($port)
+    {
+        $configs = Server::$instance->getConfigContext()->get(PortConfig::key);
+        foreach ($configs as $key => $value) {
+            if ($value['port'] === $port) {
+                $portConfig = new PortConfig();
+                $portConfig->setName($key);
+                $portConfig->buildFromConfig($value);
+                return $portConfig;
+            }
+        }
+    }
+
+    /**
+     * Port configs
      *
      * @return PortConfig[]
      * @throws ConfigException

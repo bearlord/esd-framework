@@ -132,18 +132,13 @@ class BaseUrl
             return ltrim($route, '/');
         }
 
-        // relative route
-        if (Yii::$app->controller === null) {
-            throw new InvalidArgumentException("Unable to resolve the relative route: $route. No active controller is available.");
-        }
-
         if (strpos($route, '/') === false) {
             // empty or an action ID
-            return $route === '' ? Yii::$app->controller->getRoute() : Yii::$app->controller->getUniqueId() . '/' . $route;
+            return $route === '' ? '/' : '/' . $route;
         }
 
         // relative to module
-        return ltrim(Yii::$app->controller->module->getUniqueId() . '/' . $route, '/');
+        return ltrim( '/' . $route, '/');
     }
 
     /**
@@ -216,7 +211,7 @@ class BaseUrl
 
         $url = Yii::getAlias($url);
         if ($url === '') {
-            $url = Yii::$app->getRequest()->getUrl();
+            $url = Yii::$app->getRequest()->getUri();
         }
 
         if ($scheme === false) {
@@ -434,7 +429,7 @@ class BaseUrl
     }
 
     /**
-     * @return \yii\web\UrlManager URL manager used to create URLs
+     * @return \ESD\Yii\Web\UrlManager URL manager used to create URLs
      * @since 2.0.8
      */
     protected static function getUrlManager()

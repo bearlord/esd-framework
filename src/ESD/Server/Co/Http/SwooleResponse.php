@@ -1,8 +1,10 @@
 <?php
-
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
 
 namespace ESD\Server\Co\Http;
-
 
 use ESD\Core\Exception;
 use ESD\Core\Server\Beans\Http\Cookie;
@@ -17,7 +19,7 @@ class SwooleResponse extends Response
     protected $swooleResponse;
 
     /**
-     * 加载
+     * Load object
      * @param null $realObject
      * @throws Exception
      */
@@ -31,7 +33,7 @@ class SwooleResponse extends Response
     }
 
     /**
-     * 发送数据
+     * Send data and end
      */
     public function end()
     {
@@ -74,7 +76,8 @@ class SwooleResponse extends Response
     }
 
     /**
-     * 分离响应对象。使用此方法后，$response对象销毁时不会自动end，与Http\Response::create和Server::send配合使用。
+     * Separate the response object. After using this method, the $response object will not automatically end when it is destroyed.
+     * It is used in conjunction with Http\Response::create and Server::send.
      */
     public function detach()
     {
@@ -82,7 +85,7 @@ class SwooleResponse extends Response
     }
 
     /**
-     * 是否已经发送
+     * Is end
      * @return bool
      */
     public function isEnd()
@@ -91,7 +94,7 @@ class SwooleResponse extends Response
     }
 
     /**
-     * 发送Http跳转。调用此方法会自动end发送并结束响应。
+     * Send Http redirect. Calling this method will automatically end send and end the response.
      * @param string $url
      * @param int $http_code
      */
@@ -102,7 +105,7 @@ class SwooleResponse extends Response
     }
 
     /**
-     * 创建一个新对象，配合detach使用
+     * Create a new object and use it with detach
      * @param $fd
      * @return static
      * @throws Exception

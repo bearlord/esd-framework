@@ -60,6 +60,15 @@ class BaseYii
     public static $container;
 
     /**
+     * Returns a string representing the current version of the Yii framework.
+     * @return string the version of Yii framework
+     */
+    public static function getVersion()
+    {
+        return '2.0.32-dev';
+    }
+
+    /**
      * replace Yii::$container into Yii::getContainer()
      *
      * To suit esd-projects

@@ -5,64 +5,34 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace ESD\Yii\Widgets;
+namespace ESD\Yii\Bootstrap4;
 
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
-use ESD\Yii\Base\Widget;
 use ESD\Yii\Helpers\ArrayHelper;
-use ESD\Yii\Helpers\Html;
 
 /**
- * Breadcrumbs displays a list of links indicating the position of the current page in the whole site hierarchy.
- *
- * For example, breadcrumbs like "Home / Sample Post / Edit" means the user is viewing an edit page
- * for the "Sample Post". He can click on "Sample Post" to view that page, or he can click on "Home"
- * to return to the homepage.
+ * Breadcrumbs represents a bootstrap 4 version of [[\ESD\Yii\Widgets\Breadcrumbs]]. It displays
+ * a list of links indicating the position of the current page in the whole site hierarchy.
  *
  * To use Breadcrumbs, you need to configure its [[links]] property, which specifies the links to be displayed. For example,
  *
  * ```php
- * // $this is the view object currently being used
- * echo Breadcrumbs::widget([
- *     'itemTemplate' => "<li><i>{link}</i></li>\n", // template for all links
- *     'links' => [
- *         [
- *             'label' => 'Post Category',
- *             'url' => ['post-category/view', 'id' => 10],
- *             'template' => "<li><b>{link}</b></li>\n", // template for this link only
- *         ],
- *         ['label' => 'Sample Post', 'url' => ['post/edit', 'id' => 1]],
- *         'Edit',
- *     ],
- * ]);
- * ```
- *
- * Because breadcrumbs usually appears in nearly every page of a website, you may consider placing it in a layout view.
- * You can use a view parameter (e.g. `$this->params['breadcrumbs']`) to configure the links in different
- * views. In the layout view, you assign this view parameter to the [[links]] property like the following:
- *
- * ```php
- * // $this is the view object currently being used
  * echo Breadcrumbs::widget([
  *     'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+ *     'options' => [],
  * ]);
  * ```
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * @see http://getbootstrap.com/javascript/#buttons
+ * @author Alexandr Kozhevnikov <onmotion1@gmail.com>
+ * @author Simon Karlen <simi.albi@outlook.com>
  */
 class Breadcrumbs extends Widget
 {
     /**
      * @var string the name of the breadcrumb container tag.
      */
-    public $tag = 'ul';
-    /**
-     * @var array the HTML attributes for the breadcrumb container tag.
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    public $options = ['class' => 'breadcrumb'];
+    public $tag = 'ol';
     /**
      * @var bool whether to HTML-encode the link labels.
      */
@@ -70,7 +40,7 @@ class Breadcrumbs extends Widget
     /**
      * @var array the first hyperlink in the breadcrumbs (called home link).
      * Please refer to [[links]] on the format of the link.
-     * If this property is not set, it will default to a link pointing to [[\yii\web\Application::homeUrl]]
+     * If this property is not set, it will default to a link pointing to [[\ESD\Yii\Web\Application::homeUrl]]
      * with the label 'Home'. If this property is false, the home link will not be rendered.
      */
     public $homeLink;
@@ -87,56 +57,53 @@ class Breadcrumbs extends Widget
      * ]
      * ```
      *
-     * If a link is active, you only need to specify its "label", and instead of writing `['label' => $label]`,
-     * you may simply use `$label`.
      *
-     * Since version 2.0.1, any additional array elements for each link will be treated as the HTML attributes
-     * for the hyperlink tag. For example, the following link specification will generate a hyperlink
-     * with CSS class `external`:
-     *
-     * ```php
-     * [
-     *     'label' => 'demo',
-     *     'url' => 'http://example.com',
-     *     'class' => 'external',
-     * ]
-     * ```
-     *
-     * Since version 2.0.3 each individual link can override global [[encodeLabels]] param like the following:
-     *
-     * ```php
-     * [
-     *     'label' => '<strong>Hello!</strong>',
-     *     'encode' => false,
-     * ]
-     * ```
      */
     public $links = [];
     /**
      * @var string the template used to render each inactive item in the breadcrumbs. The token `{link}`
      * will be replaced with the actual HTML link for each inactive item.
      */
-    public $itemTemplate = "<li>{link}</li>\n";
+    public $itemTemplate = "<li class=\"breadcrumb-item\">{link}</li>\n";
     /**
      * @var string the template used to render each active item in the breadcrumbs. The token `{link}`
      * will be replaced with the actual HTML link for each active item.
      */
-    public $activeItemTemplate = "<li class=\"active\">{link}</li>\n";
+    public $activeItemTemplate = "<li class=\"breadcrumb-item active\" aria-current=\"page\">{link}</li>\n";
+    /**
+     * @var array the HTML attributes for the widgets nav container tag.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     */
+    public $navOptions = ['aria-label' => 'breadcrumb'];
 
 
     /**
+     * Initializes the widget.
+     * If you override this method, make sure you call the parent implementation first.
+     */
+    public function init()
+    {
+        parent::init();
+        $this->clientOptions = false;
+        Html::addCssClass($this->options, ['widget' => 'breadcrumb']);
+    }
+
+    /**
      * Renders the widget.
+     * @throws InvalidConfigException
      */
     public function run()
     {
+        $this->registerPlugin('breadcrumb');
+
         if (empty($this->links)) {
-            return;
+            return '';
         }
         $links = [];
         if ($this->homeLink === null) {
             $links[] = $this->renderItem([
                 'label' => Yii::t('yii', 'Home'),
-                'url' => '',
+                'url' => Yii::$app->homeUrl,
             ], $this->itemTemplate);
         } elseif ($this->homeLink !== false) {
             $links[] = $this->renderItem($this->homeLink, $this->itemTemplate);
@@ -147,7 +114,7 @@ class Breadcrumbs extends Widget
             }
             $links[] = $this->renderItem($link, isset($link['url']) ? $this->itemTemplate : $this->activeItemTemplate);
         }
-        echo Html::tag($this->tag, implode('', $links), $this->options);
+        return Html::tag('nav', Html::tag($this->tag, implode('', $links), $this->options), $this->navOptions);
     }
 
     /**
