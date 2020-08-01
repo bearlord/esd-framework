@@ -230,7 +230,7 @@ class SessionConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isHttpOnly(): bool
+    public function getHttpOnly(): bool
     {
         return $this->httpOnly;
     }
@@ -246,7 +246,7 @@ class SessionConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isSecure(): bool
+    public function getSecure(): bool
     {
         return $this->secure;
     }

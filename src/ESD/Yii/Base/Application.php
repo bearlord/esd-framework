@@ -26,6 +26,7 @@ use ESD\Yii\Plugin\Pdo\PdoPools;
  * @property \ESD\Plugins\Session\HttpSession $session The session component. This property is read-only.
  * @property \ESD\Yii\Web\User $user The user component. This property is read-only.
  * @property \ESD\Yii\Caching\Cache $cache The cache application component. Null if the component is not enabled.
+ * @property \ESD\Yii\Base\Security $security The security application component. This property is read-only.
  */
 class Application extends ServiceLocator
 {
@@ -366,19 +367,8 @@ class Application extends ServiceLocator
     }
 
     /**
-<<<<<<< .mine
      * Returns the URL manager for this application.
      * @return \yii\web\UrlManager the URL manager for this application.
-
-
-
-
-
-
-
-
-
-=======
      * Returns the URL manager for this application.
      * @return \yii\web\UrlManager the URL manager for this application.
      */
@@ -387,15 +377,6 @@ class Application extends ServiceLocator
         return $this->get('urlManager');
     }
 
-    /**
-     * Returns the session component.
-     * @return HttpSession the session component.
->>>>>>> .theirs
-     */
-    public function getUrlManager()
-    {
-        return $this->get('urlManager');
-    }
 
     /**
      * Returns the asset manager.
@@ -434,6 +415,9 @@ class Application extends ServiceLocator
         $session = getDeepContextValueByClassName(HttpSession::class);
         if ($session == null) {
             $session = new HttpSession();
+            if (!$session->isAvailable()) {
+                $session->create();
+            }
         }
         return $session;
     }
@@ -517,8 +501,6 @@ class Application extends ServiceLocator
         return $db;
     }
 
-
-
     /**
      * Returns the configuration of core application components.
      * @see set()
@@ -529,17 +511,13 @@ class Application extends ServiceLocator
             'formatter' => ['class' => '\ESD\Yii\I18n\Formatter'],
             'i18n' => ['class' => 'ESD\Yii\I18n\I18N'],
             'log' => ['class' => 'ESD\Yii\Log\Dispatcher'],
-<<<<<<< .mine
             'security' => ['class' => 'ESD\Yii\Base\Security'],
             'view' => ['class' => 'ESD\Yii\Web\View'],
             'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager'],
             'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager'],
-=======
             'security' => ['class' => 'ESD\Yii\Base\Security'],
             'view' => ['class' => 'ESD\Yii\Web\View'],
             'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager']
-
->>>>>>> .theirs
         ];
     }
 }

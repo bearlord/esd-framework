@@ -1,4 +1,8 @@
 <?php
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
 
 namespace ESD\Core\Server\Beans\Http;
 
@@ -9,7 +13,7 @@ trait InteractsWithInput
      * Retrieve a server variable from the request
      *
      * @param null|string $key
-     * @param null|mixed  $default
+     * @param null|mixed $default
      * @return array|string|mixed
      */
     public function server(string $key = null, $default = null)
@@ -24,7 +28,7 @@ trait InteractsWithInput
      * Retrieve a header from the request
      *
      * @param null|string $key
-     * @param null|mixed  $default
+     * @param null|mixed $default
      * @return array|string|mixed
      */
     public function header(string $key = null, $default = null)
@@ -39,7 +43,7 @@ trait InteractsWithInput
      * Retrieve a query string from the request
      *
      * @param null|string $key
-     * @param null|mixed  $default
+     * @param null|mixed $default
      * @return array|string|mixed
      */
     public function query(string $key = null, $default = null)
@@ -54,7 +58,7 @@ trait InteractsWithInput
      * Retrieve a post item from the request
      *
      * @param null|string $key
-     * @param null|mixed  $default
+     * @param null|mixed $default
      * @return array|string|mixed
      */
     public function post(string $key = null, $default = null)
@@ -69,7 +73,7 @@ trait InteractsWithInput
      * Retrieve a input item from the request
      *
      * @param null|string $key
-     * @param null|mixed  $default
+     * @param null|mixed $default
      * @return array|string|mixed
      */
     public function input(string $key = null, $default = null)
@@ -85,7 +89,7 @@ trait InteractsWithInput
      * Retrieve a cookie from the request
      *
      * @param null|string $key
-     * @param null|mixed  $default
+     * @param null|mixed $default
      * @return array|string|mixed
      */
     public function cookie(string $key = null, $default = null)
@@ -116,7 +120,7 @@ trait InteractsWithInput
      * Retrieve a upload item from the request
      *
      * @param string|null $key
-     * @param null        $default
+     * @param null $default
      * @return array|null
      */
     public function file(string $key = null, $default = null)

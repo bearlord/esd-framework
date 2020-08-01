@@ -1,8 +1,10 @@
 <?php
-
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
 
 namespace ESD\Core\Server\Beans\Http;
-
 
 use Psr\Http\Message\StreamInterface;
 
@@ -78,7 +80,7 @@ class HttpStream implements StreamInterface
      */
     public function getSize()
     {
-        if (! $this->size) {
+        if (!$this->size) {
             $this->size = strlen($this->getContents());
         }
         return $this->size;
@@ -134,9 +136,9 @@ class HttpStream implements StreamInterface
      * If the stream is not seekable, this method will raise an exception;
      * otherwise, it will perform a seek(0).
      *
-     * @see seek()
-     * @link http://www.php.net/manual/en/function.fseek.php
      * @throws \RuntimeException on failure.
+     * @link http://www.php.net/manual/en/function.fseek.php
+     * @see seek()
      */
     public function rewind()
     {

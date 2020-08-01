@@ -210,11 +210,12 @@ class Controller extends Component implements ViewContextInterface
         }
 
         $actionMap = $this->actions();
+
         if (isset($actionMap[$id])) {
             return Yii::createObject($actionMap[$id], [$id, $this]);
         }
 
-        if (preg_match('/^(?:[a-z0-9_]+-)*[a-z0-9_]+$/', $id)) {
+        if (preg_match('/^(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]+$/', $id)) {
             $methodName = $id;
             if (method_exists($this, $methodName)) {
                 $method = new \ReflectionMethod($this, $methodName);
