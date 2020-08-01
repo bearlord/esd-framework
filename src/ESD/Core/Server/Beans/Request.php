@@ -183,8 +183,6 @@ abstract class Request extends AbstractRequest
      */
     public function getCsrfToken($regenerate = false)
     {
-        var_dump($this->_csrfToken);
-
         if ($this->_csrfToken === null || $regenerate) {
             if ($regenerate || ($token = $this->loadCsrfToken()) === null) {
                 $token = $this->generateCsrfToken();
