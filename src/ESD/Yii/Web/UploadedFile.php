@@ -44,7 +44,7 @@ class UploadedFile extends BaseObject
     /**
      * @var string the MIME-type of the uploaded file (such as "image/gif").
      * Since this MIME type is not checked on the server-side, do not take this value for granted.
-     * Instead, use [[\yii\helpers\FileHelper::getMimeType()]] to determine the exact MIME type.
+     * Instead, use [[\ESD\Yii\Helpers\FileHelper::getMimeType()]] to determine the exact MIME type.
      */
     public $type;
     /**
@@ -73,8 +73,8 @@ class UploadedFile extends BaseObject
 
     /**
      * Returns an uploaded file for the given model attribute.
-     * The file should be uploaded using [[\yii\widgets\ActiveField::fileInput()]].
-     * @param \yii\base\Model $model the data model
+     * The file should be uploaded using [[\ESD\Yii\Widgets\ActiveField::fileInput()]].
+     * @param \ESD\Yii\Base\Model $model the data model
      * @param string $attribute the attribute name. The attribute name may contain array indexes.
      * For example, '[1]file' for tabular file uploading; and 'file[1]' for an element in a file array.
      * @return null|UploadedFile the instance of the uploaded file.
@@ -89,7 +89,7 @@ class UploadedFile extends BaseObject
 
     /**
      * Returns all uploaded files for the given model attribute.
-     * @param \yii\base\Model $model the data model
+     * @param \ESD\Yii\Base\Model $model the data model
      * @param string $attribute the attribute name. The attribute name may contain array indexes
      * for tabular file uploading, e.g. '[1]file'.
      * @return UploadedFile[] array of UploadedFile objects.

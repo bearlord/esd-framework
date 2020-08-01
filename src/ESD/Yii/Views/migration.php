@@ -13,7 +13,7 @@ if (!empty($namespace)) {
 }
 ?>
 
-use yii\db\Migration;
+use ESD\Yii\Db\Migration;
 
 /**
  * Class <?= $className . "\n" ?>

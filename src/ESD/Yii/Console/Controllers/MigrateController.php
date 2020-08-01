@@ -58,7 +58,7 @@ use ESD\Yii\Helpers\Inflector;
  * return [
  *     'controllerMap' => [
  *         'migrate' => [
- *             'class' => 'yii\console\controllers\MigrateController',
+ *             'class' => 'ESD\Yii\Console\controllers\MigrateController',
  *             'migrationNamespaces' => [
  *                 'app\migrations',
  *                 'some\extension\migrations',
@@ -174,7 +174,7 @@ class MigrateController extends BaseMigrateController
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
      * It checks the existence of the [[migrationPath]].
-     * @param \yii\base\Action $action the action to be executed.
+     * @param \ESD\Yii\Base\Action $action the action to be executed.
      * @return bool whether the action should continue to be executed.
      */
     public function beforeAction($action)
@@ -190,7 +190,7 @@ class MigrateController extends BaseMigrateController
     /**
      * Creates a new migration instance.
      * @param string $class the migration class name
-     * @return \yii\db\Migration the migration instance
+     * @return \ESD\Yii\Db\Migration the migration instance
      */
     protected function createMigration($class)
     {

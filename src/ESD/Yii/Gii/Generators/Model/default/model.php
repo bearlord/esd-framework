@@ -3,12 +3,12 @@
  * This is the template for generating the model class of a specified table.
  */
 
-/* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\model\Generator */
+/* @var $this ESD\Yii\Web\View */
+/* @var $generator ESD\Yii\Gii\generators\model\Generator */
 /* @var $tableName string full table name */
 /* @var $className string class name */
 /* @var $queryClassName string query class name */
-/* @var $tableSchema yii\db\TableSchema */
+/* @var $tableSchema ESD\Yii\Db\TableSchema */
 /* @var $properties array list of properties (property => [type, name. comment]) */
 /* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
@@ -46,7 +46,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php if ($generator->db !== 'db'): ?>
 
     /**
-     * @return \yii\db\Connection the database connection used by this AR class.
+     * @return \ESD\Yii\Db\Connection the database connection used by this AR class.
      */
     public static function getDb()
     {
@@ -76,7 +76,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php foreach ($relations as $name => $relation): ?>
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return \ESD\Yii\Db\ActiveQuery
      */
     public function get<?= $name ?>()
     {

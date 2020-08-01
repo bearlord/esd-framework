@@ -12,9 +12,9 @@ use ESD\Yii\Base\BaseObject;
 use ESD\Yii\Base\InvalidCallException;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Base\NotSupportedException;
-use yii\caching\Cache;
-use yii\caching\CacheInterface;
-use yii\caching\TagDependency;
+use ESD\Yii\Caching\Cache;
+use ESD\Yii\Caching\CacheInterface;
+use ESD\Yii\Caching\TagDependency;
 use ESD\Yii\Helpers\StringHelper;
 
 /**

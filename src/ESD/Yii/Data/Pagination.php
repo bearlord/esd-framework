@@ -18,7 +18,7 @@ use ESD\Yii\Web\Linkable;
  *
  * When data needs to be rendered in multiple pages, Pagination can be used to
  * represent information such as [[totalCount|total item count]], [[pageSize|page size]],
- * [[page|current page]], etc. These information can be passed to [[\yii\widgets\LinkPager|pagers]]
+ * [[page|current page]], etc. These information can be passed to [[\ESD\Yii\Widgets\LinkPager|pagers]]
  * to render pagination buttons or links.
  *
  * The following example shows how to create a pagination object and feed it
@@ -111,7 +111,7 @@ class Pagination extends BaseObject implements Linkable
      */
     public $params;
     /**
-     * @var \yii\web\UrlManager the URL manager used for creating pagination URLs. If not set,
+     * @var \ESD\Yii\Web\UrlManager the URL manager used for creating pagination URLs. If not set,
      * the "urlManager" application component will be used.
      */
     public $urlManager;

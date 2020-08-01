@@ -17,7 +17,7 @@ use ESD\Yii\Helpers\Html;
  *
  * View provides a set of methods (e.g. [[render()]]) for rendering purpose.
  *
- * View is configured as an application component in [[\yii\base\Application]] by default.
+ * View is configured as an application component in [[\ESD\Yii\Base\Application]] by default.
  * You can access that instance via `Yii::$app->view`.
  *
  * You can modify its configuration by adding an array to your application config under `components`
@@ -35,7 +35,7 @@ use ESD\Yii\Helpers\Html;
  *
  * For more details and usage information on View, see the [guide article on views](guide:structure-views).
  *
- * @property \yii\web\AssetManager $assetManager The asset manager. Defaults to the "assetManager" application
+ * @property \ESD\Yii\Web\AssetManager $assetManager The asset manager. Defaults to the "assetManager" application
  * component.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -218,7 +218,7 @@ class View extends \ESD\Yii\Base\View
 
     /**
      * Registers the asset manager being used by this view object.
-     * @return \yii\web\AssetManager the asset manager. Defaults to the "assetManager" application component.
+     * @return \ESD\Yii\Web\AssetManager the asset manager. Defaults to the "assetManager" application component.
      */
     public function getAssetManager()
     {
@@ -227,7 +227,7 @@ class View extends \ESD\Yii\Base\View
 
     /**
      * Sets the asset manager.
-     * @param \yii\web\AssetManager $value the asset manager
+     * @param \ESD\Yii\Web\AssetManager $value the asset manager
      */
     public function setAssetManager($value)
     {
@@ -349,7 +349,7 @@ class View extends \ESD\Yii\Base\View
      * $view->registerCsrfMetaTags();
      * ```
      *
-     * The above code will result in `<meta name="csrf-param" content="[yii\web\Request::$csrfParam]">`
+     * The above code will result in `<meta name="csrf-param" content="[ESD\Yii\Web\Request::$csrfParam]">`
      * and `<meta name="csrf-token" content="tTNpWKpdy-bx8ZmIq9R72...K1y8IP3XGkzZA==">` added to the page.
      *
      * Note: Hidden CSRF input of ActiveForm will be automatically refreshed by calling `window.yii.refreshCsrfToken()`
@@ -359,7 +359,7 @@ class View extends \ESD\Yii\Base\View
      */
     public function registerCsrfMetaTags()
     {
-        $this->metaTags['csrf_meta_tags'] = $this->renderDynamic('return yii\helpers\Html::csrfMetaTags();');
+        $this->metaTags['csrf_meta_tags'] = $this->renderDynamic('return ESD\Yii\Helpers\Html::csrfMetaTags();');
     }
 
     /**
@@ -563,7 +563,7 @@ class View extends \ESD\Yii\Base\View
      */
     public function registerJsVar($name, $value, $position = self::POS_HEAD)
     {
-        $js = sprintf('var %s = %s;', $name, \yii\helpers\Json::htmlEncode($value));
+        $js = sprintf('var %s = %s;', $name, \ESD\Yii\Helpers\Json::htmlEncode($value));
         $this->registerJs($js, $position, $name);
     }
 

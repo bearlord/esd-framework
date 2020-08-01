@@ -1,7 +1,7 @@
 <?php
-/* @var $panel yii\mongodb\debug\MongoDbPanel */
-/* @var $searchModel yii\debug\models\search\Db */
-/* @var $dataProvider yii\data\ArrayDataProvider */
+/* @var $panel ESD\Yii\Mongodb\debug\MongoDbPanel */
+/* @var $searchModel ESD\Yii\Debug\\models\search\Db */
+/* @var $dataProvider ESD\Yii\Data\ArrayDataProvider */
 
 use ESD\Yii\Helpers\Html;
 use ESD\Yii\Grid\GridView;

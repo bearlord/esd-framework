@@ -60,7 +60,7 @@ class View extends Component implements DynamicContentAwareInterface
      *
      * ```php
      * [
-     *     'tpl' => ['class' => 'yii\smarty\ViewRenderer'],
+     *     'tpl' => ['class' => 'ESD\Yii\Smarty\ViewRenderer'],
      *     'twig' => ['class' => 'yii\twig\ViewRenderer'],
      * ]
      * ```
@@ -119,7 +119,7 @@ class View extends Component implements DynamicContentAwareInterface
         parent::init();
         if (is_array($this->theme)) {
             if (!isset($this->theme['class'])) {
-                $this->theme['class'] = 'yii\base\Theme';
+                $this->theme['class'] = 'ESD\Yii\Base\Theme';
             }
             $this->theme = Yii::createObject($this->theme);
         } elseif (is_string($this->theme)) {

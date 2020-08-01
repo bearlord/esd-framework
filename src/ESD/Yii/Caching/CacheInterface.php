@@ -38,7 +38,7 @@ namespace ESD\Yii\Caching;
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @author Dmitry Naumenko <d.naumenko.a@gmail.com>
- * @since 2.0.13. Previous framework versions used abstract class [[yii\caching\Cache]] as interface.
+ * @since 2.0.13. Previous framework versions used abstract class [[ESD\Yii\Caching\Cache]] as interface.
  */
 interface CacheInterface extends \ArrayAccess
 {

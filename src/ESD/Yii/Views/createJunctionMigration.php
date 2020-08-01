@@ -18,7 +18,7 @@ if (!empty($namespace)) {
 }
 ?>
 
-use yii\db\Migration;
+use ESD\Yii\Db\Migration;
 
 /**
  * Handles the creation of table `<?= $table ?>` which is a junction between

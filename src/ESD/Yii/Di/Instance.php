@@ -24,13 +24,13 @@ use ESD\Yii\Base\InvalidConfigException;
  * The following example shows how to configure a DI container with Instance:
  *
  * ```php
- * $container = new \yii\di\Container;
+ * $container = new \ESD\Yii\Di\Container;
  * $container->set('cache', [
- *     'class' => 'yii\caching\DbCache',
+ *     'class' => 'ESD\Yii\Caching\DbCache',
  *     'db' => Instance::of('db')
  * ]);
  * $container->set('db', [
- *     'class' => 'yii\db\Connection',
+ *     'class' => 'ESD\Yii\Db\Connection',
  *     'dsn' => 'sqlite:path/to/file.db',
  * ]);
  * ```
@@ -45,7 +45,7 @@ use ESD\Yii\Base\InvalidConfigException;
  *     public function init()
  *     {
  *         parent::init();
- *         $this->db = Instance::ensure($this->db, 'yii\db\Connection');
+ *         $this->db = Instance::ensure($this->db, 'ESD\Yii\Db\Connection');
  *     }
  * }
  * ```

@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace ESD\Yii\bootstrap4;
+namespace ESD\Yii\Bootstrap4;
 
 use ESD\Yii\Yii;
 use ESD\Yii\Helpers\ArrayHelper;

@@ -395,7 +395,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
      * Order::find()->joinWith('books', true, 'INNER JOIN')->all();
      * // find all orders, eager loading "books", and sort the orders and books by the book names.
      * Order::find()->joinWith([
-     *     'books' => function (\yii\db\ActiveQuery $query) {
+     *     'books' => function (\ESD\Yii\Db\ActiveQuery $query) {
      *         $query->orderBy('item.name');
      *     }
      * ])->all();

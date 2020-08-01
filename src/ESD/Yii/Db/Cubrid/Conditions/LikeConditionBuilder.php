@@ -18,7 +18,7 @@ class LikeConditionBuilder extends \ESD\Yii\Db\Conditions\LikeConditionBuilder
     protected $escapeCharacter = '!';
     /**
      * `\` is initialized in [[buildLikeCondition()]] method since
-     * we need to choose replacement value based on [[\yii\db\Schema::quoteValue()]].
+     * we need to choose replacement value based on [[\ESD\Yii\Db\Schema::quoteValue()]].
      * {@inheritdoc}
      */
     protected $escapingReplacements = [

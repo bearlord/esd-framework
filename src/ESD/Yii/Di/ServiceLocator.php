@@ -23,14 +23,14 @@ use ESD\Yii\Base\InvalidConfigException;
  * For example,
  *
  * ```php
- * $locator = new \yii\di\ServiceLocator;
+ * $locator = new \ESD\Yii\Di\ServiceLocator;
  * $locator->setComponents([
  *     'db' => [
- *         'class' => 'yii\db\Connection',
+ *         'class' => 'ESD\Yii\Db\Connection',
  *         'dsn' => 'sqlite:path/to/file.db',
  *     ],
  *     'cache' => [
- *         'class' => 'yii\caching\DbCache',
+ *         'class' => 'ESD\Yii\Caching\DbCache',
  *         'db' => 'db',
  *     ],
  * ]);
@@ -39,7 +39,7 @@ use ESD\Yii\Base\InvalidConfigException;
  * $cache = $locator->get('cache');  // or $locator->cache
  * ```
  *
- * Because [[\yii\base\Module]] extends from ServiceLocator, modules and the application are all service locators.
+ * Because [[\ESD\Yii\Base\Module]] extends from ServiceLocator, modules and the application are all service locators.
  * Modules add [tree traversal](guide:concept-service-locator#tree-traversal) for service resolution.
  *
  * For more details and usage information on ServiceLocator, see the [guide article on service locators](guide:concept-service-locator).
@@ -149,11 +149,11 @@ class ServiceLocator extends Component
      *
      * ```php
      * // a class name
-     * $locator->set('cache', 'yii\caching\FileCache');
+     * $locator->set('cache', 'ESD\Yii\Caching\FileCache');
      *
      * // a configuration array
      * $locator->set('db', [
-     *     'class' => 'yii\db\Connection',
+     *     'class' => 'ESD\Yii\Db\Connection',
      *     'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
      *     'username' => 'root',
      *     'password' => '',
@@ -162,11 +162,11 @@ class ServiceLocator extends Component
      *
      * // an anonymous function
      * $locator->set('cache', function ($params) {
-     *     return new \yii\caching\FileCache;
+     *     return new \ESD\Yii\Caching\FileCache;
      * });
      *
      * // an instance
-     * $locator->set('cache', new \yii\caching\FileCache);
+     * $locator->set('cache', new \ESD\Yii\Caching\FileCache);
      * ```
      *
      * If a component definition with the same ID already exists, it will be overwritten.
@@ -243,11 +243,11 @@ class ServiceLocator extends Component
      * ```php
      * [
      *     'db' => [
-     *         'class' => 'yii\db\Connection',
+     *         'class' => 'ESD\Yii\Db\Connection',
      *         'dsn' => 'sqlite:path/to/file.db',
      *     ],
      *     'cache' => [
-     *         'class' => 'yii\caching\DbCache',
+     *         'class' => 'ESD\Yii\Caching\DbCache',
      *         'db' => 'db',
      *     ],
      * ]

@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Helpers;
 
-use yii\console\Markdown as ConsoleMarkdown;
+use ESD\Yii\Console\Markdown as ConsoleMarkdown;
 use ESD\Yii\Base\Model;
 
 /**

@@ -20,7 +20,7 @@ namespace ESD\Yii\Base;
  *
  * That is, the last parameter of the constructor must accept a configuration array.
  *
- * This interface is mainly used by [[\yii\di\Container]] so that it can pass object configuration as the
+ * This interface is mainly used by [[\ESD\Yii\Di\Container]] so that it can pass object configuration as the
  * last parameter to the implementing class' constructor.
  *
  * For more details and usage information on Configurable, see the [guide article on configurations](guide:concept-configurations).

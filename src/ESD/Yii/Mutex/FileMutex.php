@@ -22,7 +22,7 @@ use ESD\Yii\Helpers\FileHelper;
  * [
  *     'components' => [
  *         'mutex' => [
- *             'class' => 'yii\mutex\FileMutex'
+ *             'class' => 'ESD\Yii\Mutex\FileMutex'
  *         ],
  *     ],
  * ]

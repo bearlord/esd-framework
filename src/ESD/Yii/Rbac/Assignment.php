@@ -22,7 +22,7 @@ use ESD\Yii\Base\BaseObject;
 class Assignment extends BaseObject
 {
     /**
-     * @var string|int user ID (see [[\yii\web\User::id]])
+     * @var string|int user ID (see [[\ESD\Yii\Web\User::id]])
      */
     public $userId;
     /**

@@ -15,7 +15,7 @@ if (!empty($namespace)) {
 }
 ?>
 
-use yii\db\Migration;
+use ESD\Yii\Db\Migration;
 
 /**
  * Handles adding columns to table `<?= $table ?>`.

@@ -25,7 +25,7 @@ use ESD\Yii\Yii;
  * the DB connection:
  *
  * ```php
- * $connection = new \yii\mongodb\Connection([
+ * $connection = new \ESD\Yii\Mongodb\Connection([
  *     'dsn' => $dsn,
  * ]);
  * $connection->open();
@@ -58,7 +58,7 @@ use ESD\Yii\Yii;
  * [
  *      'components' => [
  *          'mongodb' => [
- *              'class' => '\yii\mongodb\Connection',
+ *              'class' => '\ESD\Yii\Mongodb\Connection',
  *              'dsn' => 'mongodb://developer:password@localhost:27017/mydatabase',
  *          ],
  *      ],
@@ -146,7 +146,7 @@ class Connection extends Component
     /**
      * @var string name of the protocol, which should be used for the GridFS stream wrapper.
      * Only alphanumeric values are allowed: do not use any URL special characters, such as '/', '&', ':' etc.
-     * @see \yii\mongodb\file\StreamWrapper
+     * @see \ESD\Yii\Mongodb\file\StreamWrapper
      * @since 2.1
      */
     public $fileStreamProtocol = 'gridfs';
@@ -202,7 +202,7 @@ class Connection extends Component
      * Returns default database name, if it is not set,
      * attempts to determine it from [[dsn]] value.
      * @return string default database name
-     * @throws \yii\base\InvalidConfigException if unable to determine default database name.
+     * @throws \ESD\Yii\Base\InvalidConfigException if unable to determine default database name.
      */
     public function getDefaultDatabaseName()
     {
@@ -429,7 +429,7 @@ class Connection extends Component
     public function registerFileStreamWrapper($force = false)
     {
         if ($force || !$this->_fileStreamWrapperRegistered) {
-            /* @var $class \yii\mongodb\file\StreamWrapper */
+            /* @var $class \ESD\Yii\Mongodb\file\StreamWrapper */
             $class = $this->fileStreamWrapperClass;
             $class::register($this->fileStreamProtocol, $force);
 

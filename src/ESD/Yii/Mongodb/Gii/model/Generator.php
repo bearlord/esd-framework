@@ -20,7 +20,7 @@ use ESD\Yii\Helpers\Inflector;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
  */
-class Generator extends \yii\gii\Generator
+class Generator extends \ESD\Yii\Gii\Generator
 {
     public $db = 'mongodb';
     public $ns = 'app\models';

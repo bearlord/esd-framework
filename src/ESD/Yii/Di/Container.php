@@ -38,7 +38,7 @@ use ESD\Yii\Helpers\ArrayHelper;
  *
  * use ESD\Yii\Base\BaseObject;
  * use ESD\Yii\Db\Connection;
- * use yii\di\Container;
+ * use ESD\Yii\Di\Container;
  *
  * interface UserFinderInterface
  * {
@@ -72,7 +72,7 @@ use ESD\Yii\Helpers\ArrayHelper;
  * }
  *
  * $container = new Container;
- * $container->set('yii\db\Connection', [
+ * $container->set('ESD\Yii\Db\Connection', [
  *     'dsn' => '...',
  * ]);
  * $container->set('app\models\UserFinderInterface', [
@@ -84,7 +84,7 @@ use ESD\Yii\Helpers\ArrayHelper;
  *
  * // which is equivalent to:
  *
- * $db = new \yii\db\Connection(['dsn' => '...']);
+ * $db = new \ESD\Yii\Db\Connection(['dsn' => '...']);
  * $finder = new UserFinder($db);
  * $lister = new UserLister($finder);
  * ```
@@ -128,7 +128,7 @@ class Container extends Component
      * You may provide constructor parameters (`$params`) and object configurations (`$config`)
      * that will be used during the creation of the instance.
      *
-     * If the class implements [[\yii\base\Configurable]], the `$config` parameter will be passed as the last
+     * If the class implements [[\ESD\Yii\Base\Configurable]], the `$config` parameter will be passed as the last
      * parameter to the class constructor; Otherwise, the configuration will be applied *after* the object is
      * instantiated.
      *
@@ -197,20 +197,20 @@ class Container extends Component
      *
      * ```php
      * // register a class name as is. This can be skipped.
-     * $container->set('yii\db\Connection');
+     * $container->set('ESD\Yii\Db\Connection');
      *
      * // register an interface
      * // When a class depends on the interface, the corresponding class
      * // will be instantiated as the dependent object
-     * $container->set('yii\mail\MailInterface', 'yii\swiftmailer\Mailer');
+     * $container->set('ESD\Yii\Mail\MailInterface', 'yii\swiftmailer\Mailer');
      *
      * // register an alias name. You can use $container->get('foo')
      * // to create an instance of Connection
-     * $container->set('foo', 'yii\db\Connection');
+     * $container->set('foo', 'ESD\Yii\Db\Connection');
      *
      * // register a class with configuration. The configuration
      * // will be applied when the class is instantiated by get()
-     * $container->set('yii\db\Connection', [
+     * $container->set('ESD\Yii\Db\Connection', [
      *     'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
      *     'username' => 'root',
      *     'password' => '',
@@ -220,7 +220,7 @@ class Container extends Component
      * // register an alias name with class configuration
      * // In this case, a "class" element is required to specify the class
      * $container->set('db', [
-     *     'class' => 'yii\db\Connection',
+     *     'class' => 'ESD\Yii\Db\Connection',
      *     'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
      *     'username' => 'root',
      *     'password' => '',
@@ -230,7 +230,7 @@ class Container extends Component
      * // register a PHP callable
      * // The callable will be executed when $container->get('db') is called
      * $container->set('db', function ($container, $params, $config) {
-     *     return new \yii\db\Connection($config);
+     *     return new \ESD\Yii\Db\Connection($config);
      * });
      * ```
      *
@@ -502,7 +502,7 @@ class Container extends Component
      * For example, the following callback may be invoked using the Container to resolve the formatter dependency:
      *
      * ```php
-     * $formatString = function($string, \yii\i18n\Formatter $formatter) {
+     * $formatString = function($string, \ESD\Yii\I18n\Formatter $formatter) {
      *    // ...
      * }
      * Yii::$container->invoke($formatString, ['string' => 'Hello World!']);
@@ -611,8 +611,8 @@ class Container extends Component
      * Example:
      * ```php
      * $container->setDefinitions([
-     *     'yii\web\Request' => 'app\components\Request',
-     *     'yii\web\Response' => [
+     *     'ESD\Yii\Web\Request' => 'app\components\Request',
+     *     'ESD\Yii\Web\Response' => [
      *         'class' => 'app\components\Response',
      *         'format' => 'json'
      *     ],

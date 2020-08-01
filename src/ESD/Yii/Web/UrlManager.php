@@ -17,7 +17,7 @@ use ESD\Yii\Helpers\Url;
 /**
  * UrlManager handles HTTP request parsing and creation of URLs based on a set of rules.
  *
- * UrlManager is configured as an application component in [[\yii\base\Application]] by default.
+ * UrlManager is configured as an application component in [[\ESD\Yii\Base\Application]] by default.
  * You can access that instance via `Yii::$app->urlManager`.
  *
  * You can modify its configuration by adding an array to your application config under `components`
@@ -126,7 +126,7 @@ class UrlManager extends Component
      * you should only assign it with a cache object.
      * Set this property to `false` if you do not want to cache the URL rules.
      *
-     * Cache entries are stored for the time set by [[\yii\caching\Cache::$defaultDuration|$defaultDuration]] in
+     * Cache entries are stored for the time set by [[\ESD\Yii\Caching\Cache::$defaultDuration|$defaultDuration]] in
      * the cache configuration, which is unlimited by default. You may want to tune this value if your [[rules]]
      * change frequently.
      */
@@ -144,7 +144,7 @@ class UrlManager extends Component
      *
      * ```php
      * [
-     *     'class' => 'yii\web\UrlNormalizer',
+     *     'class' => 'ESD\Yii\Web\UrlNormalizer',
      *     'collapseSlashes' => true,
      *     'normalizeTrailingSlash' => true,
      * ]
@@ -386,7 +386,7 @@ class UrlManager extends Component
      *
      * The URL created is a relative one. Use [[createAbsoluteUrl()]] to create an absolute URL.
      *
-     * Note that unlike [[\yii\helpers\Url::toRoute()]], this method always treats the given route
+     * Note that unlike [[\ESD\Yii\Helpers\Url::toRoute()]], this method always treats the given route
      * as an absolute route.
      *
      * @param string|array $params use a string to represent a route (e.g. `site/index`),
@@ -473,7 +473,7 @@ class UrlManager extends Component
      *
      * This method prepends the URL created by [[createUrl()]] with the [[hostInfo]].
      *
-     * Note that unlike [[\yii\helpers\Url::toRoute()]], this method always treats the given route
+     * Note that unlike [[\ESD\Yii\Helpers\Url::toRoute()]], this method always treats the given route
      * as an absolute route.
      *
      * @param string|array $params use a string to represent a route (e.g. `site/index`),

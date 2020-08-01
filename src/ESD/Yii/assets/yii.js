@@ -133,8 +133,8 @@ window.yii = (function ($) {
          * such a link:
          *
          * ```php
-         * use yii\helpers\Html;
-         * use yii\helpers\Json;
+         * use ESD\Yii\Helpers\Html;
+         * use ESD\Yii\Helpers\Json;
          *
          * echo Html::a('submit', ['site/foobar'], [
          *     'data' => [

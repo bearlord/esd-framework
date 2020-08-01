@@ -128,7 +128,7 @@ class Controller
     /**
      * Formats a string with ANSI codes.
      *
-     * You may pass additional parameters using the constants defined in [[\yii\helpers\Console]].
+     * You may pass additional parameters using the constants defined in [[\ESD\Yii\Helpers\Console]].
      *
      * Example:
      *
@@ -154,7 +154,7 @@ class Controller
      * Prints a string to STDOUT.
      *
      * You may optionally format the string with ANSI codes by
-     * passing additional parameters using the constants defined in [[\yii\helpers\Console]].
+     * passing additional parameters using the constants defined in [[\ESD\Yii\Helpers\Console]].
      *
      * Example:
      *
@@ -180,7 +180,7 @@ class Controller
      * Prints a string to STDERR.
      *
      * You may optionally format the string with ANSI codes by
-     * passing additional parameters using the constants defined in [[\yii\helpers\Console]].
+     * passing additional parameters using the constants defined in [[\ESD\Yii\Helpers\Console]].
      *
      * Example:
      *

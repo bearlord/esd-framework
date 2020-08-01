@@ -63,7 +63,7 @@ use ESD\Yii\Validators\Validator;
  * You may populate it from request data via [[load()]] method:
  *
  * ```php
- * use yii\data\DataFilter;
+ * use ESD\Yii\Data\DataFilter;
  *
  * $dataFilter = new DataFilter();
  * $dataFilter->load(Yii::$app->request->getBodyParams());
@@ -73,7 +73,7 @@ use ESD\Yii\Validators\Validator;
  * all available search attributes and their validation rules. For example:
  *
  * ```php
- * class SearchModel extends \yii\base\Model
+ * class SearchModel extends \ESD\Yii\Base\Model
  * {
  *     public $id;
  *     public $name;
@@ -89,12 +89,12 @@ use ESD\Yii\Validators\Validator;
  * }
  * ```
  *
- * In order to reduce amount of classes, you may use [[\yii\base\DynamicModel]] instance as a [[searchModel]].
+ * In order to reduce amount of classes, you may use [[\ESD\Yii\Base\DynamicModel]] instance as a [[searchModel]].
  * In this case you should specify [[searchModel]] using a PHP callable:
  *
  * ```php
  * function () {
- *     return (new \yii\base\DynamicModel(['id' => null, 'name' => null]))
+ *     return (new \ESD\Yii\Base\DynamicModel(['id' => null, 'name' => null]))
  *         ->addRule(['id', 'name'], 'trim')
  *         ->addRule('id', 'integer')
  *         ->addRule('name', 'string');

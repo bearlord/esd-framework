@@ -6,8 +6,8 @@
  */
 
 use ESD\Yii\Base\InvalidConfigException;
-use yii\db\Migration;
-use yii\rbac\DbManager;
+use ESD\Yii\Db\Migration;
+use ESD\Yii\Rbac\DbManager;
 
 /**
  * Updates indexes without a prefix.
@@ -20,7 +20,7 @@ use yii\rbac\DbManager;
 class m180523_151638_rbac_updates_indexes_without_prefix extends Migration
 {
     /**
-     * @throws yii\base\InvalidConfigException
+     * @throws ESD\Yii\Base\InvalidConfigException
      * @return DbManager
      */
     protected function getAuthManager()

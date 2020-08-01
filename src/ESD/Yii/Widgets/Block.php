@@ -10,10 +10,10 @@ namespace ESD\Yii\Widgets;
 use ESD\Yii\Base\Widget;
 
 /**
- * Block records all output between [[begin()]] and [[end()]] calls and stores it in [[\yii\base\View::$blocks]].
+ * Block records all output between [[begin()]] and [[end()]] calls and stores it in [[\ESD\Yii\Base\View::$blocks]].
  * for later use.
  *
- * [[\yii\base\View]] component contains two methods [[\yii\base\View::beginBlock()]] and [[\yii\base\View::endBlock()]].
+ * [[\ESD\Yii\Base\View]] component contains two methods [[\ESD\Yii\Base\View::beginBlock()]] and [[\ESD\Yii\Base\View::endBlock()]].
  * The general idea is that you're defining block default in a view or layout:
  *
  * ```php

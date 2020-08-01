@@ -22,7 +22,7 @@ use ESD\Yii\Base\NotSupportedException;
  * be referenced using short names. They are listed as follows:
  *
  * - `boolean`: [[BooleanValidator]]
- * - `captcha`: [[\yii\captcha\CaptchaValidator]]
+ * - `captcha`: [[\ESD\Yii\Captcha\CaptchaValidator]]
  * - `compare`: [[CompareValidator]]
  * - `date`: [[DateValidator]]
  * - `datetime`: [[DateValidator]]
@@ -61,7 +61,7 @@ class Validator extends Component
      */
     public static $builtInValidators = [
         'boolean' => 'ESD\Yii\Validators\BooleanValidator',
-        'captcha' => 'yii\captcha\CaptchaValidator',
+        'captcha' => 'ESD\Yii\Captcha\CaptchaValidator',
         'compare' => 'ESD\Yii\Validators\CompareValidator',
         'date' => 'ESD\Yii\Validators\DateValidator',
         'datetime' => [
@@ -134,7 +134,7 @@ class Validator extends Component
     public $skipOnError = true;
     /**
      * @var bool whether this validation rule should be skipped if the attribute value
-     * is null or an empty string. This property is used only when validating [[yii\base\Model]].
+     * is null or an empty string. This property is used only when validating [[ESD\Yii\Base\Model]].
      */
     public $skipOnEmpty = true;
     /**
@@ -199,7 +199,7 @@ class Validator extends Component
      *  * a method name of the model class;
      *  * an anonymous function;
      *  * a validator class name.
-     * @param \yii\base\Model $model the data model to be validated.
+     * @param \ESD\Yii\Base\Model $model the data model to be validated.
      * @param array|string $attributes list of attributes to be validated. This can be either an array of
      * the attribute names or a string of comma-separated attribute names.
      * @param array $params initial values to be applied to the validator properties.
@@ -240,7 +240,7 @@ class Validator extends Component
 
     /**
      * Validates the specified object.
-     * @param \yii\base\Model $model the data model being validated
+     * @param \ESD\Yii\Base\Model $model the data model being validated
      * @param array|string|null $attributes the list of attributes to be validated.
      * Note that if an attribute is not associated with the validator - it will be
      * ignored. If this parameter is null, every attribute listed in [[attributes]] will be validated.
@@ -294,7 +294,7 @@ class Validator extends Component
     /**
      * Validates a single attribute.
      * Child classes must implement this method to provide the actual validation logic.
-     * @param \yii\base\Model $model the data model to be validated
+     * @param \ESD\Yii\Base\Model $model the data model to be validated
      * @param string $attribute the name of the attribute to be validated.
      */
     public function validateAttribute($model, $attribute)
@@ -384,14 +384,14 @@ class Validator extends Component
      * - `error`: the jQuery selector of the error tag under the context of the container
      * - `status`: status of the input field, 0: empty, not entered before, 1: validated, 2: pending validation, 3: validating
      *
-     * @param \yii\base\Model $model the data model being validated
+     * @param \ESD\Yii\Base\Model $model the data model being validated
      * @param string $attribute the name of the attribute to be validated.
-     * @param \yii\web\View $view the view object that is going to be used to render views or view files
+     * @param \ESD\Yii\Web\View $view the view object that is going to be used to render views or view files
      * containing a model form with this validator applied.
      * @return string|null the client-side validation script. Null if the validator does not support
      * client-side validation.
      * @see getClientOptions()
-     * @see \yii\widgets\ActiveForm::enableClientValidation
+     * @see \ESD\Yii\Widgets\ActiveForm::enableClientValidation
      */
     public function clientValidateAttribute($model, $attribute, $view)
     {
@@ -402,7 +402,7 @@ class Validator extends Component
      * Returns the client-side validation options.
      * This method is usually called from [[clientValidateAttribute()]]. You may override this method to modify options
      * that will be passed to the client-side validation.
-     * @param \yii\base\Model $model the model being validated
+     * @param \ESD\Yii\Base\Model $model the model being validated
      * @param string $attribute the attribute name being validated
      * @return array the client-side validation options
      * @since 2.0.11
@@ -431,7 +431,7 @@ class Validator extends Component
     /**
      * Adds an error about the specified attribute to the model object.
      * This is a helper method that performs message selection and internationalization.
-     * @param \yii\base\Model $model the data model being validated
+     * @param \ESD\Yii\Base\Model $model the data model being validated
      * @param string $attribute the attribute being validated
      * @param string $message the error message
      * @param array $params values for the placeholders in the error message

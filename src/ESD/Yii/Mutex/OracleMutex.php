@@ -19,12 +19,12 @@ use ESD\Yii\Base\InvalidConfigException;
  * [
  *     'components' => [
  *         'db' => [
- *             'class' => 'yii\db\Connection',
+ *             'class' => 'ESD\Yii\Db\Connection',
  *             'dsn' => 'oci:dbname=LOCAL_XE',
  *              ...
  *         ]
  *         'mutex' => [
- *             'class' => 'yii\mutex\OracleMutex',
+ *             'class' => 'ESD\Yii\Mutex\OracleMutex',
  *             'lockMode' => 'NL_MODE',
  *             'releaseOnCommit' => true,
  *              ...
@@ -89,7 +89,7 @@ class OracleMutex extends DbMutex
 
         // inside pl/sql scopes pdo binding not working correctly :(
         $this->db->useMaster(function ($db) use ($name, $timeout, $releaseOnCommit, &$lockStatus) {
-            /** @var \yii\db\Connection $db */
+            /** @var \ESD\Yii\Db\Connection $db */
             $db->createCommand(
                 'DECLARE
     handle VARCHAR2(128);
@@ -116,7 +116,7 @@ END;',
     {
         $releaseStatus = null;
         $this->db->useMaster(function ($db) use ($name, &$releaseStatus) {
-            /** @var \yii\db\Connection $db */
+            /** @var \ESD\Yii\Db\Connection $db */
             $db->createCommand(
                 'DECLARE
     handle VARCHAR2(128);

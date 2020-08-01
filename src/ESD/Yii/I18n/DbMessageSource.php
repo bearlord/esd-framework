@@ -9,7 +9,7 @@ namespace ESD\Yii\I18n;
 
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
-use yii\caching\CacheInterface;
+use ESD\Yii\Caching\CacheInterface;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Db\Expression;
 use ESD\Yii\Db\Query;

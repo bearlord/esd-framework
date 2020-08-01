@@ -24,7 +24,7 @@ class Locale extends Component
 {
     /**
      * @var string the locale ID.
-     * If not set, [[\yii\base\Application::language]] will be used.
+     * If not set, [[\ESD\Yii\Base\Application::language]] will be used.
      */
     public $locale;
 

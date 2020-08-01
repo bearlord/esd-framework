@@ -8,7 +8,7 @@
 namespace ESD\Yii\Mongodb\Rbac;
 
 /**
- * Permission is a special version of [[\yii\rbac\Permission]] dedicated to MongoDB RBAC implementation.
+ * Permission is a special version of [[\ESD\Yii\Rbac\Permission]] dedicated to MongoDB RBAC implementation.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0.5

@@ -25,7 +25,7 @@ use ESD\Yii\Di\Instance;
  * [
  *     'components' => [
  *         'mutex' => [
- *             'class' => 'yii\redis\Mutex',
+ *             'class' => 'ESD\Yii\Redis\Mutex',
  *             'redis' => [
  *                 'hostname' => 'localhost',
  *                 'port' => 6379,
@@ -42,14 +42,14 @@ use ESD\Yii\Di\Instance;
  * [
  *     'components' => [
  *         'mutex' => [
- *             'class' => 'yii\redis\Mutex',
+ *             'class' => 'ESD\Yii\Redis\Mutex',
  *             // 'redis' => 'redis' // id of the connection application component
  *         ],
  *     ],
  * ]
  * ```
  *
- * @see \yii\mutex\Mutex
+ * @see \ESD\Yii\Mutex\Mutex
  * @see http://redis.io/topics/distlock
  *
  * @author Sergey Makinen <sergey@makinen.ru>

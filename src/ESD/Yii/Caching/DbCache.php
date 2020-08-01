@@ -26,7 +26,7 @@ use ESD\Yii\Di\Instance;
  *
  * ```php
  * 'cache' => [
- *     'class' => 'yii\caching\DbCache',
+ *     'class' => 'ESD\Yii\Caching\DbCache',
  *     // 'db' => 'mydb',
  *     // 'cacheTable' => 'my_cache',
  * ]

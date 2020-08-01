@@ -10,7 +10,7 @@ namespace ESD\Yii\Log;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Di\Instance;
-use yii\mail\MailerInterface;
+use ESD\Yii\Mail\MailerInterface;
 
 /**
  * EmailTarget sends selected log messages to the specified email addresses.
@@ -23,7 +23,7 @@ use yii\mail\MailerInterface;
  *     'log' => [
  *          'targets' => [
  *              [
- *                  'class' => 'yii\log\EmailTarget',
+ *                  'class' => 'ESD\Yii\Log\EmailTarget',
  *                  'mailer' => 'mailer',
  *                  'levels' => ['error', 'warning'],
  *                  'message' => [
@@ -45,7 +45,7 @@ use yii\mail\MailerInterface;
 class EmailTarget extends Target
 {
     /**
-     * @var array the configuration array for creating a [[\yii\mail\MessageInterface|message]] object.
+     * @var array the configuration array for creating a [[\ESD\Yii\Mail\MessageInterface|message]] object.
      * Note that the "to" option must be set, which specifies the destination email address(es).
      */
     public $message = [];
@@ -67,7 +67,7 @@ class EmailTarget extends Target
         if (empty($this->message['to'])) {
             throw new InvalidConfigException('The "to" option must be set for EmailTarget::message.');
         }
-        $this->mailer = Instance::ensure($this->mailer, 'yii\mail\MailerInterface');
+        $this->mailer = Instance::ensure($this->mailer, 'ESD\Yii\Mail\MailerInterface');
     }
 
     /**
@@ -93,7 +93,7 @@ class EmailTarget extends Target
     /**
      * Composes a mail message with the given body content.
      * @param string $body the body content
-     * @return \yii\mail\MessageInterface $message
+     * @return \ESD\Yii\Mail\MessageInterface $message
      */
     protected function composeMessage($body)
     {

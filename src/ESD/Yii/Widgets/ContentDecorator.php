@@ -26,8 +26,8 @@ use ESD\Yii\Base\Widget;
  * <?php ContentDecorator::end() ?>
  * ```
  *
- * There are [[\yii\base\View::beginContent()]] and [[\yii\base\View::endContent()]] wrapper methods in the
- * [[\yii\base\View]] component to make syntax more friendly. In the view these could be used as follows:
+ * There are [[\ESD\Yii\Base\View::beginContent()]] and [[\ESD\Yii\Base\View::endContent()]] wrapper methods in the
+ * [[\ESD\Yii\Base\View]] component to make syntax more friendly. In the view these could be used as follows:
  *
  * ```php
  * <?php $this->beginContent('@app/views/layouts/base.php') ?>

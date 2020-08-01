@@ -37,7 +37,7 @@ class ListView extends BaseListView
      * function ($model, $key, $index, $widget)
      * ```
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $itemOptions = [];
     /**
@@ -71,7 +71,7 @@ class ListView extends BaseListView
     /**
      * @var array the HTML attributes for the container tag of the list view.
      * The "tag" element specifies the tag name of the container element and defaults to "div".
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'list-view'];
     /**

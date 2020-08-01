@@ -19,7 +19,7 @@ use ESD\Yii\Db\Migration;
 class m150909_153426_cache_init extends Migration
 {
     /**
-     * @throws yii\base\InvalidConfigException
+     * @throws ESD\Yii\Base\InvalidConfigException
      * @return DbCache
      */
     protected function getCache()

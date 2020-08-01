@@ -30,7 +30,7 @@ use ESD\Yii\Di\Instance;
  * [
  *     'components' => [
  *         'cache' => [
- *             'class' => 'yii\redis\Cache',
+ *             'class' => 'ESD\Yii\Redis\Cache',
  *             'redis' => [
  *                 'hostname' => 'localhost',
  *                 'port' => 6379,
@@ -47,7 +47,7 @@ use ESD\Yii\Di\Instance;
  * [
  *     'components' => [
  *         'cache' => [
- *             'class' => 'yii\redis\Cache',
+ *             'class' => 'ESD\Yii\Redis\Cache',
  *             // 'redis' => 'redis' // id of the connection application component
  *         ],
  *     ],
@@ -62,10 +62,10 @@ use ESD\Yii\Di\Instance;
  * [
  *     'components' => [
  *         'cache' => [
- *             'class' => 'yii\redis\Cache',
+ *             'class' => 'ESD\Yii\Redis\Cache',
  *             'enableReplicas' => true,
  *             'replicas' => [
- *                 // config for replica redis connections, (default class will be yii\redis\Connection if not provided)
+ *                 // config for replica redis connections, (default class will be ESD\Yii\Redis\Connection if not provided)
  *                 // you can optionally put in master as hostname as well, as all GET operation will use replicas
  *                 'redis',//id of Redis [[Connection]] Component
  *                 ['hostname' => 'redis-slave-002.xyz.0001.apse1.cache.amazonaws.com'],
@@ -99,7 +99,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @var array the Redis [[Connection]] configurations for redis replicas.
      * Each entry is a class configuration, which will be used to instantiate a replica connection.
-     * The default class is [[Connection|yii\redis\Connection]]. You should at least provide a hostname.
+     * The default class is [[Connection|ESD\Yii\Redis\Connection]]. You should at least provide a hostname.
      *
      * Configuration example:
      *
@@ -125,7 +125,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * Initializes the redis Cache component.
      * This method will initialize the [[redis]] property to make sure it refers to a valid redis connection.
-     * @throws \yii\base\InvalidConfigException if [[redis]] is invalid.
+     * @throws \ESD\Yii\Base\InvalidConfigException if [[redis]] is invalid.
      */
     public function init()
     {
@@ -251,7 +251,7 @@ class Cache extends \ESD\Yii\Caching\Cache
      * defined in this instance. Only used in getValue() and getValues().
      * @since 2.0.8
      * @return array|string|Connection
-     * @throws \yii\base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     protected function getReplica()
     {

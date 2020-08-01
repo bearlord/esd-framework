@@ -33,7 +33,7 @@ use ESD\Yii\Web\View;
  * method, for example like this:
  *
  * ```php
- * <?= $form->field($model, 'from_date')->widget(\yii\widgets\MaskedInput::className(), [
+ * <?= $form->field($model, 'from_date')->widget(\ESD\Yii\Widgets\MaskedInput::className(), [
  *     'mask' => '999-999-9999',
  * ]) ?>
  * ```
@@ -89,7 +89,7 @@ class MaskedInput extends InputWidget
     public $clientOptions = [];
     /**
      * @var array the HTML attributes for the input tag.
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'form-control'];
     /**

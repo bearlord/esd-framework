@@ -150,7 +150,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
 
     /**
      * Registers session handler.
-     * @throws \yii\base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     protected function registerSessionHandler()
     {
@@ -376,7 +376,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * To use this feature across different PHP versions check the version first. E.g.
      * ```php
      * [
-     *     'sameSite' => PHP_VERSION_ID >= 70300 ? yii\web\Cookie::SAME_SITE_LAX : null,
+     *     'sameSite' => PHP_VERSION_ID >= 70300 ? ESD\Yii\Web\Cookie::SAME_SITE_LAX : null,
      * ]
      * ```
      * See https://www.owasp.org/index.php/SameSite for more information about `sameSite`.

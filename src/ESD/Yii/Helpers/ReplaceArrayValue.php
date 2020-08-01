@@ -29,7 +29,7 @@ use ESD\Yii\Base\InvalidConfigException;
  *     'ids' => [
  *         2,
  *     ],
- *     'validDomains' => new \yii\helpers\ReplaceArrayValue([
+ *     'validDomains' => new \ESD\Yii\Helpers\ReplaceArrayValue([
  *         'yiiframework.com',
  *         'www.yiiframework.com',
  *     ]),

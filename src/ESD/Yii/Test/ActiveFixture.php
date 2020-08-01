@@ -131,7 +131,7 @@ class ActiveFixture extends BaseActiveFixture
 
     /**
      * @return TableSchema the schema information of the database table associated with this fixture.
-     * @throws \yii\base\InvalidConfigException if the table does not exist
+     * @throws \ESD\Yii\Base\InvalidConfigException if the table does not exist
      */
     public function getTableSchema()
     {
@@ -142,7 +142,7 @@ class ActiveFixture extends BaseActiveFixture
         $db = $this->db;
         $tableName = $this->tableName;
         if ($tableName === null) {
-            /* @var $modelClass \yii\db\ActiveRecord */
+            /* @var $modelClass \ESD\Yii\Db\ActiveRecord */
             $modelClass = $this->modelClass;
             $tableName = $modelClass::tableName();
         }

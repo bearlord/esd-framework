@@ -18,7 +18,7 @@ use ESD\Yii\Mongodb\Connection;
  * regular PHP stream resources.
  *
  * Before feature can be used this wrapper should be registered via [[register()]] method.
- * It is usually performed via [[yii\mongodb\Connection::registerFileStreamWrapper()]].
+ * It is usually performed via [[ESD\Yii\Mongodb\Connection::registerFileStreamWrapper()]].
  *
  * Note: do not use this class directly - its instance will be created and maintained by PHP internally
  * once corresponding stream resource is created.

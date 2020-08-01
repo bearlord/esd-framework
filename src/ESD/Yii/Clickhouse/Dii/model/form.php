@@ -1,6 +1,6 @@
 <?php
 /* @var $this ESD\Yii\Web\View */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form ESD\Yii\Widgets\ActiveForm */
 /* @var $generator ESD\Yii\Clickhouse\gii\model\Generator */
 echo $form->field($generator, 'collectionName');
 echo $form->field($generator, 'modelClass');

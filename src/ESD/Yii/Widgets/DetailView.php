@@ -86,9 +86,9 @@ class DetailView extends Widget
      *   Please refer to [[Formatter]] for supported types and [[Formatter::format()]] on how to specify this value.
      * - `visible`: whether the attribute is visible. If set to `false`, the attribute will NOT be displayed.
      * - `contentOptions`: the HTML attributes to customize value tag. For example: `['class' => 'bg-red']`.
-     *   Please refer to [[\yii\helpers\BaseHtml::renderTagAttributes()]] for the supported syntax.
+     *   Please refer to [[\ESD\Yii\Helpers\BaseHtml::renderTagAttributes()]] for the supported syntax.
      * - `captionOptions`: the HTML attributes to customize label tag. For example: `['class' => 'bg-red']`.
-     *   Please refer to [[\yii\helpers\BaseHtml::renderTagAttributes()]] for the supported syntax.
+     *   Please refer to [[\ESD\Yii\Helpers\BaseHtml::renderTagAttributes()]] for the supported syntax.
      */
     public $attributes;
     /**
@@ -110,7 +110,7 @@ class DetailView extends Widget
     /**
      * @var array the HTML attributes for the container tag of this widget. The `tag` option specifies
      * what container tag should be used. It defaults to `table` if not set.
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'table table-striped table-bordered detail-view'];
     /**

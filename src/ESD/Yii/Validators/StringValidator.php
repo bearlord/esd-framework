@@ -61,7 +61,7 @@ class StringValidator extends Validator
     public $notEqual;
     /**
      * @var string the encoding of the string value to be validated (e.g. 'UTF-8').
-     * If this property is not set, [[\yii\base\Application::charset]] will be used.
+     * If this property is not set, [[\ESD\Yii\Base\Application::charset]] will be used.
      */
     public $encoding;
 

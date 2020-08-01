@@ -461,8 +461,8 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      *
      * @param string $table the table that data will be saved into.
      * @param array|Query $columns the column data (name => value) to be saved into the table or instance
-     * of [[yii\db\Query|Query]] to perform INSERT INTO ... SELECT SQL statement.
-     * Passing of [[yii\db\Query|Query]] is available since version 2.0.11.
+     * of [[ESD\Yii\Db\Query|Query]] to perform INSERT INTO ... SELECT SQL statement.
+     * Passing of [[ESD\Yii\Db\Query|Query]] is available since version 2.0.11.
      * @return array normalized columns
      * @since 2.0.9
      */

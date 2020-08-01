@@ -8,7 +8,7 @@
 namespace ESD\Yii\Redis;
 
 use ESD\Yii\Yii;
-use ESDyii\base\InvalidConfigException;
+use ESDESD\Yii\Base\InvalidConfigException;
 
 /**
  * Redis Session implements a session component using [redis](http://redis.io/) as the storage medium.
@@ -24,7 +24,7 @@ use ESDyii\base\InvalidConfigException;
  * [
  *     'components' => [
  *         'session' => [
- *             'class' => 'yii\redis\Session',
+ *             'class' => 'ESD\Yii\Redis\Session',
  *             'redis' => [
  *                 'hostname' => 'localhost',
  *                 'port' => 6379,
@@ -41,7 +41,7 @@ use ESDyii\base\InvalidConfigException;
  * [
  *     'components' => [
  *         'session' => [
- *             'class' => 'yii\redis\Session',
+ *             'class' => 'ESD\Yii\Redis\Session',
  *             // 'redis' => 'redis' // id of the connection application component
  *         ],
  *     ],

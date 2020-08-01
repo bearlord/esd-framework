@@ -20,7 +20,7 @@ use ESD\Yii\Helpers\ArrayHelper;
  * It is used by [[Command]] for particular commands and queries composition.
  *
  * MongoDB uses JSON format to specify query conditions with quite specific syntax.
- * However [[buildCondition()]] method provides the ability of "translating" common condition format used "yii\db\*"
+ * However [[buildCondition()]] method provides the ability of "translating" common condition format used "ESD\Yii\Db\*"
  * into MongoDB condition.
  * For example:
  *
@@ -530,7 +530,7 @@ class QueryBuilder extends BaseObject
     }
 
     /**
-     * Converts "\yii\db\*" quick condition keyword into actual Mongo condition keyword.
+     * Converts "\ESD\Yii\Db\*" quick condition keyword into actual Mongo condition keyword.
      * @param string $key raw condition key.
      * @return string actual key.
      */

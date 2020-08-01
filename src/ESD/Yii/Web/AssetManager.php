@@ -17,7 +17,7 @@ use ESD\Yii\Helpers\Url;
 /**
  * AssetManager manages asset bundle configuration and loading.
  *
- * AssetManager is configured as an application component in [[\yii\web\Application]] by default.
+ * AssetManager is configured as an application component in [[\ESD\Yii\Web\Application]] by default.
  * You can access that instance via `Yii::$app->assetManager`.
  *
  * You can modify its configuration by adding an array to your application config under `components`
@@ -58,7 +58,7 @@ class AssetManager extends Component
      *
      * ```php
      * [
-     *     'yii\bootstrap\BootstrapAsset' => [
+     *     'ESD\Yii\Bootstrap\\BootstrapAsset' => [
      *         'css' => [],
      *     ],
      * ]
@@ -143,14 +143,14 @@ class AssetManager extends Component
      * The signature of the callback should be: `function ($from, $to)`, where `$from` is the sub-directory or
      * file to be copied from, while `$to` is the copy target.
      *
-     * This is passed as a parameter `beforeCopy` to [[\yii\helpers\FileHelper::copyDirectory()]].
+     * This is passed as a parameter `beforeCopy` to [[\ESD\Yii\Helpers\FileHelper::copyDirectory()]].
      */
     public $beforeCopy;
     /**
      * @var callback a PHP callback that is called after a sub-directory or file is successfully copied.
      * This option is used only when publishing a directory. The signature of the callback is the same as
      * for [[beforeCopy]].
-     * This is passed as a parameter `afterCopy` to [[\yii\helpers\FileHelper::copyDirectory()]].
+     * This is passed as a parameter `afterCopy` to [[\ESD\Yii\Helpers\FileHelper::copyDirectory()]].
      */
     public $afterCopy;
     /**

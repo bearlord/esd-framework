@@ -17,10 +17,10 @@ use ESD\Yii\Web\UploadedFile;
  *
  * A file collection object is usually created by calling [[Database::getFileCollection()]] or [[Connection::getFileCollection()]].
  *
- * File collection inherits all interface from regular [[\yii\mongo\Collection]], adding methods to store files.
+ * File collection inherits all interface from regular [[\ESD\Yii\Mongo\Collection]], adding methods to store files.
  *
- * @property \yii\mongodb\Collection $chunkCollection Mongo collection instance. This property is read-only.
- * @property \yii\mongodb\Collection $fileCollection Mongo collection instance. This property is read-only.
+ * @property \ESD\Yii\Mongodb\Collection $chunkCollection Mongo collection instance. This property is read-only.
+ * @property \ESD\Yii\Mongodb\Collection $fileCollection Mongo collection instance. This property is read-only.
  * @property string $prefix Prefix of this file collection.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
@@ -29,7 +29,7 @@ use ESD\Yii\Web\UploadedFile;
 class Collection extends \ESD\Yii\Mongodb\Collection
 {
     /**
-     * @var \yii\mongodb\Database MongoDB database instance.
+     * @var \ESD\Yii\Mongodb\Database MongoDB database instance.
      */
     public $database;
 
@@ -38,11 +38,11 @@ class Collection extends \ESD\Yii\Mongodb\Collection
      */
     private $_prefix;
     /**
-     * @var \yii\mongodb\Collection file chunks MongoDB collection.
+     * @var \ESD\Yii\Mongodb\Collection file chunks MongoDB collection.
      */
     private $_chunkCollection;
     /**
-     * @var \yii\mongodb\Collection files MongoDB collection.
+     * @var \ESD\Yii\Mongodb\Collection files MongoDB collection.
      */
     private $_fileCollection;
     /**
@@ -98,7 +98,7 @@ class Collection extends \ESD\Yii\Mongodb\Collection
     /**
      * Returns the MongoDB collection for the file chunks.
      * @param bool $refresh whether to reload the collection instance even if it is found in the cache.
-     * @return \yii\mongodb\Collection mongo collection instance.
+     * @return \ESD\Yii\Mongodb\Collection mongo collection instance.
      */
     public function getChunkCollection($refresh = false)
     {
@@ -116,7 +116,7 @@ class Collection extends \ESD\Yii\Mongodb\Collection
     /**
      * Returns the MongoDB collection for the files.
      * @param bool $refresh whether to reload the collection instance even if it is found in the cache.
-     * @return \yii\mongodb\Collection mongo collection instance.
+     * @return \ESD\Yii\Mongodb\Collection mongo collection instance.
      * @since 2.1
      */
     public function getFileCollection($refresh = false)

@@ -20,7 +20,7 @@ class LikeConditionBuilder extends \ESD\Yii\Db\Conditions\LikeConditionBuilder
     protected $escapeCharacter = '!';
     /**
      * `\` is initialized in [[buildLikeCondition()]] method since
-     * we need to choose replacement value based on [[\yii\db\Schema::quoteValue()]].
+     * we need to choose replacement value based on [[\ESD\Yii\Db\Schema::quoteValue()]].
      * {@inheritdoc}
      */
     protected $escapingReplacements = [
@@ -38,7 +38,7 @@ class LikeConditionBuilder extends \ESD\Yii\Db\Conditions\LikeConditionBuilder
         if (!isset($this->escapingReplacements['\\'])) {
             /*
              * Different pdo_oci8 versions may or may not implement PDO::quote(), so
-             * yii\db\Schema::quoteValue() may or may not quote \.
+             * ESD\Yii\Db\Schema::quoteValue() may or may not quote \.
              */
             $this->escapingReplacements['\\'] = substr($this->queryBuilder->db->quoteValue('\\'), 1, -1);
         }

@@ -127,7 +127,7 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      */
     public $queryCacheDuration;
     /**
-     * @var \yii\caching\Dependency the dependency to be associated with the cached query result for this query
+     * @var \ESD\Yii\Caching\Dependency the dependency to be associated with the cached query result for this query
      * @see cache()
      * @since 2.0.14
      */
@@ -487,7 +487,7 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * Returns table names used in [[from]] indexed by aliases.
      * Both aliases and names are enclosed into {{ and }}.
      * @return string[] table names indexed by aliases
-     * @throws \yii\base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @since 2.0.12
      */
     public function getTablesUsedInFrom()
@@ -743,16 +743,16 @@ PATTERN;
      *
      * ```php
      * // SELECT * FROM  `user` `u`, `profile`;
-     * $query = (new \yii\db\Query)->from(['u' => 'user', 'profile']);
+     * $query = (new \ESD\Yii\Db\Query)->from(['u' => 'user', 'profile']);
      *
      * // SELECT * FROM (SELECT * FROM `user` WHERE `active` = 1) `activeusers`;
-     * $subquery = (new \yii\db\Query)->from('user')->where(['active' => true])
-     * $query = (new \yii\db\Query)->from(['activeusers' => $subquery]);
+     * $subquery = (new \ESD\Yii\Db\Query)->from('user')->where(['active' => true])
+     * $query = (new \ESD\Yii\Db\Query)->from(['activeusers' => $subquery]);
      *
      * // subquery can also be a string with plain SQL wrapped in parenthesis
      * // SELECT * FROM (SELECT * FROM `user` WHERE `active` = 1) `activeusers`;
      * $subquery = "(SELECT * FROM `user` WHERE `active` = 1)";
-     * $query = (new \yii\db\Query)->from(['activeusers' => $subquery]);
+     * $query = (new \ESD\Yii\Db\Query)->from(['activeusers' => $subquery]);
      * ```
      *
      * @return $this the query object itself
@@ -1246,7 +1246,7 @@ PATTERN;
      * Use a negative number to indicate that query cache should not be used.
      * Use boolean `true` to indicate that [[Connection::queryCacheDuration]] should be used.
      * Defaults to `true`.
-     * @param \yii\caching\Dependency $dependency the cache dependency associated with the cached result.
+     * @param \ESD\Yii\Caching\Dependency $dependency the cache dependency associated with the cached result.
      * @return $this the Query object itself
      * @since 2.0.14
      */

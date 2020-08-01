@@ -38,7 +38,7 @@ class ActiveForm extends Widget
     const VALIDATION_STATE_ON_INPUT = 'input';
 
     /**
-     * @var array|string the form action URL. This parameter will be processed by [[\yii\helpers\Url::to()]].
+     * @var array|string the form action URL. This parameter will be processed by [[\ESD\Yii\Helpers\Url::to()]].
      * @see method for specifying the HTTP method for this form.
      */
     public $action = '';
@@ -60,7 +60,7 @@ class ActiveForm extends Widget
     public $method = 'post';
     /**
      * @var array the HTML attributes (name-value pairs) for the form tag.
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**
@@ -295,7 +295,7 @@ class ActiveForm extends Widget
      * - `footer`: string, the footer HTML for the error summary.
      *
      * The rest of the options will be rendered as the attributes of the container tag. The values will
-     * be HTML-encoded using [[\yii\helpers\Html::encode()]]. If a value is `null`, the corresponding attribute will not be rendered.
+     * be HTML-encoded using [[\ESD\Yii\Helpers\Html::encode()]]. If a value is `null`, the corresponding attribute will not be rendered.
      * @return string the generated error summary.
      * @see errorSummaryCssClass
      */

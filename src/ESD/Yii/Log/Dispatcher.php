@@ -27,12 +27,12 @@ use ESD\Yii\Base\ErrorHandler;
  *         'log' => [
  *             'targets' => [
  *                 'file' => [
- *                     'class' => 'yii\log\FileTarget',
+ *                     'class' => 'ESD\Yii\Log\FileTarget',
  *                     'levels' => ['trace', 'info'],
  *                     'categories' => ['yii\*'],
  *                 ],
  *                 'email' => [
- *                     'class' => 'yii\log\EmailTarget',
+ *                     'class' => 'ESD\Yii\Log\EmailTarget',
  *                     'levels' => ['error', 'warning'],
  *                     'message' => [
  *                         'to' => 'admin@example.com',

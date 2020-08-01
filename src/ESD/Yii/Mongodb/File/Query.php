@@ -12,7 +12,7 @@ use ESD\Yii\Yii;
 /**
  * Query represents Mongo "find" operation for GridFS collection.
  *
- * Query behaves exactly as regular [[\yii\mongodb\Query]].
+ * Query behaves exactly as regular [[\ESD\Yii\Mongodb\Query]].
  * Found files will be represented as arrays of file document attributes with
  * additional 'file' key, which stores [[\MongoGridFSFile]] instance.
  *
@@ -25,7 +25,7 @@ class Query extends \ESD\Yii\Mongodb\Query
 {
     /**
      * Returns the Mongo collection for this query.
-     * @param \yii\mongodb\Connection $db Mongo connection.
+     * @param \ESD\Yii\Mongodb\Connection $db Mongo connection.
      * @return Collection collection instance.
      */
     public function getCollection($db = null)

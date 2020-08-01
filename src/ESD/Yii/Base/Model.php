@@ -38,7 +38,7 @@ use ESD\Core\Server\Server;
  *
  * For more details and usage information on Model, see the [guide article on models](guide:structure-models).
  *
- * @property \yii\validators\Validator[] $activeValidators The validators applicable to the current
+ * @property \ESD\Yii\Validators\Validator[] $activeValidators The validators applicable to the current
  * [[scenario]]. This property is read-only.
  * @property array $attributes Attribute values (name => value).
  * @property array $errors An array of errors for all attributes. Empty array is returned if no error. The
@@ -49,7 +49,7 @@ use ESD\Core\Server\Server;
  * @property ArrayIterator $iterator An iterator for traversing the items in the list. This property is
  * read-only.
  * @property string $scenario The scenario that this model is in. Defaults to [[SCENARIO_DEFAULT]].
- * @property ArrayObject|\yii\validators\Validator[] $validators All the validators declared in the model.
+ * @property ArrayObject|\ESD\Yii\Validators\Validator[] $validators All the validators declared in the model.
  * This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -233,7 +233,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
     /**
      * Returns the form name that this model class should use.
      *
-     * The form name is mainly used by [[\yii\widgets\ActiveForm]] to determine how to name
+     * The form name is mainly used by [[\ESD\Yii\Widgets\ActiveForm]] to determine how to name
      * the input fields for the attributes in a model. If the form name is "A" and an attribute
      * name is "b", then the corresponding input name would be "A[b]". If the form name is
      * an empty string, then the input name would be "b".
@@ -413,7 +413,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
      * $model->validators[] = $newValidator;
      * ```
      *
-     * @return ArrayObject|\yii\validators\Validator[] all the validators declared in the model.
+     * @return ArrayObject|\ESD\Yii\Validators\Validator[] all the validators declared in the model.
      */
     public function getValidators()
     {
@@ -428,7 +428,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
      * Returns the validators applicable to the current [[scenario]].
      * @param string $attribute the name of the attribute whose applicable validators should be returned.
      * If this is null, the validators for ALL attributes in the model will be returned.
-     * @return \yii\validators\Validator[] the validators applicable to the current [[scenario]].
+     * @return \ESD\Yii\Validators\Validator[] the validators applicable to the current [[scenario]].
      */
     public function getActiveValidators($attribute = null)
     {
@@ -479,11 +479,11 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
     /**
      * Returns a value indicating whether the attribute is required.
      * This is determined by checking if the attribute is associated with a
-     * [[\yii\validators\RequiredValidator|required]] validation rule in the
+     * [[\ESD\Yii\Validators\RequiredValidator|required]] validation rule in the
      * current [[scenario]].
      *
      * Note that when the validator has a conditional validation applied using
-     * [[\yii\validators\RequiredValidator::$when|$when]] this method will return
+     * [[\ESD\Yii\Validators\RequiredValidator::$when|$when]] this method will return
      * `false` regardless of the `when` condition because it may be called be
      * before the model is loaded with data.
      *

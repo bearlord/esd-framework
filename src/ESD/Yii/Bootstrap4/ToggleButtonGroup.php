@@ -12,7 +12,7 @@ use ESD\Yii\Base\InvalidConfigException;
 /**
  * ToggleButtonGroup allows rendering form inputs Checkbox/Radio toggle button groups.
  *
- * You can use this widget in an [[ESD\Yii\Bootstrap4\ActiveForm|ActiveForm]] using the [[ESD\Yii\Widgets\\ActiveField::widget()|widget()]]
+ * You can use this widget in an [[ESD\Yii\Bootstrap4\ActiveForm|ActiveForm]] using the [[ESD\Yii\Widgets\ActiveField::widget()|widget()]]
  * method, for example like this:
  *
  * ```php

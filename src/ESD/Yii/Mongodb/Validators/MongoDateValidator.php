@@ -16,13 +16,13 @@ use ESD\Yii\Validators\DateValidator;
  * Usage example:
  *
  * ```php
- * class Customer extends yii\mongodb\ActiveRecord
+ * class Customer extends ESD\Yii\Mongodb\ActiveRecord
  * {
  *     ...
  *     public function rules()
  *     {
  *         return [
- *             ['date', 'yii\mongodb\validators\MongoDateValidator', 'format' => 'MM/dd/yyyy']
+ *             ['date', 'ESD\Yii\Mongodb\validators\MongoDateValidator', 'format' => 'MM/dd/yyyy']
  *         ];
  *     }
  * }

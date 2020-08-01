@@ -29,7 +29,7 @@ use ESD\Yii\Helpers\HtmlPurifier;
  * The behavior of some of them may be configured via the properties of Formatter. For example,
  * by configuring [[dateFormat]], one may control how [[asDate()]] formats the value into a date string.
  *
- * Formatter is configured as an application component in [[\yii\base\Application]] by default.
+ * Formatter is configured as an application component in [[\ESD\Yii\Base\Application]] by default.
  * You can access that instance via `Yii::$app->formatter`.
  *
  * The Formatter class is designed to format values according to a [[locale]]. For this feature to work
@@ -93,7 +93,7 @@ class Formatter extends Component
      * @var string the locale ID that is used to localize the date and number formatting.
      * For number and date formatting this is only effective when the
      * [PHP intl extension](https://secure.php.net/manual/en/book.intl.php) is installed.
-     * If not set, [[\yii\base\Application::language]] will be used.
+     * If not set, [[\ESD\Yii\Base\Application::language]] will be used.
      */
     public $locale;
     /**
@@ -109,7 +109,7 @@ class Formatter extends Component
      * This can be any value that may be passed to [date_default_timezone_set()](https://secure.php.net/manual/en/function.date-default-timezone-set.php)
      * e.g. `UTC`, `Europe/Berlin` or `America/Chicago`.
      * Refer to the [php manual](https://secure.php.net/manual/en/timezones.php) for available time zones.
-     * If this property is not set, [[\yii\base\Application::timeZone]] will be used.
+     * If this property is not set, [[\ESD\Yii\Base\Application::timeZone]] will be used.
      *
      * Note that the default time zone for input data is assumed to be UTC by default if no time zone is included in the input date value.
      * If you store your data in a different time zone in the database, you have to adjust [[defaultTimeZone]] accordingly.

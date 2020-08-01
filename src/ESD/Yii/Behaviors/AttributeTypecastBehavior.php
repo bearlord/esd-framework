@@ -18,19 +18,19 @@ use ESD\Yii\Validators\StringValidator;
 /**
  * AttributeTypecastBehavior provides an ability of automatic model attribute typecasting.
  * This behavior is very useful in case of usage of ActiveRecord for the schema-less databases like MongoDB or Redis.
- * It may also come in handy for regular [[\yii\db\ActiveRecord]] or even [[\yii\base\Model]], allowing to maintain
+ * It may also come in handy for regular [[\ESD\Yii\Db\ActiveRecord]] or even [[\ESD\Yii\Base\Model]], allowing to maintain
  * strict attribute types after model validation.
  *
- * This behavior should be attached to [[\yii\base\Model]] or [[\yii\db\BaseActiveRecord]] descendant.
+ * This behavior should be attached to [[\ESD\Yii\Base\Model]] or [[\ESD\Yii\Db\BaseActiveRecord]] descendant.
  *
  * You should specify exact attribute types via [[attributeTypes]].
  *
  * For example:
  *
  * ```php
- * use yii\behaviors\AttributeTypecastBehavior;
+ * use ESD\Yii\Behaviors\AttributeTypecastBehavior;
  *
- * class Item extends \yii\db\ActiveRecord
+ * class Item extends \ESD\Yii\Db\ActiveRecord
  * {
  *     public function behaviors()
  *     {
@@ -58,9 +58,9 @@ use ESD\Yii\Validators\StringValidator;
  * Following example will automatically create same [[attributeTypes]] value as it was configured at the above one:
  *
  * ```php
- * use yii\behaviors\AttributeTypecastBehavior;
+ * use ESD\Yii\Behaviors\AttributeTypecastBehavior;
  *
- * class Item extends \yii\db\ActiveRecord
+ * class Item extends \ESD\Yii\Db\ActiveRecord
  * {
  *
  *     public function rules()
@@ -155,7 +155,7 @@ class AttributeTypecastBehavior extends Behavior
     /**
      * @var bool whether to perform typecasting before saving owner model (insert or update).
      * This option may be disabled in order to achieve better performance.
-     * For example, in case of [[\yii\db\ActiveRecord]] usage, typecasting before save
+     * For example, in case of [[\ESD\Yii\Db\ActiveRecord]] usage, typecasting before save
      * will grant no benefit an thus can be disabled.
      * Note that changing this option value will have no effect after this behavior has been attached to the model.
      */
@@ -164,7 +164,7 @@ class AttributeTypecastBehavior extends Behavior
      * @var bool whether to perform typecasting after retrieving owner model data from
      * the database (after find or refresh).
      * This option may be disabled in order to achieve better performance.
-     * For example, in case of [[\yii\db\ActiveRecord]] usage, typecasting after find
+     * For example, in case of [[\ESD\Yii\Db\ActiveRecord]] usage, typecasting after find
      * will grant no benefit in most cases an thus can be disabled.
      * Note that changing this option value will have no effect after this behavior has been attached to the model.
      */
@@ -311,7 +311,7 @@ class AttributeTypecastBehavior extends Behavior
 
     /**
      * Handles owner 'afterValidate' event, ensuring attribute typecasting.
-     * @param \yii\base\Event $event event instance.
+     * @param \ESD\Yii\Base\Event $event event instance.
      */
     public function afterValidate($event)
     {
@@ -322,7 +322,7 @@ class AttributeTypecastBehavior extends Behavior
 
     /**
      * Handles owner 'afterInsert' and 'afterUpdate' events, ensuring attribute typecasting.
-     * @param \yii\base\Event $event event instance.
+     * @param \ESD\Yii\Base\Event $event event instance.
      */
     public function beforeSave($event)
     {
@@ -331,7 +331,7 @@ class AttributeTypecastBehavior extends Behavior
 
     /**
      * Handles owner 'afterFind' event, ensuring attribute typecasting.
-     * @param \yii\base\Event $event event instance.
+     * @param \ESD\Yii\Base\Event $event event instance.
      */
     public function afterFind($event)
     {

@@ -12,7 +12,7 @@ use ESD\Yii\Base\Widget;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Helpers\Html;
 use ESD\Yii\Helpers\Json;
-use yii\web\Response;
+use ESD\Yii\Web\Response;
 
 /**
  * Pjax is a widget integrating the [pjax](https://github.com/yiisoft/jquery-pjax) jQuery plugin.
@@ -28,11 +28,11 @@ use yii\web\Response;
  *
  * You may disable pjax for a specific link inside the container by adding `data-pjax="0"` attribute to this link.
  *
- * The following example shows how to use Pjax with the [[\yii\grid\GridView]] widget so that the grid pagination,
+ * The following example shows how to use Pjax with the [[\ESD\Yii\Grid\GridView]] widget so that the grid pagination,
  * sorting and filtering can be done via pjax:
  *
  * ```php
- * use yii\widgets\Pjax;
+ * use ESD\Yii\Widgets\Pjax;
  *
  * Pjax::begin();
  * echo GridView::widget([...]);
@@ -49,9 +49,9 @@ class Pjax extends Widget
      *
      * - `tag`: string, the tag name for the container. Defaults to `div`
      *   This option is available since version 2.0.7.
-     *   See also [[\yii\helpers\Html::tag()]].
+     *   See also [[\ESD\Yii\Helpers\Html::tag()]].
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**

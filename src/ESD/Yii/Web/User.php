@@ -15,7 +15,7 @@ use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Base\InvalidValueException;
 
-use yii\rbac\CheckAccessInterface;
+use ESD\Yii\Rbac\CheckAccessInterface;
 
 /**
  * User is the class for the `user` application component that manages the user authentication status.
@@ -35,7 +35,7 @@ use yii\rbac\CheckAccessInterface;
  * a user. The logic of how to authenticate a user should be done in the class implementing [[IdentityInterface]].
  * You are also required to set [[identityClass]] with the name of this class.
  *
- * User is configured as an application component in [[\yii\web\Application]] by default.
+ * User is configured as an application component in [[\ESD\Yii\Web\Application]] by default.
  * You can access that instance via `Yii::$app->user`.
  *
  * You can modify its configuration by adding an array to your application config under `components`
@@ -292,7 +292,7 @@ class User extends Component
      * If authentication fails or [[login()]] is unsuccessful, it will return null.
      * @param string $token the access token
      * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
-     * For example, [[\yii\filters\auth\HttpBearerAuth]] will set this parameter to be `yii\filters\auth\HttpBearerAuth`.
+     * For example, [[\ESD\Yii\Filters\auth\HttpBearerAuth]] will set this parameter to be `ESD\Yii\Filters\auth\HttpBearerAuth`.
      * @return IdentityInterface|null the identity associated with the given access token. Null is returned if
      * the access token is invalid or [[login()]] is unsuccessful.
      */
@@ -745,7 +745,7 @@ class User extends Component
      * When this parameter is true (default), if the access check of an operation was performed
      * before, its result will be directly returned when calling this method to check the same
      * operation. If this parameter is false, this method will always call
-     * [[\yii\rbac\CheckAccessInterface::checkAccess()]] to obtain the up-to-date access result. Note that this
+     * [[\ESD\Yii\Rbac\CheckAccessInterface::checkAccess()]] to obtain the up-to-date access result. Note that this
      * caching is effective only within the same request and only works when `$params = []`.
      * @return bool whether the user can perform the operation as specified by the given permission.
      */
@@ -795,7 +795,7 @@ class User extends Component
      *
      * By default this is the `authManager` application component.
      * You may override this method to return a different auth manager instance if needed.
-     * @return \yii\rbac\ManagerInterface
+     * @return \ESD\Yii\Rbac\ManagerInterface
      * @since 2.0.6
      * @deprecated since version 2.0.9, to be removed in 2.1. Use [[getAccessChecker()]] instead.
      */

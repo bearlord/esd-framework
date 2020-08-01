@@ -84,9 +84,9 @@ class Menu extends Widget
      *
      * - tag: string, defaults to "li", the tag name of the item container tags.
      *   Set to false to disable container tag.
-     *   See also [[\yii\helpers\Html::tag()]].
+     *   See also [[\ESD\Yii\Helpers\Html::tag()]].
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $itemOptions = [];
     /**
@@ -135,9 +135,9 @@ class Menu extends Widget
      * @var array the HTML attributes for the menu's container tag. The following special options are recognized:
      *
      * - tag: string, defaults to "ul", the tag name of the item container tags. Set to false to disable container tag.
-     *   See also [[\yii\helpers\Html::tag()]].
+     *   See also [[\ESD\Yii\Helpers\Html::tag()]].
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**

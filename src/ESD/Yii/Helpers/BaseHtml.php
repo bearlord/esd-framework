@@ -99,7 +99,7 @@ class BaseHtml
 
     /**
      * Encodes special characters into HTML entities.
-     * The [[\yii\base\Application::charset|application charset]] will be used for encoding.
+     * The [[\ESD\Yii\Base\Application::charset|application charset]] will be used for encoding.
      * @param string $content the content to be encoded
      * @param bool $doubleEncode whether to encode HTML entities in `$content`. If false,
      * HTML entities in `$content` will not be further encoded.
@@ -315,7 +315,7 @@ class BaseHtml
      * @param string $method the form submission method, such as "post", "get", "put", "delete" (case-insensitive).
      * Since most browsers only support "post" and "get", if other methods are given, they will
      * be simulated using "post", and a hidden input will be added which contains the actual method type.
-     * See [[\yii\web\Request::methodParam]] for more details.
+     * See [[\ESD\Yii\Web\Request::methodParam]] for more details.
      * @param array $options the tag options in terms of name-value pairs. These will be rendered as
      * the attributes of the resulting tag. The values will be HTML-encoded using [[encode()]].
      * If a value is null, the corresponding attribute will not be rendered.
@@ -394,7 +394,7 @@ class BaseHtml
      * If a value is null, the corresponding attribute will not be rendered.
      * See [[renderTagAttributes()]] for details on how attributes are being rendered.
      * @return string the generated hyperlink
-     * @see \yii\helpers\Url::to()
+     * @see \ESD\Yii\Helpers\Url::to()
      */
     public static function a($text, $url = null, $options = [])
     {
@@ -1248,7 +1248,7 @@ class BaseHtml
 
     /**
      * If `maxlength` option is set true and the model attribute is validated by a string validator,
-     * the `maxlength` option will take the value of [[\yii\validators\StringValidator::max]].
+     * the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
      * @param Model $model the model object
      * @param string $attribute the attribute name or expression.
      * @param array $options the tag options in terms of name-value pairs.
@@ -1280,7 +1280,7 @@ class BaseHtml
      * The following special options are recognized:
      *
      * - maxlength: integer|boolean, when `maxlength` is set true and the model attribute is validated
-     *   by a string validator, the `maxlength` option will take the value of [[\yii\validators\StringValidator::max]].
+     *   by a string validator, the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
      *   This is available since version 2.0.3.
      * - placeholder: string|boolean, when `placeholder` equals `true`, the attribute label from the $model will be used
      *   as a placeholder (this behavior is available since version 2.0.14).
@@ -1340,7 +1340,7 @@ class BaseHtml
      * The following special options are recognized:
      *
      * - maxlength: integer|boolean, when `maxlength` is set true and the model attribute is validated
-     *   by a string validator, the `maxlength` option will take the value of [[\yii\validators\StringValidator::max]].
+     *   by a string validator, the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
      *   This option is available since version 2.0.6.
      * - placeholder: string|boolean, when `placeholder` equals `true`, the attribute label from the $model will be used
      *   as a placeholder (this behavior is available since version 2.0.14).
@@ -1401,7 +1401,7 @@ class BaseHtml
      * The following special options are recognized:
      *
      * - maxlength: integer|boolean, when `maxlength` is set true and the model attribute is validated
-     *   by a string validator, the `maxlength` option will take the value of [[\yii\validators\StringValidator::max]].
+     *   by a string validator, the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
      *   This option is available since version 2.0.6.
      * - placeholder: string|boolean, when `placeholder` equals `true`, the attribute label from the $model will be used
      *   as a placeholder (this behavior is available since version 2.0.14).
@@ -2168,6 +2168,23 @@ class BaseHtml
         }
 
         throw new InvalidArgumentException(get_class($model) . '::formName() cannot be empty for tabular inputs.');
+    }
+
+    /**
+     * Generates an appropriate input ID for the specified attribute name or expression.
+     *
+     * This method converts the result [[getInputName()]] into a valid input ID.
+     * For example, if [[getInputName()]] returns `Post[content]`, this method will return `post-content`.
+     * @param Model $model the model object
+     * @param string $attribute the attribute name or expression. See [[getAttributeName()]] for explanation of attribute expression.
+     * @return string the generated input ID
+     * @throws InvalidArgumentException if the attribute name contains non-word characters.
+     */
+    public static function getInputId($model, $attribute)
+    {
+        $charset = Yii::$app ? Yii::$app->charset : 'UTF-8';
+        $name = mb_strtolower(static::getInputName($model, $attribute), $charset);
+        return str_replace(['[]', '][', '[', ']', ' ', '.'], ['', '-', '-', '', '-', '-'], $name);
     }
 
     /**

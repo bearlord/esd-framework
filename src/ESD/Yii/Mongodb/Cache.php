@@ -18,13 +18,13 @@ use ESD\Yii\Di\Instance;
  * This collection is better to be pre-created with fields 'id' and 'expire' indexed.
  * The collection name can be changed by setting [[cacheCollection]].
  *
- * Please refer to [[\yii\caching\Cache]] for common cache operations that are supported by Cache.
+ * Please refer to [[\ESD\Yii\Caching\Cache]] for common cache operations that are supported by Cache.
  *
  * The following example shows how you can configure the application to use Cache:
  *
  * ```php
  * 'cache' => [
- *     'class' => 'yii\mongodb\Cache',
+ *     'class' => 'ESD\Yii\Mongodb\Cache',
  *     // 'db' => 'mymongodb',
  *     // 'cacheCollection' => 'my_cache',
  * ]

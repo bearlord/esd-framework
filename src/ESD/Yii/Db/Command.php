@@ -83,7 +83,7 @@ class Command extends Component
      */
     public $queryCacheDuration;
     /**
-     * @var \yii\caching\Dependency the dependency to be associated with the cached query result for this command
+     * @var \ESD\Yii\Caching\Dependency the dependency to be associated with the cached query result for this command
      * @see cache()
      */
     public $queryCacheDependency;
@@ -106,7 +106,7 @@ class Command extends Component
      */
     private $_isolationLevel = false;
     /**
-     * @var callable a callable (e.g. anonymous function) that is called when [[\yii\db\Exception]] is thrown
+     * @var callable a callable (e.g. anonymous function) that is called when [[\ESD\Yii\Db\Exception]] is thrown
      * when executing the command.
      */
     private $_retryHandler;
@@ -117,7 +117,7 @@ class Command extends Component
      * @param int $duration the number of seconds that query result of this command can remain valid in the cache.
      * If this is not set, the value of [[Connection::queryCacheDuration]] will be used instead.
      * Use 0 to indicate that the cached data will never expire.
-     * @param \yii\caching\Dependency $dependency the cache dependency associated with the cached query result.
+     * @param \ESD\Yii\Caching\Dependency $dependency the cache dependency associated with the cached query result.
      * @return $this the command object itself
      */
     public function cache($duration = null, $dependency = null)
@@ -347,7 +347,7 @@ class Command extends Component
      * @param array $values the values to be bound. This must be given in terms of an associative
      * array with array keys being the parameter names, and array values the corresponding parameter values,
      * e.g. `[':name' => 'John', ':age' => 25]`. By default, the PDO type of each value is determined
-     * by its PHP type. You may explicitly specify the PDO type by using a [[yii\db\PdoValue]] class: `new PdoValue(value, type)`,
+     * by its PHP type. You may explicitly specify the PDO type by using a [[ESD\Yii\Db\PdoValue]] class: `new PdoValue(value, type)`,
      * e.g. `[':name' => 'John', ':profile' => new PdoValue($profile, \PDO::PARAM_LOB)]`.
      * @return $this the current command being executed
      */
@@ -459,9 +459,9 @@ class Command extends Component
      * Note that the created command is not executed until [[execute()]] is called.
      *
      * @param string $table the table that new rows will be inserted into.
-     * @param array|\yii\db\Query $columns the column data (name => value) to be inserted into the table or instance
-     * of [[yii\db\Query|Query]] to perform INSERT INTO ... SELECT SQL statement.
-     * Passing of [[yii\db\Query|Query]] is available since version 2.0.11.
+     * @param array|\ESD\Yii\Db\Query $columns the column data (name => value) to be inserted into the table or instance
+     * of [[ESD\Yii\Db\Query|Query]] to perform INSERT INTO ... SELECT SQL statement.
+     * Passing of [[ESD\Yii\Db\Query|Query]] is available since version 2.0.11.
      * @return $this the command object itself
      */
     public function insert($table, $columns)
@@ -525,7 +525,7 @@ class Command extends Component
      *     'url' => 'http://example.com/', // url is unique
      *     'visits' => 0,
      * ], [
-     *     'visits' => new \yii\db\Expression('visits + 1'),
+     *     'visits' => new \ESD\Yii\Db\Expression('visits + 1'),
      * ], $params);
      * ```
      *
@@ -681,7 +681,7 @@ class Command extends Component
      * Creates a SQL command for adding a new DB column.
      * @param string $table the table that the new column will be added to. The table name will be properly quoted by the method.
      * @param string $column the name of the new column. The name will be properly quoted by the method.
-     * @param string $type the column type. [[\yii\db\QueryBuilder::getColumnType()]] will be called
+     * @param string $type the column type. [[\ESD\Yii\Db\QueryBuilder::getColumnType()]] will be called
      * to convert the give column type to the physical one. For example, `string` will be converted
      * as `varchar(255)`, and `string not null` becomes `varchar(255) not null`.
      * @return $this the command object itself
@@ -724,7 +724,7 @@ class Command extends Component
      * Creates a SQL command for changing the definition of a column.
      * @param string $table the table whose column is to be changed. The table name will be properly quoted by the method.
      * @param string $column the name of the column to be changed. The name will be properly quoted by the method.
-     * @param string $type the column type. [[\yii\db\QueryBuilder::getColumnType()]] will be called
+     * @param string $type the column type. [[\ESD\Yii\Db\QueryBuilder::getColumnType()]] will be called
      * to convert the give column type to the physical one. For example, `string` will be converted
      * as `varchar(255)`, and `string not null` becomes `varchar(255) not null`.
      * @return $this the command object itself
@@ -1138,7 +1138,7 @@ class Command extends Component
         if ($method !== '') {
             $info = $this->db->getQueryCacheInfo($this->queryCacheDuration, $this->queryCacheDependency);
             if (is_array($info)) {
-                /* @var $cache \yii\caching\CacheInterface */
+                /* @var $cache \ESD\Yii\Caching\CacheInterface */
                 $cache = $info[0];
                 $rawSql = $rawSql ?: $this->getRawSql();
                 $cacheKey = $this->getCacheKey($method, $fetchMode, $rawSql);
@@ -1244,7 +1244,7 @@ class Command extends Component
      * when executing the command. The signature of the callable should be:
      *
      * ```php
-     * function (\yii\db\Exception $e, $attempt)
+     * function (\ESD\Yii\Db\Exception $e, $attempt)
      * {
      *     // return true or false (whether to retry the command or rethrow $e)
      * }

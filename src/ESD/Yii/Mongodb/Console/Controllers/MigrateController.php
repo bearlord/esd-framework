@@ -17,7 +17,7 @@ use ESD\Yii\Helpers\ArrayHelper;
 /**
  * Manages application MongoDB migrations.
  *
- * This is an analog of [[\yii\console\controllers\MigrateController]] for MongoDB.
+ * This is an analog of [[\ESD\Yii\Console\controllers\MigrateController]] for MongoDB.
  *
  * This command provides support for tracking the migration history, upgrading
  * or downloading with migrations, and creating new migration skeletons.
@@ -32,7 +32,7 @@ use ESD\Yii\Helpers\ArrayHelper;
  * return [
  *     // ...
  *     'controllerMap' => [
- *         'mongodb-migrate' => 'yii\mongodb\console\controllers\MigrateController'
+ *         'mongodb-migrate' => 'ESD\Yii\Mongodb\console\controllers\MigrateController'
  *     ],
  * ];
  * ```
@@ -57,7 +57,7 @@ use ESD\Yii\Helpers\ArrayHelper;
  * return [
  *     'controllerMap' => [
  *         'mongodb-migrate' => [
- *             'class' => 'yii\mongodb\console\controllers\MigrateController',
+ *             'class' => 'ESD\Yii\Mongodb\console\controllers\MigrateController',
  *             'migrationNamespaces' => [
  *                 'app\migrations',
  *                 'some\extension\migrations',
@@ -102,7 +102,7 @@ class MigrateController extends BaseMigrateController
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
      * It checks the existence of the [[migrationPath]].
-     * @param \yii\base\Action $action the action to be executed.
+     * @param \ESD\Yii\Base\Action $action the action to be executed.
      * @throws Exception if db component isn't configured
      * @return bool whether the action should continue to be executed.
      */
@@ -125,7 +125,7 @@ class MigrateController extends BaseMigrateController
     /**
      * Creates a new migration instance.
      * @param string $class the migration class name
-     * @return \yii\mongodb\Migration the migration instance
+     * @return \ESD\Yii\Mongodb\Migration the migration instance
      */
     protected function createMigration($class)
     {

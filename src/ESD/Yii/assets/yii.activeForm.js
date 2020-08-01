@@ -1,7 +1,7 @@
 /**
  * Yii form widget.
  *
- * This is the JavaScript widget used by the yii\widgets\ActiveForm widget.
+ * This is the JavaScript widget used by the ESD\Yii\Widgets\ActiveForm widget.
  *
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -111,7 +111,7 @@
         afterInit: 'afterInit'
     };
 
-    // NOTE: If you change any of these defaults, make sure you update yii\widgets\ActiveForm::getClientOptions() as well
+    // NOTE: If you change any of these defaults, make sure you update ESD\Yii\Widgets\ActiveForm::getClientOptions() as well
     var defaults = {
         // whether to encode the error summary
         encodeErrorSummary: true,
@@ -139,7 +139,7 @@
         validationStateOn: 'container'
     };
 
-    // NOTE: If you change any of these defaults, make sure you update yii\widgets\ActiveField::getClientOptions() as well
+    // NOTE: If you change any of these defaults, make sure you update ESD\Yii\Widgets\ActiveField::getClientOptions() as well
     var attributeDefaults = {
         // a unique ID identifying an attribute (e.g. "loginform-username") in a form
         id: undefined,

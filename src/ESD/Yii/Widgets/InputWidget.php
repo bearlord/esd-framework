@@ -20,8 +20,8 @@ use ESD\Yii\Helpers\Html;
  * or a [[name]] and a [[value]]. If the former, the name and the value will
  * be generated automatically (subclasses may call [[renderInputHtml()]] to follow this behavior).
  *
- * Classes extending from this widget can be used in an [[\yii\widgets\ActiveForm|ActiveForm]]
- * using the [[\yii\widgets\ActiveField::widget()|widget()]] method, for example like this:
+ * Classes extending from this widget can be used in an [[\ESD\Yii\Widgets\ActiveForm|ActiveForm]]
+ * using the [[\ESD\Yii\Widgets\ActiveField::widget()|widget()]] method, for example like this:
  *
  * ```php
  * <?= $form->field($model, 'from_date')->widget('WidgetClassName', [
@@ -37,8 +37,8 @@ use ESD\Yii\Helpers\Html;
 class InputWidget extends Widget
 {
     /**
-     * @var \yii\widgets\ActiveField active input field, which triggers this widget rendering.
-     * This field will be automatically filled up in case widget instance is created via [[\yii\widgets\ActiveField::widget()]].
+     * @var \ESD\Yii\Widgets\ActiveField active input field, which triggers this widget rendering.
+     * This field will be automatically filled up in case widget instance is created via [[\ESD\Yii\Widgets\ActiveField::widget()]].
      * @since 2.0.11
      */
     public $field;
@@ -60,7 +60,7 @@ class InputWidget extends Widget
     public $value;
     /**
      * @var array the HTML attributes for the input tag.
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
 

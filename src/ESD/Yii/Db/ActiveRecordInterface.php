@@ -197,7 +197,7 @@ interface ActiveRecordInterface extends StaticInstanceInterface
      * array condition, make sure the array structure can not be changed from the outside:
      *
      * ```php
-     * // yii\web\Controller ensures that $id is scalar
+     * // ESD\Yii\Web\Controller ensures that $id is scalar
      * public function actionView($id)
      * {
      *     $model = Post::findOne($id);
@@ -264,7 +264,7 @@ interface ActiveRecordInterface extends StaticInstanceInterface
      * array condition, make sure the array structure can not be changed from the outside:
      *
      * ```php
-     * // yii\web\Controller ensures that $id is scalar
+     * // ESD\Yii\Web\Controller ensures that $id is scalar
      * public function actionView($id)
      * {
      *     $model = Post::findOne($id);
@@ -333,7 +333,7 @@ interface ActiveRecordInterface extends StaticInstanceInterface
      * $customer->save();
      * ```
      *
-     * @param bool $runValidation whether to perform validation (calling [[\yii\base\Model::validate()|validate()]])
+     * @param bool $runValidation whether to perform validation (calling [[\ESD\Yii\Base\Model::validate()|validate()]])
      * before saving the record. Defaults to `true`. If the validation fails, the record
      * will not be saved to the database and this method will return `false`.
      * @param array $attributeNames list of attribute names that need to be saved. Defaults to `null`,
@@ -354,7 +354,7 @@ interface ActiveRecordInterface extends StaticInstanceInterface
      * $customer->insert();
      * ```
      *
-     * @param bool $runValidation whether to perform validation (calling [[\yii\base\Model::validate()|validate()]])
+     * @param bool $runValidation whether to perform validation (calling [[\ESD\Yii\Base\Model::validate()|validate()]])
      * before saving the record. Defaults to `true`. If the validation fails, the record
      * will not be saved to the database and this method will return `false`.
      * @param array $attributes list of attributes that need to be saved. Defaults to `null`,
@@ -375,7 +375,7 @@ interface ActiveRecordInterface extends StaticInstanceInterface
      * $customer->update();
      * ```
      *
-     * @param bool $runValidation whether to perform validation (calling [[\yii\base\Model::validate()|validate()]])
+     * @param bool $runValidation whether to perform validation (calling [[\ESD\Yii\Base\Model::validate()|validate()]])
      * before saving the record. Defaults to `true`. If the validation fails, the record
      * will not be saved to the database and this method will return `false`.
      * @param array $attributeNames list of attributes that need to be saved. Defaults to `null`,

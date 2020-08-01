@@ -1,5 +1,5 @@
 /**
- * Database schema required by \yii\rbac\DbManager.
+ * Database schema required by \ESD\Yii\Rbac\DbManager.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @author Alexander Kochetov <creocoder@gmail.com>

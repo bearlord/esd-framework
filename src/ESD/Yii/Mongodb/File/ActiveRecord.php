@@ -17,7 +17,7 @@ use ESD\Yii\Web\UploadedFile;
  *
  * To specify source file use the [[file]] attribute. It can be specified in one of the following ways:
  *  - string - full name of the file, which content should be stored in GridFS
- *  - \yii\web\UploadedFile - uploaded file instance, which content should be stored in GridFS
+ *  - \ESD\Yii\Web\UploadedFile - uploaded file instance, which content should be stored in GridFS
  *
  * For example:
  *
@@ -217,7 +217,7 @@ abstract class ActiveRecord extends \ESD\Yii\Mongodb\ActiveRecord
      * Extracts filename from given raw file value.
      * @param mixed $file raw file value.
      * @return string file name.
-     * @throws \yii\base\InvalidParamException on invalid file value.
+     * @throws \ESD\Yii\Base\InvalidParamException on invalid file value.
      */
     protected function extractFileName($file)
     {
@@ -248,7 +248,7 @@ abstract class ActiveRecord extends \ESD\Yii\Mongodb\ActiveRecord
     /**
      * Returns the associated file content.
      * @return null|string file content.
-     * @throws \yii\base\InvalidParamException on invalid file attribute value.
+     * @throws \ESD\Yii\Base\InvalidParamException on invalid file attribute value.
      */
     public function getFileContent()
     {
@@ -278,7 +278,7 @@ abstract class ActiveRecord extends \ESD\Yii\Mongodb\ActiveRecord
      * Writes the the internal file content into the given filename.
      * @param string $filename full filename to be written.
      * @return bool whether the operation was successful.
-     * @throws \yii\base\InvalidParamException on invalid file attribute value.
+     * @throws \ESD\Yii\Base\InvalidParamException on invalid file attribute value.
      */
     public function writeFile($filename)
     {
@@ -308,7 +308,7 @@ abstract class ActiveRecord extends \ESD\Yii\Mongodb\ActiveRecord
      * which deal with reading files. The contents of the file are pulled out of MongoDB on the fly,
      * so that the whole file does not have to be loaded into memory first.
      * @return resource file stream resource.
-     * @throws \yii\base\InvalidParamException on invalid file attribute value.
+     * @throws \ESD\Yii\Base\InvalidParamException on invalid file attribute value.
      */
     public function getFileResource()
     {

@@ -14,7 +14,7 @@ use ESD\Yii\Helpers\StringHelper;
  * Component is the base class that implements the *property*, *event* and *behavior* features.
  *
  * Component provides the *event* and *behavior* features, in addition to the *property* feature which is implemented in
- * its parent class [[\yii\base\BaseObject|BaseObject]].
+ * its parent class [[\ESD\Yii\Base\BaseObject|BaseObject]].
  *
  * Event is a way to "inject" custom code into existing code at certain places. For example, a comment object can trigger
  * an "add" event when the user adds a comment. We can write custom code and attach it to this event so that when the event

@@ -28,7 +28,7 @@ class JsonExpression implements ExpressionInterface, \JsonSerializable
 
     /**
      * @var mixed the value to be encoded to JSON.
-     * The value must be compatible with [\yii\helpers\Json::encode()|Json::encode()]] input requirements.
+     * The value must be compatible with [\ESD\Yii\Helpers\Json::encode()|Json::encode()]] input requirements.
      */
     protected $value;
     /**
@@ -44,7 +44,7 @@ class JsonExpression implements ExpressionInterface, \JsonSerializable
      * JsonExpression constructor.
      *
      * @param mixed $value the value to be encoded to JSON.
-     * The value must be compatible with [\yii\helpers\Json::encode()|Json::encode()]] requirements.
+     * The value must be compatible with [\ESD\Yii\Helpers\Json::encode()|Json::encode()]] requirements.
      * @param string|null $type the type of the JSON. See [[JsonExpression::type]]
      *
      * @see type

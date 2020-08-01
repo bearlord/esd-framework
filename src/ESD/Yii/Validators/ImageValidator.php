@@ -8,7 +8,7 @@
 namespace ESD\Yii\Validators;
 
 use ESD\Yii\Yii;
-use yii\web\UploadedFile;
+use ESD\Yii\Web\UploadedFile;
 
 /**
  * ImageValidator verifies if an attribute is receiving a valid image.

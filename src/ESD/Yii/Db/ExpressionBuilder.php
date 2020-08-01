@@ -8,7 +8,7 @@
 namespace ESD\Yii\Db;
 
 /**
- * Class ExpressionBuilder builds objects of [[yii\db\Expression]] class.
+ * Class ExpressionBuilder builds objects of [[ESD\Yii\Db\Expression]] class.
  *
  * @author Dmitry Naumenko <d.naumenko.a@gmail.com>
  * @since 2.0.14

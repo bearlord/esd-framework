@@ -6,7 +6,7 @@
  */
 
 use ESD\Yii\Base\InvalidConfigException;
-use yii\rbac\DbManager;
+use ESD\Yii\Rbac\DbManager;
 
 /**
  * Initializes RBAC tables.
@@ -17,7 +17,7 @@ use yii\rbac\DbManager;
 class m140506_102106_rbac_init extends \ESD\Yii\Db\Migration
 {
     /**
-     * @throws yii\base\InvalidConfigException
+     * @throws ESD\Yii\Base\InvalidConfigException
      * @return DbManager
      */
     protected function getAuthManager()

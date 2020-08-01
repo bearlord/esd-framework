@@ -120,7 +120,7 @@ class PhpManager extends BaseManager
      * This method is internally called by [[checkAccess()]].
      *
      * @param string|int $user the user ID. This should can be either an integer or a string representing
-     * the unique identifier of a user. See [[\yii\web\User::id]].
+     * the unique identifier of a user. See [[\ESD\Yii\Web\User::id]].
      * @param string $itemName the name of the operation that need access check
      * @param array $params name-value pairs that would be passed to rules associated
      * with the tasks and roles assigned to the user. A param with name 'user' is added to this array,
@@ -477,7 +477,7 @@ class PhpManager extends BaseManager
 
     /**
      * Returns all permissions that are directly assigned to user.
-     * @param string|int $userId the user ID (see [[\yii\web\User::id]])
+     * @param string|int $userId the user ID (see [[\ESD\Yii\Web\User::id]])
      * @return Permission[] all direct permissions that the user has. The array is indexed by the permission names.
      * @since 2.0.7
      */
@@ -496,7 +496,7 @@ class PhpManager extends BaseManager
 
     /**
      * Returns all permissions that the user inherits from the roles assigned to him.
-     * @param string|int $userId the user ID (see [[\yii\web\User::id]])
+     * @param string|int $userId the user ID (see [[\ESD\Yii\Web\User::id]])
      * @return Permission[] all inherited permissions that the user has. The array is indexed by the permission names.
      * @since 2.0.7
      */

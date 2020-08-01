@@ -29,25 +29,25 @@ abstract class BaseListView extends Widget
     /**
      * @var array the HTML attributes for the container tag of the list view.
      * The "tag" element specifies the tag name of the container element and defaults to "div".
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**
-     * @var \yii\data\DataProviderInterface the data provider for the view. This property is required.
+     * @var \ESD\Yii\Data\DataProviderInterface the data provider for the view. This property is required.
      */
     public $dataProvider;
     /**
      * @var array the configuration for the pager widget. By default, [[LinkPager]] will be
      * used to render the pager. You can use a different widget class by configuring the "class" element.
      * Note that the widget must support the `pagination` property which will be populated with the
-     * [[\yii\data\BaseDataProvider::pagination|pagination]] value of the [[dataProvider]] and will overwrite this value.
+     * [[\ESD\Yii\Data\BaseDataProvider::pagination|pagination]] value of the [[dataProvider]] and will overwrite this value.
      */
     public $pager = [];
     /**
      * @var array the configuration for the sorter widget. By default, [[LinkSorter]] will be
      * used to render the sorter. You can use a different widget class by configuring the "class" element.
      * Note that the widget must support the `sort` property which will be populated with the
-     * [[\yii\data\BaseDataProvider::sort|sort]] value of the [[dataProvider]] and will overwrite this value.
+     * [[\ESD\Yii\Data\BaseDataProvider::sort|sort]] value of the [[dataProvider]] and will overwrite this value.
      */
     public $sorter = [];
     /**
@@ -67,7 +67,7 @@ abstract class BaseListView extends Widget
     /**
      * @var array the HTML attributes for the summary of the list view.
      * The "tag" element specifies the tag name of the summary element and defaults to "div".
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $summaryOptions = ['class' => 'summary'];
     /**
@@ -87,7 +87,7 @@ abstract class BaseListView extends Widget
     /**
      * @var array the HTML attributes for the emptyText of the list view.
      * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \ESD\Yii\Helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $emptyTextOptions = ['class' => 'empty'];
     /**

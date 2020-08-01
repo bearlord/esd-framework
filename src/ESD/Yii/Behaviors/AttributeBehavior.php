@@ -22,7 +22,7 @@ use ESD\Yii\Db\ActiveRecord;
  * For example,
  *
  * ```php
- * use yii\behaviors\AttributeBehavior;
+ * use ESD\Yii\Behaviors\AttributeBehavior;
  *
  * public function behaviors()
  * {
@@ -42,7 +42,7 @@ use ESD\Yii\Db\ActiveRecord;
  * ```
  *
  * Because attribute values will be set automatically by this behavior, they are usually not user input and should therefore
- * not be validated, i.e. they should not appear in the [[\yii\base\Model::rules()|rules()]] method of the model.
+ * not be validated, i.e. they should not appear in the [[\ESD\Yii\Base\Model::rules()|rules()]] method of the model.
  *
  * @author Luciano Baraglia <luciano.baraglia@gmail.com>
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -66,7 +66,7 @@ class AttributeBehavior extends Behavior
     public $attributes = [];
     /**
      * @var mixed the value that will be assigned to the current attributes. This can be an anonymous function,
-     * callable in array format (e.g. `[$this, 'methodName']`), an [[\yii\db\Expression|Expression]] object representing a DB expression
+     * callable in array format (e.g. `[$this, 'methodName']`), an [[\ESD\Yii\Db\Expression|Expression]] object representing a DB expression
      * (e.g. `new Expression('NOW()')`), scalar, string or an arbitrary value. If the former, the return value of the
      * function will be assigned to the attributes.
      * The signature of the function should be as follows,

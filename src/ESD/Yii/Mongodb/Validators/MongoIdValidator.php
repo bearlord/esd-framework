@@ -19,13 +19,13 @@ use ESD\Yii\Yii;
  * Usage example:
  *
  * ```php
- * class Customer extends yii\mongodb\ActiveRecord
+ * class Customer extends ESD\Yii\Mongodb\ActiveRecord
  * {
  *     ...
  *     public function rules()
  *     {
  *         return [
- *             ['_id', 'yii\mongodb\validators\MongoIdValidator']
+ *             ['_id', 'ESD\Yii\Mongodb\validators\MongoIdValidator']
  *         ];
  *     }
  * }

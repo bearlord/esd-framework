@@ -22,6 +22,6 @@ class ValidationAsset extends AssetBundle
         'yii.validation.js',
     ];
     public $depends = [
-        'yii\web\YiiAsset',
+        'ESD\Yii\Web\YiiAsset',
     ];
 }

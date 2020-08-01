@@ -22,6 +22,6 @@ class ActiveFormAsset extends AssetBundle
         'yii.activeForm.js',
     ];
     public $depends = [
-        'yii\web\YiiAsset',
+        'ESD\Yii\Web\YiiAsset',
     ];
 }

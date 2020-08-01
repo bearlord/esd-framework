@@ -66,7 +66,7 @@ abstract class Generator extends Model
     /**
      * Generates the code based on the current user input and the specified code template files.
      * This is the main method that child classes should implement.
-     * Please refer to [[\yii\gii\generators\controller\Generator::generate()]] as an example
+     * Please refer to [[\ESD\Yii\Gii\generators\controller\Generator::generate()]] as an example
      * on how to implement this method.
      * @return CodeFile[] a list of code files to be created.
      */

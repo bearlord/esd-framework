@@ -1,7 +1,7 @@
 /**
  * Yii GridView widget.
  *
- * This is the JavaScript widget used by the yii\grid\GridView widget.
+ * This is the JavaScript widget used by the ESD\Yii\Grid\GridView widget.
  *
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC

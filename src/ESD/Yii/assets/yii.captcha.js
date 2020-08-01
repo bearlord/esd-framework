@@ -1,7 +1,7 @@
 /**
  * Yii Captcha widget.
  *
- * This is the JavaScript widget used by the yii\captcha\Captcha widget.
+ * This is the JavaScript widget used by the ESD\Yii\Captcha\Captcha widget.
  *
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC

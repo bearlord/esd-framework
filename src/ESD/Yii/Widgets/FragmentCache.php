@@ -16,7 +16,7 @@ use ESD\Yii\Caching\Dependency;
 use ESD\Yii\Di\Instance;
 
 /**
- * FragmentCache is used by [[\yii\base\View]] to provide caching of page fragments.
+ * FragmentCache is used by [[\ESD\Yii\Base\View]] to provide caching of page fragments.
  *
  * @property string|false $cachedContent The cached content. False is returned if valid content is not found
  * in the cache. This property is read-only.
@@ -47,7 +47,7 @@ class FragmentCache extends Widget implements DynamicContentAwareInterface
      *
      * ```php
      * [
-     *     'class' => 'yii\caching\DbDependency',
+     *     'class' => 'ESD\Yii\Caching\DbDependency',
      *     'sql' => 'SELECT MAX(updated_at) FROM post',
      * ]
      * ```
@@ -83,7 +83,7 @@ class FragmentCache extends Widget implements DynamicContentAwareInterface
     {
         parent::init();
 
-        $this->cache = $this->enabled ? Instance::ensure($this->cache, 'yii\caching\CacheInterface') : null;
+        $this->cache = $this->enabled ? Instance::ensure($this->cache, 'ESD\Yii\Caching\CacheInterface') : null;
 
         if ($this->cache instanceof CacheInterface && $this->getCachedContent() === false) {
             $this->getView()->pushDynamicContent($this);

@@ -111,8 +111,8 @@ class Nav extends Widget
     public function init()
     {
         parent::init();
-        if ($this->route === null && Yii::$app->controller !== null) {
-            $this->route = Yii::$app->controller->getRoute();
+        if ($this->route === null) {
+            $this->route = Yii::$app->request->getUri()->getPath();
         }
         if ($this->params === null) {
             $this->params = Yii::$app->request->getQueryParams();

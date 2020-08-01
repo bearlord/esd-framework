@@ -289,7 +289,7 @@ trait SchemaBuilderTrait
      * Creates a JSON column.
      * @return ColumnSchemaBuilder the column instance which can be further customized.
      * @since 2.0.14
-     * @throws \yii\base\Exception
+     * @throws \ESD\Yii\Base\Exception
      */
     public function json()
     {
@@ -300,7 +300,7 @@ trait SchemaBuilderTrait
          * @link https://bugs.php.net/bug.php?id=70384
          */
         if (version_compare(PHP_VERSION, '5.6', '<') && $this->getDb()->getDriverName() === 'mysql') {
-            throw new \yii\base\Exception('JSON column type is not supported in PHP < 5.6');
+            throw new \ESD\Yii\Base\Exception('JSON column type is not supported in PHP < 5.6');
         }
 
         return $this->getDb()->getSchema()->createColumnSchemaBuilder(Schema::TYPE_JSON);

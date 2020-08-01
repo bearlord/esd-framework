@@ -13,7 +13,7 @@ use ESD\Yii\Base\InvalidConfigException;
 use League\Flysystem\NotSupportedException;
 use ESD\Yii\Yii;
 
-use yii\caching\CacheInterface;
+use ESD\Yii\Caching\CacheInterface;
 
 /**
  * Connection represents a connection to a database via [PDO](https://secure.php.net/manual/en/book.pdo.php).
@@ -34,7 +34,7 @@ use yii\caching\CacheInterface;
  * the DB connection:
  *
  * ```php
- * $connection = new \yii\db\Connection([
+ * $connection = new \ESD\Yii\Db\Connection([
  *     'dsn' => $dsn,
  *     'username' => $username,
  *     'password' => $password,
@@ -102,7 +102,7 @@ use yii\caching\CacheInterface;
  * ```php
  * 'components' => [
  *     'db' => [
- *         'class' => '\yii\db\Connection',
+ *         'class' => '\ESD\Yii\Db\Connection',
  *         'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
  *         'username' => 'root',
  *         'password' => '',
@@ -137,19 +137,19 @@ use yii\caching\CacheInterface;
 class Connection extends Component
 {
     /**
-     * @event yii\base\Event an event that is triggered after a DB connection is established
+     * @event ESD\Yii\Base\Event an event that is triggered after a DB connection is established
      */
     const EVENT_AFTER_OPEN = 'afterOpen';
     /**
-     * @event yii\base\Event an event that is triggered right before a top-level transaction is started
+     * @event ESD\Yii\Base\Event an event that is triggered right before a top-level transaction is started
      */
     const EVENT_BEGIN_TRANSACTION = 'beginTransaction';
     /**
-     * @event yii\base\Event an event that is triggered right after a top-level transaction is committed
+     * @event ESD\Yii\Base\Event an event that is triggered right after a top-level transaction is committed
      */
     const EVENT_COMMIT_TRANSACTION = 'commitTransaction';
     /**
-     * @event yii\base\Event an event that is triggered right after a top-level transaction is rolled back
+     * @event ESD\Yii\Base\Event an event that is triggered right after a top-level transaction is rolled back
      */
     const EVENT_ROLLBACK_TRANSACTION = 'rollbackTransaction';
 
@@ -287,7 +287,7 @@ class Connection extends Component
         'cubrid' => 'ESD\Yii\Db\Cubrid\Schema', // CUBRID
     ];
     /**
-     * @var string Custom PDO wrapper class. If not set, it will use [[PDO]] or [[\yii\db\mssql\PDO]] when MSSQL is used.
+     * @var string Custom PDO wrapper class. If not set, it will use [[PDO]] or [[\ESD\Yii\Db\mssql\PDO]] when MSSQL is used.
      * @see pdo
      */
     public $pdoClass;
@@ -484,7 +484,7 @@ class Connection extends Component
      * @param int $duration the number of seconds that query results can remain valid in the cache. If this is
      * not set, the value of [[queryCacheDuration]] will be used instead.
      * Use 0 to indicate that the cached data will never expire.
-     * @param \yii\caching\Dependency $dependency the cache dependency associated with the cached query results.
+     * @param \ESD\Yii\Caching\Dependency $dependency the cache dependency associated with the cached query results.
      * @return mixed the return result of the callable
      * @throws \Exception|\Throwable if there is any exception during query
      * @see enableQueryCache
@@ -552,7 +552,7 @@ class Connection extends Component
      * Returns the current query cache information.
      * This method is used internally by [[Command]].
      * @param int $duration the preferred caching duration. If null, it will be ignored.
-     * @param \yii\caching\Dependency $dependency the preferred caching dependency. If null, it will be ignored.
+     * @param \ESD\Yii\Caching\Dependency $dependency the preferred caching dependency. If null, it will be ignored.
      * @return array the current query cache information, or null if query cache is not enabled.
      * @internal
      */

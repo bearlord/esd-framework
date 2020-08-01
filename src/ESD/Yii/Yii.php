@@ -10,7 +10,7 @@ namespace ESD\Yii;
 /**
  * Yii is a helper class serving common framework functionalities.
  *
- * It extends from [[\yii\BaseYii]] which provides the actual implementation.
+ * It extends from [[\ESD\Yii\BaseYii]] which provides the actual implementation.
  * By writing your own Yii class, you can customize some functionalities of [[\yii\BaseYii]].
  *
  * @author Qiang Xue <qiang.xue@gmail.com>

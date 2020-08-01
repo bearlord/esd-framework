@@ -108,7 +108,7 @@ abstract class BaseMigrateController extends Controller
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
      * It checks the existence of the [[migrationPath]].
-     * @param \yii\base\Action $action the action to be executed.
+     * @param \ESD\Yii\Base\Action $action the action to be executed.
      * @throws InvalidConfigException if directory specified in migrationPath doesn't exist and action isn't "create".
      * @return bool whether the action should continue to be executed.
      */
@@ -515,7 +515,7 @@ abstract class BaseMigrateController extends Controller
      *
      * @param int|string $limit the maximum number of migrations to be displayed.
      * If it is "all", the whole migration history will be displayed.
-     * @throws \yii\console\Exception if invalid limit value passed
+     * @throws \ESD\Yii\Console\Exception if invalid limit value passed
      */
     public function actionHistory($limit = 10)
     {
@@ -559,7 +559,7 @@ abstract class BaseMigrateController extends Controller
      *
      * @param int|string $limit the maximum number of new migrations to be displayed.
      * If it is `all`, all available new migrations will be displayed.
-     * @throws \yii\console\Exception if invalid limit value passed
+     * @throws \ESD\Yii\Console\Exception if invalid limit value passed
      */
     public function actionNew($limit = 10)
     {
@@ -767,7 +767,7 @@ abstract class BaseMigrateController extends Controller
     /**
      * Creates a new migration instance.
      * @param string $class the migration class name
-     * @return \yii\db\MigrationInterface the migration instance
+     * @return \ESD\Yii\Db\MigrationInterface the migration instance
      */
     protected function createMigration($class)
     {

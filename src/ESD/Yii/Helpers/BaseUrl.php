@@ -21,7 +21,7 @@ use ESD\Yii\Base\InvalidArgumentException;
 class BaseUrl
 {
     /**
-     * @var \yii\web\UrlManager URL manager to use for creating URLs
+     * @var \ESD\Yii\Web\UrlManager URL manager to use for creating URLs
      * @since 2.0.8
      */
     public static $urlManager;
@@ -30,7 +30,7 @@ class BaseUrl
     /**
      * Creates a URL for the given route.
      *
-     * This method will use [[\yii\web\UrlManager]] to create a URL.
+     * This method will use [[\ESD\Yii\Web\UrlManager]] to create a URL.
      *
      * You may specify the route as a string, e.g., `site/index`. You may also use an array
      * if you want to specify additional query parameters for the URL being created. The
@@ -53,11 +53,11 @@ class BaseUrl
      * while a relative route has none (e.g. `site/index` or `index`). A relative route will be converted
      * into an absolute one by the following rules:
      *
-     * - If the route is an empty string, the current [[\yii\web\Controller::route|route]] will be used;
+     * - If the route is an empty string, the current [[\ESD\Yii\Web\Controller::route|route]] will be used;
      * - If the route contains no slashes at all (e.g. `index`), it is considered to be an action ID
-     *   of the current controller and will be prepended with [[\yii\web\Controller::uniqueId]];
+     *   of the current controller and will be prepended with [[\ESD\Yii\Web\Controller::uniqueId]];
      * - If the route has no leading slash (e.g. `site/index`), it is considered to be a route relative
-     *   to the current module and will be prepended with the module's [[\yii\base\Module::uniqueId|uniqueId]].
+     *   to the current module and will be prepended with the module's [[\ESD\Yii\Base\Module::uniqueId|uniqueId]].
      *
      * Starting from version 2.0.2, a route can also be specified as an alias. In this case, the alias
      * will be converted into the actual route first before conducting the above transformation steps.
@@ -86,7 +86,7 @@ class BaseUrl
      * @param bool|string $scheme the URI scheme to use in the generated URL:
      *
      * - `false` (default): generating a relative URL.
-     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\yii\web\UrlManager::$hostInfo]].
+     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\ESD\Yii\Web\UrlManager::$hostInfo]].
      * - string: generating an absolute URL with the specified scheme (either `http`, `https` or empty string
      *   for protocol-relative URL).
      *
@@ -111,9 +111,9 @@ class BaseUrl
      *
      * A relative route is a route without a leading slash, such as "view", "post/view".
      *
-     * - If the route is an empty string, the current [[\yii\web\Controller::route|route]] will be used;
+     * - If the route is an empty string, the current [[\ESD\Yii\Web\Controller::route|route]] will be used;
      * - If the route contains no slashes at all, it is considered to be an action ID
-     *   of the current controller and will be prepended with [[\yii\web\Controller::uniqueId]];
+     *   of the current controller and will be prepended with [[\ESD\Yii\Web\Controller::uniqueId]];
      * - If the route has no leading slash, it is considered to be a route relative
      *   to the current module and will be prepended with the module's uniqueId.
      *
@@ -157,7 +157,7 @@ class BaseUrl
      * - a normal string: it will be returned as is.
      *
      * When `$scheme` is specified (either a string or `true`), an absolute URL with host info (obtained from
-     * [[\yii\web\UrlManager::$hostInfo]]) will be returned. If `$url` is already an absolute URL, its scheme
+     * [[\ESD\Yii\Web\UrlManager::$hostInfo]]) will be returned. If `$url` is already an absolute URL, its scheme
      * will be replaced with the specified one.
      *
      * Below are some examples of using this method:
@@ -196,7 +196,7 @@ class BaseUrl
      * @param bool|string $scheme the URI scheme to use in the generated URL:
      *
      * - `false` (default): generating a relative URL.
-     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\yii\web\UrlManager::$hostInfo]].
+     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\ESD\Yii\Web\UrlManager::$hostInfo]].
      * - string: generating an absolute URL with the specified scheme (either `http`, `https` or empty string
      *   for protocol-relative URL).
      *
@@ -264,7 +264,7 @@ class BaseUrl
      * @param bool|string $scheme the URI scheme to use in the returned base URL:
      *
      * - `false` (default): returning the base URL without host info.
-     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\yii\web\UrlManager::$hostInfo]].
+     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\ESD\Yii\Web\UrlManager::$hostInfo]].
      * - string: returning an absolute base URL with the specified scheme (either `http`, `https` or empty string
      *   for protocol-relative URL).
      * @return string
@@ -286,9 +286,9 @@ class BaseUrl
      * @param string|array $url the URL to remember. Please refer to [[to()]] for acceptable formats.
      * If this parameter is not specified, the currently requested URL will be used.
      * @param string $name the name associated with the URL to be remembered. This can be used
-     * later by [[previous()]]. If not set, [[\yii\web\User::setReturnUrl()]] will be used with passed URL.
+     * later by [[previous()]]. If not set, [[\ESD\Yii\Web\User::setReturnUrl()]] will be used with passed URL.
      * @see previous()
-     * @see \yii\web\User::setReturnUrl()
+     * @see \ESD\Yii\Web\User::setReturnUrl()
      */
     public static function remember($url = '', $name = null)
     {
@@ -305,11 +305,11 @@ class BaseUrl
      * Returns the URL previously [[remember()|remembered]].
      *
      * @param string $name the named associated with the URL that was remembered previously.
-     * If not set, [[\yii\web\User::getReturnUrl()]] will be used to obtain remembered URL.
+     * If not set, [[\ESD\Yii\Web\User::getReturnUrl()]] will be used to obtain remembered URL.
      * @return string|null the URL previously remembered. Null is returned if no URL was remembered with the given name
      * and `$name` is not specified.
      * @see remember()
-     * @see \yii\web\User::getReturnUrl()
+     * @see \ESD\Yii\Web\User::getReturnUrl()
      */
     public static function previous($name = null)
     {
@@ -323,8 +323,8 @@ class BaseUrl
     /**
      * Returns the canonical URL of the currently requested page.
      *
-     * The canonical URL is constructed using the current controller's [[\yii\web\Controller::route]] and
-     * [[\yii\web\Controller::actionParams]]. You may use the following code in the layout view to add a link tag
+     * The canonical URL is constructed using the current controller's [[\ESD\Yii\Web\Controller::route]] and
+     * [[\ESD\Yii\Web\Controller::actionParams]]. You may use the following code in the layout view to add a link tag
      * about canonical URL:
      *
      * ```php
@@ -347,7 +347,7 @@ class BaseUrl
      * @param bool|string $scheme the URI scheme to use for the returned URL:
      *
      * - `false` (default): returning a relative URL.
-     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\yii\web\UrlManager::$hostInfo]].
+     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\ESD\Yii\Web\UrlManager::$hostInfo]].
      * - string: returning an absolute URL with the specified scheme (either `http`, `https` or empty string
      *   for protocol-relative URL).
      *
@@ -413,7 +413,7 @@ class BaseUrl
      * @param bool|string $scheme the URI scheme to use in the generated URL:
      *
      * - `false` (default): generating a relative URL.
-     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\yii\web\UrlManager::$hostInfo]].
+     * - `true`: returning an absolute base URL whose scheme is the same as that in [[\ESD\Yii\Web\UrlManager::$hostInfo]].
      * - string: generating an absolute URL with the specified scheme (either `http`, `https` or empty string
      *   for protocol-relative URL).
      *

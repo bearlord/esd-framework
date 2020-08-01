@@ -6,8 +6,8 @@
  */
 
 use ESD\Yii\Base\InvalidConfigException;
-use yii\db\Migration;
-use yii\rbac\DbManager;
+use ESD\Yii\Db\Migration;
+use ESD\Yii\Rbac\DbManager;
 
 /**
  * Adds index on `user_id` column in `auth_assignment` table for performance reasons.
@@ -23,7 +23,7 @@ class m170907_052038_rbac_add_index_on_auth_assignment_user_id extends Migration
     public $index = 'auth_assignment_user_id_idx';
 
     /**
-     * @throws yii\base\InvalidConfigException
+     * @throws ESD\Yii\Base\InvalidConfigException
      * @return DbManager
      */
     protected function getAuthManager()

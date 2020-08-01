@@ -42,7 +42,7 @@ class EachValidator extends Validator
 {
     /**
      * @var array|Validator definition of the validation rule, which should be used on array values.
-     * It should be specified in the same format as at [[\yii\base\Model::rules()]], except it should not
+     * It should be specified in the same format as at [[\ESD\Yii\Base\Model::rules()]], except it should not
      * contain attribute list as the first element.
      * For example:
      *
@@ -51,7 +51,7 @@ class EachValidator extends Validator
      * ['match', 'pattern' => '/[a-z]/is']
      * ```
      *
-     * Please refer to [[\yii\base\Model::rules()]] for more details.
+     * Please refer to [[\ESD\Yii\Base\Model::rules()]] for more details.
      */
     public $rule;
     /**
@@ -104,7 +104,7 @@ class EachValidator extends Validator
     /**
      * Creates validator object based on the validation rule specified in [[rule]].
      * @param Model|null $model model in which context validator should be created.
-     * @throws \yii\base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @return Validator validator instance
      */
     private function createEmbeddedValidator($model)

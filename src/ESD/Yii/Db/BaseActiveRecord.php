@@ -21,7 +21,7 @@ use ESD\Yii\Helpers\ArrayHelper;
 /**
  * ActiveRecord is the base class for classes representing relational data in terms of objects.
  *
- * See [[\yii\db\ActiveRecord]] for a concrete implementation.
+ * See [[\ESD\Yii\Db\ActiveRecord]] for a concrete implementation.
  *
  * @property array $dirtyAttributes The changed attribute values (name-value pairs). This property is
  * read-only.
@@ -223,7 +223,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * 1. Create a column to store the version number of each row. The column type should be `BIGINT DEFAULT 0`.
      *    Override this method to return the name of this column.
      * 2. Ensure the version value is submitted and loaded to your model before any update or delete.
-     *    Or add [[\yii\behaviors\OptimisticLockBehavior|OptimisticLockBehavior]] to your model
+     *    Or add [[\ESD\Yii\Behaviors\OptimisticLockBehavior|OptimisticLockBehavior]] to your model
      *    class in order to automate the process.
      * 3. In the Web form that collects the user input, add a hidden field that stores
      *    the lock version of the recording being updated.
@@ -991,7 +991,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * already the new, updated values.
      *
      * Note that no automatic type conversion performed by default. You may use
-     * [[\yii\behaviors\AttributeTypecastBehavior]] to facilitate attribute typecasting.
+     * [[\ESD\Yii\Behaviors\AttributeTypecastBehavior]] to facilitate attribute typecasting.
      * See http://www.yiiframework.com/doc-2.0/guide-db-active-record.html#attributes-typecasting.
      */
     public function afterSave($insert, $changedAttributes)

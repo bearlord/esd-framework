@@ -27,7 +27,7 @@ namespace ESD\Yii\Helpers;
  *     'ids' => [
  *         2,
  *     ],
- *     'validDomains' => new \yii\helpers\UnsetArrayValue(),
+ *     'validDomains' => new \ESD\Yii\Helpers\UnsetArrayValue(),
  * ];
  *
  * $result = \ESD\Yii\Helpers\ArrayHelper::merge($array1, $array2);

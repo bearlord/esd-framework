@@ -193,7 +193,7 @@ class Security extends Component
 
         $encrypted = openssl_encrypt($data, $this->cipher, $key, OPENSSL_RAW_DATA, $iv);
         if ($encrypted === false) {
-            throw new \yii\base\Exception('OpenSSL failure on encryption: ' . openssl_error_string());
+            throw new \ESD\Yii\Base\Exception('OpenSSL failure on encryption: ' . openssl_error_string());
         }
 
         $authKey = $this->hkdf($this->kdfHash, $key, null, $this->authKeyInfo, $keySize);
@@ -250,7 +250,7 @@ class Security extends Component
 
         $decrypted = openssl_decrypt($encrypted, $this->cipher, $key, OPENSSL_RAW_DATA, $iv);
         if ($decrypted === false) {
-            throw new \yii\base\Exception('OpenSSL failure on decryption: ' . openssl_error_string());
+            throw new \ESD\Yii\Base\Exception('OpenSSL failure on decryption: ' . openssl_error_string());
         }
 
         return $decrypted;

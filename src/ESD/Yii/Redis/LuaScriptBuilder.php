@@ -246,8 +246,8 @@ EOF;
      * on how to specify a condition.
      * @param array $columns the list of columns and aliases to be used
      * @return string the generated SQL expression
-     * @throws \yii\db\Exception if the condition is in bad format
-     * @throws \yii\base\NotSupportedException if the condition is not an array
+     * @throws \ESD\Yii\Db\Exception if the condition is in bad format
+     * @throws \ESD\Yii\Base\NotSupportedException if the condition is not an array
      */
     public function buildCondition($condition, &$columns)
     {

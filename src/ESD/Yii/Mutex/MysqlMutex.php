@@ -18,11 +18,11 @@ use ESD\Yii\Base\InvalidConfigException;
  * [
  *     'components' => [
  *         'db' => [
- *             'class' => 'yii\db\Connection',
+ *             'class' => 'ESD\Yii\Db\Connection',
  *             'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
  *         ]
  *         'mutex' => [
- *             'class' => 'yii\mutex\MysqlMutex',
+ *             'class' => 'ESD\Yii\Mutex\MysqlMutex',
  *         ],
  *     ],
  * ]
@@ -57,7 +57,7 @@ class MysqlMutex extends DbMutex
     protected function acquireLock($name, $timeout = 0)
     {
         return $this->db->useMaster(function ($db) use ($name, $timeout) {
-            /** @var \yii\db\Connection $db */
+            /** @var \ESD\Yii\Db\Connection $db */
             return (bool) $db->createCommand(
                 'SELECT GET_LOCK(:name, :timeout)',
                 [':name' => $this->hashLockName($name), ':timeout' => $timeout]
@@ -74,7 +74,7 @@ class MysqlMutex extends DbMutex
     protected function releaseLock($name)
     {
         return $this->db->useMaster(function ($db) use ($name) {
-            /** @var \yii\db\Connection $db */
+            /** @var \ESD\Yii\Db\Connection $db */
             return (bool) $db->createCommand(
                 'SELECT RELEASE_LOCK(:name)',
                 [':name' => $this->hashLockName($name)]

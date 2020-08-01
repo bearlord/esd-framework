@@ -578,7 +578,7 @@ abstract class Cache extends Component implements CacheInterface
      * a complex data structure consisting of factors representing the key.
      * @param callable|\Closure $callable the callable or closure that will be used to generate a value to be cached.
      * If you use $callable that can return `false`, then keep in mind that [[getOrSet()]] may work inefficiently
-     * because the [[yii\caching\Cache::get()]] method uses `false` return value to indicate the data item is not found
+     * because the [[ESD\Yii\Caching\Cache::get()]] method uses `false` return value to indicate the data item is not found
      * in the cache. Thus, caching of `false` value will lead to unnecessary internal calls.
      * @param int $duration default duration in seconds before the cache will expire. If not set,
      * [[defaultDuration]] value will be used.

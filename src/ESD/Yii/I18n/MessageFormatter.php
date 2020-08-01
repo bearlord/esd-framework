@@ -142,7 +142,7 @@ class MessageFormatter extends Component
      * @param string $message The message to parse, conforming to the pattern.
      * @param string $language The locale to use for formatting locale-dependent parts
      * @return array|bool An array containing items extracted, or `FALSE` on error.
-     * @throws \yii\base\NotSupportedException when PHP intl extension is not installed.
+     * @throws \ESD\Yii\Base\NotSupportedException when PHP intl extension is not installed.
      */
     public function parse($pattern, $message, $language)
     {
@@ -336,7 +336,7 @@ class MessageFormatter extends Component
      * @param array $args arguments to replace
      * @param string $locale the locale
      * @return bool|string parsed token or false on failure
-     * @throws \yii\base\NotSupportedException when unsupported formatting is used.
+     * @throws \ESD\Yii\Base\NotSupportedException when unsupported formatting is used.
      */
     private function parseToken($token, $args, $locale)
     {

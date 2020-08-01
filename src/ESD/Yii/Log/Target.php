@@ -44,16 +44,16 @@ abstract class Target extends Component
     /**
      * @var array list of message categories that this target is interested in. Defaults to empty, meaning all categories.
      * You can use an asterisk at the end of a category so that the category may be used to
-     * match those categories sharing the same common prefix. For example, 'yii\db\*' will match
-     * categories starting with 'yii\db\', such as 'yii\db\Connection'.
+     * match those categories sharing the same common prefix. For example, 'ESD\Yii\Db\*' will match
+     * categories starting with 'ESD\Yii\Db\', such as 'ESD\Yii\Db\Connection'.
      */
     public $categories = [];
     /**
      * @var array list of message categories that this target is NOT interested in. Defaults to empty, meaning no uninteresting messages.
      * If this property is not empty, then any category listed here will be excluded from [[categories]].
      * You can use an asterisk at the end of a category so that the category can be used to
-     * match those categories sharing the same common prefix. For example, 'yii\db\*' will match
-     * categories starting with 'yii\db\', such as 'yii\db\Connection'.
+     * match those categories sharing the same common prefix. For example, 'ESD\Yii\Db\*' will match
+     * categories starting with 'ESD\Yii\Db\', such as 'ESD\Yii\Db\Connection'.
      * @see categories
      */
     public $except = [];
@@ -73,7 +73,7 @@ abstract class Target extends Component
      * Note that if you need $_SESSION to logged regardless if session was used you have to open it right at
      * the start of your request.
      *
-     * @see \yii\helpers\ArrayHelper::filter()
+     * @see \ESD\Yii\Helpers\ArrayHelper::filter()
      */
     public $logVars = [
         '_GET',
@@ -348,7 +348,7 @@ abstract class Target extends Component
 
         $ip = $request instanceof Request ? $request->getServer(Request::SERVER_REMOTE_ADDR) : '-';
 
-        /* @var $user \yii\web\User */
+        /* @var $user \ESD\Yii\Web\User */
         $user = Yii::$app->has('user', true) ? Yii::$app->get('user') : null;
         if ($user && ($identity = $user->getIdentity(false))) {
             $userID = $identity->getId();
@@ -356,7 +356,7 @@ abstract class Target extends Component
             $userID = '-';
         }
 
-        /* @var $session \yii\web\Session */
+        /* @var $session \ESD\Yii\Web\Session */
         $session = Yii::$app->has('session', true) ? Yii::$app->get('session') : null;
         $sessionID = $session && $session->getIsActive() ? $session->getId() : '-';
 

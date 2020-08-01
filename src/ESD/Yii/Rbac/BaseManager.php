@@ -260,7 +260,7 @@ abstract class BaseManager extends Component implements ManagerInterface
      * return the value of [[Rule::execute()]].
      *
      * @param string|int $user the user ID. This should be either an integer or a string representing
-     * the unique identifier of a user. See [[\yii\web\User::id]].
+     * the unique identifier of a user. See [[\ESD\Yii\Web\User::id]].
      * @param Item $item the auth item that needs to execute its rule
      * @param array $params parameters passed to [[CheckAccessInterface::checkAccess()]] and will be passed to the rule
      * @return bool the return value of [[Rule::execute()]]. If the auth item does not specify a rule, true will be returned.

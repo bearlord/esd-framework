@@ -417,8 +417,8 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @param string $type the type of the script to generate
      * @param string $columnName
      * @return array|bool|null|string
-     * @throws \yii\base\InvalidParamException
-     * @throws \yii\base\NotSupportedException
+     * @throws \ESD\Yii\Base\InvalidParamException
+     * @throws \ESD\Yii\Base\NotSupportedException
      */
     private function findByPk($db, $type, $columnName = null)
     {

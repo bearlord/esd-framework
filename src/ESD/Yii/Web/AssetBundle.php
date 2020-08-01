@@ -68,8 +68,8 @@ class AssetBundle extends BaseObject
      *
      * ```php
      * public $depends = [
-     *    'yii\web\YiiAsset',
-     *    'yii\bootstrap\BootstrapAsset',
+     *    'ESD\Yii\Web\YiiAsset',
+     *    'ESD\Yii\Bootstrap\\BootstrapAsset',
      * ];
      * ```
      */
@@ -144,7 +144,7 @@ class AssetBundle extends BaseObject
 
     /**
      * Registers the CSS and JS files with the given view.
-     * @param \yii\web\View $view the view that the asset files are to be registered with.
+     * @param \ESD\Yii\Web\View $view the view that the asset files are to be registered with.
      */
     public function registerAssetFiles($view)
     {

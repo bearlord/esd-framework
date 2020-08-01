@@ -66,7 +66,7 @@ class ExplainAction extends Action
      */
     protected function explainQuery($queryString)
     {
-        /* @var $connection \yii\mongodb\Connection */
+        /* @var $connection \ESD\Yii\Mongodb\Connection */
         $connection = $this->panel->getDb();
 
         $queryInfo = Json::decode($queryString);

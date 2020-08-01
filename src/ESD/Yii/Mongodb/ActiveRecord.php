@@ -157,7 +157,7 @@ abstract class ActiveRecord extends BaseActiveRecord
      * }
      * ```
      *
-     * @throws \yii\base\InvalidConfigException if not implemented
+     * @throws \ESD\Yii\Base\InvalidConfigException if not implemented
      * @return array list of attribute names.
      */
     public function attributes()

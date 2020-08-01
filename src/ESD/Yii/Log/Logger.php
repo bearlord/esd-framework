@@ -184,7 +184,7 @@ class Logger extends Component
      * Returns the total elapsed time since the start of the current request.
      * This method calculates the difference between now and the timestamp
      * defined by constant `YII_BEGIN_TIME` which is evaluated at the beginning
-     * of [[\yii\BaseYii]] class file.
+     * of [[\ESD\Yii\BaseYii]] class file.
      * @return float the total elapsed time in seconds for current request.
      */
     public function getElapsedTime()
@@ -201,8 +201,8 @@ class Logger extends Component
      *
      * @param array $categories list of categories that you are interested in.
      * You can use an asterisk at the end of a category to do a prefix match.
-     * For example, 'yii\db\*' will match categories starting with 'yii\db\',
-     * such as 'yii\db\Connection'.
+     * For example, 'ESD\Yii\Db\*' will match categories starting with 'ESD\Yii\Db\',
+     * such as 'ESD\Yii\Db\Connection'.
      * @param array $excludeCategories list of categories that you want to exclude
      * @return array the profiling results. Each element is an array consisting of these elements:
      * `info`, `category`, `timestamp`, `trace`, `level`, `duration`, `memory`, `memoryDiff`.

@@ -351,7 +351,7 @@ SQL;
      * Sequence name of table.
      *
      * @param string $tableName
-     * @internal param \yii\db\TableSchema $table->name the table schema
+     * @internal param \ESD\Yii\Db\TableSchema $table->name the table schema
      * @return string|null whether the sequence exists
      */
     protected function getTableSequenceName($tableName)

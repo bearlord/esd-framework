@@ -95,9 +95,9 @@ class BaseFileHelper
      *
      * @param string $file the original file
      * @param string $language the target language that the file should be localized to.
-     * If not set, the value of [[\yii\base\Application::language]] will be used.
+     * If not set, the value of [[\ESD\Yii\Base\Application::language]] will be used.
      * @param string $sourceLanguage the language that the original file is in.
-     * If not set, the value of [[\yii\base\Application::sourceLanguage]] will be used.
+     * If not set, the value of [[\ESD\Yii\Base\Application::sourceLanguage]] will be used.
      * @return string the matching localized file, or the original file if the localized version is not found.
      * If the target and the source language codes are the same, the original file will be returned.
      */
@@ -626,7 +626,7 @@ class BaseFileHelper
      * @param int $mode the permission to be set for the created directory.
      * @param bool $recursive whether to create parent directories if they do not exist.
      * @return bool whether the directory is created successfully
-     * @throws \yii\base\Exception if the directory could not be created (i.e. php error due to parallel changes)
+     * @throws \ESD\Yii\Base\Exception if the directory could not be created (i.e. php error due to parallel changes)
      */
     public static function createDirectory($path, $mode = 0775, $recursive = true)
     {

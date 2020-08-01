@@ -8,7 +8,7 @@
 namespace ESD\Yii\Mongodb\Rbac;
 
 /**
- * Role is a special version of [[\yii\rbac\Role]] dedicated to MongoDB RBAC implementation.
+ * Role is a special version of [[\ESD\Yii\Rbac\Role]] dedicated to MongoDB RBAC implementation.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0.5

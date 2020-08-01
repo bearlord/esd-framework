@@ -20,7 +20,7 @@ use ESD\Yii\Yii;
  * property is read-only.
  * @property string $uniqueId The controller ID that is prefixed with the module ID (if any). This property is
  * read-only.
- * @property View|\yii\web\View $view The view object that can be used to render views or view files.
+ * @property View|\ESD\Yii\Web\View $view The view object that can be used to render views or view files.
  * @property string $viewPath The directory containing the view files for this controller.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -422,7 +422,7 @@ class Controller extends Component implements ViewContextInterface
      * The [[render()]], [[renderPartial()]] and [[renderFile()]] methods will use
      * this view object to implement the actual view rendering.
      * If not set, it will default to the "view" application component.
-     * @return View|\yii\web\View the view object that can be used to render views or view files.
+     * @return View|\ESD\Yii\Web\View the view object that can be used to render views or view files.
      */
     public function getView()
     {
@@ -435,7 +435,7 @@ class Controller extends Component implements ViewContextInterface
 
     /**
      * Sets the view object to be used by this controller.
-     * @param View|\yii\web\View $view the view object that can be used to render views or view files.
+     * @param View|\ESD\Yii\Web\View $view the view object that can be used to render views or view files.
      */
     public function setView($view)
     {

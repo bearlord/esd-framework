@@ -14,7 +14,7 @@ use ESD\Yii\Di\Instance;
 use ESD\Yii\Web\MultiFieldSession;
 
 /**
- * Session extends [[\yii\web\Session]] by using MongoDB as session data storage.
+ * Session extends [[\ESD\Yii\Web\Session]] by using MongoDB as session data storage.
  *
  * By default, Session stores session data in a collection named 'session' inside the default database.
  * This collection is better to be pre-created with fields 'id' and 'expire' indexed.
@@ -25,7 +25,7 @@ use ESD\Yii\Web\MultiFieldSession;
  *
  * ```php
  * 'session' => [
- *     'class' => 'yii\mongodb\Session',
+ *     'class' => 'ESD\Yii\Mongodb\Session',
  *     // 'db' => 'mymongodb',
  *     // 'sessionCollection' => 'my_session',
  * ]

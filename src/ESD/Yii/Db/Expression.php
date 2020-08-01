@@ -16,7 +16,7 @@ namespace ESD\Yii\Db;
  *
  * ```php
  * $expression = new Expression('NOW()');
- * $now = (new \yii\db\Query)->select($expression)->scalar();  // SELECT NOW();
+ * $now = (new \ESD\Yii\Db\Query)->select($expression)->scalar();  // SELECT NOW();
  * echo $now; // prints the current date
  * ```
  *

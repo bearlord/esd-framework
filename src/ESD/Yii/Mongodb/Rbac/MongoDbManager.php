@@ -47,7 +47,7 @@ class MongoDbManager extends BaseManager
      *
      * - an application component ID (e.g. `cache`)
      * - a configuration array
-     * - a [[\yii\caching\Cache]] object
+     * - a [[\ESD\Yii\Caching\Cache]] object
      *
      * When this is not set, it means caching is not enabled.
      *
@@ -117,7 +117,7 @@ class MongoDbManager extends BaseManager
      * Performs access check for the specified user based on the data loaded from cache.
      * This method is internally called by [[checkAccess()]] when [[cache]] is enabled.
      * @param string|int $user the user ID. This should can be either an integer or a string representing
-     * the unique identifier of a user. See [[\yii\web\User::id]].
+     * the unique identifier of a user. See [[\ESD\Yii\Web\User::id]].
      * @param string $itemName the name of the operation that need access check
      * @param array $params name-value pairs that would be passed to rules associated
      * with the tasks and roles assigned to the user. A param with name 'user' is added to this array,
@@ -158,7 +158,7 @@ class MongoDbManager extends BaseManager
      * Performs access check for the specified user.
      * This method is internally called by [[checkAccess()]].
      * @param string|int $user the user ID. This should can be either an integer or a string representing
-     * the unique identifier of a user. See [[\yii\web\User::id]].
+     * the unique identifier of a user. See [[\ESD\Yii\Web\User::id]].
      * @param string $itemName the name of the operation that need access check
      * @param array $params name-value pairs that would be passed to rules associated
      * with the tasks and roles assigned to the user. A param with name 'user' is added to this array,
@@ -1067,7 +1067,7 @@ class MongoDbManager extends BaseManager
      */
     private function instantiateDefaultRoles()
     {
-        // this method can be removed in favor of `yii\rbac\BaseManager::getDefaultRoles()` in case
+        // this method can be removed in favor of `ESD\Yii\Rbac\BaseManager::getDefaultRoles()` in case
         // extension dependency on `yii2` is raised up to 2.0.12
         $result = [];
         foreach ($this->defaultRoles as $roleName) {

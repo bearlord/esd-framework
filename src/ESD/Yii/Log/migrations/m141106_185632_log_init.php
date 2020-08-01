@@ -7,7 +7,7 @@
 
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Db\Migration;
-use yii\log\DbTarget;
+use ESD\Yii\Log\DbTarget;
 
 /**
  * Initializes log table.

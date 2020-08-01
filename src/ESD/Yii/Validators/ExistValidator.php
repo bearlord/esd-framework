@@ -70,9 +70,9 @@ class ExistValidator extends Validator
     public $targetRelation;
     /**
      * @var string|array|\Closure additional filter to be applied to the DB query used to check the existence of the attribute value.
-     * This can be a string or an array representing the additional query condition (refer to [[\yii\db\Query::where()]]
+     * This can be a string or an array representing the additional query condition (refer to [[\ESD\Yii\Db\Query::where()]]
      * on the format of query condition), or an anonymous function with the signature `function ($query)`, where `$query`
-     * is the [[\yii\db\Query|Query]] object that you can modify in the function.
+     * is the [[\ESD\Yii\Db\Query|Query]] object that you can modify in the function.
      */
     public $filter;
     /**
@@ -116,7 +116,7 @@ class ExistValidator extends Validator
 
     /**
      * Validates existence of the current attribute based on relation name
-     * @param \yii\db\ActiveRecord $model the data model to be validated
+     * @param \ESD\Yii\Db\ActiveRecord $model the data model to be validated
      * @param string $attribute the name of the attribute to be validated.
      */
     private function checkTargetRelationExistence($model, $attribute)
@@ -147,7 +147,7 @@ class ExistValidator extends Validator
 
     /**
      * Validates existence of the current attribute based on targetAttribute
-     * @param \yii\base\Model $model the data model to be validated
+     * @param \ESD\Yii\Base\Model $model the data model to be validated
      * @param string $attribute the name of the attribute to be validated.
      */
     private function checkTargetAttributeExistence($model, $attribute)
@@ -179,7 +179,7 @@ class ExistValidator extends Validator
 
     /**
      * Processes attributes' relations described in $targetAttribute parameter into conditions, compatible with
-     * [[\yii\db\Query::where()|Query::where()]] key-value format.
+     * [[\ESD\Yii\Db\Query::where()|Query::where()]] key-value format.
      *
      * @param $targetAttribute array|string $attribute the name of the ActiveRecord attribute that should be used to
      * validate the existence of the current attribute value. If not set, it will use the name
@@ -187,9 +187,9 @@ class ExistValidator extends Validator
      * of multiple columns at the same time. The array key is the name of the attribute with the value to validate,
      * the array value is the name of the database field to search.
      * If the key and the value are the same, you can just specify the value.
-     * @param \yii\base\Model $model the data model to be validated
+     * @param \ESD\Yii\Base\Model $model the data model to be validated
      * @param string $attribute the name of the attribute to be validated in the $model
-     * @return array conditions, compatible with [[\yii\db\Query::where()|Query::where()]] key-value format.
+     * @return array conditions, compatible with [[\ESD\Yii\Db\Query::where()|Query::where()]] key-value format.
      * @throws InvalidConfigException
      */
     private function prepareConditions($targetAttribute, $model, $attribute)
@@ -207,7 +207,7 @@ class ExistValidator extends Validator
         }
 
         $targetModelClass = $this->getTargetClass($model);
-        if (!is_subclass_of($targetModelClass, 'yii\db\ActiveRecord')) {
+        if (!is_subclass_of($targetModelClass, 'ESD\Yii\Db\ActiveRecord')) {
             return $conditions;
         }
 
@@ -289,11 +289,11 @@ class ExistValidator extends Validator
      * Creates a query instance with the given condition.
      * @param string $targetClass the target AR class
      * @param mixed $condition query condition
-     * @return \yii\db\ActiveQueryInterface the query instance
+     * @return \ESD\Yii\Db\ActiveQueryInterface the query instance
      */
     protected function createQuery($targetClass, $condition)
     {
-        /* @var $targetClass \yii\db\ActiveRecordInterface */
+        /* @var $targetClass \ESD\Yii\Db\ActiveRecordInterface */
         $query = $targetClass::find()->andWhere($condition);
         if ($this->filter instanceof \Closure) {
             call_user_func($this->filter, $query);

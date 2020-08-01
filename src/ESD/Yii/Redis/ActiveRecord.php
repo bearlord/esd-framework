@@ -24,7 +24,7 @@ use ESD\Yii\Helpers\StringHelper;
  * The following is an example model called `Customer`:
  *
  * ```php
- * class Customer extends \yii\redis\ActiveRecord
+ * class Customer extends \ESD\Yii\Redis\ActiveRecord
  * {
  *     public function attributes()
  *     {

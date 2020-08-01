@@ -41,7 +41,7 @@ class BaseYii
      */
     public static $classMap = [];
     /**
-     * @var \yii\console\Application|\yii\web\Application|\ESD\Yii\Base\Application the application instance
+     * @var \ESD\Yii\Console\Application|\ESD\Yii\Web\Application|\ESD\Yii\Base\Application the application instance
      */
     public static $app;
     /**
@@ -244,14 +244,14 @@ class BaseYii
      * The method will attempt to include the class file according to the following procedure:
      *
      * 1. Search in [[classMap]];
-     * 2. If the class is namespaced (e.g. `yii\base\Component`), it will attempt
+     * 2. If the class is namespaced (e.g. `ESD\Yii\Base\Component`), it will attempt
      *    to include the file associated with the corresponding path alias
      *    (e.g. `@yii/base/Component.php`);
      *
      * This autoloader allows loading classes that follow the [PSR-4 standard](http://www.php-fig.org/psr/psr-4/)
      * and have its top-level namespace or sub-namespaces defined as path aliases.
      *
-     * Example: When aliases `@yii` and `@yii/bootstrap` are defined, classes in the `yii\bootstrap` namespace
+     * Example: When aliases `@yii` and `@yii/bootstrap` are defined, classes in the `ESD\Yii\Bootstrap\` namespace
      * will be loaded using the `@yii/bootstrap` alias which points to the directory where bootstrap extension
      * files are installed and all classes from other `yii` namespaces will be loaded from the yii framework directory.
      *
@@ -294,11 +294,11 @@ class BaseYii
      *
      * ```php
      * // create an object using a class name
-     * $object = Yii::createObject('yii\db\Connection');
+     * $object = Yii::createObject('ESD\Yii\Db\Connection');
      *
      * // create an object using a configuration array
      * $object = Yii::createObject([
-     *     'class' => 'yii\db\Connection',
+     *     'class' => 'ESD\Yii\Db\Connection',
      *     'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
      *     'username' => 'root',
      *     'password' => '',
@@ -309,7 +309,7 @@ class BaseYii
      * $object = \Yii::createObject('MyClass', [$param1, $param2]);
      * ```
      *
-     * Using [[\yii\di\Container|dependency injection container]], this method can also identify
+     * Using [[\ESD\Yii\Di\Container|dependency injection container]], this method can also identify
      * dependent objects, instantiate them and inject them into the newly created object.
      *
      * @param string|array|callable $type the object type. This can be specified in one of the following forms:
@@ -323,7 +323,7 @@ class BaseYii
      * @param array $params the constructor parameters
      * @return object the created object
      * @throws InvalidConfigException if the configuration is invalid.
-     * @see \yii\di\Container
+     * @see \ESD\Yii\Di\Container
      */
     public static function createObject($type, array $params = [])
     {
@@ -476,8 +476,8 @@ class BaseYii
      */
     public static function powered()
     {
-        return \Yii::t('yii', 'Powered by {yii}', [
-            'yii' => '<a href="http://www.yiiframework.com/" rel="external">' . \Yii::t('yii',
+        return Yii::t('yii', 'Powered by {yii}', [
+            'yii' => '<a href="http://www.yiiframework.com/" rel="external">' . Yii::t('yii',
                     'Yii Framework') . '</a>',
         ]);
     }
@@ -485,7 +485,7 @@ class BaseYii
     /**
      * Translates a message to the specified language.
      *
-     * This is a shortcut method of [[\yii\i18n\I18N::translate()]].
+     * This is a shortcut method of [[\ESD\Yii\I18n\I18N::translate()]].
      *
      * The translation will be conducted according to the message category and the target language will be used.
      *
@@ -498,13 +498,13 @@ class BaseYii
      * ```
      *
      * Further formatting of message parameters is supported using the [PHP intl extensions](https://secure.php.net/manual/en/intro.intl.php)
-     * message formatter. See [[\yii\i18n\I18N::translate()]] for more details.
+     * message formatter. See [[\ESD\Yii\I18n\I18N::translate()]] for more details.
      *
      * @param string $category the message category.
      * @param string $message the message to be translated.
      * @param array $params the parameters that will be used to replace the corresponding placeholders in the message.
      * @param string $language the language code (e.g. `en-US`, `en`). If this is null, the current
-     * [[\yii\base\Application::language|application language]] will be used.
+     * [[\ESD\Yii\Base\Application::language|application language]] will be used.
      * @return string the translated message.
      */
     public static function t($category, $message, $params = [], $language = null)
