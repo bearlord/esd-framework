@@ -6,15 +6,15 @@
 
 namespace ESD\Yii\Base;
 
+use DI\Container;
+use ESD\Core\DI\DI;
+use ESD\Core\Server\Server;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
 use ESD\Plugins\Session\HttpSession;
 use ESD\Yii\Di\ServiceLocator;
 use ESD\Yii\Plugin\Mongodb\MongodbPools;
 use ESD\Yii\Yii;
-use DI\Container;
-use ESD\Core\DI\DI;
-use ESD\Core\Server\Server;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Plugin\Pdo\PdoPools;
 
@@ -368,9 +368,7 @@ class Application extends ServiceLocator
 
     /**
      * Returns the URL manager for this application.
-     * @return \yii\web\UrlManager the URL manager for this application.
-     * Returns the URL manager for this application.
-     * @return \yii\web\UrlManager the URL manager for this application.
+     * @return \ESD\Yii\Web\UrlManager the URL manager for this application.
      */
     public function getUrlManager()
     {
@@ -380,7 +378,7 @@ class Application extends ServiceLocator
 
     /**
      * Returns the asset manager.
-     * @return \yii\web\AssetManager the asset manager application component.
+     * @return \ESD\Yii\Web\AssetManager the asset manager application component.
      */
     public function getAssetManager()
     {
