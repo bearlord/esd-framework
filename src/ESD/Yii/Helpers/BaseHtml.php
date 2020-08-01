@@ -7,13 +7,12 @@
 
 namespace ESD\Yii\Helpers;
 
-use ESD\Core\Server\Beans\Request;
 use ESD\Yii\Yii;
-
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\Model;
 use ESD\Yii\Db\ActiveRecordInterface;
 use ESD\Yii\Validators\StringValidator;
+use ESD\Core\Server\Beans\Request;
 
 /**
  * BaseHtml provides concrete implementation for [[Html]].
@@ -94,7 +93,7 @@ class BaseHtml
      * will be generated instead of one: `data-name="xyz" data-age="13"`.
      * @since 2.0.3
      */
-    public static $dataAttributes = ['data', 'data-ng', 'ng'];
+    public static $dataAttributes = ['aria', 'data', 'data-ng', 'ng'];
 
 
     /**
@@ -109,7 +108,7 @@ class BaseHtml
      */
     public static function encode($content, $doubleEncode = true)
     {
-        return htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', $doubleEncode);
+        return htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, Yii::$app ? Yii::$app->charset : 'UTF-8', $doubleEncode);
     }
 
     /**
@@ -302,11 +301,11 @@ class BaseHtml
     {
         $request = Yii::$app->getRequest();
         if ($request instanceof Request && $request->enableCsrfValidation) {
-            return static::tag('meta', '', ['name' => 'csrf-param', 'content' => $request->csrfParam]) . "\n    "
+            return static::tag('meta', '', ['name' => 'csrf-param', 'content' => $request->csrfParam]) . "\n"
                 . static::tag('meta', '', ['name' => 'csrf-token', 'content' => $request->getCsrfToken()]) . "\n";
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
@@ -315,7 +314,7 @@ class BaseHtml
      * @param string $method the form submission method, such as "post", "get", "put", "delete" (case-insensitive).
      * Since most browsers only support "post" and "get", if other methods are given, they will
      * be simulated using "post", and a hidden input will be added which contains the actual method type.
-     * See [[\ESD\Yii\Web\Request::methodParam]] for more details.
+     * See [[ESD\Yii\Web\Request::methodParam]] for more details.
      * @param array $options the tag options in terms of name-value pairs. These will be rendered as
      * the attributes of the resulting tag. The values will be HTML-encoded using [[encode()]].
      * If a value is null, the corresponding attribute will not be rendered.
@@ -330,11 +329,22 @@ class BaseHtml
      */
     public static function beginForm($action = '', $method = 'post', $options = [])
     {
+        $action = Url::to($action);
+
         $hiddenInputs = [];
-        if (strcasecmp($method, 'get') && strcasecmp($method, 'post')) {
-            // simulate PUT, DELETE, etc. via POST
-            $hiddenInputs[] = static::hiddenInput('_method', $method);
-            $method = 'post';
+
+        $request = Yii::$app->getRequest();
+        if ($request instanceof Request) {
+            if (strcasecmp($method, 'get') && strcasecmp($method, 'post')) {
+                // simulate PUT, DELETE, etc. via POST
+                $hiddenInputs[] = static::hiddenInput($request->methodParam, $method);
+                $method = 'post';
+            }
+            $csrf = ArrayHelper::remove($options, 'csrf', true);
+
+            if ($csrf && $request->enableCsrfValidation && strcasecmp($method, 'post') === 0) {
+                $hiddenInputs[] = static::hiddenInput($request->csrfParam, $request->getCsrfToken());
+            }
         }
 
         if (!strcasecmp($method, 'get') && ($pos = strpos($action, '?')) !== false) {
@@ -394,7 +404,7 @@ class BaseHtml
      * If a value is null, the corresponding attribute will not be rendered.
      * See [[renderTagAttributes()]] for details on how attributes are being rendered.
      * @return string the generated hyperlink
-     * @see \ESD\Yii\Helpers\Url::to()
+     * @see ESD\Yii\Helpers\Url::to()
      */
     public static function a($text, $url = null, $options = [])
     {
@@ -438,7 +448,7 @@ class BaseHtml
      */
     public static function img($src, $options = [])
     {
-        $options['src'] = $src;
+        $options['src'] = Url::to($src);
 
         if (isset($options['srcset']) && is_array($options['srcset'])) {
             $srcset = [];
@@ -780,7 +790,7 @@ class BaseHtml
      * are the corresponding option labels. The array can also be nested (i.e. some array values are arrays too).
      * For each sub-array, an option group will be generated whose label is the key associated with the sub-array.
      * If you have a list of data models, you may convert them into the format described above using
-     * [[\ESD\Yii\Helpers\ArrayHelper::map()]].
+     * [[ESD\Yii\Helpers\ArrayHelper::map()]].
      *
      * Note, the values and labels will be automatically HTML-encoded by this method, and the blank spaces in
      * the labels will also be HTML-encoded.
@@ -835,7 +845,7 @@ class BaseHtml
      * are the corresponding option labels. The array can also be nested (i.e. some array values are arrays too).
      * For each sub-array, an option group will be generated whose label is the key associated with the sub-array.
      * If you have a list of data models, you may convert them into the format described above using
-     * [[\ESD\Yii\Helpers\ArrayHelper::map()]].
+     * [[ESD\Yii\Helpers\ArrayHelper::map()]].
      *
      * Note, the values and labels will be automatically HTML-encoded by this method, and the blank spaces in
      * the labels will also be HTML-encoded.
@@ -944,7 +954,7 @@ class BaseHtml
             $name .= '[]';
         }
         if (ArrayHelper::isTraversable($selection)) {
-            $selection = array_map('strval', (array)$selection);
+            $selection = array_map('strval', ArrayHelper::toArray($selection));
         }
 
         $formatter = ArrayHelper::remove($options, 'item');
@@ -1031,7 +1041,7 @@ class BaseHtml
     public static function radioList($name, $selection = null, $items = [], $options = [])
     {
         if (ArrayHelper::isTraversable($selection)) {
-            $selection = array_map('strval', (array)$selection);
+            $selection = array_map('strval', ArrayHelper::toArray($selection));
         }
 
         $formatter = ArrayHelper::remove($options, 'item');
@@ -1220,6 +1230,111 @@ class BaseHtml
     }
 
     /**
+     * Generates a summary of the validation errors.
+     * If there is no validation error, an empty error summary markup will still be generated, but it will be hidden.
+     * @param Model|Model[] $models the model(s) whose validation errors are to be displayed.
+     * @param array $options the tag options in terms of name-value pairs. The following options are specially handled:
+     *
+     * - header: string, the header HTML for the error summary. If not set, a default prompt string will be used.
+     * - footer: string, the footer HTML for the error summary. Defaults to empty string.
+     * - encode: boolean, if set to false then the error messages won't be encoded. Defaults to `true`.
+     * - showAllErrors: boolean, if set to true every error message for each attribute will be shown otherwise
+     *   only the first error message for each attribute will be shown. Defaults to `false`.
+     *   Option is available since 2.0.10.
+     *
+     * The rest of the options will be rendered as the attributes of the container tag.
+     *
+     * @return string the generated error summary
+     */
+    public static function errorSummary($models, $options = [])
+    {
+        $header = isset($options['header']) ? $options['header'] : '<p>' . Yii::t('yii', 'Please fix the following errors:') . '</p>';
+        $footer = ArrayHelper::remove($options, 'footer', '');
+        $encode = ArrayHelper::remove($options, 'encode', true);
+        $showAllErrors = ArrayHelper::remove($options, 'showAllErrors', false);
+        unset($options['header']);
+        $lines = self::collectErrors($models, $encode, $showAllErrors);
+        if (empty($lines)) {
+            // still render the placeholder for client-side validation use
+            $content = '<ul></ul>';
+            $options['style'] = isset($options['style']) ? rtrim($options['style'], ';') . '; display:none' : 'display:none';
+        } else {
+            $content = '<ul><li>' . implode("</li>\n<li>", $lines) . '</li></ul>';
+        }
+
+        return Html::tag('div', $header . $content . $footer, $options);
+    }
+
+    /**
+     * Return array of the validation errors
+     * @param Model|Model[] $models the model(s) whose validation errors are to be displayed.
+     * @param $encode boolean, if set to false then the error messages won't be encoded.
+     * @param $showAllErrors boolean, if set to true every error message for each attribute will be shown otherwise
+     * only the first error message for each attribute will be shown.
+     * @return array of the validation errors
+     * @since 2.0.14
+     */
+    private static function collectErrors($models, $encode, $showAllErrors)
+    {
+        $lines = [];
+        if (!is_array($models)) {
+            $models = [$models];
+        }
+
+        foreach ($models as $model) {
+            $lines = array_unique(array_merge($lines, $model->getErrorSummary($showAllErrors)));
+        }
+
+        // If there are the same error messages for different attributes, array_unique will leave gaps
+        // between sequential keys. Applying array_values to reorder array keys.
+        $lines = array_values($lines);
+
+        if ($encode) {
+            foreach ($lines as &$line) {
+                $line = Html::encode($line);
+            }
+        }
+
+        return $lines;
+    }
+
+    /**
+     * Generates a tag that contains the first validation error of the specified model attribute.
+     * Note that even if there is no validation error, this method will still return an empty error tag.
+     * @param Model $model the model object
+     * @param string $attribute the attribute name or expression. See [[getAttributeName()]] for the format
+     * about attribute expression.
+     * @param array $options the tag options in terms of name-value pairs. The values will be HTML-encoded
+     * using [[encode()]]. If a value is null, the corresponding attribute will not be rendered.
+     *
+     * The following options are specially handled:
+     *
+     * - tag: this specifies the tag name. If not set, "div" will be used.
+     *   See also [[tag()]].
+     * - encode: boolean, if set to false then the error message won't be encoded.
+     * - errorSource (since 2.0.14): \Closure|callable, callback that will be called to obtain an error message.
+     *   The signature of the callback must be: `function ($model, $attribute)` and return a string.
+     *   When not set, the `$model->getFirstError()` method will be called.
+     *
+     * See [[renderTagAttributes()]] for details on how attributes are being rendered.
+     *
+     * @return string the generated label tag
+     */
+    public static function error($model, $attribute, $options = [])
+    {
+        $attribute = static::getAttributeName($attribute);
+        $errorSource = ArrayHelper::remove($options, 'errorSource');
+        if ($errorSource !== null) {
+            $error = call_user_func($errorSource, $model, $attribute);
+        } else {
+            $error = $model->getFirstError($attribute);
+        }
+        $tag = ArrayHelper::remove($options, 'tag', 'div');
+        $encode = ArrayHelper::remove($options, 'encode', true);
+        return Html::tag($tag, $encode ? Html::encode($error) : $error, $options);
+    }
+
+    /**
      * Generates an input tag for the given model attribute.
      * This method will generate the "name" and "value" tag attributes automatically for the model attribute
      * unless they are explicitly specified in `$options`.
@@ -1248,7 +1363,7 @@ class BaseHtml
 
     /**
      * If `maxlength` option is set true and the model attribute is validated by a string validator,
-     * the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
+     * the `maxlength` option will take the value of [[ESD\Yii\Validators\StringValidator::max]].
      * @param Model $model the model object
      * @param string $attribute the attribute name or expression.
      * @param array $options the tag options in terms of name-value pairs.
@@ -1280,7 +1395,7 @@ class BaseHtml
      * The following special options are recognized:
      *
      * - maxlength: integer|boolean, when `maxlength` is set true and the model attribute is validated
-     *   by a string validator, the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
+     *   by a string validator, the `maxlength` option will take the value of [[ESD\Yii\Validators\StringValidator::max]].
      *   This is available since version 2.0.3.
      * - placeholder: string|boolean, when `placeholder` equals `true`, the attribute label from the $model will be used
      *   as a placeholder (this behavior is available since version 2.0.14).
@@ -1340,7 +1455,7 @@ class BaseHtml
      * The following special options are recognized:
      *
      * - maxlength: integer|boolean, when `maxlength` is set true and the model attribute is validated
-     *   by a string validator, the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
+     *   by a string validator, the `maxlength` option will take the value of [[ESD\Yii\Validators\StringValidator::max]].
      *   This option is available since version 2.0.6.
      * - placeholder: string|boolean, when `placeholder` equals `true`, the attribute label from the $model will be used
      *   as a placeholder (this behavior is available since version 2.0.14).
@@ -1401,7 +1516,7 @@ class BaseHtml
      * The following special options are recognized:
      *
      * - maxlength: integer|boolean, when `maxlength` is set true and the model attribute is validated
-     *   by a string validator, the `maxlength` option will take the value of [[\ESD\Yii\Validators\StringValidator::max]].
+     *   by a string validator, the `maxlength` option will take the value of [[ESD\Yii\Validators\StringValidator::max]].
      *   This option is available since version 2.0.6.
      * - placeholder: string|boolean, when `placeholder` equals `true`, the attribute label from the $model will be used
      *   as a placeholder (this behavior is available since version 2.0.14).
@@ -1507,7 +1622,7 @@ class BaseHtml
      * are the corresponding option labels. The array can also be nested (i.e. some array values are arrays too).
      * For each sub-array, an option group will be generated whose label is the key associated with the sub-array.
      * If you have a list of data models, you may convert them into the format described above using
-     * [[\ESD\Yii\Helpers\ArrayHelper::map()]].
+     * [[ESD\Yii\Helpers\ArrayHelper::map()]].
      *
      * Note, the values and labels will be automatically HTML-encoded by this method, and the blank spaces in
      * the labels will also be HTML-encoded.
@@ -1562,7 +1677,7 @@ class BaseHtml
      * are the corresponding option labels. The array can also be nested (i.e. some array values are arrays too).
      * For each sub-array, an option group will be generated whose label is the key associated with the sub-array.
      * If you have a list of data models, you may convert them into the format described above using
-     * [[\ESD\Yii\Helpers\ArrayHelper::map()]].
+     * [[ESD\Yii\Helpers\ArrayHelper::map()]].
      *
      * Note, the values and labels will be automatically HTML-encoded by this method, and the blank spaces in
      * the labels will also be HTML-encoded.
@@ -1707,8 +1822,8 @@ class BaseHtml
      */
     protected static function activeListInput($type, $model, $attribute, $items, $options = [])
     {
-        $name = isset($options['name']) ? $options['name'] : static::getInputName($model, $attribute);
-        $selection = isset($options['value']) ? $options['value'] : static::getAttributeValue($model, $attribute);
+        $name = ArrayHelper::remove($options, 'name', static::getInputName($model, $attribute));
+        $selection = ArrayHelper::remove($options, 'value', static::getAttributeValue($model, $attribute));
         if (!array_key_exists('unselect', $options)) {
             $options['unselect'] = '';
         }
@@ -1726,7 +1841,7 @@ class BaseHtml
      * are the corresponding option labels. The array can also be nested (i.e. some array values are arrays too).
      * For each sub-array, an option group will be generated whose label is the key associated with the sub-array.
      * If you have a list of data models, you may convert them into the format described above using
-     * [[\ESD\Yii\Helpers\ArrayHelper::map()]].
+     * [[ESD\Yii\Helpers\ArrayHelper::map()]].
      *
      * Note, the values and labels will be automatically HTML-encoded by this method, and the blank spaces in
      * the labels will also be HTML-encoded.
@@ -1739,7 +1854,7 @@ class BaseHtml
     public static function renderSelectOptions($selection, $items, &$tagOptions = [])
     {
         if (ArrayHelper::isTraversable($selection)) {
-            $selection = array_map('strval', (array)$selection);
+            $selection = array_map('strval', ArrayHelper::toArray($selection));
         }
 
         $lines = [];
@@ -1781,7 +1896,7 @@ class BaseHtml
                 if (!array_key_exists('selected', $attrs)) {
                     $attrs['selected'] = $selection !== null &&
                         (!ArrayHelper::isTraversable($selection) && !strcmp($key, $selection)
-                        || ArrayHelper::isTraversable($selection) && ArrayHelper::isIn((string)$key, $selection));
+                            || ArrayHelper::isTraversable($selection) && ArrayHelper::isIn((string)$key, $selection));
                 }
                 $text = $encode ? static::encode($value) : $value;
                 if ($encodeSpaces) {
@@ -1804,12 +1919,14 @@ class BaseHtml
      *
      * The values of attributes will be HTML-encoded using [[encode()]].
      *
-     * The "data" attribute is specially handled when it is receiving an array value. In this case,
-     * the array will be "expanded" and a list data attributes will be rendered. For example,
-     * if `'data' => ['id' => 1, 'name' => 'yii']`, then this will be rendered:
-     * `data-id="1" data-name="yii"`.
-     * Additionally `'data' => ['params' => ['id' => 1, 'name' => 'yii'], 'status' => 'ok']` will be rendered as:
-     * `data-params='{"id":1,"name":"yii"}' data-status="ok"`.
+     * `aria` and `data` attributes get special handling when they are set to an array value. In these cases,
+     * the array will be "expanded" and a list of ARIA/data attributes will be rendered. For example,
+     * `'aria' => ['role' => 'checkbox', 'value' => 'true']` would be rendered as
+     * `aria-role="checkbox" aria-value="true"`.
+     *
+     * If a nested `data` value is set to an array, it will be JSON-encoded. For example,
+     * `'data' => ['params' => ['id' => 1, 'name' => 'yii']]` would be rendered as
+     * `data-params='{"id":1,"name":"yii"}'`.
      *
      * @param array $attributes attributes to be rendered. The attribute values will be HTML-encoded using [[encode()]].
      * @return string the rendering result. If the attributes are not empty, they will be rendered
@@ -1840,7 +1957,11 @@ class BaseHtml
                     foreach ($value as $n => $v) {
                         if (is_array($v)) {
                             $html .= " $name-$n='" . Json::htmlEncode($v) . "'";
-                        } else {
+                        } elseif (is_bool($v)) {
+                            if ($v) {
+                                $html .= " $name-$n";
+                            }
+                        } elseif ($v !== null) {
                             $html .= " $name-$n=\"" . static::encode($v) . '"';
                         }
                     }

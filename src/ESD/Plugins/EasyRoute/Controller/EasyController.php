@@ -143,4 +143,24 @@ abstract class EasyController extends Controller implements IController
             return $exception->getMessage();
         }
     }
+
+    /**
+     * Refreshes the current page.
+     * This method is a shortcut to [[Response::refresh()]].
+     *
+     * You can use it in an action by returning the [[Response]] directly:
+     *
+     * ```php
+     * // stop executing this action and refresh the current page
+     * return $this->refresh();
+     * ```
+     *
+     * @param string $anchor the anchor that should be appended to the redirection URL.
+     * Defaults to empty. Make sure the anchor starts with '#' if you want to specify it.
+     * @return Response the response object itself
+     */
+    public function refresh($anchor = '')
+    {
+        return $this->response->redirect($this->request->getUri() . $anchor);
+    }
 }

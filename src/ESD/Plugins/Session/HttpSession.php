@@ -253,4 +253,200 @@ class HttpSession
     {
         return session_create_id();
     }
+
+    /**
+     * @var string the name of the session variable that stores the flash message data.
+     */
+    public $flashParam = '__flash';
+
+    /**
+     * Returns a flash message.
+     * @param string $key the key identifying the flash message
+     * @param mixed $defaultValue value to be returned if the flash message does not exist.
+     * @param bool $delete whether to delete this flash message right after this method is called.
+     * If false, the flash message will be automatically deleted in the next request.
+     * @return mixed the flash message or an array of messages if addFlash was used
+     * @see setFlash()
+     * @see addFlash()
+     * @see hasFlash()
+     * @see getAllFlashes()
+     * @see removeFlash()
+     */
+    public function getFlash($key, $defaultValue = null, $delete = false)
+    {
+        $counters = $this->getAttribute($this->flashParam, []);
+        if (isset($counters[$key])) {
+            $value = $this->getAttribute($key, $defaultValue);
+            if ($delete) {
+                $this->removeFlash($key);
+            } elseif ($counters[$key] < 0) {
+                // mark for deletion in the next request
+                $counters[$key] = 1;
+                $this->setAttribute($this->flashParam, $counters);
+            }
+
+            return $value;
+        }
+
+        return $defaultValue;
+    }
+
+    /**
+     * Returns all flash messages.
+     *
+     * You may use this method to display all the flash messages in a view file:
+     *
+     * ```php
+     * <?php
+     * foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+     *     echo '<div class="alert alert-' . $key . '">' . $message . '</div>';
+     * } ?>
+     * ```
+     *
+     * With the above code you can use the [bootstrap alert][] classes such as `success`, `info`, `danger`
+     * as the flash message key to influence the color of the div.
+     *
+     * Note that if you use [[addFlash()]], `$message` will be an array, and you will have to adjust the above code.
+     *
+     * [bootstrap alert]: http://getbootstrap.com/components/#alerts
+     *
+     * @param bool $delete whether to delete the flash messages right after this method is called.
+     * If false, the flash messages will be automatically deleted in the next request.
+     * @return array flash messages (key => message or key => [message1, message2]).
+     * @see setFlash()
+     * @see addFlash()
+     * @see getFlash()
+     * @see hasFlash()
+     * @see removeFlash()
+     */
+    public function getAllFlashes($delete = false)
+    {
+        $counters = $this->getAttribute($this->flashParam, []);
+        $flashes = [];
+        foreach (array_keys($counters) as $key) {
+            if (array_key_exists($key, $_SESSION)) {
+                $flashes[$key] = $this->getAttribute($key);
+                if ($delete) {
+                    unset($counters[$key]);
+                    $this->removeAttribute($key);
+                } elseif ($counters[$key] < 0) {
+                    // mark for deletion in the next request
+                    $counters[$key] = 1;
+                }
+            } else {
+                unset($counters[$key]);
+            }
+        }
+
+        $this->setAttribute($this->flashParam, $counters);
+
+        return $flashes;
+    }
+
+    /**
+     * Sets a flash message.
+     * A flash message will be automatically deleted after it is accessed in a request and the deletion will happen
+     * in the next request.
+     * If there is already an existing flash message with the same key, it will be overwritten by the new one.
+     * @param string $key the key identifying the flash message. Note that flash messages
+     * and normal session variables share the same name space. If you have a normal
+     * session variable using the same name, its value will be overwritten by this method.
+     * @param mixed $value flash message
+     * @param bool $removeAfterAccess whether the flash message should be automatically removed only if
+     * it is accessed. If false, the flash message will be automatically removed after the next request,
+     * regardless if it is accessed or not. If true (default value), the flash message will remain until after
+     * it is accessed.
+     * @see getFlash()
+     * @see addFlash()
+     * @see removeFlash()
+     */
+    public function setFlash($key, $value = true, $removeAfterAccess = true)
+    {
+        $counters = $this->getAttribute($this->flashParam, []);
+        $counters[$key] = $removeAfterAccess ? -1 : 0;
+        $this->setAttribute($key, $value);
+        $this->setAttribute($this->flashParam, $counters);
+    }
+
+    /**
+     * Adds a flash message.
+     * If there are existing flash messages with the same key, the new one will be appended to the existing message array.
+     * @param string $key the key identifying the flash message.
+     * @param mixed $value flash message
+     * @param bool $removeAfterAccess whether the flash message should be automatically removed only if
+     * it is accessed. If false, the flash message will be automatically removed after the next request,
+     * regardless if it is accessed or not. If true (default value), the flash message will remain until after
+     * it is accessed.
+     * @see getFlash()
+     * @see setFlash()
+     * @see removeFlash()
+     */
+    public function addFlash($key, $value = true, $removeAfterAccess = true)
+    {
+        $counters = $this->getAttribute($this->flashParam, []);
+        $counters[$key] = $removeAfterAccess ? -1 : 0;
+        $this->setAttribute($this->flashParam, $counters);
+
+        $attribute = $this->getAttribute($key);
+        if (empty($attribute[$key])) {
+            $this->setAttribute($key, [$value]);
+        } elseif (is_array($attribute[$key])) {
+            $attribute[$key][] = $value;
+            $this->setAttribute($key, $attribute);
+        } else {
+            $this->setAttribute($key, [$_SESSION[$key], $value]);
+        }
+    }
+
+    /**
+     * Removes a flash message.
+     * @param string $key the key identifying the flash message. Note that flash messages
+     * and normal session variables share the same name space.  If you have a normal
+     * session variable using the same name, it will be removed by this method.
+     * @return mixed the removed flash message. Null if the flash message does not exist.
+     * @see getFlash()
+     * @see setFlash()
+     * @see addFlash()
+     * @see removeAllFlashes()
+     */
+    public function removeFlash($key)
+    {
+        $counters = $this->getAttribute($this->flashParam, []);
+        $attribute = $this->getAttribute($key);
+        $value = isset($attribute, $counters[$key]) ? $attribute : null;
+        unset($counters[$key]);
+        $this->removeAttribute($key);
+        $this->setAttribute($this->flashParam, $counters);
+
+        return $value;
+    }
+
+    /**
+     * Removes all flash messages.
+     * Note that flash messages and normal session variables share the same name space.
+     * If you have a normal session variable using the same name, it will be removed
+     * by this method.
+     * @see getFlash()
+     * @see setFlash()
+     * @see addFlash()
+     * @see removeFlash()
+     */
+    public function removeAllFlashes()
+    {
+        $counters = $this->getAttribute($this->flashParam, []);
+        foreach (array_keys($counters) as $key) {
+            $this->removeAttribute($key);
+        }
+        $this->removeAttribute($this->flashParam);
+    }
+
+    /**
+     * Returns a value indicating whether there are flash messages associated with the specified key.
+     * @param string $key key identifying the flash message type
+     * @return bool whether any flash messages exist under specified key
+     */
+    public function hasFlash($key)
+    {
+        return $this->getFlash($key) !== null;
+    }
 }

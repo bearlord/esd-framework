@@ -214,6 +214,7 @@ class ActiveField extends Component
             if (!isset($this->parts['{hint}'])) {
                 $this->hint(null);
             }
+
             $content = strtr($this->template, $this->parts);
         } elseif (!is_string($content)) {
             $content = call_user_func($content, $this);

@@ -132,6 +132,7 @@ class Breadcrumbs extends Widget
         if (empty($this->links)) {
             return;
         }
+
         $links = [];
         if ($this->homeLink === null) {
             $links[] = $this->renderItem([
@@ -141,13 +142,16 @@ class Breadcrumbs extends Widget
         } elseif ($this->homeLink !== false) {
             $links[] = $this->renderItem($this->homeLink, $this->itemTemplate);
         }
+
         foreach ($this->links as $link) {
             if (!is_array($link)) {
                 $link = ['label' => $link];
             }
             $links[] = $this->renderItem($link, isset($link['url']) ? $this->itemTemplate : $this->activeItemTemplate);
         }
+
         echo Html::tag($this->tag, implode('', $links), $this->options);
+        $this->links = false;
     }
 
     /**
