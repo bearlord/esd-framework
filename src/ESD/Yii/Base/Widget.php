@@ -257,7 +257,7 @@ class Widget extends Component implements ViewContextInterface
     {
         $class = new ReflectionClass($this);
 
-        return dirname($class->getFileName()) . DIRECTORY_SEPARATOR . 'views';
+        return dirname($class->getFileName()) . DIRECTORY_SEPARATOR . 'Views';
     }
 
     /**

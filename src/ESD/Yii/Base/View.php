@@ -61,7 +61,7 @@ class View extends Component implements DynamicContentAwareInterface
      * ```php
      * [
      *     'tpl' => ['class' => 'ESD\Yii\Smarty\ViewRenderer'],
-     *     'twig' => ['class' => 'yii\twig\ViewRenderer'],
+     *     'twig' => ['class' => 'ESD\Yii\Twig\ViewRenderer'],
      * ]
      * ```
      *

@@ -55,8 +55,8 @@ class Spaceless extends Widget
     public function init()
     {
         parent::init();
-//        ob_start();
-//        ob_implicit_flush(false);
+        ob_start();
+        ob_implicit_flush(false);
     }
 
     /**
@@ -67,6 +67,6 @@ class Spaceless extends Widget
     {
         $content = ob_get_contents();
         echo trim(preg_replace('/>\s+</', '><', $content));
-//        ob_clean();
+        ob_clean();
     }
 }
