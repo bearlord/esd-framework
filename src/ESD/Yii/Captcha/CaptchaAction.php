@@ -126,12 +126,13 @@ class CaptchaAction extends Action
         if (Yii::$app->request->input(self::REFRESH_GET_VAR) !== null) {
             // AJAX request for regenerating code
             $code = $this->getVerifyCode(true);
+            $url = Yii::$app->request->server('request_uri');
             return [
                 'hash1' => $this->generateValidationHash($code),
                 'hash2' => $this->generateValidationHash(strtolower($code)),
                 // we add a random 'v' parameter so that FireFox can refresh the image
                 // when src attribute of image tag is changed
-                'url' => Url::to([$this->id, 'v' => uniqid('', true)]),
+                'url' => Url::to([$url, 'v' => uniqid('', true)]),
             ];
         }
 

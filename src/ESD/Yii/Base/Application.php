@@ -501,7 +501,11 @@ class Application extends ServiceLocator
         return $db;
     }
 
-
+    /**
+     * @param $route
+     * @return array
+     * @throws InvalidConfigException
+     */
     public function createController($route)
     {
         $route = "/". trim($route, "/");
@@ -526,6 +530,21 @@ class Application extends ServiceLocator
                     'class' => $controllerName
                 ], [$id, $this]);
                 return [$controller, $actionName];
+        }
+    }
+
+    /**
+     * Run route
+     *
+     * @param $route
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function runRoute($route)
+    {
+        $controller = $this->createController($route);
+        if (!empty($controller)) {
+            return call_user_func([$controller[0], $controller[1]]);
         }
     }
 
