@@ -56,7 +56,8 @@ class CaptchaValidator extends Validator
      */
     protected function validateValue($value)
     {
-        $captcha = $this->createCaptchaAction();
+        $captchaObject = $this->createCaptchaAction();
+        $captcha = call_user_func([$captchaObject->controller, $captchaObject->actionMethod]);
         $valid = !is_array($value) && $captcha->validate($value, $this->caseSensitive);
 
         return $valid ? null : [$this->message, []];

@@ -166,14 +166,14 @@ class CaptchaAction extends Action
         }
 
         $session = Yii::$app->getSession();
-        $session->open();
         $name = $this->getSessionKey();
-        if ($session[$name] === null || $regenerate) {
-            $session[$name] = $this->generateVerifyCode();
-            $session[$name . 'count'] = 1;
+
+        if ($session->getAttribute($name) === null || $regenerate) {
+            $session->setAttribute($name, $this->generateVerifyCode());
+            $session->setAttribute($name . 'count', 1);
         }
 
-        return $session[$name];
+        return $session->getAttribute($name);
     }
 
     /**
@@ -187,10 +187,9 @@ class CaptchaAction extends Action
         $code = $this->getVerifyCode();
         $valid = $caseSensitive ? ($input === $code) : strcasecmp($input, $code) === 0;
         $session = Yii::$app->getSession();
-        $session->open();
         $name = $this->getSessionKey() . 'count';
-        $session[$name] += 1;
-        if ($valid || $session[$name] > $this->testLimit && $this->testLimit > 0) {
+        $session->setAttribute($name, $session->getAttribute($name) + 1);
+        if ($valid || $session->getAttribute($name) > $this->testLimit && $this->testLimit > 0) {
             $this->getVerifyCode(true);
         }
 
