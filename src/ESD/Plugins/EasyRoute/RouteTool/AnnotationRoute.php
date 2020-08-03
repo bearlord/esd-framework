@@ -117,35 +117,47 @@ class AnnotationRoute implements IRoute
                         }
                         $params[$annotation->param ?? $annotation->value] = $result;
                     } else if ($annotation instanceof RequestParam) {
-                        if ($request == null) continue;
+                        if ($request == null) {
+                            continue;
+                        }
                         $result = $request->query($annotation->value);
                         if ($annotation->required && $result == null) {
                             throw new ParamException("require params $annotation->value");
                         }
                         $params[$annotation->param ?? $annotation->value] = $result;
                     } else if ($annotation instanceof RequestFormData) {
-                        if ($request == null) continue;
+                        if ($request == null) {
+                            continue;
+                        }
                         $result = $request->post($annotation->value);
                         if ($annotation->required && $result == null) {
                             throw new ParamException("require params $annotation->value");
                         }
                         $params[$annotation->param ?? $annotation->value] = $result;
                     } else if ($annotation instanceof RequestRawJson || $annotation instanceof RequestBody) {
-                        if ($request == null) continue;
+                        if ($request == null) {
+                            continue;
+                        }
                         if (!$json = json_decode($request->getBody()->getContents(), true)) {
                             $this->warning('RequestRawJson errror, raw:' . $request->getBody()->getContents());
                             throw new RouteException('RawJson Format error');
                         }
                         $params[$annotation->value] = $json;
                     } else if ($annotation instanceof ModelAttribute) {
-                        if ($request == null) continue;
+                        if ($request == null) {
+                            continue;
+                        }
                         $params[$annotation->value] = $request->post();
                     } else if ($annotation instanceof RequestRaw) {
-                        if ($request == null) continue;
+                        if ($request == null) {
+                            continue;
+                        }
                         $raw = $request->getBody()->getContents();
                         $params[$annotation->value] = $raw;
                     } else if ($annotation instanceof RequestRawXml) {
-                        if ($request == null) continue;
+                        if ($request == null) {
+                            continue;
+                        }
                         $raw = $request->getBody()->getContents();
                         if (!$xml = simplexml_load_string($raw, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS)) {
                             $this->warning('RequestRawXml errror, raw:' . $request->getBody()->getContents());

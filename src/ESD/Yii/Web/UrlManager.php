@@ -403,7 +403,7 @@ class UrlManager extends Component
 
         unset($params[0]);
 
-        $url = sprintf("%s/", $baseUrl);
+        $url = sprintf("/%s/", $baseUrl);
 
         if (!empty($params) && ($query = http_build_query($params)) !== '') {
             $url .= '?' . $query;

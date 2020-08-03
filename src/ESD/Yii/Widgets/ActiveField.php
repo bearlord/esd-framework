@@ -175,10 +175,10 @@ class ActiveField extends Component
             return $this->render();
         } catch (\Exception $e) {
 //            ErrorHandler::convertExceptionToError($e);
-            return '';
+            return $e->getMessage() . "\n" . $e->getTraceAsString();
         } catch (\Throwable $e) {
 //            ErrorHandler::convertExceptionToError($e);
-            return '';
+            return $e->getMessage() . "\n" . $e->getTraceAsString();
         }
     }
 

@@ -70,6 +70,8 @@ class Controller extends Component implements ViewContextInterface
      */
     public $moduleName;
 
+    public $id;
+
     /**
      * Controller constructor.
      */
@@ -318,7 +320,7 @@ class Controller extends Component implements ViewContextInterface
      */
     public function getUniqueId()
     {
-        return $this->module instanceof Application ? $this->id : $this->module->getUniqueId() . '/' . $this->id;
+        return $this->id;
     }
 
     /**

@@ -97,7 +97,8 @@ class CaptchaValidator extends Validator
      */
     public function getClientOptions($model, $attribute)
     {
-        $captcha = $this->createCaptchaAction();
+        $captchaObject = $this->createCaptchaAction();
+        $captcha = call_user_func([$captchaObject->controller, $captchaObject->actionMethod]);
         $code = $captcha->getVerifyCode(false);
         $hash = $captcha->generateValidationHash($this->caseSensitive ? $code : strtolower($code));
         $options = [

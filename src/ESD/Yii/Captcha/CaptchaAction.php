@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Captcha;
 
-use Yii;
+use ESD\Yii\Yii;
 use ESD\Yii\Base\Action;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Helpers\Url;
@@ -89,7 +89,7 @@ class CaptchaAction extends Action
     /**
      * @var string the TrueType font file. This can be either a file path or [path alias](guide:concept-aliases).
      */
-    public $fontFile = '@yii/captcha/SpicyRice.ttf';
+    public $fontFile = '@yii/Captcha/SpicyRice.ttf';
     /**
      * @var string the fixed verification code. When this property is set,
      * [[getVerifyCode()]] will always return the value of this property.
@@ -123,10 +123,9 @@ class CaptchaAction extends Action
      */
     public function run()
     {
-        if (Yii::$app->request->getQueryParam(self::REFRESH_GET_VAR) !== null) {
+        if (Yii::$app->request->input(self::REFRESH_GET_VAR) !== null) {
             // AJAX request for regenerating code
             $code = $this->getVerifyCode(true);
-            Yii::$app->response->format = Response::FORMAT_JSON;
             return [
                 'hash1' => $this->generateValidationHash($code),
                 'hash2' => $this->generateValidationHash(strtolower($code)),
@@ -137,7 +136,6 @@ class CaptchaAction extends Action
         }
 
         $this->setHttpHeaders();
-        Yii::$app->response->format = Response::FORMAT_RAW;
 
         return $this->renderImage($this->getVerifyCode());
     }
@@ -357,11 +355,12 @@ class CaptchaAction extends Action
      */
     protected function setHttpHeaders()
     {
-        Yii::$app->getResponse()->getHeaders()
-            ->set('Pragma', 'public')
-            ->set('Expires', '0')
-            ->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-            ->set('Content-Transfer-Encoding', 'binary')
-            ->set('Content-type', 'image/png');
+        Yii::$app->getResponse()->setHeaders([
+            'Pragma' => 'public',
+            'Expires' => '0',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-type' => 'image/png'
+        ]);
     }
 }

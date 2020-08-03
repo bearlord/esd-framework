@@ -90,9 +90,7 @@ class Captcha extends InputWidget
     public function init()
     {
         parent::init();
-
         static::checkRequirements();
-
         if (!isset($this->imageOptions['id'])) {
             $this->imageOptions['id'] = $this->options['id'] . '-image';
         }

@@ -11,12 +11,14 @@ use ESD\Core\DI\DI;
 use ESD\Core\Server\Server;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
+use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\Session\HttpSession;
 use ESD\Yii\Di\ServiceLocator;
 use ESD\Yii\Plugin\Mongodb\MongodbPools;
 use ESD\Yii\Yii;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Plugin\Pdo\PdoPools;
+use FastRoute\Dispatcher;
 
 /**
  * Class Application
@@ -497,6 +499,34 @@ class Application extends ServiceLocator
         $db->schemaCache = $config['schemaCache'];
         $db->open();
         return $db;
+    }
+
+
+    public function createController($route)
+    {
+        $route = "/". trim($route, "/");
+        if (strpos($route, '/') !== false) {
+            list($id, $_route) = explode('/', $route, 2);
+        } else {
+            $id = $route;
+            $_route = '';
+        }
+
+        $method = $this->request->server('request_method');
+        $port = $this->request->server('server_port');
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch($port . ":" . $method, $route);
+
+        switch ($routeInfo[0]) {
+            case Dispatcher::FOUND:
+                $handler = $routeInfo[1];
+                $vars = $routeInfo[2];
+                $controllerName = $handler[0]->name;
+                $actionName = $handler[1]->name;
+                $controller = Yii::createObject([
+                    'class' => $controllerName
+                ], [$id, $this]);
+                return [$controller, $actionName];
+        }
     }
 
     /**
