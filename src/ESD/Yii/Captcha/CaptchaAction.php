@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Captcha;
 
+use ESD\Plugins\Session\HttpSession;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Action;
 use ESD\Yii\Base\InvalidConfigException;
@@ -105,6 +106,11 @@ class CaptchaAction extends Action
      */
     public $imageLibrary;
 
+    /**
+     * @var HttpSession
+     */
+    public $session;
+
 
     /**
      * Initializes the action.
@@ -115,6 +121,10 @@ class CaptchaAction extends Action
         $this->fontFile = Yii::getAlias($this->fontFile);
         if (!is_file($this->fontFile)) {
             throw new InvalidConfigException("The font file does not exist: {$this->fontFile}");
+        }
+        $this->session = Yii::$app->getSession();
+        if (!$this->session->isAvailable()) {
+            $this->session->create();
         }
     }
 
@@ -166,15 +176,14 @@ class CaptchaAction extends Action
             return $this->fixedVerifyCode;
         }
 
-        $session = Yii::$app->getSession();
         $name = $this->getSessionKey();
 
-        if ($session->getAttribute($name) === null || $regenerate) {
-            $session->setAttribute($name, $this->generateVerifyCode());
-            $session->setAttribute($name . 'count', 1);
+        if ($this->session->getAttribute($name) === null || $regenerate) {
+            $this->session->setAttribute($name, $this->generateVerifyCode());
+            $this->session->setAttribute($name . 'count', 1);
         }
 
-        return $session->getAttribute($name);
+        return $this->session->getAttribute($name);
     }
 
     /**
@@ -187,10 +196,10 @@ class CaptchaAction extends Action
     {
         $code = $this->getVerifyCode();
         $valid = $caseSensitive ? ($input === $code) : strcasecmp($input, $code) === 0;
-        $session = Yii::$app->getSession();
+
         $name = $this->getSessionKey() . 'count';
-        $session->setAttribute($name, $session->getAttribute($name) + 1);
-        if ($valid || $session->getAttribute($name) > $this->testLimit && $this->testLimit > 0) {
+        $this->session->setAttribute($name, $this->session->getAttribute($name) + 1);
+        if ($valid || $this->session->getAttribute($name) > $this->testLimit && $this->testLimit > 0) {
             $this->getVerifyCode(true);
         }
 

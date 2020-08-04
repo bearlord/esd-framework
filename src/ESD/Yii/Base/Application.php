@@ -415,9 +415,6 @@ class Application extends ServiceLocator
         $session = getDeepContextValueByClassName(HttpSession::class);
         if ($session == null) {
             $session = new HttpSession();
-            if (!$session->isAvailable()) {
-                $session->create();
-            }
         }
         return $session;
     }

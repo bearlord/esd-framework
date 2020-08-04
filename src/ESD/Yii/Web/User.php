@@ -9,6 +9,7 @@ namespace ESD\Yii\Web;
 
 use ESD\Core\Server\Beans\Http\Cookie;
 use ESD\Core\Server\Beans\Request;
+use ESD\Plugins\Session\HttpSession;
 use ESD\Yii\Helpers\RequestExtra;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Component;
@@ -155,6 +156,10 @@ class User extends Component
 
     private $_access = [];
 
+    /**
+     * @var HttpSession
+     */
+    public $session;
 
     /**
      * Initializes the application component.
@@ -171,6 +176,10 @@ class User extends Component
         }
         if (!empty($this->accessChecker) && is_string($this->accessChecker)) {
             $this->accessChecker = Yii::createObject($this->accessChecker);
+        }
+        $this->session = Yii::$app->getSession();
+        if (!$this->session->isAvailable()) {
+            $this->session->create();
         }
     }
 
@@ -668,19 +677,18 @@ class User extends Component
             $this->removeIdentityCookie();
         }
 
-        $session = Yii::$app->getSession();
 
-        $session->refresh();
-        $session->removeAttribute($this->idParam);
-        $session->removeAttribute($this->authTimeoutParam);
+        $this->session->refresh();
+        $this->session->removeAttribute($this->idParam);
+        $this->session->removeAttribute($this->authTimeoutParam);
 
         if ($identity) {
-            $session->setAttribute($this->idParam, $identity->getId());
+            $this->session->setAttribute($this->idParam, $identity->getId());
             if ($this->authTimeout !== null) {
-                $session->setAttribute($this->authTimeoutParam, time() + $this->authTimeout);
+                $this->session->setAttribute($this->authTimeoutParam, time() + $this->authTimeout);
             }
             if ($this->absoluteAuthTimeout !== null) {
-                $session->setAttribute($this->absoluteAuthTimeoutParam, time() + $this->absoluteAuthTimeout);
+                $this->session->setAttribute($this->absoluteAuthTimeoutParam, time() + $this->absoluteAuthTimeout);
             }
             if ($this->enableAutoLogin && $duration > 0) {
                 $this->sendIdentityCookie($identity, $duration);
@@ -700,8 +708,7 @@ class User extends Component
      */
     protected function renewAuthStatus()
     {
-        $session = Yii::$app->getSession();
-        $id = $session->getId() || $session->invalidate() ? $session->getAttribute($this->idParam) : null;
+        $id = $this->session->getId() || $this->session->invalidate() ? $this->session->getAttribute($this->idParam) : null;
 
         if ($id === null) {
             $identity = null;
@@ -714,12 +721,12 @@ class User extends Component
         $this->setIdentity($identity);
 
         if ($identity !== null && ($this->authTimeout !== null || $this->absoluteAuthTimeout !== null)) {
-            $expire = $this->authTimeout !== null ? $session->get($this->authTimeoutParam) : null;
-            $expireAbsolute = $this->absoluteAuthTimeout !== null ? $session->get($this->absoluteAuthTimeoutParam) : null;
+            $expire = $this->authTimeout !== null ? $this->session->getAttribute($this->authTimeoutParam) : null;
+            $expireAbsolute = $this->absoluteAuthTimeout !== null ? $this->session->getAttribute($this->absoluteAuthTimeoutParam) : null;
             if ($expire !== null && $expire < time() || $expireAbsolute !== null && $expireAbsolute < time()) {
                 $this->logout(false);
             } elseif ($this->authTimeout !== null) {
-                $session->set($this->authTimeoutParam, time() + $this->authTimeout);
+                $this->session->setAttribute($this->authTimeoutParam, time() + $this->authTimeout);
             }
         }
 
