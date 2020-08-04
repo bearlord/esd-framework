@@ -83,6 +83,7 @@ abstract class EasyController extends Controller implements IController
         try {
             $action = $this->createAction($methodName);
 
+            $result = null;
             if ($this->beforeAction($action)) {
                 // run the action
                 $result = $action->runWithParams($params);
