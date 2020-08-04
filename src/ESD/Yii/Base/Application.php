@@ -119,6 +119,11 @@ class Application extends ServiceLocator
             $this->setWebPath(Server::$instance->getServerConfig()->getDocumentRoot());
         }
 
+        //Set language
+        if (!empty($config['language'])) {
+            $this->setLanguage($config['language']);
+        }
+
         //Merge core components with custom components
         $newConfig = $config;
         unset($newConfig['db']);
@@ -424,7 +429,7 @@ class Application extends ServiceLocator
      *
      * @return string
      */
-    public function getLanguage()
+    public function getLanguage(): string
     {
         /** @var Request $request */
         $request = getDeepContextValueByClassName(Request::class);
@@ -444,9 +449,18 @@ class Application extends ServiceLocator
         } else {
             $lang = $this->language;
         }
-
         return $lang;
     }
+
+    /**
+     * @param string $language
+     */
+    public function setLanguage(string $language): void
+    {
+        $this->language = $language;
+    }
+
+
 
     /**
      * @return Connection|mixed

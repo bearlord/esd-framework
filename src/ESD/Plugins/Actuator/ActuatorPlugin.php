@@ -33,7 +33,7 @@ class ActuatorPlugin extends AbstractPlugin
     /**
      * @var Table
      */
-    protected  $table;
+    protected $table;
 
     public function __construct()
     {
@@ -108,16 +108,16 @@ class ActuatorPlugin extends AbstractPlugin
     {
         /**
          *
-        1byte(int8)：-127 ~ 127
-        2byte(int16)：-32767 ~ 32767
-        4byte(int32)：-2147483647 ~ 2147483647
-        8byte(int64)：不会溢出
+         * 1byte(int8)：-127 ~ 127
+         * 2byte(int16)：-32767 ~ 32767
+         * 4byte(int32)：-2147483647 ~ 2147483647
+         * 8byte(int64)：不会溢出
          */
         $table = new Table(1024);
-        $table->column('num_60', Table::TYPE_INT,4);
-        $table->column('num_3600', Table::TYPE_INT,4);
+        $table->column('num_60', Table::TYPE_INT, 4);
+        $table->column('num_3600', Table::TYPE_INT, 4);
         $table->column('num_86400', Table::TYPE_INT, 4);
-        if(!$table->create()){
+        if (!$table->create()) {
             throw  new \Exception('memory not allow');
         }
         $this->setToDIContainer('RouteCountTable', $table);
@@ -139,15 +139,15 @@ class ActuatorPlugin extends AbstractPlugin
             return;
         }
 
-        addTimerTick(60 * 1000 , function (){
+        addTimerTick(60 * 1000, function () {
             $this->updateCount('num_60');
         });
 
-        addTimerTick(3600 * 1000, function (){
+        addTimerTick(3600 * 1000, function () {
             $this->updateCount('num_3600');
         });
 
-        addTimerTick(86400 * 1000, function (){
+        addTimerTick(86400 * 1000, function () {
             $this->updateCount('num_86400');
         });
         $this->debug(Yii::t('esd', 'Before process start'));
@@ -160,10 +160,11 @@ class ActuatorPlugin extends AbstractPlugin
      * @param $column
      * @throws \Exception
      */
-    function updateCount($column){
-        foreach ($this->table as $key  => $num) {
-            $this->table->set($key,[$column => 0]);
-            $this->debug('updateCount ' .$key .':'. $column. ' -> 0');
+    public function updateCount($column)
+    {
+        foreach ($this->table as $key => $num) {
+            $this->table->set($key, [$column => 0]);
+            $this->debug(Yii::t('esd', 'Update count') . $key . ':' . $column . ' -> 0');
         }
     }
 }
