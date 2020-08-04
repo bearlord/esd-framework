@@ -29,6 +29,7 @@ return [
     'Redis name must be set' => 'Redis name 必须设置',
     'Redis host must be set' => 'Redis host 必须设置',
     'Redis poolMaxNumber must be greater than 1' => 'Redis PoolMaxNumber 必须大于1',
+    'Update count' => '更新计数',
     'Packet unpack failed' => '数据包解包失败',
     'Process ready' => '进程准备就绪',
     'Method annotation {annotationClass} in {method}' => '方法注解 {annotationClass} -> {method}',

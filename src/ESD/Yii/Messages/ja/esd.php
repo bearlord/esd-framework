@@ -29,6 +29,7 @@ return [
     'Redis name must be set' => 'Redis名を設定する必要があります',
     'Redis host must be set' => 'Redisホストを設定する必要があります',
     'Redis poolMaxNumber must be greater than 1' => 'Redis poolMaxNumber は1より大きい必要があります',
+    'Update count' => '更新カウント',
     'Packet unpack failed' => 'パケットの解凍に失敗しました',
     'Process ready' => 'プロセス準備完了',
     'Method annotation {annotationClass} in {method}' => '{method} のメソッドアノテーション {annotationClass}',

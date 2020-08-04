@@ -93,7 +93,7 @@ class ActuatorPlugin extends AbstractPlugin
             $r->addRoute("GET", "/actuator/health", "health");
             $r->addRoute("GET", "/actuator/info", "info");
         });
-        $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd/base-server");
+        $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd-framework/src/ESD/");
         $aopConfig->addAspect(new ActuatorAspect($actuatorController, $dispatcher));
         $aopConfig->addAspect(new CountAspect());
     }

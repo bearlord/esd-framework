@@ -29,6 +29,7 @@ return [
     'Redis name must be set' => 'Redis Name muss gesetzt sein',
     'Redis host must be set' => 'Redis Host muss gesetzt sein',
     'Redis poolMaxNumber must be greater than 1' => 'Redis poolMaxNumber muss größer als 1 sein',
+    'Update count' => 'Aktualisierungszählwert',
     'Packet unpack failed' => 'Das Entpacken des Pakets ist fehlgeschlagen',
     'Process ready' => 'Prozessbereit',
     'Method annotation {annotationClass} in {method}' => 'Methodenanmerkung {annotationClass} in {method}',

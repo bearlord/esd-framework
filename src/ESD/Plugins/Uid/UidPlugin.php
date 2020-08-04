@@ -82,7 +82,7 @@ class UidPlugin extends AbstractPlugin
         parent::init($context);
         $serverConfig = Server::$instance->getServerConfig();
         $aopConfig = DIGet(AopConfig::class);
-        $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd/base-server");
+        $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd-framework/src/ESD/");
         $this->uidAspect = new UidAspect();
         $aopConfig->addAspect($this->uidAspect);
     }

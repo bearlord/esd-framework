@@ -105,7 +105,7 @@ class WhoopsPlugin extends AbstractPlugin
         $handler->addResourcePath($serverConfig->getVendorDir() . "/filp/whoops/src/Whoops/Resources/");
         $handler->setPageTitle("出现错误了");
         $this->whoops->pushHandler($handler);
-        $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd/base-server");
+        $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd-framework/src/ESD/");
         $aopConfig->addAspect(new WhoopsAspect($this->whoops, $this->whoopsConfig));
     }
 

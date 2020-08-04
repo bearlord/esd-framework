@@ -29,6 +29,7 @@ return [
     'Redis name must be set' => 'Redis name 必須設置',
     'Redis host must be set' => 'Redis host 必須設置',
     'Redis poolMaxNumber must be greater than 1' => 'Redis PoolMaxNumber 必須大於1',
+    'Update count' => '更新計數',
     'Packet unpack failed' => '數據包解析失敗',
     'Process ready' => '進程準備就緒',
     'Method annotation {annotationClass} in {method}' => '方法注解 {annotationClass} -> {method}',
