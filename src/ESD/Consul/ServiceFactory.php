@@ -21,6 +21,9 @@ use SensioLabs\Consul\Services\SessionInterface;
  */
 final class ServiceFactory
 {
+    /**
+     * @var array $services
+     */
     private static $services = array(
         AgentInterface::class => Agent::class,
         CatalogInterface::class => Catalog::class,
@@ -52,6 +55,7 @@ final class ServiceFactory
     }
 
     /**
+     * Get service
      * @param $service
      * @return mixed
      */

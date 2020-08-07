@@ -28,6 +28,7 @@ class Health implements HealthInterface
     }
 
     /**
+     * Node
      * @param $node
      * @param array $options
      * @param int $timeout
@@ -44,6 +45,7 @@ class Health implements HealthInterface
     }
 
     /**
+     * Checks
      * @param $service
      * @param array $options
      * @param int $timeout
@@ -60,6 +62,7 @@ class Health implements HealthInterface
     }
 
     /**
+     * Service
      * @param $service
      * @param array $options
      * @param int $timeout
@@ -76,6 +79,7 @@ class Health implements HealthInterface
     }
 
     /**
+     * Connect
      * @param $connect
      * @param array $options
      * @param int $timeout
@@ -92,6 +96,7 @@ class Health implements HealthInterface
     }
 
     /**
+     * State
      * @param $state
      * @param array $options
      * @param int $timeout

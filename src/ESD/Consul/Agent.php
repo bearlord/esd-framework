@@ -28,6 +28,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Checks
      * @return mixed
      */
     public function checks()
@@ -36,6 +37,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Services
      * @return mixed
      */
     public function services()
@@ -44,6 +46,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Service
      * @param array $options
      * @param int $timeout
      * @return mixed
@@ -58,6 +61,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Members
      * @param array $options
      * @return mixed
      */
@@ -71,6 +75,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Self
      * @return mixed
      */
     public function self()
@@ -79,6 +84,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Join
      * @param $address
      * @param array $options
      * @return mixed
@@ -93,6 +99,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Force leave
      * @param $node
      * @return mixed
      */
@@ -102,6 +109,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Register check
      * @param $check
      * @return mixed
      */
@@ -115,6 +123,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Deregister
      * @param $checkId
      * @return mixed
      */
@@ -124,6 +133,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Pass check
      * @param $checkId
      * @param array $options
      * @return mixed
@@ -138,6 +148,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Warn check
      * @param $checkId
      * @param array $options
      * @return mixed
@@ -152,6 +163,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Fail check
      * @param $checkId
      * @param array $options
      * @return mixed
@@ -166,6 +178,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * Register service
      * @param $service
      * @return mixed
      */
@@ -179,6 +192,7 @@ class Agent implements AgentInterface
     }
 
     /**
+     * DeRegister service
      * @param $serviceId
      * @return mixed
      */

@@ -28,6 +28,7 @@ class Session implements SessionInterface
     }
 
     /**
+     * Session create
      * @param null $body
      * @param array $options
      * @return mixed
@@ -43,6 +44,7 @@ class Session implements SessionInterface
     }
 
     /**
+     * Session destroy
      * @param $sessionId
      * @param array $options
      * @return mixed
@@ -57,6 +59,7 @@ class Session implements SessionInterface
     }
 
     /**
+     * Session info
      * @param $sessionId
      * @param array $options
      * @param int $timeout
@@ -73,6 +76,7 @@ class Session implements SessionInterface
     }
 
     /**
+     * Seesion node
      * @param $node
      * @param array $options
      * @param int $timeout
@@ -89,6 +93,7 @@ class Session implements SessionInterface
     }
 
     /**
+     * Session list
      * @param array $options
      * @param int $timeout
      * @return mixed
@@ -104,6 +109,7 @@ class Session implements SessionInterface
     }
 
     /**
+     * Session renew
      * @param $sessionId
      * @param array $options
      * @return mixed

@@ -28,6 +28,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Register
      * @param $node
      * @return mixed
      */
@@ -41,6 +42,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Deregister
      * @param $node
      * @return mixed
      */
@@ -54,6 +56,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Data centers
      * @return mixed
      */
     public function datacenters()
@@ -62,6 +65,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Nodes
      * @param array $options
      * @param int $timeout
      * @return mixed
@@ -77,6 +81,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Node
      * @param $node
      * @param array $options
      * @return mixed
@@ -91,6 +96,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Services
      * @param array $options
      * @param int $timeout
      * @return mixed
@@ -106,6 +112,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Service
      * @param $service
      * @param array $options
      * @param int $timeout
@@ -122,6 +129,7 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Connect
      * @param $service
      * @param array $options
      * @param int $timeout

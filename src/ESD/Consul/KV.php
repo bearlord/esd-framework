@@ -28,6 +28,7 @@ class KV implements KVInterface
     }
 
     /**
+     * Get
      * @param $key
      * @param array $options
      * @param int $timeout
@@ -44,6 +45,7 @@ class KV implements KVInterface
     }
 
     /**
+     * Put
      * @param $key
      * @param $value
      * @param array $options
@@ -60,6 +62,7 @@ class KV implements KVInterface
     }
 
     /**
+     * Delete
      * @param $key
      * @param array $options
      * @return mixed
