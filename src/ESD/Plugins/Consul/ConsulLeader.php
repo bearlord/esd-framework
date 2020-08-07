@@ -6,14 +6,32 @@
 
 namespace ESD\Plugins\Consul;
 
+use ESD\Psr\Cloud\Leader;
+
 /**
  * Class Leader
  * @package ESD\Plugins\Consul
  */
-class Leader
+class ConsulLeader implements Leader
 {
     /**
      * @var bool
      */
-    public static $isLeader;
+    public $leader;
+
+    /**
+     * @return bool
+     */
+    public function isLeader(): bool
+    {
+        return $this->leader;
+    }
+
+    /**
+     * @param bool $leader
+     */
+    public function setLeader(bool $leader): void
+    {
+        $this->leader = $leader;
+    }
 }

@@ -20,6 +20,7 @@ class ConsulConfig extends BaseConfig
     const key = "consul";
 
     /**
+     * Default host
      * @var string
      */
     protected $host = "http://127.0.0.1:8500";
@@ -97,6 +98,7 @@ class ConsulConfig extends BaseConfig
         $normalName = $serverConfig->getName();
         $ip = $this->getServerIp($this->getBindNetDev());
         if (empty($this->getServiceConfigs())) {
+
             //If ServiceConfigs is not configured then the configuration will be populated automatically
             foreach (Server::$instance->getPortManager()->getPortConfigs() as $portConfig) {
                 $protocol = "http";
@@ -113,6 +115,7 @@ class ConsulConfig extends BaseConfig
                 } elseif ($portConfig->getSockType() == PortConfig::SWOOLE_SOCK_TCP || $portConfig->getSockType() == PortConfig::SWOOLE_SOCK_TCP6) {
                     $protocol = "tcp";
                 }
+
                 //Set up a service config
                 $consulServiceConfig = new ConsulServiceConfig();
                 $consulServiceConfig->setName($normalName);
@@ -126,6 +129,7 @@ class ConsulConfig extends BaseConfig
                 $consulCheckConfig->setNotes("esd auto check");
                 $consulCheckConfig->setStatus("passing");
                 $consulServiceConfig->setCheckConfig($consulCheckConfig);
+
                 if ($portConfig->isOpenHttpProtocol() || $portConfig->isOpenWebsocketProtocol()) {
                     $consulCheckConfig->setHttp("$protocol://$ip:{$portConfig->getPort()}/actuator/health");
                     $this->addServiceConfig($consulServiceConfig);
@@ -136,6 +140,7 @@ class ConsulConfig extends BaseConfig
                 }
             }
         }
+
         //Modify global configuration
         foreach ($this->getServiceConfigs() as $consulServiceConfig) {
             if (empty($consulServiceConfig->getName())) {

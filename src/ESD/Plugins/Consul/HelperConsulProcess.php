@@ -13,7 +13,7 @@ class HelperConsulProcess extends Process
 {
 
     /**
-     * 在onProcessStart之前，用于初始化成员变量
+     * @inheritDoc
      * @return mixed
      */
     public function init()
