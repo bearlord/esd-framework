@@ -1,0 +1,97 @@
+reload:
+  enable: true
+
+blade:
+  namespace:
+    app:
+      path: ${ROOT_DIR}/src/Views
+
+redis:
+  default:
+    host: 'localhost'
+    database: 1
+
+session:
+  timeout: 3600
+  database: 2
+  sessionStorageClass: 'ESD\Plugins\Session\RedisSessionStorage'
+  sessionUsage: 'cookie'
+  #  headerIdentity: 'sessionId'
+  #  domain: '192.168.108.130'
+  path: '/'
+  #  httpOnly: true
+  secure: false
+
+amqp:
+  default:
+    hosts:
+      - host: 127.0.0.1
+        port: 5672
+        user: guest
+        password: guest
+
+
+yii:
+  components:
+    log:
+      traceLevel: 0
+      flushInterval: 5
+      targets:
+        - class: 'ESD\Yii\Log\FileTarget'
+          exportInterval: 3
+          levels:
+            - error
+            - warning
+            - info
+            - trace
+            - profile
+
+    cache:
+      class: 'ESD\Yii\Redis\Cache'
+      redis:
+        database: 3
+
+    formatter:
+      sizeFormatBase: 1000
+
+    admin:
+      class: 'ESD\Yii\Web\User'
+      identityClass: 'app\Model\MySQL\Admin'
+      enableAutoLogin: true
+      enableSession: true
+      identityCookie:
+        name: _identity-admin
+        httpOnly: true
+
+    clickhouse:
+      class: 'ESD\Yii\Clickhouse\Connection'
+      dsn: 'host=localhost;port=8123;database=default'
+      username: web
+      password: 123
+      enableSchemaCache: true
+      schemaCache: cache,
+      schemaCacheDuration: 86400
+
+    user:
+      class:  'ESD\Yii\Web\User'
+      identityClass:  'App\Models\User'
+      enableAutoLogin:  true
+
+  language: 'en'
+
+  db:
+    default:
+      dsn: 'pgsql:host=192.168.108.130;dbname=narucrm'
+      username: 'postgres'
+      password: '123456'
+      tablePrefix: 'n_'
+      poolMaxNumber: 10
+      enableSchemaCache: false
+      schemaCacheDuration: 3600
+      schemaCache: cache
+
+  mongodb:
+    default:
+      dsn: 'mongodb://localhost:27017/test'
+      options:
+        -

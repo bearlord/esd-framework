@@ -1,0 +1,68 @@
+esd:
+  aop:
+    excludePaths:
+      - src/Libs
+      - src/Filters
+      - src/Views
+      - src/Assets
+
+  logger:
+    level: DEBUG
+
+  profiles:
+    active: local
+
+  server:
+    name: esd-server
+    workerNum: 8
+    maxConn: 65535
+    debug: true
+    document_root: /root/esd-framework-demo/web
+    enable_static_handler: true
+
+  port:
+    http:
+      host: 0.0.0.0
+      port: 8080
+      open_http_protocol: true
+      sock_type: 1
+
+    https:
+      host: 0.0.0.0
+      port: 8081
+      openHttpProtocol: true
+      sockType: 1
+      enableSsl: true
+      sslKeyFile: '/root/esd-framework-demo/resources/test.key'
+      sslCertFile: '/root/esd-framework-demo/resources/test.pem'
+
+    websocket:
+      host: 0.0.0.0
+      port: 8082
+      openWebsocketProtocol: true
+      sockType: 1
+
+    websockets:
+      host: 0.0.0.0
+      port: 8083
+      openWebsocketProtocol: true
+      sockType: 1
+      enableSsl: true
+      sslKeyFile: '/root/esd-framework-demo/resources/test.key'
+      sslCertFile: '/root/esd-framework-demo/resources/test.pem'
+
+    tcp:
+      host: 0.0.0.0
+      port: 8084
+      openHttpProtocol: false
+      openWebsocketProtocol: false
+      sockType: 1
+      packageEof: "\r\n"
+      openEofSplit: true
+      packTool: 'ESD\Plugins\Pack\PackTool\StreamPack'
+
+    mqtt:
+      host: 0.0.0.0
+      port: 8085
+      openMqttProtocol: true
+      sockType: 1
