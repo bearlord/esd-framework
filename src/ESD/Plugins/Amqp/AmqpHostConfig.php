@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Plugins\Config\BaseConfig;
+use ESD\Yii\Yii;
 
 /**
  * Class AmqpHostConfig
@@ -52,17 +53,17 @@ class AmqpHostConfig extends BaseConfig
 
 
     /**
-     * 构建配置
+     * Build config
      * @throws AmqpException
      */
     public function buildConfig()
     {
         if(empty($this->host)){
-            throw new AmqpException("host必须设置");
+            throw new AmqpException(Yii::t('esd', 'Amqp host must be set'));
         }
 
         if(empty($this->port) || $this->port > 65535 || $this->port < 1){
-            throw new AmqpException("port必须设置");
+            throw new AmqpException(Yii::t('esd', 'Amqp port must be set'));
         }
     }
 

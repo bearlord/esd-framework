@@ -82,7 +82,9 @@ trait ToConfigArray
      */
     public function buildFromConfig($config)
     {
-        if ($config == null) return $this;
+        if ($config == null) {
+            return $this;
+        }
         foreach ($config as $key => $value) {
             $varName = $this->toCamelCase($key);
             $func = "set" . ucfirst($varName);

@@ -22,18 +22,19 @@ trait GetAmqp
      */
     public function amqp(string $name = 'default')
     {
+        $poolKey = sprintf("AmqpChannel:%s", $name);
         /**
          * @var $db AMQPChannel
          */
-        $db = getContextValue("AmqpChannel:$name");
+        $db = getContextValue($poolKey);
         if ($db == null || !$db->is_open()) {
             $amqpPool = getDeepContextValueByClassName(AmqpPool::class);
             if ($amqpPool instanceof AmqpPool) {
                 $db = $amqpPool->channel($name);
-                setContextValue("AmqpChannel:$name", $db);
+                setContextValue($poolKey, $db);
                 return $db;
             } else {
-                throw new AmqpException("没有找到名为{$name}的amqp连接");
+                throw new AmqpException("No Amqp connection pool named {$poolKey} was found");
             }
         } else {
             return $db;

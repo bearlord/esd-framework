@@ -1,5 +1,6 @@
 <?php
 return [
+    '{driverName} connection pool named {name} created' => 'Erstellen Sie einen  {driverName} {name}-Datenbankverbindungspool',
     '{name} cannot be empty' => '{name} Kann nicht leer sein',
     '{path} 404 Not Found' => '{path} 404 Anfrage nicht gefunden',
     'onto' => '->',
@@ -7,7 +8,9 @@ return [
     'Actor {actor} not exist' => 'Schauspieler {actor} existiert nicht',
     'Actor {actor} created timeout' => 'Schauspieler {actor} hat eine Zeitüberschreitung erstellt',
     'Actor {actor} created' => 'Schauspieler erstellen {actor}',
-    '{driverName} connection pool named {name} created' => 'Erstellen Sie einen  {driverName} {name}-Datenbankverbindungspool',
+    'Amqp configuration not found' => 'Die Amqp-Konfiguration ist nicht festgelegt',
+    'Amqp host must be set' => 'Amqp Host muss gesetzt sein',
+    'Amqp port must be set' => 'Amqp Port muss gesetzt sein',
     'Application start' => 'Anwendungsstart',
     'Application shutdown' => 'Anwendungsstopp',
     'Before process start' => 'Bevor der Prozess beginnt',

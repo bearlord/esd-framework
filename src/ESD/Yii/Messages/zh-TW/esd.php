@@ -1,5 +1,6 @@
 <?php
 return [
+    '{driverName} connection pool named {name} created' => '創建 {driverName} {name} 的连接池',
     '{name} cannot be empty' => '{name} 不能爲空',
     '{path} 404 Not Found' => '{path} 404 請求未找到',
     'onto' => '->',
@@ -7,7 +8,9 @@ return [
     'Actor {actor} not exist' => 'Actor {actor} 不存在',
     'Actor {actor} created timeout' => '創建 Actor {actor} 超時',
     'Actor {actor} created' => '創建 Actor {actor}',
-    '{driverName} connection pool named {name} created' => '創建 {driverName} {name} 的连接池',
+    'Amqp configuration not found' => 'Amqp 配置未設置',
+    'Amqp host must be set' => 'Amqp host 必須設置',
+    'Amqp port must be set' => 'Amqp port 必須設置',
     'Application start' => '程序啓動',
     'Application shutdown' => '程序關閉',
     'Before process start' => '進程啓動前',

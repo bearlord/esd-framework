@@ -23,7 +23,7 @@ class AmqpPool
      */
     public function addConnection(AmqpConnection $amqpConnection)
     {
-        $this->poolList[$amqpConnection->getAmqpPoolConfig()->getName()] = $amqpConnection;
+        $this->poolList[$amqpConnection->getConfig()->getName()] = $amqpConnection;
     }
 
     /**

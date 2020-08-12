@@ -11,6 +11,7 @@ use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
+use ESD\Yii\Yii;
 use PhpAmqpLib\Channel\AMQPChannel;
 
 /**
@@ -35,12 +36,8 @@ class AmqpPlugin extends AbstractPlugin
     public function __construct()
     {
         parent::__construct();
-        $this->amqpConfig = new AmqpConfig();
-        $this->amqpConfig->setAmqpConfigs([]);
-
-        $this->setToDIContainer(AmqpConfig::class, $this->amqpConfig);
+        $this->configs = new Configs();
     }
-
 
     /**
      * @return string
@@ -58,16 +55,12 @@ class AmqpPlugin extends AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
-        //所有配置合併
-        foreach ($this->amqpConfig->getAmqpConfigs() as $config) {
-            $config->merge();
-        }
+        $configs = Server::$instance->getConfigContext()->get('amqp');
 
-        $configs = Server::$instance->getConfigContext()->get(AmqpPoolConfig::key, []);
-        foreach ($configs as $key => $value) {
-            $amqpPoolConfig = new AmqpPoolConfig();
-            $amqpPoolConfig->setName($key);
-            $this->amqpConfig->addAmqpPoolConfig($amqpPoolConfig->buildFromConfig($value));
+        foreach ($configs as $key => $config) {
+            $configObject = new Config($key);
+            $configObject->setHosts($config['hosts']);
+            $this->configs->addConfig($configObject->buildFromConfig($config));
         }
 
         $amqpProxy = new AmqpProxy();
@@ -82,15 +75,20 @@ class AmqpPlugin extends AbstractPlugin
     public function beforeProcessStart(Context $context)
     {
         $amqpPool = new AmqpPool();
-        if (empty($this->amqpConfig->getAmqpConfigs())) {
-            $this->warn("没有amqp配置");
-            return;
+
+        $configs = $this->configs->getConfigs();
+        if (empty($configs)) {
+            $this->warn(Yii::t('esd', 'Amqp configuration not found'));
+            return false;
         }
 
-        foreach ($this->amqpConfig->getAmqpConfigs() as $key => $amqpPoolConfig) {
-            $amqpConnection = new AmqpConnection($amqpPoolConfig);
+        foreach ($configs as $key => $config) {
+            $amqpConnection = new AmqpConnection($config);
             $amqpPool->addConnection($amqpConnection);
-            $this->debug("已添加名为 {$amqpPoolConfig->getName()} 的Amqp连接");
+            $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
+                'driverName' => 'Amqp',
+                'name' => $config->getName()
+            ]));
         }
 
         $context->add("amqpPool", $amqpPool);

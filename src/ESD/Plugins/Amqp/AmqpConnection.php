@@ -20,7 +20,7 @@ class AmqpConnection
     /**
      * @var AmqpConfig
      */
-    protected $amqpPoolConfig;
+    protected $config;
 
     /**
      * @var AMQPStreamConnection
@@ -29,13 +29,13 @@ class AmqpConnection
 
     /**
      * AmqpConnection constructor.
-     * @param AmqpPoolConfig $amqpPoolConfig
+     * @param Config $config
      * @throws Exception
      */
-    public function __construct(AmqpPoolConfig $amqpPoolConfig)
+    public function __construct(Config $config)
     {
-        $amqpPoolConfig->buildConfig();
-        $this->amqpPoolConfig = $amqpPoolConfig;
+        $config->buildConfig();
+        $this->config = $config;
     }
 
     /**
@@ -63,34 +63,34 @@ class AmqpConnection
             /**
              * @var $connection AmqpConnection
              */
-            $connection = AMQPStreamConnection::create_connection($this->amqpPoolConfig->getHosts(), [
-                'insist' => $this->amqpPoolConfig->isInsist(),
-                'login_method' => $this->amqpPoolConfig->getLoginMethod(),
-                'login_response' => $this->amqpPoolConfig->getLoginResponse(),
-                'locale' => $this->amqpPoolConfig->getLocale(),
-                'connection_timeout' => $this->amqpPoolConfig->getConnectionTimeout(),
-                'read_write_timeout' => $this->amqpPoolConfig->getReadWriteTimeout(),
-                'context' => $this->amqpPoolConfig->getContext(),
-                'keepalive' => $this->amqpPoolConfig->isKeepAlive(),
-                'heartbeat' => $this->amqpPoolConfig->getHeartBeat()
+            $connection = AMQPStreamConnection::create_connection($this->config->getHosts(), [
+                'insist' => $this->config->isInsist(),
+                'login_method' => $this->config->getLoginMethod(),
+                'login_response' => $this->config->getLoginResponse(),
+                'locale' => $this->config->getLocale(),
+                'connection_timeout' => $this->config->getConnectionTimeout(),
+                'read_write_timeout' => $this->config->getReadWriteTimeout(),
+                'context' => $this->config->getContext(),
+                'keepalive' => $this->config->isKeepAlive(),
+                'heartbeat' => $this->config->getHeartBeat()
             ]);
             $this->connection = $connection;
         }
     }
 
     /**
-     * @return AmqpPoolConfig
+     * @return Config
      */
-    public function getAmqpPoolConfig(): AmqpPoolConfig
+    public function getConfig(): Config
     {
-        return $this->amqpPoolConfig;
+        return $this->config;
     }
 
     /**
-     * @param AmqpPoolConfig $amqpPoolConfig
+     * @param Config $config
      */
-    public function setAmqpPoolConfig(AmqpPoolConfig $amqpPoolConfig): void
+    public function setConfig(Config $config): void
     {
-        $this->amqpPoolConfig = $amqpPoolConfig;
+        $this->config = $config;
     }
 }
