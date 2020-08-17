@@ -71,7 +71,7 @@ class PdoPool
             /** @var Connection $db */
             $db = $this->pool->pop();
 
-            defer(function () use ($db) {
+            \Swoole\Coroutine::defer(function () use ($db) {
                 $this->pool->push($db);
             });
             setContextValue($contextKey, $db);

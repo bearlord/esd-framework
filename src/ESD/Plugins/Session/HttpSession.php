@@ -82,7 +82,7 @@ class HttpSession
                 $this->attribute = [];
             }
         }
-        defer(function () {
+        \Swoole\Coroutine::defer(function () {
             $this->save();
         });
     }

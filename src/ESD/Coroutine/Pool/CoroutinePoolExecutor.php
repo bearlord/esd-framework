@@ -101,7 +101,7 @@ class CoroutinePoolExecutor implements Executor
     private function createNewCoroutine($runnable, float $keepAliveTime): void
     {
         $cid = goWithContext(function () use ($runnable, $keepAliveTime) {
-            defer(function () {
+            \Swoole\Coroutine::defer(function () {
                 unset($this->cids[Co::getCid()]);
             });
             if ($runnable != null) {

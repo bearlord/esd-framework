@@ -68,7 +68,7 @@ class RedisPool
                     $db->select($this->redisConfig->getDatabase());
                 }
             }
-            defer(function () use ($db) {
+            \Swoole\Coroutine::defer(function () use ($db) {
                 $this->pool->push($db);
             });
             setContextValue($contextKey, $db);
