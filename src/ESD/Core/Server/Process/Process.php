@@ -286,7 +286,7 @@ abstract class Process
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
                 Process::signal(SIGTERM, [$this, '_onProcessStop']);
                 $this->socket = $this->swooleProcess->exportSocket();
-                go(function () {
+                \Swoole\Coroutine::create(function () {
                     while (true) {
                         $recv = $this->socket->recv();
                         if (empty($recv)) break;
@@ -295,7 +295,7 @@ abstract class Process
                         $unpackData = unpack("N", $recv);
                         $processId = $unpackData[1];
                         $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
-                        go(function () use ($recv, $fromProcess) {
+                        \Swoole\Coroutine::create(function () use ($recv, $fromProcess) {
                             $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
                         });
                     }

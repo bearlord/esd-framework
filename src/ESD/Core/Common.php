@@ -141,7 +141,7 @@ function goWithContext(callable $run)
 {
     if (Runtime::$enableCoroutine) {
         $context = getContext();
-        return go(function () use ($run, $context) {
+        return \Swoole\Coroutine::create(function () use ($run, $context) {
             $currentContext = getContext();
             //Reset parent context
             $currentContext->setParentContext($context);

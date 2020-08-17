@@ -362,7 +362,7 @@ abstract class AbstractServerPort
         $response->end();
 
         $this->server->defer(function () use ($request) {
-            go(function () use ($request) {
+            \Swoole\Coroutine::create(function () use ($request) {
                 $this->_onOpen($this->server->getServer(), $request);
             });
         });

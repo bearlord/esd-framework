@@ -316,7 +316,7 @@ class MQTT implements IMqtt
     public function connectAndLoop()
     {
         $this->_connect();
-        go(function () {
+        \Swoole\Coroutine::create(function () {
             $this->_loop();
         });
     }
