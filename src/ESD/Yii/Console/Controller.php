@@ -38,7 +38,7 @@ use ESD\Yii\Helpers\Inflector;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Controller
+class Controller extends \ESD\Yii\Base\Controller
 {
     /**
      * @deprecated since 2.0.13. Use [[ExitCode::OK]] instead.
@@ -69,7 +69,6 @@ class Controller
      */
     private $_passedOptions = [];
 
-
     /**
      * Returns a value indicating whether ANSI color is enabled.
      *
@@ -82,6 +81,86 @@ class Controller
     public function isColorEnabled($stream = \STDOUT)
     {
         return $this->color === null ? Console::streamSupportsAnsiColors($stream) : $this->color;
+    }
+
+    /**
+     * Runs an action with the specified action ID and parameters.
+     * If the action ID is empty, the method will use [[defaultAction]].
+     * @param string $id the ID of the action to be executed.
+     * @param array $params the parameters (name-value pairs) to be passed to the action.
+     * @return int the status of the action execution. 0 means normal, other values mean abnormal.
+     * @throws InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
+     * @throws Exception if there are unknown options or missing arguments
+     * @see createAction
+     */
+    public function runAction($id, $params = [])
+    {
+        if (!empty($params)) {
+            // populate options here so that they are available in beforeAction().
+            $options = $this->options($id === '' ? $this->defaultAction : $id);
+            if (isset($params['_aliases'])) {
+                $optionAliases = $this->optionAliases();
+                foreach ($params['_aliases'] as $name => $value) {
+                    if (array_key_exists($name, $optionAliases)) {
+                        $params[$optionAliases[$name]] = $value;
+                    } else {
+                        $message = Yii::t('yii', 'Unknown alias: -{name}', ['name' => $name]);
+                        if (!empty($optionAliases)) {
+                            $aliasesAvailable = [];
+                            foreach ($optionAliases as $alias => $option) {
+                                $aliasesAvailable[] = '-' . $alias . ' (--' . $option . ')';
+                            }
+
+                            $message .= '. ' . Yii::t('yii', 'Aliases available: {aliases}', [
+                                    'aliases' => implode(', ', $aliasesAvailable)
+                                ]);
+                        }
+                        throw new Exception($message);
+                    }
+                }
+                unset($params['_aliases']);
+            }
+
+            foreach ($params as $name => $value) {
+                // Allow camelCase options to be entered in kebab-case
+                if (!in_array($name, $options, true) && strpos($name, '-') !== false) {
+                    $kebabName = $name;
+                    $altName = lcfirst(Inflector::id2camel($kebabName));
+                    if (in_array($altName, $options, true)) {
+                        $name = $altName;
+                    }
+                }
+
+                if (in_array($name, $options, true)) {
+                    $default = $this->$name;
+                    if (is_array($default)) {
+                        $this->$name = preg_split('/\s*,\s*(?![^()]*\))/', $value);
+                    } elseif ($default !== null) {
+                        settype($value, gettype($default));
+                        $this->$name = $value;
+                    } else {
+                        $this->$name = $value;
+                    }
+                    $this->_passedOptions[] = $name;
+                    unset($params[$name]);
+                    if (isset($kebabName)) {
+                        unset($params[$kebabName]);
+                    }
+                } elseif (!is_int($name)) {
+                    $message = Yii::t('yii', 'Unknown option: --{name}', ['name' => $name]);
+                    if (!empty($options)) {
+                        $message .= '. ' . Yii::t('yii', 'Options available: {options}', ['options' => '--' . implode(', --', $options)]);
+                    }
+
+                    throw new Exception($message);
+                }
+            }
+        }
+        if ($this->help) {
+            $route = $this->getUniqueId() . '/' . $id;
+            return Yii::$app->runAction('help', [$route]);
+        }
+        return parent::runAction($id, $params);
     }
 
     /**
@@ -102,19 +181,35 @@ class Controller
             $method = new \ReflectionMethod($action, 'run');
         }
 
-        $args = array_values($params);
-
+        $args = [];
         $missing = [];
+        $actionParams = [];
+        $requestedParams = [];
         foreach ($method->getParameters() as $i => $param) {
-            if ($param->isArray() && isset($args[$i])) {
-                $args[$i] = $args[$i] === '' ? [] : preg_split('/\s*,\s*/', $args[$i]);
+            $name = $param->getName();
+            $key = null;
+            if (array_key_exists($i, $params)) {
+                $key = $i;
+            } elseif (array_key_exists($name, $params)) {
+                $key = $name;
             }
-            if (!isset($args[$i])) {
-                if ($param->isDefaultValueAvailable()) {
-                    $args[$i] = $param->getDefaultValue();
-                } else {
-                    $missing[] = $param->getName();
+
+            if ($key !== null) {
+                if ($param->isArray()) {
+                    $params[$key] = $params[$key] === '' ? [] : preg_split('/\s*,\s*/', $params[$key]);
                 }
+                $args[] = $actionParams[$key] = $params[$key];
+                unset($params[$key]);
+            } elseif (PHP_VERSION_ID >= 70100 && ($type = $param->getType()) !== null && !$type->isBuiltin()) {
+                try {
+                    $this->bindInjectedParams($type, $name, $args, $requestedParams);
+                } catch (\ESD\Yii\Base\Exception $e) {
+                    throw new Exception($e->getMessage());
+                }
+            } elseif ($param->isDefaultValueAvailable()) {
+                $args[] = $actionParams[$i] = $param->getDefaultValue();
+            } else {
+                $missing[] = $name;
             }
         }
 
@@ -163,6 +258,7 @@ class Controller
      * ```
      *
      * @param string $string the string to print
+     * @param int ...$args additional parameters to decorate the output
      * @return int|bool Number of bytes printed or false on error
      */
     public function stdout($string)
@@ -294,7 +390,7 @@ class Controller
     public function options($actionID)
     {
         // $actionId might be used in subclasses to provide options specific to action id
-        return ['color', 'interactive', 'help'];
+        return ['color', 'interactive', 'help', 'silentExitOnException', 'command', 'route'];
     }
 
     /**

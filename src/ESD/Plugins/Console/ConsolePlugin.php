@@ -13,6 +13,7 @@ use ESD\Plugins\Console\Command\RestartCmd;
 use ESD\Plugins\Console\Command\StartCmd;
 use ESD\Plugins\Console\Command\StatusCmd;
 use ESD\Plugins\Console\Command\StopCmd;
+use ESD\Plugins\Console\Command\YiiCmd;
 use ESD\Yii\Gii\ModelCmd;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -87,6 +88,7 @@ class ConsolePlugin extends AbstractPlugin
         $this->config->addCmdClass(StatusCmd::class);
         $this->config->addCmdClass(StopCmd::class);
         $this->config->addCmdClass(ModelCmd::class);
+        $this->config->addCmdClass(YiiCmd::class);
         $this->config->merge();
         $cmds = [];
         foreach ($this->config->getCmdClassList() as $value) {

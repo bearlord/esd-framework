@@ -37,7 +37,10 @@ class Controller extends Component implements ViewContextInterface
      * @event ActionEvent an event raised right after executing a controller action.
      */
     const EVENT_AFTER_ACTION = 'afterAction';
-
+    /**
+     * @var Module the module that this controller belongs to.
+     */
+    public $module;
     /**
      * @var string the ID of the action that is used when the action ID is not specified
      * in the request. Defaults to 'index'.
@@ -129,16 +132,6 @@ class Controller extends Component implements ViewContextInterface
         $modules = [];
         $runAction = true;
 
-        // call beforeAction on modules
-        foreach ($this->getModules() as $module) {
-            if ($module->beforeAction($action)) {
-                array_unshift($modules, $module);
-            } else {
-                $runAction = false;
-                break;
-            }
-        }
-
         $result = null;
 
         if ($runAction && $this->beforeAction($action)) {
@@ -218,7 +211,8 @@ class Controller extends Component implements ViewContextInterface
         }
 
         if (preg_match('/^(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]+$/', $id)) {
-            $methodName = $id;
+//            $methodName = $id;
+            $methodName = 'action' . str_replace(' ', '', ucwords(str_replace('-', ' ', $id)));
             if (method_exists($this, $methodName)) {
                 $method = new \ReflectionMethod($this, $methodName);
                 if ($method->isPublic() && $method->getName() === $methodName) {
@@ -294,24 +288,6 @@ class Controller extends Component implements ViewContextInterface
         $event->result = $result;
         $this->trigger(self::EVENT_AFTER_ACTION, $event);
         return $event->result;
-    }
-
-    /**
-     * Returns all ancestor modules of this controller.
-     * The first module in the array is the outermost one (i.e., the application instance),
-     * while the last is the innermost one.
-     * @return Module[] all ancestor modules that this controller is located within.
-     */
-    public function getModules()
-    {
-        $modules = [$this->module];
-        $module = $this->module;
-        while ($module->module !== null) {
-            array_unshift($modules, $module->module);
-            $module = $module->module;
-        }
-
-        return $modules;
     }
 
     /**
