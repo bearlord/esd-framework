@@ -65,43 +65,8 @@ class YiiCmd extends Command
         $route = $input->getArgument('route');
         unset($arguments['command'], $arguments['route']);
         $content = Application::instance()->runAction($route, $arguments);
-        return false;
 
-        $serverName = $serverConfig->getName();
-        $masterPid = exec("ps -ef | grep $serverName-master | grep -v 'grep ' | awk '{print $2}'");
-        if (empty($masterPid)) {
-            $io->warning("server $serverName not run");
-            return ConsolePlugin::SUCCESS_EXIT;
-        }
-
-        if ($input->getOption('kill')) {
-            //kill -9
-            exec("ps -ef|grep $serverName|grep -v grep|cut -c 9-15|xargs kill -9");
-            return ConsolePlugin::SUCCESS_EXIT;
-        }
-
-        // Send stop signal to master process.
-        $masterPid && posix_kill($masterPid, SIGTERM);
-        // Timeout.
-        $timeout = 40;
-        $startTime = time();
-        // Check master process is still alive?
-        while (1) {
-            $masterIsAlive = $masterPid && posix_kill($masterPid, 0);
-            if ($masterIsAlive) {
-                // Timeout?
-                if (time() - $startTime >= $timeout) {
-                    $io->warning("Server $serverName stop fail");
-                    return ConsolePlugin::FAIL_EXIT;
-                }
-                // Waiting amoment.
-                usleep(10000);
-                continue;
-            }
-            // Stop success.
-            $io->success("Server $serverName stop success");
-            break;
-        }
+        $io->success(sprintf("Route %s execute success", $route));
         return ConsolePlugin::SUCCESS_EXIT;
     }
 }
