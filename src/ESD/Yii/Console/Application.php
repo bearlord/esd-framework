@@ -711,8 +711,8 @@ class Application extends \ESD\Yii\Base\Application
                 /* @var $controller \ESD\Yii\Console\Controller */
                 list($controller, $actionID) = $parts;
                 $res = $controller->runAction($actionID, $params);
+                return is_object($res) ? $res : (int) $res;
             }
-            return is_object($res) ? $res : (int) $res;
         } catch (InvalidRouteException $e) {
             throw new UnknownCommandException($route, $this, 0, $e);
         }
