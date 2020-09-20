@@ -6,6 +6,10 @@
 
 namespace ESD\Core\DI;
 
+/**
+ * Interface Factory
+ * @package ESD\Core\DI
+ */
 interface Factory
 {
     /**

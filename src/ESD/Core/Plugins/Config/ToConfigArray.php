@@ -35,15 +35,15 @@ trait ToConfigArray
                     if (is_array($this->$varName)) {
                         foreach ($this->$varName as $key => $value) {
                             if ($value instanceof BaseConfig) {
-                                $config[$this->toConnectCase($varName)][$this->toConnectCase($key)] = $value->toConfigArray();
+                                $config[$this->toUnderlineCase($varName)][$this->toUnderlineCase($key)] = $value->toConfigArray();
                             } else {
-                                $config[$this->toConnectCase($varName)][$this->toConnectCase($key)] = $value;
+                                $config[$this->toUnderlineCase($varName)][$this->toUnderlineCase($key)] = $value;
                             }
                         }
                     } elseif ($this->$varName instanceof BaseConfig) {
-                        $config[$this->toConnectCase($varName)] = $this->$varName->toConfigArray();
+                        $config[$this->toUnderlineCase($varName)] = $this->$varName->toConfigArray();
                     } else {
-                        $config[$this->toConnectCase($varName)] = $this->$varName;
+                        $config[$this->toUnderlineCase($varName)] = $this->$varName;
                     }
                 }
             }
@@ -57,7 +57,7 @@ trait ToConfigArray
      * @param $var
      * @return mixed
      */
-    protected function toConnectCase($var)
+    protected function toUnderlineCase($var)
     {
         if (is_numeric($var)) {
             return $var;

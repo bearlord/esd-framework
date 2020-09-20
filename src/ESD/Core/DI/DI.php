@@ -6,9 +6,12 @@
 
 namespace ESD\Core\DI;
 
-
 use DI\ContainerBuilder;
 
+/**
+ * Class DI
+ * @package ESD\Core\DI
+ */
 class DI
 {
     public static $definitions = [];

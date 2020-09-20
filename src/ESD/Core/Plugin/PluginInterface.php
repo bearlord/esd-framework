@@ -9,6 +9,10 @@ namespace ESD\Core\Plugin;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
 
+/**
+ * Interface PluginInterface
+ * @package ESD\Core\Plugin
+ */
 interface PluginInterface
 {
     /**

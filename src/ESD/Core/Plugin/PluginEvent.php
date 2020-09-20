@@ -6,9 +6,12 @@
 
 namespace ESD\Core\Plugin;
 
-
 use ESD\Core\Plugins\Event\Event;
 
+/**
+ * Class PluginEvent
+ * @package ESD\Core\Plugin
+ */
 class PluginEvent extends Event
 {
     /**

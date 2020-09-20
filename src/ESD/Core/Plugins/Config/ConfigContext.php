@@ -119,7 +119,8 @@ class ConfigContext
     }
 
     /**
-     * 获取a.b.v这种的值，分隔符默认为"."
+     * Get the value of a.b.v, the default separator is "."
+     *
      * @param $key
      * @param null $default
      * @param string $separator
