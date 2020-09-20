@@ -20,7 +20,7 @@ class Client
      */
     public function __construct(int $sock_type = PortConfig::SWOOLE_SOCK_TCP)
     {
-        $this - $this->swooleClient = new Coroutine\Client($sock_type);
+        $this->swooleClient = new Swoole\Coroutine\Client($sock_type);
     }
 
     /**
