@@ -9,6 +9,10 @@ namespace ESD\Plugins\Aop;
 use ESD\Core\Order\Order;
 use Go\Aop\Aspect;
 
+/**
+ * Class OrderAspect
+ * @package ESD\Plugins\Aop
+ */
 abstract class OrderAspect extends Order implements Aspect
 {
 }

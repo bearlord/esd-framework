@@ -6,6 +6,10 @@
 
 namespace ESD\Psr\Cloud;
 
+/**
+ * Interface CircuitBreaker
+ * @package ESD\Psr\Cloud
+ */
 interface CircuitBreaker
 {
     /**

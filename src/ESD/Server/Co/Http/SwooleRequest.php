@@ -11,6 +11,10 @@ use ESD\Core\Server\Beans\Http\HttpStream;
 use ESD\Core\Server\Beans\Http\Uri;
 use ESD\Core\Server\Beans\Request;
 
+/**
+ * Class SwooleRequest
+ * @package ESD\Server\Co\Http
+ */
 class SwooleRequest extends Request
 {
 

@@ -8,6 +8,10 @@ namespace ESD\Plugins\Actor;
 
 use ESD\Core\Server\Process\Process;
 
+/**
+ * Class ActorInfo
+ * @package ESD\Plugins\Actor
+ */
 class ActorInfo
 {
     /**

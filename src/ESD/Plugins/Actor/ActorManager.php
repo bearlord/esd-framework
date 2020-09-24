@@ -12,6 +12,10 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Server\Co\Server;
 use ESD\Yii\Yii;
 
+/**
+ * Class ActorManager
+ * @package ESD\Plugins\Actor
+ */
 class ActorManager
 {
     use GetLogger;

@@ -25,6 +25,10 @@ use ESD\Yii\Yii;
 use ReflectionClass;
 use ReflectionException;
 
+/**
+ * Class AnnotationsScanPlugin
+ * @package ESD\Plugins\AnnotationsScan
+ */
 class AnnotationsScanPlugin extends AbstractPlugin
 {
     use GetLogger;

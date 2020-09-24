@@ -6,10 +6,13 @@
 
 namespace ESD\Plugins\Aop;
 
-
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
 
+/**
+ * Class FileCacheAspectKernel
+ * @package ESD\Plugins\Aop
+ */
 class FileCacheAspectKernel extends AspectKernel
 {
     /**

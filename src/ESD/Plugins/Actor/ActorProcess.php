@@ -11,6 +11,10 @@ use ESD\Core\Server\Process\Process;
 use ESD\Server\Co\Server;
 use ESD\Yii\Yii;
 
+/**
+ * Class ActorProcess
+ * @package ESD\Plugins\Actor
+ */
 class ActorProcess extends Process
 {
     /**

@@ -16,6 +16,10 @@ use Go\Core\AspectKernel;
 use Go\Instrument\ClassLoading\AopComposerLoader;
 use Go\Instrument\ClassLoading\SourceTransformingLoader;
 
+/**
+ * Class ApplicationAspectKernel
+ * @package ESD\Plugins\Aop
+ */
 class ApplicationAspectKernel extends AspectKernel
 {
     use OrderOwnerTrait;

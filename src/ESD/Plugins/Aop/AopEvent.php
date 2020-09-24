@@ -8,6 +8,10 @@ namespace ESD\Plugins\Aop;
 
 use ESD\Core\Plugins\Event\Event;
 
+/**
+ * Class AopEvent
+ * @package ESD\Plugins\Aop
+ */
 class AopEvent extends Event
 {
     const type = "AopEvent";

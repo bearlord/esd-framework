@@ -10,6 +10,10 @@ use ESD\Core\Exception;
 use ESD\Core\Server\Beans\Http\Cookie;
 use ESD\Core\Server\Beans\Response;
 
+/**
+ * Class SwooleResponse
+ * @package ESD\Server\Co\Http
+ */
 class SwooleResponse extends Response
 {
 
