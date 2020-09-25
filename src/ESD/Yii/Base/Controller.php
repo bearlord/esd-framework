@@ -120,6 +120,7 @@ class Controller extends Component implements ViewContextInterface
     public function runAction($id, $params = [])
     {
         $action = $this->createAction($id);
+
         if ($action === null) {
             throw new InvalidRouteException('Unable to resolve the request: ' . $this->getUniqueId() . '/' . $id);
         }
@@ -211,8 +212,7 @@ class Controller extends Component implements ViewContextInterface
         }
 
         if (preg_match('/^(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]+$/', $id)) {
-//            $methodName = $id;
-            $methodName = 'action' . str_replace(' ', '', ucwords(str_replace('-', ' ', $id)));
+            $methodName = $id;
             if (method_exists($this, $methodName)) {
                 $method = new \ReflectionMethod($this, $methodName);
                 if ($method->isPublic() && $method->getName() === $methodName) {

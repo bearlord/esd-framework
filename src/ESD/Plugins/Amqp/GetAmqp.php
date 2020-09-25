@@ -6,8 +6,6 @@
 
 namespace ESD\Plugins\Amqp;
 
-use PhpAmqpLib\Channel\AMQPChannel;
-
 /**
  * Trait GetAmqp
  * @package ESD\Plugins\Amqp
@@ -23,9 +21,7 @@ trait GetAmqp
     public function amqp(string $name = 'default')
     {
         $poolKey = sprintf("AmqpChannel:%s", $name);
-        /**
-         * @var $db AMQPChannel
-         */
+
         $db = getContextValue($poolKey);
         if ($db == null || !$db->is_open()) {
             $amqpPool = getDeepContextValueByClassName(AmqpPool::class);

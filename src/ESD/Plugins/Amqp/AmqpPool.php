@@ -6,8 +6,6 @@
 
 namespace ESD\Plugins\Amqp;
 
-use PhpAmqpLib\Channel\AMQPChannel;
-
 /**
  * Class AmqpPool
  * @package ESD\Plugins\Amqp
@@ -19,7 +17,7 @@ class AmqpPool
     /**
      * Add amqp connection
      *
-     * @param AmqpConnection $connection
+     * @param Connection $connection
      */
     public function addConnection(Connection $connection)
     {
@@ -37,7 +35,7 @@ class AmqpPool
     public function channel($name = "default", $channel_id = null): AMQPChannel
     {
         $connection = $this->getConnection($name);
-        return $connection->channel($channel_id);
+        return new \AMQPChannel($connection, $channel_id);
     }
 
     /**

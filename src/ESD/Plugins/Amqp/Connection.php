@@ -21,7 +21,7 @@ class Connection
     protected $config;
 
     /**
-     * @var AMQPStreamConnection
+     * @var AMQPConnection
      */
     protected $connection = null;
 

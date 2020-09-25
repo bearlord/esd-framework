@@ -79,8 +79,8 @@ class AmqpPlugin extends AbstractPlugin
         }
 
         foreach ($configs as $key => $config) {
-            $amqpConnection = new Connection($config);
-            $amqpPool->addConnection($amqpConnection);
+            $connection = new Connection($config);
+            $amqpPool->addConnection($connection);
             $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
                 'driverName' => 'Amqp',
                 'name' => $config->getName()

@@ -160,6 +160,11 @@ class Controller extends \ESD\Yii\Base\Controller
             $route = $this->getUniqueId() . '/' . $id;
             return Yii::$app->runAction('help', [$route]);
         }
+
+        if (!empty($id)) {
+            $id = sprintf("action%s", ucfirst($id));
+        }
+
         return parent::runAction($id, $params);
     }
 
