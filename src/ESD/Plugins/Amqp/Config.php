@@ -23,7 +23,7 @@ class Config extends BaseConfig
     protected $name;
 
     /**
-     * @var AmqpHostConfig[]
+     * @var HostConfig[]
      */
     protected $hosts = [];
 
@@ -267,10 +267,10 @@ class Config extends BaseConfig
 
         foreach ($hosts as $key => $host) {
             if (is_array($host)) {
-                $amqpConfig = new AmqpHostConfig();
+                $amqpConfig = new HostConfig();
                 $amqpConfig->buildFromConfig($host);
                 $this->hosts[$key] = $amqpConfig;
-            } else if($host instanceof AmqpHostConfig) {
+            } else if($host instanceof HostConfig) {
                 $this->hosts[$key] = $host;
             }
         }

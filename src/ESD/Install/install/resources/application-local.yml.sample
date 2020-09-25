@@ -11,6 +11,11 @@ redis:
     host: 'localhost'
     database: 1
 
+amqp:
+  defalt:
+    hosts:
+      - {host: 127.0.0.1, port: 5672, user: guest, password: guest, vhost: /}
+
 session:
   timeout: 3600
   database: 2

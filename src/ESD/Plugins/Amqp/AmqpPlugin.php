@@ -12,7 +12,6 @@ use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
-use PhpAmqpLib\Channel\AMQPChannel;
 
 /**
  * Class AmqpPlugin
@@ -62,9 +61,6 @@ class AmqpPlugin extends AbstractPlugin
             $configObject->setHosts($config['hosts']);
             $this->configs->addConfig($configObject->buildFromConfig($config));
         }
-
-        $amqpProxy = new AmqpProxy();
-        $this->setToDIContainer(AmqpChannel::class, $amqpProxy);
     }
 
     /**
@@ -83,7 +79,7 @@ class AmqpPlugin extends AbstractPlugin
         }
 
         foreach ($configs as $key => $config) {
-            $amqpConnection = new AmqpConnection($config);
+            $amqpConnection = new Connection($config);
             $amqpPool->addConnection($amqpConnection);
             $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
                 'driverName' => 'Amqp',
