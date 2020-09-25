@@ -14,6 +14,7 @@ use ESD\Core\Server\Beans\Response;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\Session\HttpSession;
 use ESD\Yii\Base\Controller;
+use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Di\ServiceLocator;
 use ESD\Yii\Plugin\Mongodb\MongodbPools;
 use ESD\Yii\Yii;
