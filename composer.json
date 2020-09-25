@@ -22,7 +22,6 @@
         "monolog/monolog": "^1.24",
         "ocramius/proxy-manager": "^2.1",
         "php": ">=7.1.4",
-        "php-amqplib/php-amqplib": "^2.9",
         "php-di/php-di": "^6.0",
         "psr/http-message": "^1.0",
         "goaop/framework": "^2.3",
