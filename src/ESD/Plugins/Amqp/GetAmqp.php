@@ -5,6 +5,9 @@
  */
 
 namespace ESD\Plugins\Amqp;
+use AMQPConnection;
+use ESD\Core\Server\Server;
+use ESD\Yii\Yii;
 
 /**
  * Trait GetAmqp
@@ -14,26 +17,47 @@ trait GetAmqp
 {
     /**
      * @param string $name
-     * @return AmqpChannel
+     * @return AMQPConnection|\ESD\Plugins\Amqp\AmqpConnection|null
      * @throws AmqpException
-     * @throws \ReflectionException
      */
     public function amqp(string $name = 'default')
     {
-        $poolKey = sprintf("AmqpChannel:%s", $name);
+        $poolKey = sprintf("Amqp:%s", $name);
 
-        $db = getContextValue($poolKey);
-        if ($db == null || !$db->is_open()) {
+        /** @var AMQPConnection $connection */
+        $connection = getContextValue($poolKey);
+        if ($connection == null || !$connection->isConnected()) {
             $amqpPool = getDeepContextValueByClassName(AmqpPool::class);
             if ($amqpPool instanceof AmqpPool) {
-                $db = $amqpPool->channel($name);
-                setContextValue($poolKey, $db);
-                return $db;
+                $connection = $amqpPool->getConnection($name);
+                setContextValue($poolKey, $connection);
+                return $connection;
             } else {
                 throw new AmqpException("No Amqp connection pool named {$poolKey} was found");
             }
         } else {
-            return $db;
+            return $connection;
+        }
+    }
+
+    /**
+     * @param string $name
+     * @return AMQPConnection
+     * @throws AmqpException
+     */
+    public function amqpOnce(string $name = 'default')
+    {
+        $configs = Server::$instance->getConfigContext()->get('amqp');
+        foreach ($configs as $key => $config) {
+            $configObject = new Config($key);
+            $configObject->setHosts($config['hosts']);
+            try {
+                $connection = new Connection($configObject);
+                return $connection->getConnection();
+            } catch (AmqpException $exception) {
+                throw $exception;
+            }
+
         }
     }
 }

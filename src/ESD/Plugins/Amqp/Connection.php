@@ -8,6 +8,7 @@ namespace ESD\Plugins\Amqp;
 
 use Exception;
 use AMQPConnection;
+use AMQPChannel;
 
 /**
  * Class Connection
@@ -72,18 +73,6 @@ class Connection
     }
 
     /**
-     * Get channel
-     * @param null $channel_id
-     * @return \AmqpChannel
-     * @throws Exception
-     */
-    public function channel($channel_id = null)
-    {
-        return new \AMQPChannel($this->connection, $channel_id);
-    }
-
-
-    /**
      * Connect
      * @throws Exception
      */
@@ -93,14 +82,14 @@ class Connection
             $this->connection->reconnect();
         } else if (!$this->connection) {
             foreach ($this->config->getHosts() as $key => $value) {
-                $connection = new \AMQPConnection($value);
+                $connection = new AMQPConnection($value);
                 try {
                     $connection->connect();
                     if ($connection->isConnected()) {
                         $this->setConnection($connection);
                     }
                     break;
-                } catch (\Exception $exception) {
+                } catch (AmqpException $exception) {
                     throw $exception;
                 }
             }
