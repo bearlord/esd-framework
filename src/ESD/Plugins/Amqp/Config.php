@@ -23,6 +23,11 @@ class Config extends BaseConfig
     protected $name;
 
     /**
+     * @var int
+     */
+    protected $poolMaxNumber = 3;
+
+    /**
      * @var HostConfig[]
      */
     protected $hosts = [];
@@ -80,6 +85,38 @@ class Config extends BaseConfig
     {
         parent::__construct(self::key, true, "name");
         $this->setName($name);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPoolMaxNumber(): int
+    {
+        return $this->poolMaxNumber;
+    }
+
+    /**
+     * @param int $poolMaxNumber
+     */
+    public function setPoolMaxNumber(int $poolMaxNumber)
+    {
+        $this->poolMaxNumber = $poolMaxNumber;
     }
 
     /**
@@ -224,22 +261,6 @@ class Config extends BaseConfig
     public function setHeartBeat(int $heartBeat): void
     {
         $this->heartBeat = $heartBeat;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 
     /**

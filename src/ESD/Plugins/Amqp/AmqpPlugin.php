@@ -11,6 +11,8 @@ use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
+use ESD\Plugins\Amqp\AmqpPool;
+use ESD\Plugins\Amqp\AmqpPools;
 use ESD\Yii\Yii;
 
 /**
@@ -70,7 +72,7 @@ class AmqpPlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        $amqpPool = new AmqpPool();
+        $pools = new AmqpPools();
 
         $configs = $this->configs->getConfigs();
         if (empty($configs)) {
@@ -79,16 +81,18 @@ class AmqpPlugin extends AbstractPlugin
         }
 
         foreach ($configs as $key => $config) {
-            $connection = new Connection($config);
-            $amqpPool->addConnection($connection);
+            $pool = new AmqpPool($config);
+            $pools->addPool($pool);
             $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
                 'driverName' => 'Amqp',
                 'name' => $config->getName()
             ]));
         }
 
-        $context->add("amqpPool", $amqpPool);
-        $this->setToDIContainer(AmqpPool::class, $amqpPool);
+        $context->add("amqpPools", $pools);
+        $this->setToDIContainer(AmqpPools::class, $pools);
+        $this->setToDIContainer(AmqpPool::class, $pools->getPool());
+
         $this->ready();
     }
 }

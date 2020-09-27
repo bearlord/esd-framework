@@ -1,53 +1,98 @@
 <?php
 /**
- * ESD framework
- * @author tmtbe <896369042@qq.com>
+ * ESD Yii pdo plugin
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Plugins\Amqp;
 
-use AMQPChannel;
+use ESD\Core\Channel\Channel;
+use ESD\Coroutine\Co;
 
 /**
- * Class AmqpPool
- * @package ESD\Plugins\Amqp
+ * Class PdoPool
+ * @package ESD\Yii\Plugin\Pdo
  */
 class AmqpPool
 {
-    protected $poolList = [];
-
     /**
-     * Add amqp connection
-     *
-     * @param Connection $connection
+     * @var Channel
      */
-    public function addConnection(Connection $connection)
-    {
-        $this->poolList[$connection->getConfig()->getName()] = $connection->getConnection();
-    }
+    protected $pool;
+
+    /** @var Config  */
+    protected $config;
 
     /**
-     * Get channel
-     *
-     * @param string $name
-     * @param int $channel_id
-     * @return AMQPChannel
+     * AmqpPool constructor.
+     * @param Config $config
      * @throws \Exception
      */
-    public function channel($name = "default", $channel_id = null): AMQPChannel
+    public function __construct(Config $config)
     {
-        $connection = $this->getConnection($name);
-        return new AMQPChannel($connection);
+        $this->config = $config;
+        $this->pool = DIGet(Channel::class, [$config->getPoolMaxNumber()]);
+        for ($i = 0; $i < $config->getPoolMaxNumber(); $i++) {
+            $db = $this->connect($config);
+            $this->pool->push($db);
+        }
     }
 
     /**
-     * Get connection
-     * 
-     * @param $name
-     * @return AmqpConnection|null
+     * @param $config
+     * @return Connection
+     * @throws \Exception
      */
-    public function getConnection($name = "default")
+    protected function connect($config)
     {
-        return $this->poolList[$name] ?? null;
+        $db = new Connection($config);
+        return $db;
+    }
+
+    /**
+     * @return Connection|mixed
+     */
+    /**
+     * @return \AMQPConnection
+     */
+    public function db()
+    {
+        $contextKey = "Amqp:{$this->getConfig()->getName()}";
+        $db = getContextValue($contextKey);
+ 
+        if ($db == null) {
+            /** @var Connection $db */
+            $db = $this->pool->pop();
+
+            \Swoole\Coroutine::defer(function () use ($db) {
+                $this->pool->push($db);
+            });
+            setContextValue($contextKey, $db);
+        }
+        return $db->getConnection();
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param Config $config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @return Channel|mixed
+     */
+    public function getPool()
+    {
+        return $this->pool;
     }
 }

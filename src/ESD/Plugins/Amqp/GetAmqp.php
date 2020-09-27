@@ -5,7 +5,6 @@
  */
 
 namespace ESD\Plugins\Amqp;
-use AMQPConnection;
 use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
 
@@ -17,33 +16,33 @@ trait GetAmqp
 {
     /**
      * @param string $name
-     * @return AMQPConnection|\ESD\Plugins\Amqp\AmqpConnection|null
+     * @return \AMQPConnection|mixed
      * @throws AmqpException
      */
     public function amqp(string $name = 'default')
     {
-        $poolKey = sprintf("Amqp:%s", $name);
+        $poolKey = $name;
+        $contextKey = sprintf("Amqp:%s", $name);
 
-        /** @var AMQPConnection $connection */
-        $connection = getContextValue($poolKey);
-        if ($connection == null || !$connection->isConnected()) {
-            $amqpPool = getDeepContextValueByClassName(AmqpPool::class);
-            if ($amqpPool instanceof AmqpPool) {
-                $connection = $amqpPool->getConnection($name);
-                setContextValue($poolKey, $connection);
-                return $connection;
-            } else {
+        $db = getContextValue($contextKey);
+        if ($db == null) {
+            /** @var AmqpPools $pdoPools * */
+            $pdoPools = getDeepContextValueByClassName(AmqpPools::class);
+            $pool = $pdoPools->getPool($poolKey);
+            if ($pool == null) {
                 throw new AmqpException("No Amqp connection pool named {$poolKey} was found");
             }
+            return $pool->db();
         } else {
-            return $connection;
+            return $db;
         }
     }
 
     /**
      * @param string $name
-     * @return AMQPConnection
+     * @return \AMQPConnection
      * @throws AmqpException
+     * @throws \ReflectionException
      */
     public function amqpOnce(string $name = 'default')
     {

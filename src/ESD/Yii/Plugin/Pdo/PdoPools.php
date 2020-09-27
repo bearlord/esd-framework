@@ -18,10 +18,8 @@ class PdoPools
     protected $poolList = [];
 
     /**
-     * Get pool
-     *
-     * @param $name
-     * @return
+     * @param string $name
+     * @return PdoPool|mixed|null
      */
     public function getPool($name = "default")
     {
