@@ -280,7 +280,9 @@ abstract class Process
             $this->setIsReady(true);
             $this->init();
 
+            /*
             $this->log->info(Yii::t('esd', 'Process ready'));
+            */
 
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);

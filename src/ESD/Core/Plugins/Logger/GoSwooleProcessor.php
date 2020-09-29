@@ -119,7 +119,7 @@ class GoSwooleProcessor implements ProcessorInterface
         }
     }
 
-    private $classNameMax = 50;
+    private $classNameMax = 70;
 
     /**
      * Handle class name
@@ -130,6 +130,7 @@ class GoSwooleProcessor implements ProcessorInterface
      */
     private function handleClassName($class, $func)
     {
+        /*
         $maxLength = 25;
         if (!empty($class) && strlen($class) > $maxLength) {
             $count = strlen($class);
@@ -142,6 +143,7 @@ class GoSwooleProcessor implements ProcessorInterface
             }
             $class = implode(".", $array);
         }
+        */
         $class = str_replace("\\", ".", $class);
         if (stristr($func, "{closure}")) {
             $func = "{closure}";

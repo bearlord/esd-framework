@@ -18,7 +18,9 @@ use ESD\Yii\Yii;
 class InotifyReload
 {
     use GetLogger;
-    public $monitor_dir;
+
+    public $monitorDirectory;
+
     public $inotifyFd;
 
     /**
@@ -28,9 +30,18 @@ class InotifyReload
      */
     public function __construct(AutoReloadConfig $autoReloadConfig)
     {
+        $this->prepareInit($autoReloadConfig);
+    }
+
+    /**
+     * @param AutoReloadConfig $autoReloadConfig
+     * @throws \Exception
+     */
+    public function prepareInit(AutoReloadConfig $autoReloadConfig)
+    {
         if ($autoReloadConfig->isEnable()) {
             $this->info(Yii::t('esd', 'Hot reload is enabled'));
-            $this->monitor_dir = realpath($autoReloadConfig->getMonitorDir());
+            $this->monitorDirectory = realpath($autoReloadConfig->getMonitorDir());
             if (!extension_loaded('inotify')) {
                 addTimerAfter(1000, [$this, 'unUseInotify']);
             } else {
@@ -49,7 +60,7 @@ class InotifyReload
         $this->inotifyFd = inotify_init();
         stream_set_blocking($this->inotifyFd, 0);
 
-        $dir_iterator = new \RecursiveDirectoryIterator($this->monitor_dir);
+        $dir_iterator = new \RecursiveDirectoryIterator($this->monitorDirectory);
         $iterator = new \RecursiveIteratorIterator($dir_iterator);
         foreach ($iterator as $file) {
             if (pathinfo($file, PATHINFO_EXTENSION) != 'php') {
@@ -97,7 +108,7 @@ class InotifyReload
         addTimerTick(1, function () {
             global $last_mtime;
             // recursive traversal directory
-            $dir_iterator = new \RecursiveDirectoryIterator($this->monitor_dir);
+            $dir_iterator = new \RecursiveDirectoryIterator($this->monitorDirectory);
             $iterator = new \RecursiveIteratorIterator($dir_iterator);
             foreach ($iterator as $file) {
                 //Only check php files
