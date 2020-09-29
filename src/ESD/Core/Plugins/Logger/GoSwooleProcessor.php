@@ -111,7 +111,7 @@ class GoSwooleProcessor implements ProcessorInterface
     private function handleProcess($processGroup, $processName, $cid)
     {
         $processName = sprintf('%10s', $processName);
-        $result = sprintf("[%15s|%15s|%4s]", $processGroup, $processName, $cid);
+        $result = sprintf("[%15s|%12s|%8s]", $processGroup, $processName, $cid);
         if ($this->color) {
             return "\e[35m" . $result . "\e[0m";
         } else {
