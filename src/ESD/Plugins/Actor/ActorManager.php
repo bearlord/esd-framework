@@ -117,7 +117,7 @@ class ActorManager
      */
     public function addActor(Actor $actor)
     {
-        if (Server::$instance->getProcessManager()->getCurrentProcess()->getGroupName() != ActorConfig::groupName) {
+        if (Server::$instance->getProcessManager()->getCurrentProcess()->getGroupName() != ActorConfig::GROUP_NAME) {
             throw new ActorException("Do not new a actor, use Actor::create()");
         }
         if ($this->actorTable->exist($actor->getName())) {

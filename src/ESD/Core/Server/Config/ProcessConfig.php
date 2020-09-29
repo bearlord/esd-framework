@@ -32,7 +32,7 @@ class ProcessConfig extends BaseConfig
     {
         parent::__construct(self::key, true, "name");
         if ($groupName == Process::WORKER_GROUP) {
-            throw new ConfigException("自定义进程不允许使用WORKER_GROUP组名");
+            throw new ConfigException("The custom process is not allowed to use the WORKER_GROUP group name");
         }
         $this->groupName = $groupName;
         $this->name = $name;

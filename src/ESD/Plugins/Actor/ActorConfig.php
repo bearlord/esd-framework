@@ -14,9 +14,9 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class ActorConfig extends BaseConfig
 {
-    const key = "actor";
+    const KEY = "actor";
 
-    const groupName = "ActorGroup";
+    const GROUP_NAME = "ActorGroup";
     
     /**
      * @var int Actor max count
@@ -43,7 +43,7 @@ class ActorConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

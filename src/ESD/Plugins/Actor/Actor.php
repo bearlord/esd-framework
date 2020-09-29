@@ -117,7 +117,7 @@ abstract class Actor
      */
     public static function create(string $actorName, $data = null, $waitCreate = true, $timeOut = 5)
     {
-        $processes = Server::$instance->getProcessManager()->getProcessGroup(ActorConfig::groupName);
+        $processes = Server::$instance->getProcessManager()->getProcessGroup(ActorConfig::GROUP_NAME);
 
         $nowProcess = ActorManager::getInstance()->getAtomic()->add();
         $index = $nowProcess % count($processes->getProcesses());

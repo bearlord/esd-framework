@@ -75,7 +75,7 @@ class ActorPlugin extends AbstractPlugin
     {
         $this->actorConfig->merge();
         for ($i = 0; $i < $this->actorConfig->getActorWorkerCount(); $i++) {
-            Server::$instance->addProcess("actor-$i", ActorProcess::class, ActorConfig::groupName);
+            Server::$instance->addProcess("actor-$i", ActorProcess::class, ActorConfig::GROUP_NAME);
         }
         $this->actorManager = ActorManager::getInstance();
         return;
