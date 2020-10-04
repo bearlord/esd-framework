@@ -8,7 +8,7 @@ namespace ESD\Plugins\Amqp;
 
 /**
  * Class AmqpPools
- * @package ESD\Yii\Plugin\Amqp
+ * @package ESD\Plugins\Amqp
  */
 class AmqpPools
 {

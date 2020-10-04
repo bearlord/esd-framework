@@ -1,7 +1,7 @@
 <?php
 /**
- * ESD Yii pdo plugin
- * @author bearlord <565364226@qq.com>
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\Amqp;
