@@ -37,7 +37,7 @@ class ScheduledConfig extends BaseConfig
     /**
      * @var string
      */
-    protected $taskProcessGroupName = ScheduledTask::GroupName;
+    protected $taskProcessGroupName = ScheduledTask::GROUP_NAME;
 
     /**
      * @var ScheduledTask[]
@@ -67,14 +67,14 @@ class ScheduledConfig extends BaseConfig
      */
     public function addScheduled(ScheduledTask $scheduledTask)
     {
-        if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::processName) {
+        if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::PROCESS_NAME) {
             //The scheduled process can directly add tasks
             $this->scheduledTasks[$scheduledTask->getName()] = $scheduledTask;
         } else {
             //Non-scheduled processes need to be added dynamically, with the help of Event
             Server::$instance->getEventDispatcher()->dispatchProcessEvent(
                 new ScheduledAddEvent($scheduledTask),
-                Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::processName)
+                Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::PROCESS_NAME)
             );
         }
     }
@@ -86,14 +86,14 @@ class ScheduledConfig extends BaseConfig
      */
     public function removeScheduled(String $scheduledTaskName)
     {
-        if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::processName) {
+        if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::PROCESS_NAME) {
             //The scheduling process can be removed directly
             unset($this->scheduledTasks[$scheduledTaskName]);
         } else {
             //Non-scheduled processes need to be removed dynamically, with the help of Event
             Server::$instance->getEventDispatcher()->dispatchProcessEvent(
                 new ScheduledRemoveEvent($scheduledTaskName),
-                Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::processName)
+                Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::PROCESS_NAME)
             );
         }
     }

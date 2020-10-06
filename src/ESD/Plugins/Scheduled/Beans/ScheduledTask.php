@@ -15,9 +15,9 @@ use ESD\Plugins\Scheduled\Cron\CronExpression;
  */
 class ScheduledTask extends BaseConfig
 {
-    const key = "scheduled.task";
-    const ProcessGroupAll = "all";
-    const GroupName = "ScheduledGroup";
+    const KEY = "scheduled.task";
+    const PROCESS_GROUP_ALL = "all";
+    const GROUP_NAME = "ScheduledGroup";
     /**
      * @var string
      */
@@ -40,7 +40,7 @@ class ScheduledTask extends BaseConfig
     /**
      * @var string
      */
-    protected $processGroup = ScheduledTask::GroupName;
+    protected $processGroup = ScheduledTask::GROUP_NAME;
 
     /**
      * @var CronExpression
@@ -57,7 +57,7 @@ class ScheduledTask extends BaseConfig
      */
     public function __construct($name, $expression, $className, $functionName, $processGroup = ScheduledTask::GroupName)
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
         $this->name = $name;
         $this->expression = $expression;
         $this->className = $className;

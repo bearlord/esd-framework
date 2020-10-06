@@ -30,5 +30,5 @@ class Scheduled extends Annotation
     /**
      * @var string
      */
-    public $processGroup = ScheduledTask::GroupName;
+    public $processGroup = ScheduledTask::GROUP_NAME;
 }

@@ -24,8 +24,8 @@ use ESD\Yii\Yii;
 class ScheduledPlugin extends AbstractPlugin
 {
     use GetLogger;
-    const processName = "helper";
-    const processGroupName = "HelperGroup";
+    const PROCESS_NAME = "helper";
+    const PROCESS_GROUP_NAME = "HelperGroup";
 
     /**
      * @var ScheduledConfig
@@ -91,10 +91,10 @@ class ScheduledPlugin extends AbstractPlugin
     {
         //Add helper process
         $this->scheduledConfig->merge();
-        Server::$instance->addProcess(self::processName, HelperScheduledProcess::class, self::processGroupName);
+        Server::$instance->addProcess(self::PROCESS_NAME, HelperScheduledProcess::class, self::PROCESS_GROUP_NAME);
         //Add scheduled process
         for ($i = 0; $i < $this->scheduledConfig->getTaskProcessCount(); $i++) {
-            Server::$instance->addProcess("scheduled-$i", ScheduledProcess::class, ScheduledTask::GroupName);
+            Server::$instance->addProcess("scheduled-$i", ScheduledProcess::class, ScheduledTask::GROUP_NAME);
         }
     }
 
@@ -111,7 +111,7 @@ class ScheduledPlugin extends AbstractPlugin
         new ScheduledTaskHandle();
 
         //Help process
-        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::processName) {
+        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
             //Scan annotation
             $scanClass = Server::$instance->getContainer()->get(ScanClass::class);
             $reflectionMethods = $scanClass->findMethodsByAnn(Scheduled::class);
@@ -164,7 +164,7 @@ class ScheduledPlugin extends AbstractPlugin
                         asort($this->processScheduledCount);
                         $process = null;
                         foreach ($this->processScheduledCount as $id => $value) {
-                            if ($scheduledTask->getProcessGroup() == ScheduledTask::ProcessGroupAll) {
+                            if ($scheduledTask->getProcessGroup() == ScheduledTask::PROCESS_GROUP_ALL) {
                                 $process = Server::$instance->getProcessManager()->getProcessFromId($id);
                                 break;
                             } else {
