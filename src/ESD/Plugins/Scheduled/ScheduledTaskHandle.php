@@ -20,7 +20,7 @@ class ScheduledTaskHandle
     {
         //Listen the execution of task events
         goWithContext(function () {
-            $call = Server::$instance->getEventDispatcher()->listen(ScheduledExecuteEvent::ScheduledExecuteEvent);
+            $call = Server::$instance->getEventDispatcher()->listen(ScheduledExecuteEvent::SCHEDULED_EXECUTE_EVENT);
             $call->call(function (ScheduledExecuteEvent $event){
                 goWithContext(function () use ($event) {
                     $this->execute($event->getTask());

@@ -24,6 +24,7 @@ use ESD\Yii\Yii;
 class ScheduledPlugin extends AbstractPlugin
 {
     use GetLogger;
+    
     const PROCESS_NAME = "helper";
     const PROCESS_GROUP_NAME = "HelperGroup";
 

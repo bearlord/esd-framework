@@ -14,7 +14,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class AnnotationsScanConfig extends BaseConfig
 {
-    const key = "scan";
+    const KEY = "scan";
 
     /**
      * @var string[]
@@ -32,7 +32,7 @@ class AnnotationsScanConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**
