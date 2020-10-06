@@ -5,6 +5,7 @@
  */
 
 namespace ESD\Plugins\Scheduled;
+
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Scheduled\Beans\ScheduledTask;
 use ESD\Plugins\Scheduled\Event\ScheduledExecuteEvent;
