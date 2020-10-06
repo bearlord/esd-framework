@@ -8,9 +8,13 @@ namespace ESD\Plugins\Cache;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class CacheConfig
+ * @package ESD\Plugins\Cache
+ */
 class CacheConfig extends BaseConfig
 {
-    const key = "cache";
+    const KEY = "cache";
     
     /**
      *
@@ -75,7 +79,7 @@ class CacheConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

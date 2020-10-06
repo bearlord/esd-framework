@@ -24,7 +24,7 @@ use ESD\Yii\Yii;
 class ScheduledPlugin extends AbstractPlugin
 {
     use GetLogger;
-    
+
     const PROCESS_NAME = "helper";
     const PROCESS_GROUP_NAME = "HelperGroup";
 
@@ -146,8 +146,8 @@ class ScheduledPlugin extends AbstractPlugin
 
             //Listen to dynamically added/removed task events
             goWithContext(function () {
-                $call = Server::$instance->getEventDispatcher()->listen(ScheduledAddEvent::ScheduledAddEvent);
-                Server::$instance->getEventDispatcher()->listen(ScheduledRemoveEvent::ScheduledRemoveEvent, $call);
+                $call = Server::$instance->getEventDispatcher()->listen(ScheduledAddEvent::SCHEDULED_ADD_EVENT);
+                Server::$instance->getEventDispatcher()->listen(ScheduledRemoveEvent::SCHEDULED_REMOVE_EVENT, $call);
                 $call->call(function (Event $event) {
                     if ($event instanceof ScheduledAddEvent) {
                         $this->scheduledConfig->addScheduled($event->getTask());

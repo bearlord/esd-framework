@@ -23,7 +23,7 @@ class ProcessRPCCallMessage extends Message
      */
     public function __construct(string $className, string $name, array $arguments, bool $oneway)
     {
-        parent::__construct(RpcMessageProcessor::type, new ProcessRPCCallData($className, $name, $arguments, $oneway));
+        parent::__construct(RpcMessageProcessor::TYPE, new ProcessRPCCallData($className, $name, $arguments, $oneway));
     }
 
     /**

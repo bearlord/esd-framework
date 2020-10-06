@@ -15,7 +15,7 @@ use ESD\Core\Server\Server;
  */
 class RouteConfig extends BaseConfig
 {
-    const key = "route";
+    const KEY = "route";
 
     /**
      * @var string
@@ -32,7 +32,7 @@ class RouteConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

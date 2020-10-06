@@ -15,7 +15,7 @@ use ESD\Core\Plugins\Config\ConfigException;
  */
 class AopConfig extends BaseConfig
 {
-    const key = "aop";
+    const KEY = "aop";
 
     /**
      * Cache directory
@@ -52,7 +52,7 @@ class AopConfig extends BaseConfig
      */
     public function __construct(...$includePaths)
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
         foreach ($includePaths as $includePath) {
             $this->addIncludePath($includePath);
         }

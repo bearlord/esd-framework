@@ -16,6 +16,10 @@ use ESD\Plugins\Pack\PackTool\IPack;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
 
+/**
+ * Class PackAspect
+ * @package ESD\Plugins\Pack\Aspect
+ */
 class PackAspect extends OrderAspect
 {
     use GetLogger;

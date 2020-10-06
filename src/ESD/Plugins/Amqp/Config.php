@@ -15,7 +15,7 @@ use ESD\Yii\Yii;
  */
 class Config extends BaseConfig
 {
-    const key = "amqp";
+    const KEY = "amqp";
 
     /**
      * @var string
@@ -83,7 +83,7 @@ class Config extends BaseConfig
      */
     public function __construct($name)
     {
-        parent::__construct(self::key, true, "name");
+        parent::__construct(self::KEY, true, "name");
         $this->setName($name);
     }
 

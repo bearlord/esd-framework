@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\Saber;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Plugins\Saber\Interceptors\Interceptor;
 use ESD\Server\Co\Server;
@@ -15,7 +14,7 @@ use Swlib\Http\Exception\HttpExceptionMask;
 
 class SaberConfig extends BaseConfig
 {
-    const key = "saber";
+    const KEY = "saber";
     /**
      * Base url
      * @var string|null
@@ -106,7 +105,7 @@ class SaberConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

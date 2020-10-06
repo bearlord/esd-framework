@@ -18,7 +18,8 @@ use ESD\Core\Server\Server;
 class RpcMessageProcessor extends MessageProcessor
 {
     use GetLogger;
-    const type = "@processRPC";
+    
+    const TYPE = "@processRPC";
 
     /**
      * @var array
@@ -35,7 +36,7 @@ class RpcMessageProcessor extends MessageProcessor
      */
     public function __construct()
     {
-        parent::__construct(self::type);
+        parent::__construct(self::TYPE);
     }
 
     /**

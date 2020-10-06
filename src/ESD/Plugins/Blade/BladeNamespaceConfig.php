@@ -12,7 +12,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
 
 class BladeNamespaceConfig extends BaseConfig
 {
-    const key = "blade.namespace";
+    const KEY = "blade.namespace";
 
     /**
      * @var string
@@ -29,7 +29,7 @@ class BladeNamespaceConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

@@ -15,7 +15,7 @@ use ESD\Plugins\Scheduled\Beans\ScheduledTask;
  */
 class ScheduledRemoveEvent extends Event
 {
-    const ScheduledRemoveEvent = "ScheduledRemoveEvent";
+    const SCHEDULED_REMOVE_EVENT = "ScheduledRemoveEvent";
 
     /**
      * ScheduledRemoveEvent constructor.
@@ -23,7 +23,7 @@ class ScheduledRemoveEvent extends Event
      */
     public function __construct(string $scheduledTaskName)
     {
-        parent::__construct(self::ScheduledRemoveEvent, $scheduledTaskName);
+        parent::__construct(self::SCHEDULED_REMOVE_EVENT, $scheduledTaskName);
     }
 
     /**

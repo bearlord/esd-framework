@@ -11,7 +11,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
 
 class BladeConfig extends BaseConfig
 {
-    const key = "blade";
+    const KEY = "blade";
     /**
      * @var string
      */
@@ -27,7 +27,7 @@ class BladeConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

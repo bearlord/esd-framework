@@ -15,7 +15,7 @@ use ESD\Plugins\Scheduled\Beans\ScheduledTask;
  */
 class ScheduledAddEvent extends Event
 {
-    const ScheduledAddEvent = "ScheduledAddEvent";
+    const SCHEDULED_ADD_EVENT = "ScheduledAddEvent";
 
     /**
      * ScheduledAddEvent constructor.
@@ -23,7 +23,7 @@ class ScheduledAddEvent extends Event
      */
     public function __construct(ScheduledTask $data)
     {
-        parent::__construct(self::ScheduledAddEvent, $data);
+        parent::__construct(self::SCHEDULED_ADD_EVENT, $data);
     }
 
     /**

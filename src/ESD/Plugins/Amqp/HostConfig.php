@@ -15,7 +15,7 @@ use ESD\Yii\Yii;
  */
 class HostConfig extends BaseConfig
 {
-    const key = "amqp.hosts";
+    const KEY = "amqp.hosts";
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class HostConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
 

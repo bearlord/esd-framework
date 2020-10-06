@@ -14,7 +14,8 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class RouteRoleConfig extends BaseConfig
 {
-    const key = "route.role";
+    const KEY = "route.role";
+    
     /**
      * Name
      * @var string
@@ -62,7 +63,7 @@ class RouteRoleConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key, true, "name");
+        parent::__construct(self::KEY, true, "name");
     }
 
     /**

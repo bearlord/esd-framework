@@ -20,7 +20,7 @@ use ESD\Yii\Yii;
  */
 class ScheduledConfig extends BaseConfig
 {
-    const key = "scheduled";
+    const KEY = "scheduled";
 
     /**
      * Minimum interval
@@ -53,7 +53,7 @@ class ScheduledConfig extends BaseConfig
      */
     public function __construct($minIntervalTime = 1000)
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
         $this->minIntervalTime = $minIntervalTime;
         if ($minIntervalTime < 1000) {
             throw new ConfigException(Yii::t('esd', 'The minimum time unit for scheduled tasks is 1s'));

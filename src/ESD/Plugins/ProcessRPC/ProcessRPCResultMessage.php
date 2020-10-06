@@ -24,7 +24,7 @@ class ProcessRPCResultMessage extends Message
      */
     public function __construct(int $token, $result, ?string $errorClass, ?int $errorCode, ?string $errorMessage)
     {
-        parent::__construct(RpcMessageProcessor::type, new ProcessRPCResultData($token, $result, $errorClass, $errorCode, $errorMessage));
+        parent::__construct(RpcMessageProcessor::TYPE, new ProcessRPCResultData($token, $result, $errorClass, $errorCode, $errorMessage));
     }
 
     /**

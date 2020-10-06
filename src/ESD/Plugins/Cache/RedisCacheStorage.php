@@ -19,7 +19,7 @@ class RedisCacheStorage implements CacheStorage
      */
     private $cacheConfig;
 
-    const prefix = "CACHE_";
+    const PREFIX = "CACHE_";
 
     /**
      * RedisCacheStorage constructor.
@@ -37,7 +37,7 @@ class RedisCacheStorage implements CacheStorage
      */
     public function getFromNameSpace(string $nameSpace, string $id)
     {
-        return $this->redis($this->cacheConfig->getDb())->hGet(self::prefix . $nameSpace, $id);
+        return $this->redis($this->cacheConfig->getDb())->hGet(self::PREFIX . $nameSpace, $id);
     }
 
     /**
@@ -48,7 +48,7 @@ class RedisCacheStorage implements CacheStorage
      */
     public function setFromNameSpace(string $nameSpace, string $id, string $data)
     {
-        return $this->redis($this->cacheConfig->getDb())->hSet(self::prefix . $nameSpace, $id, $data);
+        return $this->redis($this->cacheConfig->getDb())->hSet(self::PREFIX . $nameSpace, $id, $data);
     }
 
     /**
@@ -58,7 +58,7 @@ class RedisCacheStorage implements CacheStorage
      */
     public function removeFromNameSpace(string $nameSpace, string $id)
     {
-        return $this->redis($this->cacheConfig->getDb())->hDel(self::prefix . $nameSpace, $id);
+        return $this->redis($this->cacheConfig->getDb())->hDel(self::PREFIX . $nameSpace, $id);
     }
 
     /**
@@ -67,7 +67,7 @@ class RedisCacheStorage implements CacheStorage
      */
     public function removeNameSpace(string $nameSpace)
     {
-        return $this->redis($this->cacheConfig->getDb())->del(self::prefix . $nameSpace);
+        return $this->redis($this->cacheConfig->getDb())->del(self::PREFIX . $nameSpace);
     }
 
     /**
@@ -76,7 +76,7 @@ class RedisCacheStorage implements CacheStorage
      */
     public function get(string $id)
     {
-        return $this->redis($this->cacheConfig->getDb())->get(self::prefix . $id);
+        return $this->redis($this->cacheConfig->getDb())->get(self::PREFIX . $id);
     }
 
     /**
@@ -93,9 +93,9 @@ class RedisCacheStorage implements CacheStorage
             $time = mt_rand($time, ceil($time *0.2) + $time);
         }
         if ($time > 0) {
-            return $this->redis($this->cacheConfig->getDb())->setex(self::prefix . $id, $time, $data);
+            return $this->redis($this->cacheConfig->getDb())->setex(self::PREFIX . $id, $time, $data);
         } else {
-            return $this->redis($this->cacheConfig->getDb())->set(self::prefix . $id, $data);
+            return $this->redis($this->cacheConfig->getDb())->set(self::PREFIX . $id, $data);
         }
     }
 
@@ -105,7 +105,7 @@ class RedisCacheStorage implements CacheStorage
      */
     public function remove(string $id)
     {
-        $this->redis($this->cacheConfig->getDb())->del(self::prefix . $id);
+        $this->redis($this->cacheConfig->getDb())->del(self::PREFIX . $id);
     }
 
     /**
