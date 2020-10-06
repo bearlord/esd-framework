@@ -12,8 +12,8 @@ use ESD\Core\Server\Server;
 
 class AutoReloadPlugin extends AbstractPlugin
 {
-    const processName = "helper";
-    const processGroupName = "HelperGroup";
+    const PROCESS_NAME = "helper";
+    const PROCESS_GROUP_NAME = "HelperGroup";
 
     /**
      * @var InotifyReload
@@ -68,7 +68,7 @@ class AutoReloadPlugin extends AbstractPlugin
         $this->autoReloadConfig->merge();
 
         //Add help process
-        Server::$instance->addProcess(self::processName, HelperReloadProcess::class, self::processGroupName);
+        Server::$instance->addProcess(self::PROCESS_NAME, HelperReloadProcess::class, self::PROCESS_GROUP_NAME);
         return;
     }
 
@@ -80,7 +80,7 @@ class AutoReloadPlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::processName) {
+        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
             $this->inotifyReload = new InotifyReload($this->autoReloadConfig);
         }
         $this->ready();
