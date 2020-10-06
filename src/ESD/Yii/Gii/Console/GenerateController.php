@@ -21,7 +21,13 @@ class GenerateController extends Controller
      */
     public $generator;
 
-    public function runAction($type, $options)
+    /**
+     * @param string $type
+     * @param array $options
+     * @return int|void
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     */
+    public function runAction($type, $options = [])
     {
         $generator = $this->getGenerator($type);
         /** @var \ESD\Yii\Gii\Generator | \ESD\Yii\Gii\Generators\Model\Generator $generatorObject */
