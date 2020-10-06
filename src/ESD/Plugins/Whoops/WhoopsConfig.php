@@ -14,7 +14,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class WhoopsConfig extends BaseConfig
 {
-    const key = "whoops";
+    const KEY = "whoops";
 
     /**
      * @var bool
@@ -26,7 +26,7 @@ class WhoopsConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**
