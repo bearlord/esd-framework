@@ -41,7 +41,7 @@ class ProcessRPCResultData
      * @param int|null $errorCode
      * @param string|null $errorMessage
      */
-    public function __construct(int $token, $result,?string $errorClass,?int $errorCode,?string $errorMessage)
+    public function __construct(int $token, $result, ?string $errorClass, ?int $errorCode, ?string $errorMessage)
     {
         $this->token = $token;
         $this->result = $result;

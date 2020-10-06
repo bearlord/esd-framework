@@ -22,7 +22,7 @@ use ESD\Plugins\Uid\UidPlugin;
  */
 class TopicPlugin extends AbstractPlugin
 {
-    const processGroupName = "HelperGroup";
+    const PROCESS_GROUP_NAME = "HelperGroup";
 
     /**
      * @var Table
@@ -110,7 +110,7 @@ class TopicPlugin extends AbstractPlugin
         $this->topicTable->column("uid", Table::TYPE_STRING, $uidConfig->getUidMaxLength());
         $this->topicTable->create();
 
-        Server::$instance->addProcess($this->topicConfig->getProcessName(), TopicProcess::class, self::processGroupName);
+        Server::$instance->addProcess($this->topicConfig->getProcessName(), TopicProcess::class, self::PROCESS_GROUP_NAME);
         return;
     }
 

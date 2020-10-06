@@ -14,7 +14,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class TopicConfig extends BaseConfig
 {
-    const key = "topic";
+    const KEY = "topic";
     /**
      * @var int
      */
@@ -31,7 +31,7 @@ class TopicConfig extends BaseConfig
 
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

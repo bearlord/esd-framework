@@ -9,6 +9,10 @@ namespace ESD\Plugins\Topic;
 use ESD\Core\Exception;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class Utility
+ * @package ESD\Plugins\Topic
+ */
 class Utility
 {
     /**

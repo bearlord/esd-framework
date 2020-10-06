@@ -15,6 +15,7 @@ use ESD\Plugins\ProcessRPC\GetProcessRpc;
 trait GetTopic
 {
     use GetProcessRpc;
+    
     /**
      * @var TopicConfig
      */
