@@ -73,7 +73,7 @@ class ConsulServices implements Services
         if ($consulServiceInfos == null) {
             Server::$instance->getEventDispatcher()->dispatchProcessEvent(
                 new ConsulAddServiceMonitorEvent($service),
-                Server::$instance->getProcessManager()->getProcessFromName(ConsulPlugin::processName)
+                Server::$instance->getProcessManager()->getProcessFromName(ConsulPlugin::PROCESS_NAME)
             );
             $call = Server::$instance->getEventDispatcher()->listen(ConsulOneServiceChangeEvent::ConsulOneServiceChangeEvent . "::" . $service, null, true);
             /** @var ConsulOneServiceChangeEvent $consulGetServiceEvent */

@@ -24,8 +24,8 @@ use ESD\Server\Co\Server;
 class ConsulPlugin extends AbstractPlugin
 {
     use GetLogger;
-    const processName = "helper";
-    const processGroupName = "HelperGroup";
+    const PROCESS_NAME = "helper";
+    const PROCESS_GROUP_NAME = "HelperGroup";
 
     /**
      * @var ConsulConfig
@@ -92,7 +92,7 @@ class ConsulPlugin extends AbstractPlugin
     public function beforeServerStart(Context $context)
     {
         //Add a helper process
-        Server::$instance->addProcess(self::processName, HelperConsulProcess::class, self::processGroupName);
+        Server::$instance->addProcess(self::PROCESS_NAME, HelperConsulProcess::class, self::PROCESS_GROUP_NAME);
         //Auto config
         $this->consulConfig->autoConfig();
         $this->consulConfig->merge();
@@ -121,7 +121,7 @@ class ConsulPlugin extends AbstractPlugin
         });
 
         //Helper process
-        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::processName) {
+        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
             $this->consul = new Consul($this->consulConfig);
             //Process monitoring server information
             $call = Server::$instance->getEventDispatcher()->listen(ProcessEvent::ProcessStopEvent, null, true);

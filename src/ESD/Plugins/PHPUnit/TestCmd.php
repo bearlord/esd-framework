@@ -58,7 +58,7 @@ class TestCmd extends Command
         $file = $input->getArgument("file");
         Server::$instance->getContainer()->set("phpunit.file", $file);
         //添加一个unit进程
-        Server::$instance->addProcess(PHPUnitPlugin::processName, PHPUnitProcess::class, PHPUnitPlugin::processGroupName);
+        Server::$instance->addProcess(PHPUnitPlugin::PROCESS_NAME, PHPUnitProcess::class, PHPUnitPlugin::PROCESS_GROUP_NAME);
         return ConsolePlugin::NOEXIT;
     }
 }

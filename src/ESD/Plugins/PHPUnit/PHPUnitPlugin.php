@@ -18,8 +18,8 @@ use ESD\Plugins\Console\ConsolePlugin;
  */
 class PHPUnitPlugin extends AbstractPlugin
 {
-    const processName = "unit";
-    const processGroupName = "UnitGroup";
+    const PROCESS_NAME = "unit";
+    const PROCESS_GROUP_NAME = "UnitGroup";
 
     /**
      * PHPUnitPlugin constructor.
