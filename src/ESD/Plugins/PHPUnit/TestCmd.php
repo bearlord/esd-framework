@@ -57,7 +57,7 @@ class TestCmd extends Command
         $serverConfig->setProxyServerClass(UnitServer::class);
         $file = $input->getArgument("file");
         Server::$instance->getContainer()->set("phpunit.file", $file);
-        //添加一个unit进程
+        //Add the unit process
         Server::$instance->addProcess(PHPUnitPlugin::PROCESS_NAME, PHPUnitProcess::class, PHPUnitPlugin::PROCESS_GROUP_NAME);
         return ConsolePlugin::NOEXIT;
     }
