@@ -13,6 +13,10 @@ use ESD\Plugins\Pack\ClientData;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
 
+/**
+ * Class NonJsonPack
+ * @package ESD\Plugins\Pack\PackTool
+ */
 class NonJsonPack implements IPack
 {
     use GetLogger;
