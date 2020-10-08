@@ -44,7 +44,7 @@ class PortConfig extends BaseConfig
     const WEBSOCKET_STATUS_HANDSHAKE = WEBSOCKET_STATUS_HANDSHAKE;
     const WEBSOCKET_STATUS_FRAME = WEBSOCKET_STATUS_FRAME;
 
-    const key = "esd.port";
+    const KEY = "esd.port";
 
     /**
      * @var string
@@ -266,7 +266,7 @@ class PortConfig extends BaseConfig
 
     public function __construct()
     {
-        parent::__construct(self::key, true, "name");
+        parent::__construct(self::KEY, true, "name");
     }
 
     /**

@@ -7,10 +7,15 @@
 namespace ESD\Yii\Plugin;
 
 use ESD\Core\Context\Context;
+use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Yii\Base\Application;
 
-class YiiPlugin extends \ESD\Core\Plugin\AbstractPlugin
+/**
+ * Class YiiPlugin
+ * @package ESD\Yii\Plugin
+ */
+class YiiPlugin extends AbstractPlugin
 {
     /**
      * @return string

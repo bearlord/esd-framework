@@ -85,7 +85,7 @@ class PortManager
      */
     public function getPortConfig($port)
     {
-        $configs = Server::$instance->getConfigContext()->get(PortConfig::key);
+        $configs = Server::$instance->getConfigContext()->get(PortConfig::KEY);
         foreach ($configs as $key => $value) {
             if ($value['port'] === $port) {
                 $portConfig = new PortConfig();
@@ -109,7 +109,7 @@ class PortManager
 
         //Reacquire configuration
         $portConfigs = [];
-        $configs = Server::$instance->getConfigContext()->get(PortConfig::key);
+        $configs = Server::$instance->getConfigContext()->get(PortConfig::KEY);
         foreach ($configs as $key => $value) {
             $portConfig = new PortConfig();
             $portConfig->setName($key);

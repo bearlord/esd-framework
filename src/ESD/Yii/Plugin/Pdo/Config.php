@@ -14,7 +14,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class Config extends BaseConfig
 {
-    const key = "pdo";
+    const KEY = "pdo";
     /**
      * @var string
      */
@@ -65,7 +65,7 @@ class Config extends BaseConfig
      */
     public function __construct($name)
     {
-        parent::__construct(self::key, true, "name");
+        parent::__construct(self::KEY, true, "name");
         $this->setName($name);
     }
 
