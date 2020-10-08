@@ -14,7 +14,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class ConsulServiceConfig extends BaseConfig
 {
-    const key = "consul.service_configs";
+    const KEY = "consul.service_configs";
 
     /**
      * Service name, default will be server name

@@ -14,7 +14,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class ConsoleConfig extends BaseConfig
 {
-    const key = "console";
+    const KEY = "console";
     /**
      * @var string[]
      */
@@ -25,7 +25,7 @@ class ConsoleConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

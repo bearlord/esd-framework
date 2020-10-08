@@ -82,11 +82,13 @@ class RedisPlugin extends AbstractPlugin
         foreach ($this->redisConfig->getRedisConfigs() as $config) {
             $config->merge();
         }
-        $configs = Server::$instance->getConfigContext()->get(RedisOneConfig::key, []);
+
+        $configs = Server::$instance->getConfigContext()->get(RedisOneConfig::KEY, []);
         foreach ($configs as $key => $value) {
             $redisOneConfig = new RedisOneConfig($key);
             $this->redisConfig->addRedisOneConfig($redisOneConfig->buildFromConfig($value));
         }
+
         $redisProxy = new RedisProxy();
         $this->setToDIContainer(\Redis::class, $redisProxy);
         $this->setToDIContainer(Redis::class, $redisProxy);

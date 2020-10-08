@@ -14,7 +14,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class ConsulCheckConfig extends BaseConfig
 {
-    const key = "consul.service_configs.[].check_config";
+    const KEY = "consul.service_configs.[].check_config";
 
     /**
      * Specify how often to run this check. This is required for HTTP and TCP checks.
@@ -117,7 +117,7 @@ class ConsulCheckConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

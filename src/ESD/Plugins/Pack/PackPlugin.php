@@ -63,7 +63,8 @@ class PackPlugin extends AbstractPlugin
     public function init(Context $context)
     {
         parent::init($context);
-        $configs = Server::$instance->getConfigContext()->get(PortConfig::key);
+
+        $configs = Server::$instance->getConfigContext()->get(PortConfig::KEY);
         foreach ($configs as $key => $value) {
             $packConfig = new PackConfig();
             $packConfig->setName($key);
@@ -81,6 +82,7 @@ class PackPlugin extends AbstractPlugin
             $packConfig->merge();
             $this->packConfigs[$packConfig->getPort()] = $packConfig;
         }
+
         $serverConfig = Server::$instance->getServerConfig();
         /** @var AopConfig $aopConfig */
         $aopConfig = DIget(AopConfig::class);

@@ -110,7 +110,7 @@ class EasyRoutePlugin extends AbstractPlugin
     public function init(Context $context)
     {
         parent::init($context);
-        $configs = Server::$instance->getConfigContext()->get(PortConfig::key);
+        $configs = Server::$instance->getConfigContext()->get(PortConfig::KEY);
         foreach ($configs as $key => $value) {
             $easyRouteConfig = new EasyRouteConfig();
             $easyRouteConfig->setName($key);

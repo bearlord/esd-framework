@@ -17,7 +17,7 @@ class SessionConfig extends BaseConfig
     /**
      * Key
      */
-    const key = "session";
+    const KEY = "session";
 
     /**
      * Usage cookie
@@ -96,7 +96,7 @@ class SessionConfig extends BaseConfig
      */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

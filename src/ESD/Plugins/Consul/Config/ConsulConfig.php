@@ -17,7 +17,7 @@ use ESD\Server\Co\Server;
  */
 class ConsulConfig extends BaseConfig
 {
-    const key = "consul";
+    const KEY = "consul";
 
     /**
      * Default host
@@ -67,7 +67,7 @@ class ConsulConfig extends BaseConfig
      */
     public function __construct(?string $host)
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
         if ($host != null) {
             $this->host = $host;
         }

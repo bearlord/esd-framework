@@ -14,12 +14,16 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class UidConfig extends BaseConfig
 {
-    const key = "uid";
+    const KEY = "uid";
+    
     protected $uidMaxLength = 24;
 
+    /**
+     * UidConfig constructor.
+     */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 
     /**

@@ -8,12 +8,19 @@ namespace ESD\Plugins\Security;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class SecurityConfig
+ * @package ESD\Plugins\Security
+ */
 class SecurityConfig extends BaseConfig
 {
-    const key = "security";
+    const KEY = "security";
 
+    /**
+     * SecurityConfig constructor.
+     */
     public function __construct()
     {
-        parent::__construct(self::key);
+        parent::__construct(self::KEY);
     }
 }

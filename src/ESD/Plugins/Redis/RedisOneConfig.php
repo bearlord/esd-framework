@@ -15,7 +15,7 @@ use ESD\Yii\Yii;
  */
 class RedisOneConfig extends BaseConfig
 {
-    const key = "redis";
+    const KEY = "redis";
 
     /**
      * @var string
@@ -53,7 +53,7 @@ class RedisOneConfig extends BaseConfig
      */
     public function __construct(string $name)
     {
-        parent::__construct(self::key, true, "name");
+        parent::__construct(self::KEY, true, "name");
         $this->setName($name);
     }
 
