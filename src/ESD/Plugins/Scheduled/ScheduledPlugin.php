@@ -57,6 +57,23 @@ class ScheduledPlugin extends AbstractPlugin
         $this->atAfter(AnnotationsScanPlugin::class);
     }
 
+
+    /**
+     * @return ScheduledConfig
+     */
+    public function getScheduledConfig(): ScheduledConfig
+    {
+        return $this->scheduledConfig;
+    }
+
+    /**
+     * @param ScheduledConfig $scheduledConfig
+     */
+    public function setScheduledConfig(ScheduledConfig $scheduledConfig): void
+    {
+        $this->scheduledConfig = $scheduledConfig;
+    }
+
     /**
      * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
@@ -188,21 +205,5 @@ class ScheduledPlugin extends AbstractPlugin
             });
         }
         $this->ready();
-    }
-
-    /**
-     * @return ScheduledConfig
-     */
-    public function getScheduledConfig(): ScheduledConfig
-    {
-        return $this->scheduledConfig;
-    }
-
-    /**
-     * @param ScheduledConfig $scheduledConfig
-     */
-    public function setScheduledConfig(ScheduledConfig $scheduledConfig): void
-    {
-        $this->scheduledConfig = $scheduledConfig;
     }
 }

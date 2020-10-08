@@ -44,6 +44,31 @@ class RedisPlugin extends AbstractPlugin
         return "Redis";
     }
 
+
+    /**
+     * @return RedisOneConfig[]
+     */
+    public function getConfigList(): array
+    {
+        return $this->redisConfig->getRedisConfigs();
+    }
+
+    /**
+     * @param RedisOneConfig[] $configList
+     */
+    public function setConfigList(array $configList): void
+    {
+        $this->redisConfig->setRedisConfigs($configList);
+    }
+
+    /**
+     * @param RedisOneConfig $redisOneConfig
+     */
+    public function addConfigList(RedisOneConfig $redisOneConfig): void
+    {
+        $this->redisConfig->addRedisOneConfig($redisOneConfig);
+    }
+
     /**
      * @inheritDoc
      * @param Context $context
@@ -92,29 +117,5 @@ class RedisPlugin extends AbstractPlugin
         $this->setToDIContainer(RedisManyPool::class, $redisManyPool);
         $this->setToDIContainer(RedisPool::class, $redisManyPool->getPool());
         $this->ready();
-    }
-
-    /**
-     * @return RedisOneConfig[]
-     */
-    public function getConfigList(): array
-    {
-        return $this->redisConfig->getRedisConfigs();
-    }
-
-    /**
-     * @param RedisOneConfig[] $configList
-     */
-    public function setConfigList(array $configList): void
-    {
-        $this->redisConfig->setRedisConfigs($configList);
-    }
-
-    /**
-     * @param RedisOneConfig $redisOneConfig
-     */
-    public function addConfigList(RedisOneConfig $redisOneConfig): void
-    {
-        $this->redisConfig->addRedisOneConfig($redisOneConfig);
     }
 }
