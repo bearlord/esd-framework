@@ -108,11 +108,12 @@ class RedisPlugin extends AbstractPlugin
         if (empty($this->redisConfig->getRedisConfigs())) {
             $this->warn(Yii::t('esd', 'Redis configuration not found'));
         }
-        foreach ($this->redisConfig->getRedisConfigs() as $key => $value) {
-            $redisPool = new RedisPool($value);
+        foreach ($this->redisConfig->getRedisConfigs() as $key => $config) {
+            $redisPool = new RedisPool($config);
             $redisManyPool->addPool($redisPool);
-            $this->debug(Yii::t('esd', 'Redis connection pool named {name} created', [
-                'name' => $value->getName()
+            $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
+                'driverName' => sprintf("%s", 'Redis'),
+                'name' => $config->getName()
             ]));
         }
         $context->add("redisPool", $redisManyPool);
