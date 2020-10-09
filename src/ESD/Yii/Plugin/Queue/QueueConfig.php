@@ -12,6 +12,7 @@ use ESD\Plugins\Scheduled\Beans\ScheduledTask;
 use ESD\Plugins\Scheduled\Event\ScheduledAddEvent;
 use ESD\Plugins\Scheduled\Event\ScheduledRemoveEvent;
 use ESD\Server\Co\Server;
+use ESD\Yii\Plugin\Queue\Beans\QueueTask;
 use ESD\Yii\Yii;
 
 /**
@@ -20,13 +21,7 @@ use ESD\Yii\Yii;
  */
 class QueueConfig extends BaseConfig
 {
-    const KEY = "scheduled";
-
-    /**
-     * Minimum interval
-     * @var int
-     */
-    protected $minIntervalTime;
+    const KEY = "queue";
 
     /**
      * Task processes count
@@ -37,107 +32,45 @@ class QueueConfig extends BaseConfig
     /**
      * @var string
      */
-    protected $taskProcessGroupName = ScheduledTask::GROUP_NAME;
+    protected $taskProcessGroupName = QueueTask::GROUP_NAME;
 
     /**
      * @var ScheduledTask[]
      */
-    protected $scheduledTasks = [];
-
+    protected $queueTasks = [];
 
     /**
-     * ScheduledConfig constructor.
-     * @param int $minIntervalTime
-     * @throws ConfigException
-     * @throws \ReflectionException
+     * QueueConfig constructor.
      */
-    public function __construct($minIntervalTime = 1000)
+    public function __construct()
     {
         parent::__construct(self::KEY);
-        $this->minIntervalTime = $minIntervalTime;
-        if ($minIntervalTime < 1000) {
-            throw new ConfigException(Yii::t('esd', 'The minimum time unit for scheduled tasks is 1s'));
-        }
-    }
-
-    /**
-     * Add Scheduled
-     * @param ScheduledTask $scheduledTask
-     * @throws \Exception
-     */
-    public function addScheduled(ScheduledTask $scheduledTask)
-    {
-        if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::PROCESS_NAME) {
-            //The scheduled process can directly add tasks
-            $this->scheduledTasks[$scheduledTask->getName()] = $scheduledTask;
-        } else {
-            //Non-scheduled processes need to be added dynamically, with the help of Event
-            Server::$instance->getEventDispatcher()->dispatchProcessEvent(
-                new ScheduledAddEvent($scheduledTask),
-                Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::PROCESS_NAME)
-            );
-        }
-    }
-
-    /**
-     * Remove scheduled
-     * @param String $scheduledTaskName
-     * @throws \Exception
-     */
-    public function removeScheduled(String $scheduledTaskName)
-    {
-        if (!Server::$isStart || Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() == ScheduledPlugin::PROCESS_NAME) {
-            //The scheduling process can be removed directly
-            unset($this->scheduledTasks[$scheduledTaskName]);
-        } else {
-            //Non-scheduled processes need to be removed dynamically, with the help of Event
-            Server::$instance->getEventDispatcher()->dispatchProcessEvent(
-                new ScheduledRemoveEvent($scheduledTaskName),
-                Server::$instance->getProcessManager()->getProcessFromName(ScheduledPlugin::PROCESS_NAME)
-            );
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getMinIntervalTime(): int
-    {
-        return $this->minIntervalTime;
     }
 
     /**
      * @return ScheduledTask[]
      */
-    public function getScheduledTasks(): array
+    public function getQueueTasks(): array
     {
-        return $this->scheduledTasks;
+        return $this->queueTasks;
     }
 
     /**
-     * @param array $scheduledTasks
+     * @param array $queueTasks
      * @throws \ReflectionException
      */
-    public function setScheduledTasks(array $scheduledTasks): void
+    public function setQueueTasks(array $queueTasks): void
     {
-        foreach ($scheduledTasks as $key => $scheduledTask) {
-            if ($scheduledTask instanceof ScheduledTask) {
-                $this->scheduledTasks[$scheduledTask->getName()] = $scheduledTask;
+        foreach ($queueTasks as $key => $queueTask) {
+            if ($queueTask instanceof ScheduledTask) {
+                $this->queueTasks[$queueTask->getName()] = $queueTask;
             } else {
-                $scheduledTaskInstance = new ScheduledTask(null, null, null, null);
-                $scheduledTaskInstance->buildFromConfig($scheduledTask);
-                $scheduledTaskInstance->setName($key);
-                $this->scheduledTasks[$scheduledTaskInstance->getName()] = $scheduledTaskInstance;
+                $queueTaskInstance = new QueueTask(null);
+                $queueTaskInstance->buildFromConfig($queueTask);
+                $queueTaskInstance->setName($key);
+                $this->queueTasks[$queueTaskInstance->getName()] = $queueTaskInstance;
             }
         }
-    }
-
-    /**
-     * @param int $minIntervalTime
-     */
-    public function setMinIntervalTime(int $minIntervalTime): void
-    {
-        $this->minIntervalTime = $minIntervalTime;
     }
 
     /**
