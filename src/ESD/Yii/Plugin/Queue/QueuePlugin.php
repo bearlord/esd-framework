@@ -58,7 +58,8 @@ class QueuePlugin extends AbstractPlugin
 
         $key = "default";
         $contextKey = "Queue:{$key}";
-        setContextValue($contextKey, $queue);
+
+        $context->add($contextKey, $queue);
         $this->ready();
     }
 
