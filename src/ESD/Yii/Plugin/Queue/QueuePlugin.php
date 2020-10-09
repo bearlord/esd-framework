@@ -9,8 +9,13 @@ namespace ESD\Yii\Plugin\Queue;
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
-use ESD\Yii\Base\Application;
+use ESD\Plugins\Redis\RedisPlugin;
+use ESD\Server\Co\Server;
 use ESD\Yii\Plugin\YiiPlugin;
+use ESD\Yii\Plugin\Queue\Beans\QueueTask;
+use ESD\Yii\Plugin\Queue\HelperQueueProcess;
+use ESD\Yii\Plugin\Queue\QueueProcess;
+use ESD\Yii\Queue\Drivers\Redis\Queue;
 use ESD\Yii\Yii;
 
 /**
@@ -19,6 +24,10 @@ use ESD\Yii\Yii;
  */
 class QueuePlugin extends AbstractPlugin
 {
+    const PROCESS_NAME = "helper";
+
+    const PROCESS_GROUP_NAME = "HelperGroup";
+
     /**
      * PdoPlugin constructor.
      */
@@ -26,7 +35,9 @@ class QueuePlugin extends AbstractPlugin
     {
         parent::__construct();
         $this->atAfter(YiiPlugin::class);
+        $this->atAfter(RedisPlugin::class);
     }
+
     /**
      * @return string
      */
@@ -42,7 +53,12 @@ class QueuePlugin extends AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
-
+        Server::$instance->addProcess(self::PROCESS_NAME, HelperQueueProcess::class, self::PROCESS_GROUP_NAME);
+        //Add queue process
+        $taskProcessCount = 1;
+        for ($i = 0; $i < $taskProcessCount; $i++) {
+            Server::$instance->addProcess("queue-$i", QueueProcess::class, QueueTask::GROUP_NAME);
+        }
     }
 
     /**
@@ -51,7 +67,8 @@ class QueuePlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        //Dev not fishied
+        //Dev not finishied
+        /** @var Queue $queue */
         $queue = Yii::createObject([
             'class' => 'ESD\Yii\Queue\Drivers\Redis\Queue'
         ]);
@@ -60,6 +77,7 @@ class QueuePlugin extends AbstractPlugin
         $contextKey = "Queue:{$key}";
 
         $context->add($contextKey, $queue);
+
         $this->ready();
     }
 

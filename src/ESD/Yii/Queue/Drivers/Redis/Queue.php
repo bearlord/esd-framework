@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Queue\Drivers\Redis;
 
+use ESD\Plugins\Redis\GetRedis;
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\NotSupportedException;
 use ESD\Yii\Di\Instance;
@@ -21,6 +22,8 @@ use ESD\Yii\Yii;
  */
 class Queue extends CliQueue
 {
+    use GetRedis;
+
     /**
      * @var Connection|array|string
      */
@@ -42,6 +45,7 @@ class Queue extends CliQueue
     {
         parent::init();
         $this->redis = Yii::createObject(Connection::className());
+//        $this->redis = $this->redis();
     }
 
     /**
@@ -111,7 +115,7 @@ class Queue extends CliQueue
      */
     public function remove($id)
     {
-        while (!$this->redis->set("$this->channel.moving_lock", true, 'NX', 'EX', 1)) {
+        while (!$this->redis->set("$this->channel.moving_lock", true, ['NX', 'EX' => 1])) {
             usleep(10000);
         }
         if ($this->redis->hdel("$this->channel.messages", $id)) {
@@ -133,7 +137,7 @@ class Queue extends CliQueue
     protected function reserve($timeout)
     {
         // Moves delayed and reserved jobs into waiting list with lock for one second
-        if ($this->redis->set("$this->channel.moving_lock", true, 'NX', 'EX', 1)) {
+        if ($this->redis->set("$this->channel.moving_lock", true, ['NX', 'EX' => 1])) {
             $this->moveExpired("$this->channel.delayed");
             $this->moveExpired("$this->channel.reserved");
         }
