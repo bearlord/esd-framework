@@ -209,16 +209,6 @@ abstract class Queue extends Component
     abstract protected function pushMessage($message, $ttr, $delay, $priority);
 
     /**
-     * Uses for CLI drivers and gets process ID of a worker.
-     *
-     * @since 2.0.2
-     */
-    public function getWorkerPid()
-    {
-        return null;
-    }
-
-    /**
      * @param string $id of a job message
      * @param string $message
      * @param int $ttr time to reserve

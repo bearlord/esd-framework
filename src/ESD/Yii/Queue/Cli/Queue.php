@@ -36,12 +36,7 @@ abstract class Queue extends BaseQueue
      * @since 2.0.2
      */
     const EVENT_WORKER_STOP = 'workerStop';
-
-    /**
-     * @var array|string
-     * @since 2.0.2
-     */
-    public $loopConfig = SignalLoop::class;
+    
     /**
      * @var string command class name
      */
@@ -57,40 +52,6 @@ abstract class Queue extends BaseQueue
     public $messageHandler;
 
     /**
-     * @var int|null current process ID of a worker.
-     * @since 2.0.2
-     */
-    private $_workerPid;
-
-
-    /**
-     * @return string command id
-     * @throws
-     */
-    protected function getCommandId()
-    {
-        foreach (Yii::$app->getComponents(false) as $id => $component) {
-            if ($component === $this) {
-                return Inflector::camel2id($id);
-            }
-        }
-        throw new InvalidConfigException('Queue must be an application component.');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function bootstrap($app)
-    {
-        if ($app instanceof ConsoleApp) {
-            $app->controllerMap[$this->getCommandId()] = [
-                'class' => $this->commandClass,
-                'queue' => $this,
-            ] + $this->commandOptions;
-        }
-    }
-
-    /**
      * Runs worker.
      *
      * @param callable $handler
@@ -99,11 +60,7 @@ abstract class Queue extends BaseQueue
      */
     protected function runWorker(callable $handler)
     {
-        $this->_workerPid = getmypid();
-        /** @var LoopInterface $loop */
-        $loop = Yii::createObject($this->loopConfig, [$this]);
-
-        $event = new WorkerEvent(['loop' => $loop]);
+        $event = new WorkerEvent();
         $this->trigger(self::EVENT_WORKER_START, $event);
         if ($event->exitCode !== null) {
             return $event->exitCode;
@@ -111,28 +68,15 @@ abstract class Queue extends BaseQueue
 
         $exitCode = null;
         try {
-            call_user_func($handler, function () use ($loop, $event) {
+            call_user_func($handler, function () use ($event) {
                 $this->trigger(self::EVENT_WORKER_LOOP, $event);
-                return $event->exitCode === null && $loop->canContinue();
+                return $event->exitCode === null;
             });
         } finally {
             $this->trigger(self::EVENT_WORKER_STOP, $event);
-            $this->_workerPid = null;
         }
 
         return $event->exitCode;
-    }
-
-    /**
-     * Gets process ID of a worker.
-     *
-     * @inheritdoc
-     * @return int|null
-     * @since 2.0.2
-     */
-    public function getWorkerPid()
-    {
-        return $this->_workerPid;
     }
 
     /**
@@ -158,7 +102,6 @@ abstract class Queue extends BaseQueue
      */
     public function execute($id, $message, $ttr, $attempt, $workerPid)
     {
-        $this->_workerPid = $workerPid;
         return parent::handleMessage($id, $message, $ttr, $attempt);
     }
 }

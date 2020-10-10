@@ -36,7 +36,6 @@ trait GetQueue
             setContextValue($contextKey, $queue);
         }
 
-        var_dump(get_class($queue));
         return $queue;
     }
 }

@@ -22,10 +22,7 @@ class WorkerEvent extends Event
      * @inheritdoc
      */
     public $sender;
-    /**
-     * @var LoopInterface
-     */
-    public $loop;
+
     /**
      * @var null|int exit code
      */

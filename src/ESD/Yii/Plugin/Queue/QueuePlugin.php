@@ -78,8 +78,8 @@ class QueuePlugin extends AbstractPlugin
 
         $context->add($contextKey, $queue);
 
-        addTimerTick(5000, function (){
-            printf("%s - %s\n\n", date("Y-m-d H:i:s"), microtime(true));
+        addTimerTick(5000, function () use ($queue) {
+            $queue->run(true, 500);
         });
 
         $this->ready();

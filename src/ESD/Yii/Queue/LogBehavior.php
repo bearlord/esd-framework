@@ -89,34 +89,6 @@ class LogBehavior extends Behavior
     }
 
     /**
-     * @param cli\WorkerEvent $event
-     * @since 2.0.2
-     */
-    public function workerStart(cli\WorkerEvent $event)
-    {
-        $title = 'Worker ' . $event->sender->getWorkerPid();
-        Yii::info("$title is started.", Queue::class);
-        Yii::beginProfile($title, Queue::class);
-        if ($this->autoFlush) {
-            Yii::getLogger()->flush(true);
-        }
-    }
-
-    /**
-     * @param cli\WorkerEvent $event
-     * @since 2.0.2
-     */
-    public function workerStop(cli\WorkerEvent $event)
-    {
-        $title = 'Worker ' . $event->sender->getWorkerPid();
-        Yii::endProfile($title, Queue::class);
-        Yii::info("$title is stopped.", Queue::class);
-        if ($this->autoFlush) {
-            Yii::getLogger()->flush(true);
-        }
-    }
-
-    /**
      * @param JobEvent $event
      * @return string
      * @since 2.0.2
@@ -136,9 +108,6 @@ class LogBehavior extends Behavior
     {
         $title = $this->getJobTitle($event);
         $extra = "attempt: $event->attempt";
-        if ($pid = $event->sender->getWorkerPid()) {
-            $extra .= ", PID: $pid";
-        }
         return "$title ($extra)";
     }
 }

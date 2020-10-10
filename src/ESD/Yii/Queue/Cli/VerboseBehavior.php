@@ -109,37 +109,7 @@ class VerboseBehavior extends Behavior
     {
         $name = $event->job instanceof JobInterface ? get_class($event->job) : 'unknown job';
         $extra = "attempt: $event->attempt";
-        if ($pid = $event->sender->getWorkerPid()) {
-            $extra .= ", pid: $pid";
-        }
         return " [$event->id] $name ($extra)";
-    }
-
-    /**
-     * @param WorkerEvent $event
-     * @since 2.0.2
-     */
-    public function workerStart(WorkerEvent $event)
-    {
-        $this->workerStartedAt = time();
-        $this->command->stdout(date('Y-m-d H:i:s'), Console::FG_YELLOW);
-        $pid = $event->sender->getWorkerPid();
-        $this->command->stdout(" [pid: $pid]", Console::FG_GREY);
-        $this->command->stdout(" - Worker is started\n", Console::FG_GREEN);
-    }
-
-    /**
-     * @param WorkerEvent $event
-     * @since 2.0.2
-     */
-    public function workerStop(WorkerEvent $event)
-    {
-        $this->command->stdout(date('Y-m-d H:i:s'), Console::FG_YELLOW);
-        $pid = $event->sender->getWorkerPid();
-        $this->command->stdout(" [pid: $pid]", Console::FG_GREY);
-        $this->command->stdout(' - Worker is stopped ', Console::FG_GREEN);
-        $duration = $this->formatDuration(time() - $this->workerStartedAt);
-        $this->command->stdout("($duration)\n", Console::FG_YELLOW);
     }
 
     /**

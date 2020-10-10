@@ -45,7 +45,6 @@ class Queue extends CliQueue
     {
         parent::init();
         $this->redis = Yii::createObject(Connection::className());
-//        $this->redis = $this->redis();
     }
 
     /**
@@ -61,7 +60,8 @@ class Queue extends CliQueue
     {
         return $this->runWorker(function (callable $canContinue) use ($repeat, $timeout) {
             while ($canContinue()) {
-                if (($payload = $this->reserve($timeout)) !== null) {
+                $payload = $this->reserve($timeout);
+                if ($payload !== null) {
                     list($id, $message, $ttr, $attempt) = $payload;
                     if ($this->handleMessage($id, $message, $ttr, $attempt)) {
                         $this->delete($id);
@@ -134,7 +134,7 @@ class Queue extends CliQueue
      * @param int $timeout timeout
      * @return array|null payload
      */
-    protected function reserve($timeout)
+    public function reserve($timeout)
     {
         // Moves delayed and reserved jobs into waiting list with lock for one second
         if ($this->redis->set("$this->channel.moving_lock", true, ['NX', 'EX' => 1])) {
