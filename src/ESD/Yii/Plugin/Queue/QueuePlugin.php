@@ -89,15 +89,16 @@ class QueuePlugin extends AbstractPlugin
             return false;
         }
 
-        $pool = new QueuePool($this->config[$key]);
+        $config = $this->config[$key];
+        $pool = new QueuePool($config);
         $context->add('QueuePool', $pool);
         $this->setToDIContainer(QueuePool::class, $pool);
 
         $queue = $pool->handle();
         //Help process
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
-            addTimerTick(5000, function () use ($queue) {
-                $queue->run(true, 500);
+            addTimerTick($config['minIntervalTime'], function () use ($queue) {
+                $queue->listen();
             });
         }
 

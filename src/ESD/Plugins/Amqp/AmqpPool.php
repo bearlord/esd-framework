@@ -67,7 +67,7 @@ class AmqpPool
             \Swoole\Coroutine::defer(function () use ($db) {
                 $this->pool->push($db);
             });
-            setContextValue($contextKey, $db);
+            setContextValue($contextKey, $db->getConnection());
         }
         return $db->getConnection();
     }

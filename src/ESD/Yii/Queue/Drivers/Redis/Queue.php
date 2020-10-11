@@ -50,6 +50,27 @@ class Queue extends CliQueue
     }
 
     /**
+     * Listens redis-queue and runs new jobs.
+     * It can be used as daemon process.
+     *
+     * @param int $timeout number of seconds to wait a job.
+     * @throws Exception when params are invalid.
+     * @return null|int exit code.
+     */
+    public function listen($timeout = 3)
+    {
+        if (!is_numeric($timeout)) {
+            throw new Exception('Timeout must be numeric.');
+        }
+        if ($timeout < 1) {
+            throw new Exception('Timeout must be greater than zero.');
+        }
+        
+        return $this->run(true, $timeout);
+    }
+
+
+    /**
      * Listens queue and runs each job.
      *
      * @param bool $repeat whether to continue listening when queue is empty.
