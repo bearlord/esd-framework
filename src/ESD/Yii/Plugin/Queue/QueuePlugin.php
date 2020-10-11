@@ -80,25 +80,22 @@ class QueuePlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        if (empty($this->config)) {
+        //Key
+        $key = "default";
+        if (empty($this->config) || empty($this->config[$key])) {
             $this->warn(Yii::t('esd', '{name} configuration not found', [
                 'name' => 'Queue'
             ]));
             return false;
         }
 
+        $pool = new QueuePool($this->config[$key]);
+        $context->add('QueuePool', $pool);
+        $this->setToDIContainer(QueuePool::class, $pool);
+
+        $queue = $pool->handle();
         //Help process
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
-            //Key
-            $key = "default";
-
-            /** @var Queue $queue */
-            $queue = Yii::createObject($this->config[$key]);
-
-            $contextKey = "Queue:{$key}";
-
-            $context->add($contextKey, $queue);
-
             addTimerTick(5000, function () use ($queue) {
                 $queue->run(true, 500);
             });

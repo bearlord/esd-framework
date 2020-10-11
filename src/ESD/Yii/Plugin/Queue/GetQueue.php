@@ -26,18 +26,12 @@ trait GetQueue
             $poolKey = "default";
             $contextKey = "Queue:default";
         }
+
         $queue = getContextValue($contextKey);
-        
         if (empty($queue)) {
-            //Dev not fishied
-            $queue = Yii::createObject([
-                'class' => 'ESD\Yii\Queue\Drivers\Redis\Queue'
-            ]);
-            
-//            $this->setToDIContainer(MongodbPools::class, $pools);
-//            $this->setToDIContainer(MongodbPool::class, $pools->getPool());
-            
-            setContextValue($contextKey, $queue);
+            /** @var QueuePool $queuePool */
+            $queuePool = getDeepContextValueByClassName(QueuePool::class);
+            return $queuePool->handle();
         }
 
         return $queue;

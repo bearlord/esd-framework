@@ -47,7 +47,9 @@ class Context
      */
     public function add($name, $value)
     {
-        if ($value == null) return;
+        if ($value == null) {
+            return;
+        }
         $this->contain[$name] = $value;
         if (!is_string($value) && !is_int($value) && !is_bool($value) && !is_float($value) && !is_double($value) && !is_array($value) && !is_callable($value) && !is_long($value)) {
             $this->classContain[get_class($value)] = $value;
@@ -63,7 +65,9 @@ class Context
      */
     public function addWithClass($name, $value, $class)
     {
-        if ($value == null) return;
+        if ($value == null) {
+            return;
+        }
         $this->contain[$name] = $value;
 
         if (class_exists($class)) {
@@ -131,7 +135,9 @@ class Context
      */
     public function setParentContext(?Context $parentContext): void
     {
-        if ($parentContext === $this) return;
+        if ($parentContext === $this) {
+            return;
+        }
         $this->parentContext = $parentContext;
     }
 

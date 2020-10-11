@@ -113,7 +113,7 @@ class PdoPlugin extends \ESD\Core\Plugin\AbstractPlugin
             ]));
         }
 
-        $context->add("PdoPool", $pools);
+        $context->add("PdoPools", $pools);
         $this->setToDIContainer(PdoPools::class, $pools);
         $this->setToDIContainer(PdoPool::class, $pools->getPool());
 

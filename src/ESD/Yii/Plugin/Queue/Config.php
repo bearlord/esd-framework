@@ -29,6 +29,12 @@ class Config extends BaseConfig
     protected $name = "default";
 
     /**
+     * Minimum interval
+     * @var int
+     */
+    protected $minIntervalTime;
+
+    /**
      * @var int
      */
     protected $poolMaxNumber = 5;
@@ -58,6 +64,23 @@ class Config extends BaseConfig
     {
         $this->name = $name;
     }
+
+    /**
+     * @return int
+     */
+    public function getMinIntervalTime(): int
+    {
+        return $this->minIntervalTime;
+    }
+
+    /**
+     * @param int $minIntervalTime
+     */
+    public function setMinIntervalTime(int $minIntervalTime)
+    {
+        $this->minIntervalTime = $minIntervalTime;
+    }
+    
 
     /**
      * @return int
