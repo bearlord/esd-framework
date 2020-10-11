@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Queue;
 
+use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidArgumentException;
@@ -218,6 +219,12 @@ abstract class Queue extends Component
     protected function handleMessage($id, $message, $ttr, $attempt)
     {
         list($job, $error) = $this->unserializeMessage($message);
+
+        $this->debug(Yii::t('esd', 'Execute queue job {id}: {job}', [
+            'id' => $id,
+            'job' => sprintf("%s-%s", get_class($job), Json::encode($job))
+        ]));
+
         $event = new ExecEvent([
             'id' => $id,
             'job' => $job,

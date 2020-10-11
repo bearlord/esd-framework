@@ -19,6 +19,7 @@ return [
     'Packet used LenJsonPack but Length protocol is not enabled, Enable open_length_check automatically' => '數據包使用了LenJsonPack，但未啓用Length协议，自動啓用open_length_check',
     'Class annotation {annotationClass} in {class}' => '類注解 {annotationClass} -> {class}',
     'Configure ready' => '準備就緒',
+    'Execute queue job {id}: {job}' => '執行隊列工作{id}: {job}',
     'Execute scheduled task {name}' => '執行定時任務 {name}',
     'Hot reload is enabled' => '熱重載已開啓',
     'Mapping' => '映射',

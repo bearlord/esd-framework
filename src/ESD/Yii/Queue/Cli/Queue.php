@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Queue\Cli;
 
+use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
 
@@ -21,6 +22,8 @@ use ESD\Yii\Queue\Queue as BaseQueue;
  */
 abstract class Queue extends BaseQueue
 {
+    use GetLogger;
+
     /**
      * @event WorkerEvent that is triggered when the worker is started.
      * @since 2.0.2

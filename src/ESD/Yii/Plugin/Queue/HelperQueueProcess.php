@@ -5,7 +5,7 @@
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Yii\Plugins\Queue;
+namespace ESD\Yii\Plugin\Queue;
 
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
