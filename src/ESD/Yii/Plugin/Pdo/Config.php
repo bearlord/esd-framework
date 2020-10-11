@@ -19,26 +19,32 @@ class Config extends BaseConfig
      * @var string
      */
     protected $name = "default";
+
     /**
      * @var int
      */
     protected $poolMaxNumber = 5;
+
     /**
      * @var string
      */
     protected $dsn = "";
+
     /**
      * @var username
      */
     protected $username = "";
+
     /**
      * @var password
      */
     protected $password = "";
+
     /**
      * @var table prefix
      */
     protected $tablePrefix = "";
+    
     /**
      * @var string charset
      */

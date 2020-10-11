@@ -28,10 +28,12 @@ class Queue extends CliQueue
      * @var Connection|array|string
      */
     public $redis = 'redis';
+
     /**
      * @var string
      */
     public $channel = 'queue';
+
     /**
      * @var string command class name
      */
@@ -101,7 +103,7 @@ class Queue extends CliQueue
     public function clear()
     {
         while (!$this->redis->set("$this->channel.moving_lock", true, 'NX')) {
-            usleep(10000);
+            \Swoole\Coroutine::sleep(0.01);
         }
         $this->redis->executeCommand('DEL', $this->redis->keys("$this->channel.*"));
     }
@@ -116,7 +118,7 @@ class Queue extends CliQueue
     public function remove($id)
     {
         while (!$this->redis->set("$this->channel.moving_lock", true, ['NX', 'EX' => 1])) {
-            usleep(10000);
+            \Swoole\Coroutine::sleep(0.01);
         }
         if ($this->redis->hdel("$this->channel.messages", $id)) {
             $this->redis->zrem("$this->channel.delayed", $id);

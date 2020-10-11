@@ -2,6 +2,7 @@
 return [
     '{driverName} connection pool named {name} created' => '創建 {driverName} {name} 的连接池',
     '{name} cannot be empty' => '{name} 不能爲空',
+    '{name} configuration not found' => '{name} 配置未設置',
     '{path} 404 Not Found' => '{path} 404 請求未找到',
     'onto' => '->',
     'Aspect {name} created' => '創建切片 {name}',

@@ -185,11 +185,9 @@ class ScheduledPlugin extends AbstractPlugin
                             if ($scheduledTask->getProcessGroup() == ScheduledTask::PROCESS_GROUP_ALL) {
                                 $process = Server::$instance->getProcessManager()->getProcessFromId($id);
                                 break;
-                            } else {
-                                if (Server::$instance->getProcessManager()->getProcessFromId($id)->getGroupName() == $scheduledTask->getProcessGroup()) {
-                                    $process = Server::$instance->getProcessManager()->getProcessFromId($id);
-                                    break;
-                                }
+                            } else if (Server::$instance->getProcessManager()->getProcessFromId($id)->getGroupName() == $scheduledTask->getProcessGroup()) {
+                                $process = Server::$instance->getProcessManager()->getProcessFromId($id);
+                                break;
                             }
                         }
                         if ($process != null) {

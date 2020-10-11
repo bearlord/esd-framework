@@ -15,22 +15,27 @@ use ESD\Core\Plugins\Config\BaseConfig;
 class Config extends BaseConfig
 {
     const KEY = "mongodb";
+
     /**
      * @var string
      */
     protected $name = "default";
+
     /**
      * @var int
      */
     protected $poolMaxNumber = 5;
+
     /**
      * @var string
      */
     protected $dsn = "";
+
     /**
      * @var string table prefix
      */
     protected $tablePrefix = "";
+    
 
     /** @var array  */
     protected $options = [];

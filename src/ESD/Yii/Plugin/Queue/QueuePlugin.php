@@ -15,6 +15,7 @@ use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Plugin\Queue\Beans\QueueTask;
 use ESD\Yii\Plugin\Queue\HelperQueueProcess;
 use ESD\Yii\Plugin\Queue\QueueProcess;
+use ESD\Yii\Plugins\Queue\Config;
 use ESD\Yii\Queue\Drivers\Redis\Queue;
 use ESD\Yii\Yii;
 
@@ -27,6 +28,17 @@ class QueuePlugin extends AbstractPlugin
     const PROCESS_NAME = "helper";
 
     const PROCESS_GROUP_NAME = "HelperGroup";
+
+    /**
+     * @var int
+     */
+    protected $taskProcessCount = 1;
+
+    /**
+     * @var array
+     */
+    protected $config;
+
 
     /**
      * PdoPlugin constructor.
@@ -53,10 +65,11 @@ class QueuePlugin extends AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
+        $this->config = Server::$instance->getConfigContext()->get("yii.queue");
+        
         Server::$instance->addProcess(self::PROCESS_NAME, HelperQueueProcess::class, self::PROCESS_GROUP_NAME);
         //Add queue process
-        $taskProcessCount = 1;
-        for ($i = 0; $i < $taskProcessCount; $i++) {
+        for ($i = 0; $i < $this->taskProcessCount; $i++) {
             Server::$instance->addProcess("queue-$i", QueueProcess::class, QueueTask::GROUP_NAME);
         }
     }
@@ -67,20 +80,29 @@ class QueuePlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        //Dev not finishied
-        /** @var Queue $queue */
-        $queue = Yii::createObject([
-            'class' => 'ESD\Yii\Queue\Drivers\Redis\Queue'
-        ]);
+        if (empty($this->config)) {
+            $this->warn(Yii::t('esd', '{name} configuration not found', [
+                'name' => 'Queue'
+            ]));
+            return false;
+        }
 
-        $key = "default";
-        $contextKey = "Queue:{$key}";
+        //Help process
+        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
+            //Key
+            $key = "default";
 
-        $context->add($contextKey, $queue);
+            /** @var Queue $queue */
+            $queue = Yii::createObject($this->config[$key]);
 
-        addTimerTick(5000, function () use ($queue) {
-            $queue->run(true, 500);
-        });
+            $contextKey = "Queue:{$key}";
+
+            $context->add($contextKey, $queue);
+
+            addTimerTick(5000, function () use ($queue) {
+                $queue->run(true, 500);
+            });
+        }
 
         $this->ready();
     }

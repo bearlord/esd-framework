@@ -67,8 +67,12 @@ class ProcessManager
      */
     public function getProcessFromId(int $processId)
     {
-        if ($processId == MasterProcess::id) return $this->masterProcess;
-        if ($processId == ManagerProcess::id) return $this->managerProcess;
+        if ($processId == MasterProcess::id) {
+            return $this->masterProcess;
+        }
+        if ($processId == ManagerProcess::id) {
+            return $this->managerProcess;
+        }
         return $this->processes[$processId] ?? null;
     }
 

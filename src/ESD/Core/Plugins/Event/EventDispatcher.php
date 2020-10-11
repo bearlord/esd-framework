@@ -131,7 +131,9 @@ class EventDispatcher
                 if ($start) {
                     $event->setProgress($order->getName());
                     $result = $order->dispatchEvent($event);
-                    if (!$result) break;
+                    if (!$result) {
+                        break;
+                    }
                 }
             }
         }

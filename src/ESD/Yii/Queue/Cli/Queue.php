@@ -36,7 +36,7 @@ abstract class Queue extends BaseQueue
      * @since 2.0.2
      */
     const EVENT_WORKER_STOP = 'workerStop';
-    
+
     /**
      * @var string command class name
      */
