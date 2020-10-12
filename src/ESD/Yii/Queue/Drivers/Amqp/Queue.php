@@ -220,30 +220,59 @@ class Queue extends CliQueue
 
     /**
      * Listens amqp-queue and runs new jobs.
+     * 
+     * @param int $timeout
+     * @return int|null
      */
-    public function listen()
+    public function listen($timeout = 3)
+    {
+        if (!is_numeric($timeout)) {
+            throw new Exception('Timeout must be numeric.');
+        }
+        if ($timeout < 1) {
+            throw new Exception('Timeout must be greater than zero.');
+        }
+
+        return $this->run(true, $timeout);
+    }
+
+    /**
+     * Listens queue and runs each job.
+     *
+     * @param bool $repeat whether to continue listening when queue is empty.
+     * @param int $timeout number of seconds to wait for next message.
+     * @return null|int exit code.
+     * @internal for worker command only.
+     * @since 2.0.2
+     */
+    public function run($repeat, $timeout = 0)
     {
         $this->context->getQueue()->setName($this->queueName);
         $this->context->getQueue()->setFlags(AMQP_DURABLE);
         $this->context->getQueue()->setArguments(['x-max-priority' => $this->maxPriority]);
         $this->context->getQueue()->declareQueue();
 
-        $callback = function (AMQPEnvelope $message, AMQPQueue $q) use (&$max_consume) {
-            if ($message->isRedelivery()) {
-                $q->ack($message->getDeliveryTag());
-            }
+        return $this->runWorker(function (callable $canContinue) use ($repeat, $timeout) {
+            while ($canContinue()) {
+                $callback = function (AMQPEnvelope $message, AMQPQueue $q) use (&$max_consume) {
+                    if ($message->isRedelivery()) {
+                        $q->ack($message->getDeliveryTag());
+                    }
 
-            $ttr = $attempt = null;
-            if ($this->handleMessage($message->getMessageId(), $message->getBody(), $ttr, $attempt)) {
-                $q->ack($message->getDeliveryTag());
-            } else {
-                $q->ack($message->getDeliveryTag());
-                $this->redeliver($message);
-            }
-        };
+                    $ttr = $attempt = null;
+                    if ($this->handleMessage($message->getMessageId(), $message->getBody(), $ttr, $attempt)) {
+                        $q->ack($message->getDeliveryTag());
+                    } else {
+                        $q->ack($message->getDeliveryTag());
+                        $this->redeliver($message);
+                    }
+                };
 
-        return $this->context->getQueue()->consume($callback, AMQP_DURABLE);
+                return $this->context->getQueue()->consume($callback);
+            }
+        });
     }
+
 
     /**
      * @return AmqpContext
