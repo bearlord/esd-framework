@@ -292,9 +292,7 @@ class Queue extends CliQueue
         $this->context->getQueue()->setArguments(['x-max-priority' => $this->maxPriority]);
         $this->context->getQueue()->declareQueue();
 
-        $this->context->getExchange()->publish($payload, $this->queueName, AMQP_DURABLE, [
-            'expiration' => $ttr
-        ]);
+        $this->context->getExchange()->publish($payload, $this->queueName, AMQP_DURABLE);
         return;
     }
 
