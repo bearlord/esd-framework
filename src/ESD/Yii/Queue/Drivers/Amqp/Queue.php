@@ -163,7 +163,7 @@ class Queue extends CliQueue
      *
      * @var string
      */
-    public $queueName = 'interop_queue';
+    public $queueName = 'queue';
     /**
      * The exchange used to publish messages to.
      *
@@ -188,9 +188,9 @@ class Queue extends CliQueue
      * @var string command class name
      */
     public $commandClass = Command::class;
-
+    
     /**
-     * @var AMQPConnection
+     * @var Context;
      */
     protected $context;
     /**
@@ -214,6 +214,7 @@ class Queue extends CliQueue
     public function init()
     {
         parent::init();
+        sprintf("%s - \r\n", get_class($this->amqp()));
         $this->context = $this->amqp();
     }
 
@@ -222,40 +223,26 @@ class Queue extends CliQueue
      */
     public function listen()
     {
-        $connection = $this->context;
-
-        //Create and declare channel
-        $channel = new AMQPChannel($connection);
-
-        $queue = new AMQPQueue($channel);
-
-        $queue->setFlags(AMQP_NOPARAM);
-        $queue->declareQueue();
+        $this->context->getQueue()->setName($this->queueName);
+        $this->context->getQueue()->setFlags(AMQP_DURABLE);
+        $this->context->getQueue()->setArguments(['x-max-priority' => $this->maxPriority]);
+        $this->context->getQueue()->declareQueue();
 
         $callback = function (AMQPEnvelope $message, AMQPQueue $q) use (&$max_consume) {
-            echo PHP_EOL, "------------", PHP_EOL;
-            echo " [x] Received ", $message->getBody(), PHP_EOL;
-            echo PHP_EOL, "------------", PHP_EOL;
-
             if ($message->isRedelivery()) {
                 $q->ack($message->getDeliveryTag());
             }
-            $ttr = $message->getPriority(self::TTR);
-            $attempt = $message->getPriority(self::ATTEMPT, 1);
 
+            $ttr = $attempt = null;
             if ($this->handleMessage($message->getMessageId(), $message->getBody(), $ttr, $attempt)) {
-                $consumer->acknowledge($message);
+                $q->ack($message->getDeliveryTag());
             } else {
-                $consumer->acknowledge($message);
-
+                $q->ack($message->getDeliveryTag());
                 $this->redeliver($message);
             }
-
-            return true;
         };
 
-        $queue->consume($callback);
-        return;
+        return $this->context->getQueue()->consume($callback, AMQP_DURABLE);
     }
 
     /**
@@ -271,25 +258,14 @@ class Queue extends CliQueue
      */
     protected function pushMessage($payload, $ttr, $delay, $priority)
     {
-        $connection = $this->context;
+        $this->context->getQueue()->setName($this->queueName);
+        $this->context->getQueue()->setFlags(AMQP_DURABLE);
+        $this->context->getQueue()->setArguments(['x-max-priority' => $this->maxPriority]);
+        $this->context->getQueue()->declareQueue();
 
-        //Create and declare channel
-        $channel = new AMQPChannel($connection);
-
-        //AMQPC Exchange is the publishing mechanism
-        $exchange = new AMQPExchange($channel);
-
-        //Queue
-        $queue = new AMQPQueue($channel);
-
-        $queue->setName($this->queueName);
-        $queue->setFlags(AMQP_DURABLE);
-        $queue->setArguments(['x-max-priority' => $this->maxPriority]);
-        $queue->declareQueue();
-
-        $message = 'howdy-do-';
-        $rr = $exchange->publish($message, $this->queueName);
-        var_dump($rr);
+        $this->context->getExchange()->publish($payload, $this->queueName, AMQP_DURABLE, [
+            'expiration' => $ttr
+        ]);
         return;
     }
 
@@ -306,35 +282,6 @@ class Queue extends CliQueue
         if ($this->setupBrokerDone) {
             return;
         }
-
-        $connection = $this->context;
-
-        //Create and declare channel
-        $channel = new AMQPChannel($connection);
-        //Queue
-        $queue = new AMQPQueue($channel);
-
-        $queue->setName($this->queueName);
-        $queue->setFlags(AMQP_DURABLE);
-        $queue->setArguments(['x-max-priority' => $this->maxPriority]);
-        $queue->declareQueue();
-
-        $this->setupBrokerDone = true;
-        return $queue;
-
-        $queue = $this->context->createQueue($this->queueName);
-        $queue->addFlag(AmqpQueue::FLAG_DURABLE);
-        $queue->setArguments(['x-max-priority' => $this->maxPriority]);
-        $this->context->declareQueue($queue);
-
-        $topic = $this->context->createTopic($this->exchangeName);
-        $topic->setType(AmqpTopic::TYPE_DIRECT);
-        $topic->addFlag(AmqpTopic::FLAG_DURABLE);
-        $this->context->declareTopic($topic);
-
-        $this->context->bind(new AmqpBind($queue, $topic));
-
-        $this->setupBrokerDone = true;
     }
 
     /**
@@ -342,15 +289,6 @@ class Queue extends CliQueue
      */
     protected function redeliver(AmqpMessage $message)
     {
-        $attempt = $message->getProperty(self::ATTEMPT, 1);
-
-        $newMessage = $this->context->createMessage($message->getBody(), $message->getProperties(), $message->getHeaders());
-        $newMessage->setDeliveryMode($message->getDeliveryMode());
-        $newMessage->setProperty(self::ATTEMPT, ++$attempt);
-
-        $this->context->createProducer()->send(
-             $this->context->createQueue($this->queueName),
-             $newMessage
-         );
+        return true;
     }
 }

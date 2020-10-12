@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Channel\Channel;
+use ESD\Core\Context\Context;
 use ESD\Coroutine\Co;
 
 /**
@@ -20,7 +21,7 @@ class AmqpPool
      */
     protected $pool;
 
-    /** @var Config  */
+    /** @var Config */
     protected $config;
 
     /**
@@ -45,31 +46,30 @@ class AmqpPool
      */
     protected function connect($config)
     {
-        $db = new Connection($config);
-        return $db;
+        return new \ESD\Yii\Queue\Drivers\Amqp\Context([
+            'connection' => (new Connection($config))->getConnection()
+        ]);
     }
 
+
     /**
-     * @return Connection|mixed
-     */
-    /**
-     * @return \AMQPConnection
+     * @return Context|mixed
      */
     public function db()
     {
         $contextKey = "Amqp:{$this->getConfig()->getName()}";
         $db = getContextValue($contextKey);
- 
+
         if ($db == null) {
-            /** @var Connection $db */
+            /** @var Context $db */
             $db = $this->pool->pop();
 
             \Swoole\Coroutine::defer(function () use ($db) {
                 $this->pool->push($db);
             });
-            setContextValue($contextKey, $db->getConnection());
+            setContextValue($contextKey, $db);
         }
-        return $db->getConnection();
+        return $db;
     }
 
     /**
