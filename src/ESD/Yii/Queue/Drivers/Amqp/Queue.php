@@ -247,11 +247,8 @@ class Queue extends CliQueue
      */
     public function run($repeat, $timeout = 0)
     {
-        $this->context->getQueue()->setName($this->queueName);
-        $this->context->getQueue()->setFlags(AMQP_DURABLE);
-        $this->context->getQueue()->setArguments(['x-max-priority' => $this->maxPriority]);
-        $this->context->getQueue()->declareQueue();
-
+        $this->setupBroker();
+        
         return $this->runWorker(function (callable $canContinue) use ($repeat, $timeout) {
             while ($canContinue()) {
                 $callback = function (AMQPEnvelope $message, AMQPQueue $q) use (&$max_consume) {
@@ -287,13 +284,22 @@ class Queue extends CliQueue
      */
     protected function pushMessage($payload, $ttr, $delay, $priority)
     {
-        $this->context->getQueue()->setName($this->queueName);
-        $this->context->getQueue()->setFlags(AMQP_DURABLE);
-        $this->context->getQueue()->setArguments(['x-max-priority' => $this->maxPriority]);
-        $this->context->getQueue()->declareQueue();
+        $this->setupBroker();
 
-        $this->context->getExchange()->publish($payload, $this->queueName, AMQP_DURABLE);
-        return;
+        $messageId = uniqid('', true);
+
+        $attributes = [
+            'message_id' => $messageId,
+            'timestamp' => time()
+        ];
+        if ($delay) {
+            $attributes['headers'][self::DELAY] = $delay;
+        }
+        if ($priority) {
+            $attributes['headers'][self::PRIORITY] = $priority;
+        }
+        $this->context->getExchange()->publish($payload, $this->queueName, AMQP_DURABLE, $attributes);
+        return $messageId;
     }
 
     /**
@@ -309,6 +315,13 @@ class Queue extends CliQueue
         if ($this->setupBrokerDone) {
             return;
         }
+
+        $this->context->getQueue()->setName($this->queueName);
+        $this->context->getQueue()->setFlags(AMQP_DURABLE);
+        $this->context->getQueue()->setArgument('x-max-priority', $this->maxPriority);
+        $this->context->getQueue()->declareQueue();
+
+        $this->setupBrokerDone = true;
     }
 
     /**
