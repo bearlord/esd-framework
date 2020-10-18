@@ -25,19 +25,16 @@ class Queue extends CliQueue
      * @var string connection host
      */
     public $host = 'localhost';
+    
     /**
      * @var int connection port
      */
     public $port = PheanstalkInterface::DEFAULT_PORT;
+
     /**
      * @var string beanstalk tube
      */
     public $tube = 'queue';
-    /**
-     * @var string command class name
-     */
-    public $commandClass = Command::class;
-
 
     /**
      * Listens queue and runs each job.

@@ -62,7 +62,7 @@ class Context extends Component
             //Set queue
             $this->setQueue(new AMQPQueue($this->getChannel()));
 
-            //Set exchage
+            //Set exchange
             $this->setExchange(new AMQPExchange($this->getChannel()));
         }
     }
@@ -122,6 +122,8 @@ class Context extends Component
     {
         return $this->queue;
     }
+
+
 
     /**
      * @param AMQPQueue $queue

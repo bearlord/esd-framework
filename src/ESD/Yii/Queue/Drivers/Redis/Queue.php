@@ -35,12 +35,6 @@ class Queue extends CliQueue
     public $channel = 'queue';
 
     /**
-     * @var string command class name
-     */
-    public $commandClass = Command::class;
-
-
-    /**
      * @inheritdoc
      */
     public function init()

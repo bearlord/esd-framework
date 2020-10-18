@@ -90,6 +90,10 @@ class QueuePlugin extends AbstractPlugin
         }
 
         $config = $this->config[$key];
+        if (empty($config['minIntervalTime']) || $config['minIntervalTime'] < 1000) {
+            $config['minIntervalTime'] = 1000;
+        }
+
         $pool = new QueuePool($config);
         $context->add('QueuePool', $pool);
         $this->setToDIContainer(QueuePool::class, $pool);
