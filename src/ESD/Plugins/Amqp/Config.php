@@ -25,7 +25,7 @@ class Config extends BaseConfig
     /**
      * @var int
      */
-    protected $poolMaxNumber = 3;
+    protected $poolMaxNumber = 2;
 
     /**
      * @var HostConfig[]
