@@ -9,6 +9,7 @@ namespace ESD\Yii\Plugin\Queue;
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
+use ESD\Plugins\Amqp\AmqpPlugin;
 use ESD\Plugins\Redis\RedisPlugin;
 use ESD\Server\Co\Server;
 use ESD\Yii\Plugin\YiiPlugin;
@@ -47,6 +48,7 @@ class QueuePlugin extends AbstractPlugin
         parent::__construct();
         $this->atAfter(YiiPlugin::class);
         $this->atAfter(RedisPlugin::class);
+        $this->atAfter(AmqpPlugin::class);
     }
 
     /**
