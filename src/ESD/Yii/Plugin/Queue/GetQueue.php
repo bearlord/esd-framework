@@ -35,7 +35,7 @@ trait GetQueue
             $pool = $pools->getPool($poolKey);
 
             if ($pool == null) {
-                throw new \PDOException("No Queue pool named {$poolKey} was found");
+                throw new \Exception("No Queue pool named {$poolKey} was found");
             }
 
             return $pool->handle();
