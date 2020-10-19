@@ -15,7 +15,6 @@ use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Plugin\Queue\Beans\QueueTask;
 use ESD\Yii\Plugin\Queue\HelperQueueProcess;
 use ESD\Yii\Plugin\Queue\QueueProcess;
-use ESD\Yii\Plugins\Queue\Config;
 use ESD\Yii\Queue\Drivers\Redis\Queue;
 use ESD\Yii\Yii;
 
@@ -80,32 +79,34 @@ class QueuePlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        //Key
-        $key = "default";
-        if (empty($this->config) || empty($this->config[$key])) {
+        if (empty($this->config)) {
             $this->warn(Yii::t('esd', '{name} configuration not found', [
                 'name' => 'Queue'
             ]));
             return false;
         }
 
-        $config = $this->config[$key];
-        if (empty($config['minIntervalTime']) || $config['minIntervalTime'] < 1000) {
-            $config['minIntervalTime'] = 1000;
+        $pools = new QueuePools();
+
+        foreach ($this->config as $key => $config) {
+            if (empty($config['minIntervalTime']) || $config['minIntervalTime'] < 1000) {
+                $config['minIntervalTime'] = 1000;
+            }
+
+            $pool = new QueuePool($key, $config);
+            $pools->addPool($key, $pool);
+
+            $queue = $pool->handle();
+            //Help process
+            if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
+                addTimerTick($config['minIntervalTime'], function () use ($queue) {
+                    $queue->listen();
+                });
+            }
         }
 
-        $pool = new QueuePool($config);
-        $context->add('QueuePool', $pool);
-        $this->setToDIContainer(QueuePool::class, $pool);
-
-        $queue = $pool->handle();
-        //Help process
-        if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
-            addTimerTick($config['minIntervalTime'], function () use ($queue) {
-                $queue->listen();
-            });
-        }
-
+        $context->add("QueuePools", $pools);
+        $this->setToDIContainer(QueuePools::class, $pools);
         $this->ready();
     }
 

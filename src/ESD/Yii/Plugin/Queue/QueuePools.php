@@ -29,10 +29,11 @@ class QueuePools
     }
 
     /**
-     * @param PdoPool $pool
+     * @param string $name
+     * @param QueuePool $pool
      */
-    public function addPool(QueuePool $pool)
+    public function addPool(string $name, QueuePool $pool)
     {
-        $this->poolList[$pool->getConfig()->getName()] = $pool;
+        $this->poolList[$name] = $pool;
     }
 }

@@ -22,16 +22,23 @@ trait GetQueue
      */
     public function queue($name = "default")
     {
-        if ($name === "default") {
-            $poolKey = "default";
-            $contextKey = "Queue:default";
-        }
+        $poolKey = $name;
+        $contextKey = sprintf("Queue:%s", $name);
 
-        $queue = getContextValue($contextKey);
+        $queue = getDeepContextValue($contextKey);
+
         if (empty($queue)) {
-            /** @var QueuePool $queuePool */
-            $queuePool = getDeepContextValueByClassName(QueuePool::class);
-            return $queuePool->handle();
+            /** @var QueuePools $pools */
+            $pools = getDeepContextValueByClassName(QueuePools::class);
+
+            /** @var QueuePool $pool */
+            $pool = $pools->getPool($poolKey);
+
+            if ($pool == null) {
+                throw new \PDOException("No Queue pool named {$poolKey} was found");
+            }
+
+            return $pool->handle();
         }
 
         return $queue;

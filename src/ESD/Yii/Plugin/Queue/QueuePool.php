@@ -11,11 +11,15 @@ use ESD\Yii\Yii;
 class QueuePool
 {
     /**
+     * @var string
+     */
+    protected $name;
+    /**
      * @var Channel
      */
     protected $pool;
 
-    /** @var Config  */
+    /** @var array  */
     protected $config;
 
     /** @var int  */
@@ -26,9 +30,10 @@ class QueuePool
      * @param array $config
      * @throws \Exception
      */
-    public function __construct(array $config)
+    public function __construct(string $name, array $config)
     {
-        $this->config = $config;
+        $this->setName($name);
+        $this->setConfig($config);
 
         $this->pool = DIGet(Channel::class, [$this->getPoolMaxNumber()]);
         for ($i = 0; $i < $this->getPoolMaxNumber(); $i++) {
@@ -36,6 +41,39 @@ class QueuePool
             $this->pool->push($queue);
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param Config $config
+     */
+    public function setConfig(array $config): void
+    {
+        $this->config = $config;
+    }
+
 
     /**
      * @return int|mixed
@@ -67,7 +105,7 @@ class QueuePool
      */
     public function handle()
     {
-        $contextKey = "Queue:default";
+        $contextKey = sprintf("Queue:%s", $this->name);
         $handle = getContextValue($contextKey);
 
         if ($handle == null) {
