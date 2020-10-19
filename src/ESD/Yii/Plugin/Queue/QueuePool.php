@@ -97,6 +97,8 @@ class QueuePool
             unset($config['poolMaxNumber']);
         }
 
+        $config['name'] = $this->getName();
+
         return Yii::createObject($config);
     }
 

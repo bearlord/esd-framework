@@ -37,6 +37,8 @@ class Queue extends CliQueue
     const AMQP_X_DELAYED_MESSAGE = 'x-delayed-message';
     const AMQP_X_DELAYED_TYPE = 'x-delayed-type';
 
+    public $name = 'default';
+
     /**
      * The connection to the borker could be configured as an array of options
      * or as a DSN string like amqp:, amqps:, amqps://user:pass@localhost:1000/vhost.
@@ -227,7 +229,6 @@ class Queue extends CliQueue
     public function init()
     {
         parent::init();
-        sprintf("%s - \r\n", get_class($this->amqp()));
         $this->context = $this->amqp();
     }
 
