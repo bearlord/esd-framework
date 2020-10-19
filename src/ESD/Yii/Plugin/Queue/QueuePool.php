@@ -59,7 +59,7 @@ class QueuePool
     }
 
     /**
-     * @return Config
+     * @return array
      */
     public function getConfig(): array
     {
@@ -96,8 +96,6 @@ class QueuePool
         if (!empty($config['poolMaxNumber'])) {
             unset($config['poolMaxNumber']);
         }
-
-        $config['name'] = $this->getName();
 
         return Yii::createObject($config);
     }

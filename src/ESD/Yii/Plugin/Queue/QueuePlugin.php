@@ -12,6 +12,7 @@ use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Plugins\Amqp\AmqpPlugin;
 use ESD\Plugins\Redis\RedisPlugin;
 use ESD\Server\Co\Server;
+use ESD\Yii\Helpers\Json;
 use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Plugin\Queue\Beans\QueueTask;
 use ESD\Yii\Plugin\Queue\HelperQueueProcess;
@@ -90,6 +91,7 @@ class QueuePlugin extends AbstractPlugin
 
         $pools = new QueuePools();
 
+        $queues = [];
         foreach ($this->config as $key => $config) {
             if (empty($config['minIntervalTime']) || $config['minIntervalTime'] < 1000) {
                 $config['minIntervalTime'] = 1000;
@@ -98,7 +100,9 @@ class QueuePlugin extends AbstractPlugin
             $pool = new QueuePool($key, $config);
             $pools->addPool($key, $pool);
 
+            /** @var Queue $queue */
             $queue = $pool->handle();
+            
             //Help process
             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
                 addTimerTick($config['minIntervalTime'], function () use ($queue) {
