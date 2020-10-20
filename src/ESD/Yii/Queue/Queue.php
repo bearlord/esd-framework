@@ -220,10 +220,12 @@ abstract class Queue extends Component
     {
         list($job, $error) = $this->unserializeMessage($message);
 
+        /*
         $this->debug(Yii::t('esd', 'Execute queue job {id}: {job}', [
             'id' => $id,
             'job' => sprintf("%s-%s", get_class($job), Json::encode($job))
         ]));
+        */
 
         $event = new ExecEvent([
             'id' => $id,

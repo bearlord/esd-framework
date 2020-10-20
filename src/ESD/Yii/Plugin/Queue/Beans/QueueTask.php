@@ -27,11 +27,7 @@ class QueueTask extends BaseConfig
     protected $processGroup = QueueTask::GROUP_NAME;
 
     /**
-     * ScheduledTask constructor.
-     * @param $name
-     * @param $expression
-     * @param $className
-     * @param $functionName
+     * QueueTask constructor.
      * @param string $processGroup
      */
     public function __construct($processGroup = QueueTask::GROUP_NAME)
