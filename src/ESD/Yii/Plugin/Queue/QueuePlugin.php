@@ -30,6 +30,8 @@ class QueuePlugin extends AbstractPlugin
 
     const PROCESS_GROUP_NAME = "HelperGroup";
 
+    const PROCESS_QUEUE_PREFIX  = 'queue-';
+
     /**
      * @var int
      */
@@ -68,11 +70,20 @@ class QueuePlugin extends AbstractPlugin
     public function beforeServerStart(Context $context)
     {
         $this->config = Server::$instance->getConfigContext()->get("yii.queue");
+        if (empty($this->config)) {
+            $this->warn(Yii::t('esd', '{name} configuration not found', [
+                'name' => 'Queue'
+            ]));
+            return false;
+        }
         
         Server::$instance->addProcess(self::PROCESS_NAME, HelperQueueProcess::class, self::PROCESS_GROUP_NAME);
-        //Add queue process
-        for ($i = 0; $i < $this->taskProcessCount; $i++) {
-            Server::$instance->addProcess("queue-$i", QueueProcess::class, QueueTask::GROUP_NAME);
+
+        //Add custom queue process
+        $index = 0;
+        foreach ($this->config as $key => $config) {
+            Server::$instance->addProcess(self::PROCESS_QUEUE_PREFIX . $index, QueueProcess::class, QueueTask::GROUP_NAME);
+            $index++;
         }
     }
 
@@ -82,16 +93,9 @@ class QueuePlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        if (empty($this->config)) {
-            $this->warn(Yii::t('esd', '{name} configuration not found', [
-                'name' => 'Queue'
-            ]));
-            return false;
-        }
-
         $pools = new QueuePools();
 
-        $queues = [];
+        $index = 0;
         foreach ($this->config as $key => $config) {
             if (empty($config['minIntervalTime']) || $config['minIntervalTime'] < 1000) {
                 $config['minIntervalTime'] = 1000;
@@ -102,13 +106,14 @@ class QueuePlugin extends AbstractPlugin
 
             /** @var Queue $queue */
             $queue = $pool->handle();
-            
-            //Help process
-            if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
+
+            //Custom process
+            if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_QUEUE_PREFIX . $index) {
                 addTimerTick($config['minIntervalTime'], function () use ($queue) {
                     $queue->listen();
                 });
             }
+            $index++;
         }
 
         $context->add("QueuePools", $pools);
