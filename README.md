@@ -30,7 +30,7 @@ ESD协议：Apache License 2.0，YII2协议：BSD 3-Clause。
 1. 代码安装已于原有的ESD没有依赖，单独的仓库。
 2. 去除了原有的 MySQLi 驱动，替换为 PDO驱动。
 3. 支持的数据库包含 MySQL、PostgreSQL、SQL Server[sqlsrv、dblib]、Cubrid、Oracle、Mongodb。
-4. 引入YII2 的文件包含：
+4. 引入Yii2 的文件包含：
    1. Connection、Query、Model、ActiveRecord、Validator、I18n、  Di、Component、Logger、Security、Cache、Redis、User、Identity、helpers、 behaviors、events。
    2. Gii/Model、View、Assets。
    3. 替换原有的AMQP的第三方驱动，改为官方PECL扩展。
@@ -61,7 +61,7 @@ HTTP Client ==> wait ==> HTTP Server => TCP Server == wait ==> TCP Client => TCP
 
 
 
-3.深度整合的YII2，模板引擎与Widget可快速开发【前后端不分离】的项目。当前大环境前后端分离盛行，不分离的项目也就仅仅适合**单兵作战**情况下、**快速开发**这一个优势了。人多还是前后端分离。
+3.深度整合的Yii2，模板引擎与Widget可快速开发【前后端不分离】的项目。当前大环境前后端分离盛行，不分离的项目也就仅仅适合**单兵作战**情况下、**快速开发**这一个优势了。人多还是前后端分离。
 
 
 
