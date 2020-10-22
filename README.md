@@ -13,7 +13,7 @@ ESD Framework 克隆自[EasySwooleDistributed](https://github.com/esd-projects/e
 
 延续了ESD的称谓，程序启动时候，显示ESD-YII，因为笔者把Yii2的诸多东西硬整合进ESD。
 
-ESD协议：Apache License 2.0，YII2协议：BSD 3-Clause。
+ESD协议：Apache License 2.0，Yii2协议：BSD 3-Clause。
 
 新的ESD Framework协议：BSD 3-Clause
 
