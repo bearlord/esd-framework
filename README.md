@@ -65,7 +65,7 @@ HTTP Client ==> wait ==> HTTP Server => TCP Server == wait ==> TCP Client => TCP
 
 
 
-4.惯例，**HTTP服务器** CURL 请求  **硬件通讯API接口**，不仅阻塞，还会造成**PHP-FPM**被**占用**，客户不能继续操作其他操作，直到当此CURL请求结束。ESD Framework可极力避免这个问题。
+4.惯例，**HTTP服务器** CURL 请求  **硬件通讯API接口**，不仅阻塞，还会造成**PHP-FPM**被**占用**，客户不能继续操作其他操作，直到当次CURL请求结束。ESD Framework可极力避免这个问题。
 
 
 
