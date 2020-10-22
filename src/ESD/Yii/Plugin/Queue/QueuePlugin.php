@@ -9,6 +9,7 @@ namespace ESD\Yii\Plugin\Queue;
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
+use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Amqp\AmqpPlugin;
 use ESD\Plugins\Redis\RedisPlugin;
 use ESD\Server\Co\Server;
@@ -26,6 +27,8 @@ use ESD\Yii\Yii;
  */
 class QueuePlugin extends AbstractPlugin
 {
+    use GetLogger;
+
     const PROCESS_NAME = "helper";
 
     const PROCESS_GROUP_NAME = "HelperGroup";
@@ -94,6 +97,10 @@ class QueuePlugin extends AbstractPlugin
     public function beforeProcessStart(Context $context)
     {
         $pools = new QueuePools();
+
+        if (empty($this->config)) {
+            return false;
+        }
 
         $index = 0;
         foreach ($this->config as $key => $config) {
