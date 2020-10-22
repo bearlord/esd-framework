@@ -57,7 +57,7 @@ php ./vendor/bearlord/esd-framework/src/ESD/Install/Install.php
 
 2.TCP、Websocket、HTTP同服务端，进程间通讯，简洁高效。
 
-HTTP Client ==> wait ==> HTTP Server => TCP Server == wait ==> TCP Client => TCP Server => HTTP Server => HTTP Client.
+HTTP Client == wait ==> HTTP Server => TCP Server == wait ==> TCP Client => TCP Server => HTTP Server => HTTP Client.
 
 
 
