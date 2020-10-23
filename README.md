@@ -27,12 +27,12 @@ ESD协议：Apache License 2.0，Yii2协议：BSD 3-Clause。
 
 ## 修改说明：
 
-1. 代码安装已于原有的ESD没有依赖，单独的仓库。
+1. 代码安装已与原有的ESD没有依赖，是单独的仓库。
 2. 去除了原有的 MySQLi 驱动，替换为 PDO驱动。
-3. 支持的数据库包含 MySQL、PostgreSQL、SQL Server[sqlsrv、dblib]、Cubrid、Oracle、Mongodb。
+3. 支持的数据库包含 MySQL、PostgreSQL、SQL Server、Cubrid、Oracle、Mongodb。
 4. 引入Yii2 的文件包含：
    1. Connection、Query、Model、ActiveRecord、Validator、I18n、  Di、Component、Logger、Security、Cache、Redis、User、Identity、helpers、 behaviors、events。
-   2. Gii/Model、View、Assets。
+   2. Gii/Model、View、Assets、Widgets、Bootstrap4。
    3. 替换原有的AMQP的第三方驱动，改为官方PECL扩展。
    4. 整合了Yii-Queue，驱动包含了Redis和AMQP。
 
