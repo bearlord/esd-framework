@@ -210,8 +210,8 @@ class UploadedFile extends BaseObject
             $request = getDeepContextValueByClassName(Request::class);
             $files = $request->getFiles();
             if (isset($files) && is_array($files)) {
-                foreach ($files as $class => $info) {
-                    self::loadFilesRecursive($class, $info['name'], $info['tmp_name'], $info['type'], $info['size'], $info['error']);
+                foreach ($files as $key => $info) {
+                    self::loadFilesRecursive($key, $info);
                 }
             }
         }
@@ -228,19 +228,19 @@ class UploadedFile extends BaseObject
      * @param mixed $sizes file sizes provided by PHP
      * @param mixed $errors uploading issues provided by PHP
      */
-    private static function loadFilesRecursive($key, $names, $tempNames, $types, $sizes, $errors)
+    private static function loadFilesRecursive($key, $info)
     {
-        if (is_array($names)) {
-            foreach ($names as $i => $name) {
-                self::loadFilesRecursive($key . '[' . $i . ']', $name, $tempNames[$i], $types[$i], $sizes[$i], $errors[$i]);
+        if (is_array($info) && empty($info['name'])) {
+            foreach ($info as $i => $item) {
+                self::loadFilesRecursive($key . '[' . $i . ']', $item);
             }
-        } elseif ((int) $errors !== UPLOAD_ERR_NO_FILE) {
+        } else {
             self::$_files[$key] = [
-                'name' => $names,
-                'tempName' => $tempNames,
-                'type' => $types,
-                'size' => $sizes,
-                'error' => $errors,
+                'name' => $info['name'],
+                'tempName' => $info['tmp_name'],
+                'type' => $info['type'],
+                'size' => $info['size'],
+                'error' => $info['error'],
             ];
         }
     }
