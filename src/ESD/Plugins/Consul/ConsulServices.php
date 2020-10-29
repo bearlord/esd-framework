@@ -15,7 +15,7 @@ use ESD\Plugins\Consul\Event\ConsulServiceChangeEvent;
 use ESD\Psr\Cloud\ServiceInfo;
 use ESD\Psr\Cloud\ServiceInfoList;
 use ESD\Psr\Cloud\Services;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class Services

@@ -9,7 +9,7 @@ namespace ESD\Plugins\Actor;
 use ESD\Core\Memory\CrossProcess\Atomic;
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 /**

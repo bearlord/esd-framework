@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Actuator;
 
 use ESD\Core\Memory\CrossProcess\Table;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class ActuatorController

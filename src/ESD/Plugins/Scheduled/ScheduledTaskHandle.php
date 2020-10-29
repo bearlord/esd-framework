@@ -9,7 +9,7 @@ namespace ESD\Plugins\Scheduled;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Scheduled\Beans\ScheduledTask;
 use ESD\Plugins\Scheduled\Event\ScheduledExecuteEvent;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 class ScheduledTaskHandle

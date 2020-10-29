@@ -11,7 +11,7 @@ use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Plugins\Scheduled\Beans\ScheduledTask;
 use ESD\Plugins\Scheduled\Event\ScheduledAddEvent;
 use ESD\Plugins\Scheduled\Event\ScheduledRemoveEvent;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 /**

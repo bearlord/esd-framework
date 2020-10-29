@@ -9,7 +9,7 @@ namespace ESD\Plugins\Consul\Config;
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Server\Config\PortConfig;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class ConsulConfig

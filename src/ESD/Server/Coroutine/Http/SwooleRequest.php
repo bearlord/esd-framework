@@ -4,7 +4,7 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Server\Co\Http;
+namespace ESD\Server\Coroutine\Http;
 
 use ESD\Core\Exception;
 use ESD\Core\Server\Beans\Http\HttpStream;
@@ -13,7 +13,7 @@ use ESD\Core\Server\Beans\Request;
 
 /**
  * Class SwooleRequest
- * @package ESD\Server\Co\Http
+ * @package ESD\Server\Coroutine\Http
  */
 class SwooleRequest extends Request
 {

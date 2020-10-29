@@ -4,7 +4,7 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Server\Co;
+namespace ESD\Server\Coroutine;
 
 use ESD\Core\Channel\Channel;
 use ESD\Core\DI\DI;
@@ -15,13 +15,13 @@ use ESD\Core\Server\Config\ServerConfig;
 use ESD\Coroutine\Channel\ChannelFactory;
 use ESD\Coroutine\Coroutine;
 use ESD\Coroutine\Event\EventCallFactory;
-use ESD\Server\Co\Http\Factory\RequestFactory;
-use ESD\Server\Co\Http\Factory\ResponseFactory;
+use ESD\Server\Coroutine\Http\Factory\RequestFactory;
+use ESD\Server\Coroutine\Http\Factory\ResponseFactory;
 use ESD\Yii\Yii;
 
 /**
  * Class Server
- * @package ESD\Server\Co
+ * @package ESD\Server\Coroutine
  */
 abstract class Server extends \ESD\Core\Server\Server
 {

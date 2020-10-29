@@ -15,7 +15,7 @@ use ESD\Plugins\Actuator\ActuatorPlugin;
 use ESD\Plugins\Consul\Config\ConsulConfig;
 use ESD\Plugins\Consul\Event\ConsulLeaderChangeEvent;
 use ESD\Plugins\Consul\Event\ConsulServiceChangeEvent;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class ConsulPlugin
