@@ -7,7 +7,7 @@
 namespace ESD\Yii\Plugin\Pdo;
 
 use ESD\Core\Channel\Channel;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 use ESD\Yii\Db\Connection;
 
 /**

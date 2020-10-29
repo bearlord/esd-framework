@@ -13,7 +13,7 @@ use ESD\Core\Server\Beans\AbstractRequest;
 use ESD\Core\Server\Beans\AbstractResponse;
 use ESD\Core\Server\Config\ServerConfig;
 use ESD\Coroutine\Channel\ChannelFactory;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 use ESD\Coroutine\Event\EventCallFactory;
 use ESD\Server\Co\Http\Factory\RequestFactory;
 use ESD\Server\Co\Http\Factory\ResponseFactory;
@@ -34,7 +34,7 @@ abstract class Server extends \ESD\Core\Server\Server
      */
     public function __construct(?ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
-        Co::enableCoroutine();
+        Coroutine::enableCoroutine();
         DI::$definitions = [
             Channel::class => new ChannelFactory(),
             EventCall::class => new EventCallFactory(),

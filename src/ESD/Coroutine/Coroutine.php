@@ -11,7 +11,7 @@ use ESD\Core\Context\ContextManager;
 use ESD\Core\Runtime;
 use ESD\Coroutine\Pool\Runnable;
 
-class Co
+class Coroutine
 {
 
     /**

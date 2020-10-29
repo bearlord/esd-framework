@@ -92,15 +92,15 @@ class EventCallImpl extends ChannelImpl implements EventCall
 
     /**
      * @inheritDoc
-     * @param callable $fuc
+     * @param callable $callback
      * @return mixed|void
      */
-    public function call(callable $fuc)
+    public function call(callable $callback)
     {
-        goWithContext(function () use ($fuc) {
+        goWithContext(function () use ($callback) {
             while (true) {
                 $result = $this->pop();
-                $fuc($result);
+                $callback($result);
                 if ($this->once) {
                     $this->eventDispatcher->remove($this->type, $this);
                     break;

@@ -7,7 +7,7 @@
 namespace ESD\Coroutine\Pool;
 
 use ESD\Coroutine\Channel\ChannelImpl;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 
 class Runnable
 {
@@ -74,7 +74,7 @@ class Runnable
      */
     public function justRun()
     {
-        Co::runTask($this);
+        Coroutine::runTask($this);
     }
 
     /**

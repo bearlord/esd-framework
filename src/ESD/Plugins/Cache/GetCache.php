@@ -8,7 +8,7 @@ namespace ESD\Plugins\Cache;
 
 use ESD\Core\Exception;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 
 /**
  * Trait GetCache
@@ -85,7 +85,7 @@ trait  GetCache
                         break;
                     }
 
-                    Co::sleep($config->getLockWait() / 1000.0);
+                    Coroutine::sleep($config->getLockWait() / 1000.0);
                     $i += $config->getLockWait();
                     if ($i >= $config->getLockTimeout()) {
                         if ($config->getLockThrowException()) {

@@ -7,7 +7,7 @@
 namespace ESD\Yii\Plugin\Mongodb;
 
 use ESD\Core\Channel\Channel;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 use ESD\Yii\Mongodb\Connection;
 
 /**

@@ -8,7 +8,7 @@
 namespace ESD\Coroutine\Pool;
 
 use ESD\Coroutine\Channel\ChannelImpl;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 
 /**
  * Class CoroutinePoolExecutor
@@ -102,7 +102,7 @@ class CoroutinePoolExecutor implements Executor
     {
         $cid = goWithContext(function () use ($runnable, $keepAliveTime) {
             \Swoole\Coroutine::defer(function () {
-                unset($this->cids[Co::getCid()]);
+                unset($this->cids[Coroutine::getCid()]);
             });
             if ($runnable != null) {
                 if ($runnable instanceof Runnable) {

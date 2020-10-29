@@ -20,8 +20,8 @@ class CoroutineContextBuilder implements ContextBuilder
      */
     public function build(): ?Context
     {
-        if (Co::getCid() > 0) {
-            return Co::getContext();
+        if (Coroutine::getCid() > 0) {
+            return Coroutine::getContext();
         } else {
             return null;
         }
