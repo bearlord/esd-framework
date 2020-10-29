@@ -4,9 +4,12 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-
 namespace ESD\Coroutine\Pool;
 
+/**
+ * Class CoroutineExecutor
+ * @package ESD\Coroutine\Pool
+ */
 class CoroutineExecutor implements Executor
 {
     /**

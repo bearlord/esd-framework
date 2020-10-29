@@ -9,6 +9,10 @@ namespace ESD\Coroutine\Pool;
 use ESD\Coroutine\Channel\ChannelImpl;
 use ESD\Coroutine\Coroutine;
 
+/**
+ * Class Runnable
+ * @package ESD\Coroutine\Pool
+ */
 class Runnable
 {
     /**
