@@ -59,11 +59,15 @@ class HostConfig extends BaseConfig
     public function buildConfig()
     {
         if(empty($this->host)){
-            throw new AmqpException(Yii::t('esd', 'Amqp host must be set'));
+            throw new AmqpException(Yii::t('esd', '{name} must be set', [
+                'name' => 'Amqp host'
+            ]));
         }
 
         if(empty($this->port) || $this->port > 65535 || $this->port < 1){
-            throw new AmqpException(Yii::t('esd', 'Amqp port must be set'));
+            throw new AmqpException(Yii::t('esd', '{name} must be set', [
+                'name' => 'Amqp port'
+            ]));
         }
     }
 

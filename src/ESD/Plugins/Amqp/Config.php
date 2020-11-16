@@ -308,7 +308,9 @@ class Config extends BaseConfig
         }
 
         if(empty($this->hosts)){
-            throw new AmqpException(Yii::t('esd', 'Amqp host must be set'));
+            throw new AmqpException(Yii::t('esd', '{name} must be set', [
+                'name' => 'Amqp host'
+            ]));
         }
 
         foreach ($this->hosts as $host) {

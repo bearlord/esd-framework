@@ -76,7 +76,9 @@ class AmqpPlugin extends AbstractPlugin
 
         $configs = $this->configs->getConfigs();
         if (empty($configs)) {
-            $this->warn(Yii::t('esd', 'Amqp configuration not found'));
+            $this->warn(Yii::t('esd', '{name} configuration not found', [
+                'name' => 'Amqp'
+            ]));
             return false;
         }
 
