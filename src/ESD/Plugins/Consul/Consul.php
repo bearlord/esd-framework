@@ -17,7 +17,7 @@ use ESD\Plugins\Consul\Config\ConsulConfig;
 use ESD\Plugins\Consul\Event\ConsulAddServiceMonitorEvent;
 use ESD\Plugins\Consul\Event\ConsulLeaderChangeEvent;
 use ESD\Plugins\Consul\Event\ConsulServiceChangeEvent;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use SensioLabs\Consul\ConsulResponse;
 use SensioLabs\Consul\Services\Agent;
 use SensioLabs\Consul\Services\AgentInterface;

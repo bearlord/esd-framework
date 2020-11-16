@@ -9,7 +9,7 @@ namespace ESD\Plugins\Cache\Aspect;
 use DI\DependencyException;
 use DI\NotFoundException;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Cache\Annotation\Cacheable;
 use ESD\Plugins\Cache\Annotation\CacheEvict;
@@ -105,7 +105,7 @@ class CachingAspect extends OrderAspect
                         do {
                             $result = $this->getCache($key, $cacheable);
                             if ($result) break;
-                            Co::sleep($this->config->getLockWait() / 1000.0);
+                            Coroutine::sleep($this->config->getLockWait() / 1000.0);
                             $i += $this->config->getLockWait();
                             if ($i >= $this->config->getLockTimeout()) {
                                 if($this->config->getLockThrowException()){

@@ -8,7 +8,7 @@ namespace ESD\Plugins\Actor;
 
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 /**

@@ -7,7 +7,7 @@
 namespace ESD\Plugins\EasyRoute\Filter;
 
 use ESD\Plugins\Pack\ClientData;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class ServerFilter

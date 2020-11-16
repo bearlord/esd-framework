@@ -8,7 +8,7 @@ namespace ESD\Plugins\Saber;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 use ESD\Plugins\Saber\Interceptors\Interceptor;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use Swlib\Http\ContentType;
 use Swlib\Http\Exception\HttpExceptionMask;
 

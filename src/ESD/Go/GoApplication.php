@@ -32,7 +32,7 @@ use ESD\Plugins\Session\SessionPlugin;
 use ESD\Plugins\Topic\TopicPlugin;
 use ESD\Plugins\Uid\UidPlugin;
 use ESD\Plugins\Whoops\WhoopsPlugin;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Yii;
 

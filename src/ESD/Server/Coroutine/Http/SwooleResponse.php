@@ -4,7 +4,7 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Server\Co\Http;
+namespace ESD\Server\Coroutine\Http;
 
 use ESD\Core\Exception;
 use ESD\Core\Server\Beans\Http\Cookie;
@@ -12,7 +12,7 @@ use ESD\Core\Server\Beans\Response;
 
 /**
  * Class SwooleResponse
- * @package ESD\Server\Co\Http
+ * @package ESD\Server\Coroutine\Http
  */
 class SwooleResponse extends Response
 {

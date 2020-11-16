@@ -6,7 +6,7 @@
 
 namespace ESD\Plugins\Actor;
 
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Trait GetActorRpc

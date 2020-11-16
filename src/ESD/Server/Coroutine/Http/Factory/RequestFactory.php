@@ -4,14 +4,14 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Server\Co\Http\Factory;
+namespace ESD\Server\Coroutine\Http\Factory;
 
 use ESD\Core\DI\Factory;
-use ESD\Server\Co\Http\SwooleRequest;
+use ESD\Server\Coroutine\Http\SwooleRequest;
 
 /**
  * Class RequestFactory
- * @package ESD\Server\Co\Http\Factory
+ * @package ESD\Server\Coroutine\Http\Factory
  */
 class RequestFactory implements Factory
 {

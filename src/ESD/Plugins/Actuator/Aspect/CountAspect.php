@@ -17,7 +17,7 @@ use ESD\Plugins\EasyRoute\Controller\IController;
 use ESD\Plugins\EasyRoute\EasyRouteConfig;
 use ESD\Plugins\EasyRoute\RouteConfig;
 use ESD\Plugins\EasyRoute\RouteTool\IRoute;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
 

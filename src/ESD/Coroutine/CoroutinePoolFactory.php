@@ -9,10 +9,10 @@ namespace ESD\Coroutine;
 use ESD\Coroutine\Pool\CoroutinePoolExecutor;
 
 /**
- * Class CoPoolFactory
+ * Class CoroutinePoolFactory
  * @package ESD\Coroutine
  */
-class CoPoolFactory
+class CoroutinePoolFactory
 {
     /**
      * @var CoroutinePoolExecutor[]

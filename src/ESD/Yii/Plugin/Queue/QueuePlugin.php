@@ -12,7 +12,7 @@ use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Amqp\AmqpPlugin;
 use ESD\Plugins\Redis\RedisPlugin;
-use ESD\Server\Co\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Plugin\YiiPlugin;
 use ESD\Yii\Plugin\Queue\Beans\QueueTask;

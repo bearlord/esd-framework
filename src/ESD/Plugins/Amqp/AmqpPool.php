@@ -8,7 +8,7 @@ namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
-use ESD\Coroutine\Co;
+use ESD\Coroutine\Coroutine;
 
 /**
  * Class PdoPool
