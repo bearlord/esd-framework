@@ -1,6 +1,7 @@
 <?php
 return [
     '{driverName} connection pool named {name} created' => '{name}という名前の{driverName}接続プールが作成されました',
+    '{driverName} connection pool named {name} not found' => '{name}という名前の{driverName}接続プールが見つかりません',
     '{name} cannot be empty' => '{method} のメソッドアノテーション{annotationClass}',
     '{name} configuration not found' => '{name} 配置未设置',
     '{path} 404 Not Found' => '{パス} 404が見つかりません',
@@ -23,8 +24,6 @@ return [
     'Process start' => 'プロセス開始',
     'Process stop' => 'プロセス停止',
     'Print configuration' => 'アプリケーション構成',
-    'Redis connection pool named {name} created' => '{name} という名前のRedis接続プールが作成されました',
-    'Redis connection pool named {name} not found' => '{name} という名前のRedis接続プールが見つかりません',
     'Redis extension is not loaded' => 'Redis拡張機能が読み込まれていません',
     'Redis name must be set' => 'Redis名を設定する必要があります',
     'Redis host must be set' => 'Redisホストを設定する必要があります',

@@ -30,7 +30,8 @@ trait GetRedis
             $pool = $redisPool->getPool($name);
 
             if ($pool == null) {
-                throw new Exception(Yii::t('esd', 'Redis connection pool named {name} not found', [
+                throw new Exception(Yii::t('esd', '{driverName} connection pool named {name} not found', [
+                    'driverName' => 'Redis',
                     'name' => $name
                 ]));
             }

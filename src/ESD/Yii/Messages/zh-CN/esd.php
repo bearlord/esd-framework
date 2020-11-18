@@ -1,6 +1,7 @@
 <?php
 return [
-    '{driverName} connection pool named {name} created' => '添加 {driverName} {name} 的连接池',
+    '{driverName} connection pool named {name} created' => '创建 {driverName} {name} 连接池',
+    '{driverName} connection pool named {name} not found' => '{driverName} {name} 连接池未设置',
     '{name} cannot be empty' => '{name} 不能为空',
     '{name} configuration not found' => '{name} 配置未设置',
     '{path} 404 Not Found' => '{path} 404 请求未找到',
@@ -24,8 +25,6 @@ return [
     'Process start' => '进程启动',
     'Process stop' => '进程结束',
     'Print configuration' => '打印配置文件',
-    'Redis connection pool named {name} created' => '创建 Redis {name} 的连接池',
-    'Redis connection pool named {name} not found' => '没有 Redis {name} 的连接池',
     'Redis extension is not loaded' => 'Redis 扩展没有加载',
     'Redis name must be set' => 'Redis name 必须设置',
     'Redis host must be set' => 'Redis host 必须设置',

@@ -164,7 +164,7 @@ class ActuatorPlugin extends AbstractPlugin
     {
         foreach ($this->table as $key => $num) {
             $this->table->set($key, [$column => 0]);
-            $this->debug(Yii::t('esd', 'Update count') . $key . ':' . $column . ' -> 0');
+            $this->debug(sprintf("%s %s:%s -> 0", Yii::t('esd', 'Update count'), $key, $column));
         }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 return [
-    '{driverName} connection pool named {name} created' => 'Erstellen Sie einen  {driverName} {name}-Datenbankverbindungspool',
+    '{driverName} connection pool named {name} created' => '{driverName} Verbindungspool mit dem Namen {name} erstellt',
+    '{driverName} connection pool named {name} not found' => '{driverName} Verbindungspool mit dem Namen {name} wurde nicht gefunden',
     '{name} cannot be empty' => '{name} Kann nicht leer sein',
     '{name} configuration not found' => ' Die {name}-Konfiguration ist nicht festgelegt',
     '{path} 404 Not Found' => '{path} 404 Anfrage nicht gefunden',
@@ -23,8 +24,6 @@ return [
     'Process start' => 'Prozessstart',
     'Process stop' => 'Prozess gestoppt',
     'Print configuration' => 'Konfigurationsdatei drucken',
-    'Redis connection pool named {name} created' => 'Redis Verbindungspool mit dem Namen {name} erstellt',
-    'Redis connection pool named {name} not found' => 'Der Redis-Verbindungspool mit dem Namen {name} wurde nicht gefunden',
     'Redis extension is not loaded' => 'Die Redis-Erweiterung ist nicht geladen',
     'Redis name must be set' => 'Redis Name muss gesetzt sein',
     'Redis host must be set' => 'Redis Host muss gesetzt sein',
