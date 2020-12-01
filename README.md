@@ -41,7 +41,7 @@ ESD协议：Apache License 2.0，Yii2协议：BSD 3-Clause。
 ## 安装使用：
 
 ```
-composer require bearlord/esd-framework:dev-master 
+composer require bearlord/esd-framework 
 php ./vendor/bearlord/esd-framework/src/ESD/Install/Install.php 
 ```
 
