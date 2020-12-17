@@ -9,6 +9,7 @@ namespace ESD\Consul;
 use SensioLabs\Consul\Client;
 use SensioLabs\Consul\OptionsResolver;
 use SensioLabs\Consul\Services\SessionInterface;
+use SensioLabs\Consul\ConsulResponse;
 
 /**
  * Class Session
@@ -31,13 +32,13 @@ class Session implements SessionInterface
      * Session create
      * @param null $body
      * @param array $options
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function create($body = null, array $options = array())
+    public function create($body = null, array $options = [])
     {
         $params = array(
             'body' => $body,
-            'query' => OptionsResolver::resolve($options, array('dc')),
+            'query' => OptionsResolver::resolve($options, ['dc']),
         );
 
         return $this->client->put('/v1/session/create', $params);
@@ -47,12 +48,12 @@ class Session implements SessionInterface
      * Session destroy
      * @param $sessionId
      * @param array $options
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function destroy($sessionId, array $options = array())
+    public function destroy($sessionId, array $options = [])
     {
         $params = array(
-            'query' => OptionsResolver::resolve($options, array('dc')),
+            'query' => OptionsResolver::resolve($options, ['dc']),
         );
 
         return $this->client->put('/v1/session/destroy/' . $sessionId, $params);
@@ -63,13 +64,13 @@ class Session implements SessionInterface
      * @param $sessionId
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function info($sessionId, array $options = array(), $timeout = 5)
+    public function info($sessionId, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
-            'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc')),
+            'query' => OptionsResolver::resolve($options, ['index', 'wait', 'dc']),
         );
 
         return $this->client->get('/v1/session/info/' . $sessionId, $params);
@@ -80,13 +81,13 @@ class Session implements SessionInterface
      * @param $node
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function node($node, array $options = array(), $timeout = 5)
+    public function node($node, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
-            'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc')),
+            'query' => OptionsResolver::resolve($options, ['index', 'wait', 'dc']),
         );
 
         return $this->client->get('/v1/session/node/' . $node, $params);
@@ -96,13 +97,13 @@ class Session implements SessionInterface
      * Session list
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function all(array $options = array(), $timeout = 5)
+    public function all(array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
-            'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc')),
+            'query' => OptionsResolver::resolve($options, ['index', 'wait', 'dc']),
         );
 
         return $this->client->get('/v1/session/list', $params);
@@ -112,12 +113,12 @@ class Session implements SessionInterface
      * Session renew
      * @param $sessionId
      * @param array $options
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function renew($sessionId, array $options = array())
+    public function renew($sessionId, array $options = [])
     {
         $params = array(
-            'query' => OptionsResolver::resolve($options, array('dc')),
+            'query' => OptionsResolver::resolve($options, ['dc']),
         );
 
         return $this->client->put('/v1/session/renew/' . $sessionId, $params);

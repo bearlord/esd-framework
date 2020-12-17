@@ -30,10 +30,11 @@ class AtomicLong
 
     /**
      * Add value
+     *
      * @param int $addValue
      * @return int
      */
-    public function add(int $addValue = 1)
+    public function add(int $addValue = 1): int
     {
         return $this->swooleAtomicLong->add($addValue);
     }
@@ -44,15 +45,15 @@ class AtomicLong
      * @param int $subValue
      * @return int
      */
-    public function sub(int $subValue = 1)
+    public function sub(int $subValue = 1): int
     {
         return $this->swooleAtomicLong->sub($subValue);
     }
 
     /**
-     * Get value
-     *
-     * @return int
+     * Get
+     * 
+     * @return mixed
      */
     public function get()
     {

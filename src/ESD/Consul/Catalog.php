@@ -9,6 +9,7 @@ namespace ESD\Consul;
 use SensioLabs\Consul\Client;
 use SensioLabs\Consul\OptionsResolver;
 use SensioLabs\Consul\Services\CatalogInterface;
+use SensioLabs\Consul\ConsulResponse;
 
 /**
  * Class Catalog
@@ -28,36 +29,35 @@ class Catalog implements CatalogInterface
     }
 
     /**
-     * Register
+     * register
      * @param $node
-     * @return mixed
+     * @return ConsulResponse
      */
     public function register($node)
     {
-        $params = array(
+        $params = [
             'body' => (string)$node,
-        );
+        ];
 
         return $this->client->put('/v1/catalog/register', $params);
     }
 
     /**
-     * Deregister
      * @param $node
-     * @return mixed
+     * @return ConsulResponse
      */
     public function deregister($node)
     {
-        $params = array(
+        $params = [
             'body' => (string)$node,
-        );
+        ];
 
         return $this->client->put('/v1/catalog/deregister', $params);
     }
 
     /**
      * Data centers
-     * @return mixed
+     * @return ConsulResponse
      */
     public function datacenters()
     {
@@ -68,14 +68,14 @@ class Catalog implements CatalogInterface
      * Nodes
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function nodes(array $options = array(), $timeout = 5)
+    public function nodes(array $options = [], $timeout = 5)
     {
-        $params = array(
+        $params = [
             'timeout' => $timeout,
-            'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc', 'near', 'node-meta', 'filter')),
-        );
+            'query' => OptionsResolver::resolve($options, ['index', 'wait', 'dc', 'near', 'node-meta', 'filter']),
+        ];
 
         return $this->client->get('/v1/catalog/nodes', $params);
     }
@@ -84,13 +84,13 @@ class Catalog implements CatalogInterface
      * Node
      * @param $node
      * @param array $options
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function node($node, array $options = array())
+    public function node($node, array $options = [])
     {
-        $params = array(
-            'query' => OptionsResolver::resolve($options, array('dc', 'filter')),
-        );
+        $params = [
+            'query' => OptionsResolver::resolve($options, ['dc', 'filter']),
+        ];
 
         return $this->client->get('/v1/catalog/node/' . $node, $params);
     }
@@ -99,14 +99,14 @@ class Catalog implements CatalogInterface
      * Services
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function services(array $options = array(), $timeout = 5)
+    public function services(array $options = [], $timeout = 5)
     {
-        $params = array(
+        $params = [
             'timeout' => $timeout,
             'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc', 'node-meta')),
-        );
+        ];
 
         return $this->client->get('/v1/catalog/services', $params);
     }
@@ -116,14 +116,14 @@ class Catalog implements CatalogInterface
      * @param $service
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function service($service, array $options = array(), $timeout = 5)
+    public function service($service, array $options = [], $timeout = 5)
     {
-        $params = array(
+        $params = [
             'timeout' => $timeout,
             'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc', 'tag', 'near', 'node-meta', 'filter')),
-        );
+        ];
 
         return $this->client->get('/v1/catalog/service/' . $service, $params);
     }
@@ -133,14 +133,14 @@ class Catalog implements CatalogInterface
      * @param $service
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function connect($service, array $options = array(), $timeout = 5)
+    public function connect($service, array $options = [], $timeout = 5)
     {
-        $params = array(
+        $params = [
             'timeout' => $timeout,
             'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc', 'tag', 'near', 'node-meta', 'filter')),
-        );
+        ];
 
         return $this->client->get('/v1/catalog/connect/' . $service, $params);
     }

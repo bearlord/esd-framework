@@ -28,7 +28,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 
     /**
@@ -47,7 +47,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 
     /**
@@ -65,7 +65,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 
     /**
@@ -82,7 +82,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 
     /**
@@ -117,7 +117,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 
     /**
@@ -135,7 +135,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 
     /**
@@ -151,7 +151,7 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 
     /**
@@ -168,6 +168,6 @@ class Log implements LoggerInterface
         if($message instanceof \Throwable){
             $message = $message->getMessage();
         }
-        printf($message."\n");
+        printf("%s\n", $message);
     }
 }

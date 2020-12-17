@@ -206,7 +206,7 @@ class Table implements \Iterator, \Countable
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->swooleTable->valid();
     }

@@ -9,6 +9,7 @@ namespace ESD\Consul;
 use SensioLabs\Consul\Client;
 use SensioLabs\Consul\OptionsResolver;
 use SensioLabs\Consul\Services\KVInterface;
+use SensioLabs\Consul\ConsulResponse;
 
 /**
  * Class KV
@@ -32,13 +33,13 @@ class KV implements KVInterface
      * @param $key
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function get($key, array $options = array(), $timeout = 5)
+    public function get($key, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
-            'query' => OptionsResolver::resolve($options, array('index', 'wait', 'dc', 'recurse', 'keys', 'separator', 'raw', 'stale', 'consistent', 'default')),
+            'query' => OptionsResolver::resolve($options, ['index', 'wait', 'dc', 'recurse', 'keys', 'separator', 'raw', 'stale', 'consistent', 'default']),
         );
 
         return $this->client->get('v1/kv/' . $key, $params);
@@ -49,13 +50,13 @@ class KV implements KVInterface
      * @param $key
      * @param $value
      * @param array $options
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function put($key, $value, array $options = array())
+    public function put($key, $value, array $options = [])
     {
         $params = array(
             'body' => (string)$value,
-            'query' => OptionsResolver::resolve($options, array('dc', 'flags', 'cas', 'acquire', 'release')),
+            'query' => OptionsResolver::resolve($options, ['dc', 'flags', 'cas', 'acquire', 'release']),
         );
 
         return $this->client->put('v1/kv/' . $key, $params);
@@ -65,12 +66,12 @@ class KV implements KVInterface
      * Delete
      * @param $key
      * @param array $options
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function delete($key, array $options = array())
+    public function delete($key, array $options = [])
     {
         $params = array(
-            'query' => OptionsResolver::resolve($options, array('dc', 'recurse')),
+            'query' => OptionsResolver::resolve($options, ['dc', 'recurse']),
         );
 
         return $this->client->delete('v1/kv/' . $key, $params);

@@ -58,7 +58,7 @@ class DI
      * @return DI
      * @throws \Exception
      */
-    public static function getInstance()
+    public static function getInstance(): DI
     {
         if (self::$instance == null) {
             self::$instance = new DI();

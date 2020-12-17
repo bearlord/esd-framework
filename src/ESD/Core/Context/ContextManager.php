@@ -6,6 +6,10 @@
 
 namespace ESD\Core\Context;
 
+/**
+ * Class ContextManager
+ * @package ESD\Core\Context
+ */
 class ContextManager
 {
     /**
@@ -40,7 +44,7 @@ class ContextManager
      * Instance
      * @return ContextManager
      */
-    public static function getInstance()
+    public static function getInstance(): ContextManager
     {
         if (self::$instance == null) {
             self::$instance = new ContextManager();
@@ -54,7 +58,7 @@ class ContextManager
      * @param callable|null $register
      * @return ContextBuilder
      */
-    public function getContextBuilder($deep, ?callable $register = null)
+    public function getContextBuilder($deep, ?callable $register = null): ContextBuilder
     {
         $result = $this->contextStack[$deep] ?? null;
         if ($result == null && $register != null) {
@@ -68,7 +72,7 @@ class ContextManager
      * Get context
      * @return Context|null
      */
-    public function getContext()
+    public function getContext(): ?Context
     {
         $context = null;
         $parentContext = null;

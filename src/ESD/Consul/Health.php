@@ -9,6 +9,7 @@ namespace ESD\Consul;
 use SensioLabs\Consul\Client;
 use SensioLabs\Consul\OptionsResolver;
 use SensioLabs\Consul\Services\HealthInterface;
+use SensioLabs\Consul\ConsulResponse;
 
 /**
  * Class Health
@@ -32,9 +33,9 @@ class Health implements HealthInterface
      * @param $node
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function node($node, array $options = array(), $timeout = 5)
+    public function node($node, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -49,9 +50,9 @@ class Health implements HealthInterface
      * @param $service
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function checks($service, array $options = array(), $timeout = 5)
+    public function checks($service, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -66,9 +67,9 @@ class Health implements HealthInterface
      * @param $service
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function service($service, array $options = array(), $timeout = 5)
+    public function service($service, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -83,9 +84,9 @@ class Health implements HealthInterface
      * @param $connect
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function connect($connect, array $options = array(), $timeout = 5)
+    public function connect($connect, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -100,9 +101,9 @@ class Health implements HealthInterface
      * @param $state
      * @param array $options
      * @param int $timeout
-     * @return mixed
+     * @return ConsulResponse
      */
-    public function state($state, array $options = array(), $timeout = 5)
+    public function state($state, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,

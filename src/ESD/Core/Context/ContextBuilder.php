@@ -6,6 +6,10 @@
 
 namespace ESD\Core\Context;
 
+/**
+ * Interface ContextBuilder
+ * @package ESD\Core\Context
+ */
 interface ContextBuilder
 {
     const ROOT_CONTEXT = 0;

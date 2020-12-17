@@ -6,6 +6,10 @@
 
 namespace ESD\Core\Context;
 
+/**
+ * Class RootContextBuilder
+ * @package ESD\Core\Context
+ */
 class RootContextBuilder implements ContextBuilder
 {
     private $context;
