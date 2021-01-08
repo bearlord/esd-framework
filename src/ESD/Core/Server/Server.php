@@ -34,6 +34,7 @@ use ESD\Core\Server\Process\ManagerProcess;
 use ESD\Core\Server\Process\MasterProcess;
 use ESD\Core\Server\Process\Process;
 use ESD\Core\Server\Process\ProcessManager;
+use ESD\Coroutine\Coroutine;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -230,6 +231,13 @@ abstract class Server
 
         //Lock configuration
         $this->setConfigured(true);
+
+        //Disable swoole's enable_deadlock_check option
+        if (version_compare(swoole_version(), "4.6.0", "ge")) {
+            Coroutine::set([
+                'enable_deadlock_check' => false
+            ]);
+        }
 
         //Setting up the main process
         $managerProcess = new ManagerProcess($this);

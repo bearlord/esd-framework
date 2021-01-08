@@ -15,7 +15,7 @@ class Configs
     /**
      * @var array
      */
-    protected $configs;
+    protected $configs = [];
 
     /**
      * @return array
