@@ -46,7 +46,6 @@ class BaseConfig
     {
         $this->config = [];
         $prefix = $this->configPrefix;
-        $config = &$this->config;
 
         if ($this->isArray) {
             if ($this->indexName == null) {
@@ -61,20 +60,42 @@ class BaseConfig
             $prefix = $prefix . ".$index";
         }
 
-        $prefixList = explode(".", $prefix);
-        foreach ($prefixList as $value) {
-            $config[$value] = [];
-            $config = &$config[$value];
-        }
-        $config = $this->toConfigArray();
+        $this->config = $this->processPrefix($prefix);
+        $this->config = $this->toConfigArray();
 
         //Append config context
         Server::$instance->getConfigContext()->appendDeepConfig($this->config, ConfigPlugin::ConfigDeep);
-
         //Merge config
         $this->config = Server::$instance->getConfigContext()->get($prefix);
         $this->buildFromConfig($this->config);
 
         DISet(get_class($this), $this);
+    }
+
+
+    /**
+     * Process prefix to array
+     *
+     * @param $prefix
+     * @return array
+     */
+    protected function processPrefix($prefix)
+    {
+        $cabinet = [];
+        $box = &$cabinet;
+
+        $prefixList = explode(".", $prefix);
+        if (empty($prefix)) {
+            return [];
+        }
+
+        foreach ($prefixList as $value) {
+            $box[$value] = [];
+            $box = &$box[$value];
+        }
+
+        $result = $cabinet;
+        unset($cabinet);
+        return $result;
     }
 }
