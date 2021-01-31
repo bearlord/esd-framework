@@ -46,6 +46,7 @@ class BaseConfig
     {
         $this->config = [];
         $prefix = $this->configPrefix;
+        $config = &$this->config;
 
         if ($this->isArray) {
             if ($this->indexName == null) {
@@ -60,11 +61,17 @@ class BaseConfig
             $prefix = $prefix . ".$index";
         }
 
-        $this->config = $this->processPrefix($prefix);
-        $this->config = $this->toConfigArray();
+        $prefixList = explode(".", $prefix);
+        foreach ($prefixList as $value) {
+            $config[$value] = [];
+            $config = &$config[$value];
+        }
+
+        $config = $this->toConfigArray();
 
         //Append config context
         Server::$instance->getConfigContext()->appendDeepConfig($this->config, ConfigPlugin::ConfigDeep);
+
         //Merge config
         $this->config = Server::$instance->getConfigContext()->get($prefix);
         $this->buildFromConfig($this->config);
