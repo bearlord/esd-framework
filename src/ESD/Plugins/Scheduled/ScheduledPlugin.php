@@ -194,9 +194,9 @@ class ScheduledPlugin extends AbstractPlugin
                             $this->processScheduledCount[$process->getProcessId()]++;
                             Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ScheduledExecuteEvent($scheduledTask), $process);
                         } else {
-                            $this->warn('esd', 'The {name} task did not find a scheduled process', [
+                            $this->warn(Yii::t('esd', 'The {name} task did not find a scheduled process', [
                                 'name' => $scheduledTask->getName()
-                            ]);
+                            ]));
                         }
                     }
                 }
