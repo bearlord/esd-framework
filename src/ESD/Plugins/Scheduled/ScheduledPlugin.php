@@ -132,7 +132,7 @@ class ScheduledPlugin extends AbstractPlugin
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
             //Scan annotation
             $scanClass = Server::$instance->getContainer()->get(ScanClass::class);
-            $reflectionMethods = $scanClass->findMethodsByAnn(Scheduled::class);
+            $reflectionMethods = $scanClass->findMethodsByAnnotation(Scheduled::class);
             foreach ($reflectionMethods as $reflectionMethod) {
                 $reflectionClass = $reflectionMethod->getParentReflectClass();
                 $scheduled = $scanClass->getCachedReader()->getMethodAnnotation($reflectionMethod->getReflectionMethod(), Scheduled::class);
