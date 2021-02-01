@@ -345,7 +345,7 @@ abstract class Process
     public function _onProcessStop()
     {
         try {
-            //发出事件
+            //Dispatch event
             $this->eventDispatcher->dispatchEvent(new ProcessEvent(ProcessEvent::ProcessStopEvent, $this));
             $this->onProcessStop();
         } catch (\Throwable $e) {
