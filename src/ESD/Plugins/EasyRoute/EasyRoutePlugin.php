@@ -167,7 +167,7 @@ class EasyRoutePlugin extends AbstractPlugin
             return;
         }
         $this->scanClass = DIget(ScanClass::class);
-        $reflectionMethods = $this->scanClass->findMethodsByAnn(RequestMapping::class);
+        $reflectionMethods = $this->scanClass->findMethodsByAnnotation(RequestMapping::class);
         $this->dispatcher = simpleDispatcher(function (RouteCollector $r) use ($reflectionMethods) {
             //Add route in configuration
             foreach ($this->routeConfig->getRouteRoles() as $routeRole) {

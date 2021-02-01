@@ -100,7 +100,7 @@ class ScanClass
      * @param $annClass
      * @return ScanReflectionMethod[]
      */
-    public function findMethodsByAnn($annClass)
+    public function findMethodsByAnnotation($annClass)
     {
         return $this->annotationMethod[$annClass] ?? [];
     }
