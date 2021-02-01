@@ -12,6 +12,10 @@ use ESD\Plugins\Scheduled\Event\ScheduledExecuteEvent;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
+/**
+ * Class ScheduledTaskHandle
+ * @package ESD\Plugins\Scheduled
+ */
 class ScheduledTaskHandle
 {
     use GetLogger;

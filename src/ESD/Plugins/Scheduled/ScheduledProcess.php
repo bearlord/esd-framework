@@ -9,6 +9,10 @@ namespace ESD\Plugins\Scheduled;
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
 
+/**
+ * Class ScheduledProcess
+ * @package ESD\Plugins\Scheduled
+ */
 class ScheduledProcess extends Process
 {
 

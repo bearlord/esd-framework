@@ -21,6 +21,10 @@ use ESD\Plugins\Scheduled\Event\ScheduledRemoveEvent;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
+/**
+ * Class ScheduledPlugin
+ * @package ESD\Plugins\Scheduled
+ */
 class ScheduledPlugin extends AbstractPlugin
 {
     use GetLogger;
