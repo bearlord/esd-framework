@@ -9,6 +9,10 @@ namespace ESD\Core\Server\Process;
 use ESD\Core\Context\Context;
 use ESD\Core\Context\ContextBuilder;
 
+/**
+ * Class ProcessContextBuilder
+ * @package ESD\Core\Server\Process
+ */
 class ProcessContextBuilder implements ContextBuilder
 {
     /**

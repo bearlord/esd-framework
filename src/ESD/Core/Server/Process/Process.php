@@ -254,11 +254,6 @@ abstract class Process
      */
     public function _onProcessStart()
     {
-        /*
-        Process::signal(SIGINT, function ($signo) {
-
-            });
-        */
         $this->log = Server::$instance->getLog();
         $this->eventDispatcher = Server::$instance->getEventDispatcher();
         try {

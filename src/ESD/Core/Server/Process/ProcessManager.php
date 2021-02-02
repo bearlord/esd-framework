@@ -9,6 +9,10 @@ namespace ESD\Core\Server\Process;
 use ESD\Core\Server\Config\ProcessConfig;
 use ESD\Core\Server\Server;
 
+/**
+ * Class ProcessManager
+ * @package ESD\Core\Server\Process
+ */
 class ProcessManager
 {
     /**
@@ -67,10 +71,10 @@ class ProcessManager
      */
     public function getProcessFromId(int $processId)
     {
-        if ($processId == MasterProcess::id) {
+        if ($processId == MasterProcess::ID) {
             return $this->masterProcess;
         }
-        if ($processId == ManagerProcess::id) {
+        if ($processId == ManagerProcess::ID) {
             return $this->managerProcess;
         }
         return $this->processes[$processId] ?? null;

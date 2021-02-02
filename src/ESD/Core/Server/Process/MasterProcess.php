@@ -9,10 +9,14 @@ namespace ESD\Core\Server\Process;
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Server;
 
+/**
+ * Class MasterProcess
+ * @package ESD\Core\Server\Process
+ */
 class MasterProcess extends Process
 {
-    const name = "master";
-    const id = "-1";
+    const NAME = "master";
+    const ID = "-1";
 
     /**
      * MasterProcess constructor.
@@ -20,7 +24,7 @@ class MasterProcess extends Process
      */
     public function __construct(Server $server)
     {
-        parent::__construct($server, self::id, self::name, Process::SERVER_GROUP);
+        parent::__construct($server, self::ID, self::NAME, Process::SERVER_GROUP);
     }
 
     /**
@@ -32,11 +36,6 @@ class MasterProcess extends Process
         Process::setProcessTitle(Server::$instance->getServerConfig()->getName() . "-" . $this->getProcessName());
         $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessId($this->processId);
-        /*
-        Process::signal(SIGINT, function ($signo) {
-                Server::$instance->shutdown();
-            });
-        */
     }
 
     /**

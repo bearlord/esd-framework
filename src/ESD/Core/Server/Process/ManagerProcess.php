@@ -9,10 +9,14 @@ namespace ESD\Core\Server\Process;
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Server;
 
+/**
+ * Class ManagerProcess
+ * @package ESD\Core\Server\Process
+ */
 class ManagerProcess extends Process
 {
-    const name = "manager";
-    const id = "-2";
+    const NAME = "manager";
+    const ID = "-2";
 
     /**
      * ManagerProcess constructor.
@@ -20,7 +24,7 @@ class ManagerProcess extends Process
      */
     public function __construct(Server $server)
     {
-        parent::__construct($server, self::id, self::name, Process::SERVER_GROUP);
+        parent::__construct($server, self::ID, self::NAME, Process::SERVER_GROUP);
     }
 
     /**
@@ -32,11 +36,6 @@ class ManagerProcess extends Process
         Process::setProcessTitle(Server::$instance->getServerConfig()->getName() . "-" . $this->getProcessName());
         $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessId($this->processId);
-        /*
-        //block SIGINT
-        pcntl_signal(SIGINT, function () {
-
-        });*/
     }
 
     /**
