@@ -9,7 +9,9 @@ namespace ESD\Yii\Web;
 
 use ESD\Core\Server\Beans\Request;
 use ESD\Yii\Base\BaseObject;
+use ESD\Yii\Helpers\FileHelper;
 use ESD\Yii\Helpers\Html;
+use ESD\Yii\Yii;
 
 /**
  * UploadedFile represents the information for an uploaded file.
@@ -27,6 +29,7 @@ use ESD\Yii\Helpers\Html;
  * error code information. This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
+ * @author bearlord <565364226@qq.com> modified for esd framework
  * @since 2.0
  */
 class UploadedFile extends BaseObject
@@ -57,8 +60,68 @@ class UploadedFile extends BaseObject
      */
     public $error;
 
-    private static $_files;
+    /**
+     * @var array Files
+     */
+    private $_files;
 
+    /**
+     * @var string Root Path
+     */
+    private $rootPath;
+
+    /**
+     * @var string Upload Base Path
+     */
+    private $uploadBasePath;
+
+    /**
+     * @var string Upload save path
+     */
+    private $uploadSavePath;
+
+    /**
+     * @return string
+     */
+    public function getRootPath(): string
+    {
+        if (empty($this->rootPath)) {
+            return rtrim(ROOT_DIR, '/') . '/web/';
+        }
+        return $this->rootPath;
+    }
+
+    /**
+     * @param string $rootPath
+     */
+    public function setRootPath(string $rootPath): void
+    {
+        $this->rootPath = $rootPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUploadBasePath(): string
+    {
+        return $this->uploadBasePath;
+    }
+
+    /**
+     * @param string $uploadBasePath
+     */
+    public function setUploadBasePath(string $uploadBasePath): void
+    {
+        $this->uploadBasePath = $uploadBasePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUploadSavePath(): string
+    {
+        return $this->getRootPath() . $this->getUploadBasePath();
+    }
 
     /**
      * String output.
@@ -81,10 +144,10 @@ class UploadedFile extends BaseObject
      * Null is returned if no file is uploaded for the specified model attribute.
      * @see getInstanceByName()
      */
-    public static function getInstance($model, $attribute)
+    public function instance($model, $attribute)
     {
         $name = Html::getInputName($model, $attribute);
-        return static::getInstanceByName($name);
+        return $this->getInstanceByName($name);
     }
 
     /**
@@ -95,10 +158,10 @@ class UploadedFile extends BaseObject
      * @return UploadedFile[] array of UploadedFile objects.
      * Empty array is returned if no available file was found for the given attribute.
      */
-    public static function getInstances($model, $attribute)
+    public function instances($model, $attribute)
     {
         $name = Html::getInputName($model, $attribute);
-        return static::getInstancesByName($name);
+        return $this->getInstancesByName($name);
     }
 
     /**
@@ -108,7 +171,7 @@ class UploadedFile extends BaseObject
      * @return null|UploadedFile the instance of the uploaded file.
      * Null is returned if no file is uploaded for the specified name.
      */
-    public static function getInstanceByName($name)
+    public function instanceByName($name)
     {
         $files = self::loadFiles();
         return isset($files[$name]) ? new static($files[$name]) : null;
@@ -123,7 +186,7 @@ class UploadedFile extends BaseObject
      * if no adequate upload was found. Please note that this array will contain
      * all files from all sub-arrays regardless how deeply nested they are.
      */
-    public static function getInstancesByName($name)
+    public function instancesByName($name)
     {
         $files = self::loadFiles();
         if (isset($files[$name])) {
@@ -135,7 +198,6 @@ class UploadedFile extends BaseObject
                 $results[] = new static($file);
             }
         }
-
         return $results;
     }
 
@@ -143,10 +205,22 @@ class UploadedFile extends BaseObject
      * Cleans up the loaded UploadedFile instances.
      * This method is mainly used by test scripts to set up a fixture.
      */
-    public static function reset()
+    public function reset()
     {
-        self::$_files = null;
+        $this->_files = null;
     }
+
+    /**
+     * Generate filename
+     *
+     * @return string
+     */
+    public function generateFilename()
+    {
+        $name = sha1(microtime(true) . mt_rand(1000, 9999));
+        return $name;
+    }
+
 
     /**
      * Saves the uploaded file.
@@ -160,6 +234,11 @@ class UploadedFile extends BaseObject
      */
     public function saveAs($file, $deleteTempFile = true)
     {
+        $fileDirectory = dirname($file);
+        if (!file_exists($fileDirectory)) {
+            FileHelper::createDirectory($fileDirectory);
+        }
+
         if ($this->error == UPLOAD_ERR_OK) {
             if ($deleteTempFile) {
                 return move_uploaded_file($this->tempName, $file);
@@ -169,6 +248,32 @@ class UploadedFile extends BaseObject
         }
 
         return false;
+    }
+
+    /**
+     * Get file url
+     * 
+     * @param $path
+     * @return string
+     */
+    public function getFileUrl($path)
+    {
+        if (empty($path)) {
+            return '';
+        }
+        if (strpos($path, 'http') === 0) {
+            return $path;
+        }
+
+        /** @var Request $request */
+        $request = getDeepContextValueByClassName(Request::class);
+        $_host = $request->getHeader('host');
+        //Host
+        $host = $_host[0];
+        //Scheme
+        $scheme = $request->getUri()->getScheme();
+        $realpath = sprintf("%s://%s/%s", $scheme, $host, ltrim(trim($path), '/'));
+        return $realpath;
     }
 
     /**
@@ -202,21 +307,21 @@ class UploadedFile extends BaseObject
      * Creates UploadedFile instances from $_FILE.
      * @return array the UploadedFile instances
      */
-    private static function loadFiles()
+    private function loadFiles()
     {
-        if (self::$_files === null) {
-            self::$_files = [];
+        if ($this->_files === null) {
+            $this->_files = [];
 
             $request = getDeepContextValueByClassName(Request::class);
             $files = $request->getFiles();
             if (isset($files) && is_array($files)) {
                 foreach ($files as $key => $info) {
-                    self::loadFilesRecursive($key, $info);
+                    $this->loadFilesRecursive($key, $info);
                 }
             }
         }
 
-        return self::$_files;
+        return $this->_files;
     }
 
     /**
@@ -228,14 +333,14 @@ class UploadedFile extends BaseObject
      * @param mixed $sizes file sizes provided by PHP
      * @param mixed $errors uploading issues provided by PHP
      */
-    private static function loadFilesRecursive($key, $info)
+    private function loadFilesRecursive($key, $info)
     {
         if (is_array($info) && empty($info['name'])) {
             foreach ($info as $i => $item) {
-                self::loadFilesRecursive($key . '[' . $i . ']', $item);
+                $this->loadFilesRecursive($key . '[' . $i . ']', $item);
             }
         } else {
-            self::$_files[$key] = [
+            $this->_files[$key] = [
                 'name' => $info['name'],
                 'tempName' => $info['tmp_name'],
                 'type' => $info['type'],
