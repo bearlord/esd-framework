@@ -7,6 +7,7 @@
 namespace ESD\Core\Server\Port;
 
 use ESD\Core\Context\Context;
+use ESD\Core\Exception;
 use ESD\Core\Server\Beans\AbstractRequest;
 use ESD\Core\Server\Beans\AbstractResponse;
 use ESD\Core\Server\Beans\Request;
@@ -263,7 +264,12 @@ abstract class AbstractServerPort
          * @var $_request Request
          */
         $_request = DIGet(AbstractRequest::class);
-        $_request->load($request);
+        try {
+            $_request->load($request);
+        } catch (\Exception $exception) {
+            Server::$instance->getLog()->error($exception->getMessage());
+            return false;
+        }
 
         /**
          * @var $_response Response

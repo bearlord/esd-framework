@@ -54,8 +54,8 @@ class SwooleRequest extends Request
             $queryString = "?" . http_build_query($this->queryParams);
         }
 
-        if (empty($this->headers['host'][0])) {
-            throw new \Exception("Headers parsing error");
+        if (empty($this->headers['host'][0]) || empty($this->headers['content-length'])) {
+            throw new Exception(sprintf( "%s %s Headers parsing error. Headers: %s", $this->server['request_method'], $this->server['request_uri'], json_encode($this->headers, JSON_UNESCAPED_SLASHES)));
         }
 
         $this->uri = new Uri(sprintf("%s://%s%s%s",
