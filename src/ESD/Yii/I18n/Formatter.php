@@ -1403,7 +1403,7 @@ class Formatter extends Component
                 case 0:
                     return Yii::t('yii', '{nFormatted} B', $params, $this->language);
                 case 1:
-                    return Yii::t('yii', '{nFormatted} kB', $params, $this->language);
+                    return Yii::t('yii', '{nFormatted} KB', $params, $this->language);
                 case 2:
                     return Yii::t('yii', '{nFormatted} MB', $params, $this->language);
                 case 3:
