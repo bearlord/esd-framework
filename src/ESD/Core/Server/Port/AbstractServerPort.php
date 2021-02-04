@@ -8,6 +8,7 @@ namespace ESD\Core\Server\Port;
 
 use ESD\Core\Context\Context;
 use ESD\Core\Exception;
+use ESD\Core\ParamException;
 use ESD\Core\Server\Beans\AbstractRequest;
 use ESD\Core\Server\Beans\AbstractResponse;
 use ESD\Core\Server\Beans\Request;
@@ -16,6 +17,7 @@ use ESD\Core\Server\Beans\WebSocketCloseFrame;
 use ESD\Core\Server\Beans\WebSocketFrame;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Server;
+use ESD\Go\GoController;
 
 /**
  * AbstractServerPort
@@ -261,21 +263,27 @@ abstract class AbstractServerPort
         Server::$instance->getProcessManager()->getCurrentProcess()->waitReady();
 
         /**
+         * @var $_response Response
+         */
+        $_response = DIGet(AbstractResponse::class);
+        $_response->load($response);
+
+        /**
          * @var $_request Request
          */
         $_request = DIGet(AbstractRequest::class);
         try {
             $_request->load($request);
-        } catch (\Exception $exception) {
+        } catch (ParamException $exception) {
+            Server::$instance->getLog()->error($exception->getMessage());
+
+            $msg = '400 Bad Request';
+            $_response->withStatus(400)->withContent($msg)->end();
+            return false;
+        } catch (Exception $exception) {
             Server::$instance->getLog()->error($exception->getMessage());
             return false;
         }
-
-        /**
-         * @var $_response Response
-         */
-        $_response = DIGet(AbstractResponse::class);
-        $_response->load($response);
 
         try {
             setContextValueWithClass("request", $_request, Request::class);
