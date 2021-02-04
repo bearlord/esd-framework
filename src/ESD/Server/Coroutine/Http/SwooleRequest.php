@@ -7,6 +7,7 @@
 namespace ESD\Server\Coroutine\Http;
 
 use ESD\Core\Exception;
+use ESD\Core\ParamException;
 use ESD\Core\Server\Beans\Http\HttpStream;
 use ESD\Core\Server\Beans\Http\Uri;
 use ESD\Core\Server\Beans\Request;
@@ -55,7 +56,7 @@ class SwooleRequest extends Request
         }
 
         if (empty($this->headers['host'][0]) || empty($this->headers['content-length'])) {
-            throw new Exception(sprintf( "%s %s Headers parsing error. Headers: %s", $this->server['request_method'], $this->server['request_uri'], json_encode($this->headers, JSON_UNESCAPED_SLASHES)));
+            throw new ParamException(sprintf( "%s %s Headers parsing error. Headers: %s", $this->server['request_method'], $this->server['request_uri'], json_encode($this->headers, JSON_UNESCAPED_SLASHES)));
         }
 
         $this->uri = new Uri(sprintf("%s://%s%s%s",
