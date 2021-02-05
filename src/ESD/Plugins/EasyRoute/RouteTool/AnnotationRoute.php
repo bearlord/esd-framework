@@ -55,8 +55,13 @@ class AnnotationRoute implements IRoute
     public function handleClientData(ClientData $data, EasyRouteConfig $easyRouteConfig): bool
     {
         $this->clientData = $data;
+        //Port
         $port = $this->clientData->getClientInfo()->getServerPort();
-        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch($port . ":" . $this->clientData->getRequestMethod(), $this->clientData->getPath());
+        //Request method
+        $requestMethod = strtoupper($this->clientData->getRequestMethod());
+        //Route info
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $port, $requestMethod), $this->clientData->getPath());
+
         $request = $this->clientData->getRequest();
 
         switch ($routeInfo[0]) {
