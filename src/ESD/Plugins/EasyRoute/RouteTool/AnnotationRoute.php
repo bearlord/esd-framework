@@ -71,7 +71,7 @@ class AnnotationRoute implements IRoute
                     $_contentType = $this->clientData->getRequest()->getHeader('content-type');
                     if (!empty($_contentType)) {
                         $contentType = strtolower($_contentType[0]);
-                        if (in_array($contentType, ['application/json'])) {
+                        if (strpos($contentType, 'application/json') !== false) {
                             $this->clientData->getResponse()->withHeader("Content-Type", $contentType);
                             $message = Yii::t('esd', '{path} 404 Not Found', [
                                 'path' => $this->clientData->getPath()
