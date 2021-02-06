@@ -794,14 +794,6 @@ class PortConfig extends BaseConfig
             $build['ssl_client_cert_file'] = $this->getSSlClientCertFile();
         }
 
-        if (!$this->isOpenHttpProtocol() &&
-            !$this->isOpenWebsocketProtocol() &&
-            !$this->isOpenMqttProtocol() &&
-            !$this->isOpenEofCheck() &&
-            !$this->isOpenEofSplit() &&
-            !$this->isOpenLengthCheck()) {
-            throw new ConfigException("No port protocol specified");
-        }
         $count = 0;
         if ($this->isOpenHttpProtocol()) {
             $count++;
