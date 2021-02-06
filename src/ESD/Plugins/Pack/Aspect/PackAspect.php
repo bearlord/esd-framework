@@ -89,7 +89,9 @@ class PackAspect extends OrderAspect
         $packTool = $this->packTools[$packConfig->getPackTool()];
 
         $clientData = $packTool->unPack($fd, $data, $packConfig);
-        if ($clientData == null) return;
+        if ($clientData == null) {
+            return;
+        }
         setContextValue("ClientData", $clientData);
         $invocation->proceed();
         return;

@@ -57,7 +57,7 @@ class StreamPack extends AbstractPack
     public function pack($data, PortConfig $portConfig, ?string $topic = null)
     {
         $this->portConfig = $portConfig;
-        return $this->encode(Json::encode($data, JSON_UNESCAPED_UNICODE));
+        return $this->encode($data);
     }
 
     /**

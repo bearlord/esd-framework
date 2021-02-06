@@ -191,7 +191,6 @@ class AnnotationsScanPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
      * @param Context $context
      * @throws DependencyException
      * @throws Exception
