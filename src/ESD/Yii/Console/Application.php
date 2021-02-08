@@ -352,7 +352,7 @@ class Application extends \ESD\Yii\Base\Application
         $db->tablePrefix = $config['tablePrefix'];
         $db->enableSchemaCache = $config['enableSchemaCache'];
         $db->schemaCacheDuration = $config['schemaCacheDuration'];
-        $db->schemaCache = $config['schemaCache'];
+        $db->schemaCache = $config['schemaCache'] ?? '';
         $db->open();
         return $db;
     }

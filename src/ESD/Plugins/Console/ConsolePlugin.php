@@ -14,7 +14,7 @@ use ESD\Plugins\Console\Command\StartCmd;
 use ESD\Plugins\Console\Command\StatusCmd;
 use ESD\Plugins\Console\Command\StopCmd;
 use ESD\Plugins\Console\Command\YiiCmd;
-use ESD\Yii\Gii\ModelCmd;
+use ESD\Plugins\Console\Command\ModelCmd;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
