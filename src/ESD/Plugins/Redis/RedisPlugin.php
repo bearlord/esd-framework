@@ -46,7 +46,7 @@ class RedisPlugin extends AbstractPlugin
 
 
     /**
-     * @return RedisOneConfig[]
+     * @return array
      */
     public function getConfigList(): array
     {

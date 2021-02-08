@@ -6,10 +6,13 @@
 
 namespace ESD\Plugins\EasyRoute\Aspect;
 
+use ESD\Core\Exception;
 use ESD\Core\Plugins\Logger\GetLogger;
+use ESD\Core\Server\Server;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\EasyRoute\Controller\IController;
 use ESD\Plugins\EasyRoute\EasyRouteConfig;
+use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\EasyRoute\Filter\AbstractFilter;
 use ESD\Plugins\EasyRoute\Filter\FilterManager;
 use ESD\Plugins\EasyRoute\RouteConfig;
@@ -18,8 +21,11 @@ use ESD\Plugins\EasyRoute\RouteTool\IRoute;
 use ESD\Plugins\Pack\Aspect\PackAspect;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\GetBoostSend;
+use FastRoute\Dispatcher;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
+use Go\Lang\Annotation\After;
+use Go\Lang\Annotation\Before;
 
 /**
  * Class RouteAspect
@@ -200,6 +206,39 @@ class RouteAspect extends OrderAspect
     }
 
     /**
+     * After onTcpClose
+     *
+     * @param MethodInvocation $invocation Invocation
+     * @throws \Throwable
+     * @After("within(ESD\Core\Server\Port\IServerPort+) && execution(public **->onTcpClose(*))")
+     */
+    protected function afterTcpClose(MethodInvocation $invocation)
+    {
+        list($fd, $reactorId) = $invocation->getArguments();
+
+        $clientInfo = Server::$instance->getClientInfo($fd);
+        //Server port
+        $serverPort = $clientInfo->getServerPort();
+        //Request method
+        $requestMethod = 'TCP';
+        //Defined path
+        $onClosePath = '/onClose';
+        //Route info
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+
+        if ($routeInfo[0] !== Dispatcher::FOUND) {
+            return false;
+        }
+
+        try {
+            call_user_func_array([$routeInfo[1][0]->name, $routeInfo[1][1]->name], [$fd, $reactorId]);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+    }
+
+
+    /**
      * Around onWsMessage
      *
      * @param MethodInvocation $invocation Invocation
@@ -244,6 +283,38 @@ class RouteAspect extends OrderAspect
             throw $e;
         }
         return;
+    }
+
+    /**
+     * After onWsClose
+     *
+     * @param MethodInvocation $invocation Invocation
+     * @throws \Throwable
+     * @After("within(ESD\Core\Server\Port\IServerPort+) && execution(public **->onWsClose(*))")
+     */
+    protected function afterWSClose(MethodInvocation $invocation)
+    {
+        list($fd, $reactorId) = $invocation->getArguments();
+
+        $clientInfo = Server::$instance->getClientInfo($fd);
+        //Server port
+        $serverPort = $clientInfo->getServerPort();
+        //Request method
+        $requestMethod = 'WS';
+        //Define path
+        $onClosePath = '/onWsClose';
+        //Route info
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+
+        if ($routeInfo[0] !== Dispatcher::FOUND) {
+            return false;
+        }
+
+        try {
+            call_user_func_array([$routeInfo[1][0]->name, $routeInfo[1][1]->name], [$fd, $reactorId]);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
     }
 
     /**

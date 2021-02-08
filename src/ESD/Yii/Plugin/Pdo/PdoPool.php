@@ -80,7 +80,7 @@ class PdoPool
     }
 
     /**
-     * @return PdoOneConfig
+     * @return Config
      */
     public function getConfig()
     {
