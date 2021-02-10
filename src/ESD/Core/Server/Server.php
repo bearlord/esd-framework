@@ -237,7 +237,7 @@ abstract class Server
         if (version_compare(swoole_version(), "4.6.0", "ge")) {
             Coroutine::set([
                 'enable_deadlock_check' => false,
-                'hook_flags' => SWOOLE_HOOK_ALL
+//                'hook_flags' => SWOOLE_HOOK_ALL
             ]);
         }
 

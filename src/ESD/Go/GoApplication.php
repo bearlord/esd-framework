@@ -108,7 +108,7 @@ class GoApplication extends Server
         $routeConfig->setErrorControllerName(GoController::class);
 
         $this->addPlugin(new EasyRoutePlugin($routeConfig));
-        $this->addPlugin(new ScheduledPlugin());
+//        $this->addPlugin(new ScheduledPlugin());
         $this->addPlugin(new RedisPlugin());
         $this->addPlugin(new AutoreloadPlugin());
         $this->addPlugin(new AopPlugin());
