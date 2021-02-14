@@ -15,7 +15,7 @@
         "cebe/markdown": "^1.2.1",
         "doctrine/annotations": "^1.6",
         "ext-json": "*",
-        "ext-swoole": ">=4.3.0",
+        "ext-swoole": ">=4.5.0",
         "ezyang/htmlpurifier": "^4.10.0",
         "filp/whoops": "^2.3",
         "illuminate/view": "^5.8",
