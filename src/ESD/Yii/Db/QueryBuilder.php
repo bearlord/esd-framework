@@ -373,7 +373,8 @@ class QueryBuilder extends BaseObject
         } else {
             foreach ($columns as $name => $value) {
                 $names[] = $schema->quoteColumnName($name);
-                $value = isset($columnSchemas[$name]) ? $columnSchemas[$name]->dbTypecast($value) : $value;
+//                $value = isset($columnSchemas[$name]) ? $columnSchemas[$name]->dbTypecast($value) : $value;
+                $value = isset($columnSchemas[$name]) ? call_user_func([$columnSchemas[$name], 'dbTypecast'], $value) : $value;
 
                 if ($value instanceof ExpressionInterface) {
                     $placeholders[] = $this->buildExpression($value, $params);

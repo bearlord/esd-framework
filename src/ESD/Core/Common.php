@@ -68,6 +68,9 @@ const HOOK_ALL = SWOOLE_HOOK_ALL;
 function enableRuntimeCoroutine(bool $enable = true, int $flags = HOOK_ALL ^ HOOK_FILE)
 {
     if (Runtime::$enableCoroutine) {
+        if (version_compare(swoole_version(), "4.6.0", "ge")) {
+            $flags = SWOOLE_HOOK_ALL ^ SWOOLE_HOOK_FILE ^ SWOOLE_HOOK_SOCKETS;
+        }
         \Swoole\Runtime::enableCoroutine($enable, $flags);
     }
 }
