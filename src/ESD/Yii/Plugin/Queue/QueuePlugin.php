@@ -45,9 +45,8 @@ class QueuePlugin extends AbstractPlugin
      */
     protected $config;
 
-
     /**
-     * PdoPlugin constructor.
+     * QueuePlugin constructor.
      */
     public function __construct()
     {
