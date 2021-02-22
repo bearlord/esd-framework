@@ -124,7 +124,7 @@ class MqttPack implements IPack, IMqtt
     {
         $uid = $this->getFdUid($fd);
         setContextValue("uid", $uid);
-        $message_object = $this->message_read($data);
+        $message_object = $this->messageRead($data);
         switch ($message_object->getMessageType()) {
             case Message::CONNECT:
                 $connack = new CONNACK($this);
@@ -252,7 +252,7 @@ class MqttPack implements IPack, IMqtt
      * @return Base
      * @throws MqttException
      */
-    protected function message_read($data)
+    protected function messageRead($data)
     {
         $cmd = Utility::ParseCommand(ord($data[0]));
         $message_type = $cmd['message_type'];
