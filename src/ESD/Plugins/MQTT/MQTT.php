@@ -73,7 +73,7 @@ class MQTT implements IMqtt
     const VERSION_3_0 = 3;
     const VERSION_3_1 = 3;
     const VERSION_3_1_1 = 4;
-    
+
     /**
      * Current version
      *
@@ -252,14 +252,14 @@ class MQTT implements IMqtt
      * @param array $params
      * @return bool
      */
-    protected function call_handler($name, array $params = array())
+    protected function callHandler($name, array $params = array())
     {
         if ($this->handler === null) {
             return false;
         }
 
         if (!is_callable(array($this->handler, $name))) {
-            Debug::Log(Debug::ERR, "call_handler function {$name} NOT CALLABLE");
+            Debug::Log(Debug::ERR, "callHandler function {$name} NOT CALLABLE");
             return false;
         }
 
@@ -368,7 +368,7 @@ class MQTT implements IMqtt
         $this->connectedTime = time();
 
         # Call connect
-        $this->call_handler('connack', array($this, $connackobj));
+        $this->callHandler('connack', array($this, $connackobj));
         return $connackobj;
     }
 
@@ -391,7 +391,7 @@ class MQTT implements IMqtt
          */
         $this->socket->close();
 
-        $this->call_handler('disconnect', array($this));
+        $this->callHandler('disconnect', array($this));
 
         return true;
     }
@@ -724,7 +724,7 @@ class MQTT implements IMqtt
 
                 $this->lastPingTime = time();
 
-                $this->call_handler('pingresp', array($this, $messageObject));
+                $this->callHandler('pingresp', array($this, $messageObject));
 
                 break;
 
@@ -770,7 +770,7 @@ class MQTT implements IMqtt
                 }
 
                 # call handler
-                $this->call_handler('publish', array($this, $messageObject));
+                $this->callHandler('publish', array($this, $messageObject));
 
                 break;
 
@@ -783,13 +783,12 @@ class MQTT implements IMqtt
                  */
 
                 # Message has been published (QoS 1)
-
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received PUBACK msgid=' . $msgId);
                 # Verify Packet Identifier
-                $this->call_handler('puback', array($this, $messageObject));
+                $this->callHandler('puback', array($this, $messageObject));
 
-                $this->cmdStore->delWait(Message::PUBACK, $msgId);
+                $this->cmdStore->deleteWait(Message::PUBACK, $msgId);
                 break;
 
             # Process PUBREC, send PUBREL
@@ -798,16 +797,14 @@ class MQTT implements IMqtt
                 /**
                  * @var Message\PUBREC $messageObject
                  */
-
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received PUBREC msgid=' . $msgId);
 
-                $this->cmdStore->delWait(Message::PUBREC, $msgId);
+                $this->cmdStore->deleteWait(Message::PUBREC, $msgId);
 
                 # PUBREL
                 Debug::Log(Debug::INFO, 'loop(): send PUBREL msgid=' . $msgId);
-                $pubrel_bytes_written = $this->simpleCommand(Message::PUBREL, $msgId);
-
+                $pubrelBytesWritten = $this->simpleCommand(Message::PUBREL, $msgId);
 
                 $this->cmdStore->addWait(
                     Message::PUBCOMP,
@@ -818,9 +815,9 @@ class MQTT implements IMqtt
                     )
                 );
 
-                Debug::Log(Debug::DEBUG, 'loop(): PUBREL QoS=2 PUBREL written=' . $pubrel_bytes_written);
+                Debug::Log(Debug::DEBUG, 'loop(): PUBREL QoS=2 PUBREL written=' . $pubrelBytesWritten);
 
-                $this->call_handler('pubrec', array($this, $messageObject));
+                $this->callHandler('pubrec', array($this, $messageObject));
                 break;
 
 
@@ -830,11 +827,10 @@ class MQTT implements IMqtt
                 /**
                  * @var Message\PUBREL $messageObject
                  */
-
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received PUBREL msgid=' . $msgId);
 
-                $this->cmdStore->delWait(Message::PUBREL, $msgId);
+                $this->cmdStore->deleteWait(Message::PUBREL, $msgId);
 
                 # PUBCOMP
                 Debug::Log(Debug::INFO, 'loop(): send PUBCOMP msgid=' . $msgId);
@@ -842,34 +838,29 @@ class MQTT implements IMqtt
 
                 Debug::Log(Debug::DEBUG, 'loop(): PUBREL QoS=2 PUBCOMP written=' . $pubcomp_bytes_written);
 
-                $this->call_handler('pubrel', array($this, $messageObject));
+                $this->callHandler('pubrel', array($this, $messageObject));
                 break;
 
             # Process PUBCOMP
             # in: Client -> Server, QoS = 2, Step 4
             case Message::PUBCOMP:
-
                 # Message has been published (QoS 2)
-
                 /**
                  * @var Message\PUBCOMP $messageObject
                  */
-
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received PUBCOMP msgid=' . $msgId);
 
-                $this->cmdStore->delWait(Message::PUBCOMP, $msgId);
+                $this->cmdStore->deleteWait(Message::PUBCOMP, $msgId);
 
-                $this->call_handler('pubcomp', array($this, $messageObject));
+                $this->callHandler('pubcomp', array($this, $messageObject));
                 break;
 
             # Process SUBACK
             case Message::SUBACK:
-
                 /**
                  * @var Message\SUBACK $messageObject
                  */
-
                 $returnCodes = $messageObject->getReturnCodes();
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received SUBACK msgid=' . $msgId);
@@ -894,8 +885,7 @@ class MQTT implements IMqtt
                     }
                 }
 
-                $this->call_handler('suback', array($this, $messageObject));
-
+                $this->callHandler('suback', array($this, $messageObject));
                 break;
 
             # Process UNSUBACK
@@ -903,7 +893,6 @@ class MQTT implements IMqtt
                 /**
                  * @var Message\UNSUBACK $messageObject
                  */
-
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received UNSUBACK msgid=' . $msgId);
 
@@ -916,7 +905,7 @@ class MQTT implements IMqtt
                     }
                 }
 
-                $this->call_handler('unsuback', array($this, $messageObject));
+                $this->callHandler('unsuback', array($this, $messageObject));
                 break;
 
             default:

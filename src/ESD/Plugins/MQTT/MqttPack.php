@@ -167,6 +167,7 @@ class MqttPack implements IPack, IMqtt
                     }
                 }
                 break;
+
             case Message::PUBLISH:
                 if ($messageObject instanceof PUBLISH) {
                     $publish = $messageObject;
@@ -189,7 +190,6 @@ class MqttPack implements IPack, IMqtt
                                 break;
                         }
                     } else {
-                        //这里将会当做路由信息
                         $clientData = new ClientData($fd, $portConfig->getBaseType(), $topic, $this->handler->upPack($data));
                         setContextValue("msgId", $msgId);
                         setContextValue("qos", $publish->getQos());
@@ -197,6 +197,7 @@ class MqttPack implements IPack, IMqtt
                     }
                 }
                 break;
+
             case Message::PUBREL:
                 if ($messageObject instanceof PUBREL) {
                     $pubrel = $messageObject;
@@ -206,6 +207,7 @@ class MqttPack implements IPack, IMqtt
                     $this->autoBoostSend($fd, $pubcomp);
                 }
                 break;
+
             case Message::SUBSCRIBE:
                 if ($messageObject instanceof SUBSCRIBE) {
                     $subscribe = $messageObject;
@@ -221,6 +223,7 @@ class MqttPack implements IPack, IMqtt
                     $this->autoBoostSend($fd, $suback);
                 }
                 break;
+
             case Message::UNSUBSCRIBE:
                 if ($messageObject instanceof UNSUBSCRIBE) {
                     $unsubscribe = $messageObject;
@@ -233,10 +236,12 @@ class MqttPack implements IPack, IMqtt
                     $this->autoBoostSend($fd, $unsuback);
                 }
                 break;
+
             case Message::PINGREQ:
                 $pingresp = new PINGRESP($this);
                 $this->autoBoostSend($fd, $pingresp);
                 break;
+
             case Message::DISCONNECT:
                 Server::$instance->closeFd($fd);
                 break;

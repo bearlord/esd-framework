@@ -41,28 +41,26 @@ class Utility
     {
         $output = '';
 
-        $hex_str   = '';
-        $ascii_str = '';
+        $hexStr   = '';
+        $asciiStr = '';
 
         $width = (int) $width;
         if (!$width) {
             for ($i=0; isset($chars[$i]); $i++) {
-                $hex_str   .= sprintf('%02x ', ord($chars[$i]));
-                $ascii_str .= sprintf('%s  ', self::ASCII2Visible($chars[$i], '.'));
+                $hexStr   .= sprintf('%02x ', ord($chars[$i]));
+                $asciiStr .= sprintf('%s  ', self::ASCII2Visible($chars[$i], '.'));
             }
 
-            $output .= "HEX DUMP:\t" . $hex_str . "\n";
+            $output .= "HEX DUMP:\t" . $hexStr . "\n";
             if ($with_ascii) {
-                $output .= "ASCII CHR: \t" . $ascii_str . "\n";
+                $output .= "ASCII CHR: \t" . $asciiStr . "\n";
             }
 
         } else {
-
             for ($i=0; isset($chars[$i]); $i++) {
-                $hex_str   .= sprintf('%02x ', ord($chars[$i]));
-                $ascii_str .= sprintf('%s', self::ASCII2Visible($chars[$i], '.'));
+                $hexStr   .= sprintf('%02x ', ord($chars[$i]));
+                $asciiStr .= sprintf('%s', self::ASCII2Visible($chars[$i], '.'));
             }
-
             $ph = $pa = 0;
             $wh = 3;
             $wa = 1;
@@ -71,14 +69,14 @@ class Utility
 
             do {
                 $output .= "DUMP\t";
-                $output .= str_pad(substr($hex_str, $ph, $lwh), $lwh, ' ');
+                $output .= str_pad(substr($hexStr, $ph, $lwh), $lwh, ' ');
                 $output .= "\t";
-                $output .= str_pad(substr($ascii_str, $pa, $lwa), $lwa, ' ');
+                $output .= str_pad(substr($asciiStr, $pa, $lwa), $lwa, ' ');
                 $output .= "\n";
                 $ph += $lwh;
                 $pa += $lwa;
 
-                if (!isset($hex_str[$ph]) || !isset($ascii_str[$pa])) {
+                if (!isset($hexStr[$ph]) || !isset($asciiStr[$pa])) {
                     break;
                 }
             } while (true);

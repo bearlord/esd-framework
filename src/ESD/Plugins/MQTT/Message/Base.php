@@ -155,14 +155,14 @@ abstract class Base
      */
     final public function build(&$length = 0)
     {
-        if ($this->protocolType == self::FIXED_ONLY) {
-            $payload = $this->payload();
-        } else if ($this->protocolType == self::WITH_VARIABLE) {
-            $payload = $this->payload();
-        } else if ($this->protocolType == self::WITH_PAYLOAD) {
-            $payload = $this->payload();
-        } else {
-            throw new MqttException('Invalid protocol type');
+        switch ($this->protocolType) {
+            case self::FIXED_ONLY:
+            case self::WITH_VARIABLE:
+            case self::WITH_PAYLOAD:
+                $payload = $this->payload();
+                break;
+            default:
+                throw new MqttException('Invalid protocol type');
         }
 
         $length = strlen($payload);

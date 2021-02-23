@@ -54,7 +54,7 @@ class CMDStore
      * @param int $messageType
      * @param int $msgId
      */
-    public function delWait($messageType, $msgId)
+    public function deleteWait($messageType, $msgId)
     {
         if (isset($this->commandAwaits[$messageType][$msgId])) {
             Debug::Log(Debug::DEBUG, "Forget " . Message::$name[$messageType] . " msgid={$msgId}");
