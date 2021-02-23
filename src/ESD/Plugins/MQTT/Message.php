@@ -1,9 +1,8 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
-
 
 namespace ESD\Plugins\MQTT;
 
@@ -89,18 +88,18 @@ class Message
     /**
      * Create Message Object
      *
-     * @param int $message_type
+     * @param int $messageType
      * @param IMqtt $mqtt
      * @return mixed
      * @throws MqttException
      */
-    static public function Create($message_type, IMqtt $mqtt)
+    static public function Create($messageType, IMqtt $mqtt)
     {
-        if (!isset(Message::$name[$message_type])) {
+        if (!isset(Message::$name[$messageType])) {
             throw new MqttException('Message type not defined');
         }
 
-        $class = __NAMESPACE__ . '\\Message\\' . self::$name[$message_type];
+        $class = __NAMESPACE__ . '\\Message\\' . self::$name[$messageType];
 
         return new $class($mqtt);
     }
@@ -110,5 +109,3 @@ class Message
      */
     const MAX_DATA_LENGTH = 268435455;
 }
-
-# EOF

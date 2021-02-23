@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -16,8 +16,6 @@ use ESD\Plugins\MQTT\Message;
  */
 class DISCONNECT extends Base
 {
-    protected $message_type = Message::DISCONNECT;
-    protected $protocol_type = self::FIXED_ONLY;
+    protected $messageType = Message::DISCONNECT;
+    protected $protocolType = self::FIXED_ONLY;
 }
-
-# EOF

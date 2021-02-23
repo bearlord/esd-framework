@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -19,8 +19,8 @@ use ESD\Plugins\MQTT\Message;
  */
 class PUBLISH extends Base
 {
-    protected $message_type = Message::PUBLISH;
-    protected $protocol_type = self::WITH_PAYLOAD;
+    protected $messageType = Message::PUBLISH;
+    protected $protocolType = self::WITH_PAYLOAD;
 
     protected $topic;
     protected $message;
@@ -146,14 +146,12 @@ class PUBLISH extends Base
     /**
      * Decode Payload
      *
-     * @param string & $packet_data
-     * @param int    & $payload_pos
+     * @param string & $packetData
+     * @param int    & $payloadPos
      * @return void
      */
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    protected function decodePayload(& $packetData, & $payloadPos)
     {
-        $this->message = substr($packet_data, $payload_pos);
+        $this->message = substr($packetData, $payloadPos);
     }
 }
-
-# EOF

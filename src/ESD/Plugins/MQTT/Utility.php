@@ -227,12 +227,12 @@ class Utility
     /**
      * Check Packet Identifier
      *
-     * @param int $msgid
+     * @param int $msgId
      * @throws MqttException
      */
-    static public function CheckPacketIdentifier($msgid)
+    static public function CheckPacketIdentifier($msgId)
     {
-        if (!is_int($msgid) || $msgid < 1 || $msgid > 65535) {
+        if (!is_int($msgId) || $msgId < 1 || $msgId > 65535) {
             throw new MqttException('Packet identifier must be non-zero 16-bit.');
         }
     }
@@ -349,11 +349,11 @@ class Utility
     static public function ParseCommand($cmd)
     {
         # check Message type
-        $message_type = $cmd >> 4;
+        $messageType = $cmd >> 4;
         $flags = $cmd & 0x0f;
 
         return array(
-            'message_type'  =>  $message_type,
+            'message_type'  =>  $messageType,
             'flags'         =>  $flags,
         );
     }
@@ -388,13 +388,13 @@ class Utility
     static public function UnpackCommand($cmd)
     {
         # check Message type
-        $message_type = $cmd >> 4;
+        $messageType = $cmd >> 4;
         $dup = ($cmd & 0x08) >> 3;
         $qos = ($cmd & 0x06) >> 1;
         $retain = ($cmd & 0x01);
 
         return array(
-            'message_type'  =>  $message_type,
+            'message_type'  =>  $messageType,
             'dup'           =>  $dup,
             'qos'           =>  $qos,
             'retain'        =>  $retain,
@@ -500,5 +500,3 @@ class Utility
         return 'mqtt' . substr(md5(uniqid('mqtt', true)), 8, 16);
     }
 }
-
-# EOF

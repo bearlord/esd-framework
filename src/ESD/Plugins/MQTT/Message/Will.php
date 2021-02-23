@@ -1,8 +1,9 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
+
 namespace ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\MqttException;
 use ESD\Plugins\MQTT\Utility;
@@ -109,5 +110,3 @@ class Will
         return $var;
     }
 }
-
-# EOF

@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -19,8 +19,8 @@ use ESD\Plugins\MQTT\Utility;
  */
 class CONNECT extends Base
 {
-    protected $message_type = Message::CONNECT;
-    protected $protocol_type = self::WITH_PAYLOAD;
+    protected $messageType = Message::CONNECT;
+    protected $protocolType = self::WITH_PAYLOAD;
 
     /**
      * Connect Will
@@ -137,9 +137,9 @@ class CONNECT extends Base
         $this->password = $password;
     }
 
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    protected function decodePayload(& $packetData, & $payloadPos)
     {
-        $message = substr($packet_data, $payload_pos);
+        $message = substr($packetData, $payloadPos);
         $messages = $this->readUTF($message);
         $this->client_id = array_shift($messages);
         if ($this->header->getWillFlag()) {
@@ -185,5 +185,3 @@ class CONNECT extends Base
         return $payload;
     }
 }
-
-# EOF

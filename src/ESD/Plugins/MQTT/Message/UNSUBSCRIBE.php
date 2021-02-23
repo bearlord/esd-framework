@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -18,8 +18,8 @@ use ESD\Plugins\MQTT\Utility;
  */
 class UNSUBSCRIBE extends Base
 {
-    protected $message_type = Message::UNSUBSCRIBE;
-    protected $protocol_type = self::WITH_PAYLOAD;
+    protected $messageType = Message::UNSUBSCRIBE;
+    protected $protocolType = self::WITH_PAYLOAD;
 
     protected $topics = array();
 
@@ -54,10 +54,8 @@ class UNSUBSCRIBE extends Base
         return $buffer;
     }
 
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    protected function decodePayload(& $packetData, & $payloadPos)
     {
-        $this->topics = $this->readUTF($packet_data);
+        $this->topics = $this->readUTF($packetData);
     }
 }
-
-# EOF

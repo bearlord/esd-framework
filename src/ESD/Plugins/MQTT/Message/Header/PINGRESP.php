@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message\Header;
@@ -19,28 +19,26 @@ class PINGRESP extends Base
      *
      * @var int
      */
-    protected $reserved_flags = 0x00;
+    protected $reservedFlags = 0x00;
 
     /**
      * PINGRESP does not have Packet Identifier
      *
      * @var bool
      */
-    protected $require_msgid = false;
+    protected $requireMsgId = false;
 
     /**
      * Decode Variable Header
      *
-     * @param string & $packet_data
+     * @param string & $packetData
      * @param int    & $pos
      * @return bool
      * @throws MqttException
      */
-    protected function decodeVariableHeader(& $packet_data, & $pos)
+    protected function decodeVariableHeader(& $packetData, & $pos)
     {
         # DO NOTHING
         return true;
     }
 }
-
-# EOF

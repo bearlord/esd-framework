@@ -14,79 +14,79 @@ namespace ESD\Plugins\MQTT;
 class CMDStore
 {
 
-    protected $command_awaits = array();
-    protected $command_awaits_counter = 0;
+    protected $commandAwaits = array();
+    protected $commandAwaitsCounter = 0;
 
     /**
-     * @param int $message_type
-     * @param int $msgid
+     * @param int $messageType
+     * @param int $msgId
      * @return bool
      */
-    public function isEmpty($message_type, $msgid=null)
+    public function isEmpty($messageType, $msgId = null)
     {
-        if ($msgid) {
-            return empty($this->command_awaits[$message_type][$msgid]);
+        if ($msgId) {
+            return empty($this->commandAwaits[$messageType][$msgId]);
         } else {
-            return empty($this->command_awaits[$message_type]);
+            return empty($this->commandAwaits[$messageType]);
         }
     }
 
     /**
      * Add
      *
-     * @param int   $message_type
-     * @param int   $msgid
+     * @param int $messageType
+     * @param int $msgId
      * @param array $data
      */
-    public function addWait($message_type, $msgid, array $data)
+    public function addWait($messageType, $msgId, array $data)
     {
-        if (!isset($this->command_awaits[$message_type][$msgid])) {
-            Debug::Log(Debug::DEBUG, "Waiting for " . Message::$name[$message_type] . " msgid={$msgid}");
+        if (!isset($this->commandAwaits[$messageType][$msgId])) {
+            Debug::Log(Debug::DEBUG, "Waiting for " . Message::$name[$messageType] . " msgid={$msgId}");
 
-            $this->command_awaits[$message_type][$msgid] = $data;
-            ++ $this->command_awaits_counter;
+            $this->commandAwaits[$messageType][$msgId] = $data;
+            ++$this->commandAwaitsCounter;
         }
     }
 
     /**
      * Delete
      *
-     * @param int $message_type
-     * @param int $msgid
+     * @param int $messageType
+     * @param int $msgId
      */
-    public function delWait($message_type, $msgid)
+    public function delWait($messageType, $msgId)
     {
-        if (isset($this->command_awaits[$message_type][$msgid])) {
-            Debug::Log(Debug::DEBUG, "Forget " . Message::$name[$message_type] . " msgid={$msgid}");
+        if (isset($this->commandAwaits[$messageType][$msgId])) {
+            Debug::Log(Debug::DEBUG, "Forget " . Message::$name[$messageType] . " msgid={$msgId}");
 
-            unset($this->command_awaits[$message_type][$msgid]);
-            -- $this->command_awaits_counter;
+            unset($this->commandAwaits[$messageType][$msgId]);
+            --$this->commandAwaitsCounter;
         }
     }
 
     /**
      * Get
      *
-     * @param int $message_type
-     * @param int $msgid
+     * @param int $messageType
+     * @param int $msgId
      * @return false|array
      */
-    public function getWait($message_type, $msgid)
+    public function getWait($messageType, $msgId)
     {
-        return $this->isEmpty($message_type, $msgid) ?
-            false : $this->command_awaits[$message_type][$msgid];
+        return $this->isEmpty($messageType, $msgId) ?
+            false : $this->commandAwaits[$messageType][$msgId];
     }
 
     /**
      * Get all by message_type
      *
-     * @param int $message_type
+     * @param int $messageType
      * @return array
      */
-    public function getWaits($message_type)
+    public function getWaits($messageType)
     {
-        return $this->isEmpty($this->command_awaits[$message_type]) ?
-            false : $this->command_awaits[$message_type];
+        return $this->isEmpty($this->commandAwaits[$messageType]) ?
+            false : $this->commandAwaits[$messageType];
     }
 
     /**
@@ -96,8 +96,6 @@ class CMDStore
      */
     public function countWaits()
     {
-        return $this->command_awaits_counter;
+        return $this->commandAwaitsCounter;
     }
 }
-
-# EOF

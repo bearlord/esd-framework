@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -16,16 +16,16 @@ use ESD\Plugins\MQTT\Message;
  */
 class SUBACK extends Base
 {
-    protected $message_type = Message::SUBACK;
-    protected $protocol_type = self::WITH_VARIABLE;
-    protected $read_bytes = 4;
+    protected $messageType = Message::SUBACK;
+    protected $protocolType = self::WITH_VARIABLE;
+    protected $readBytes = 4;
 
     /**
      * Return Codes from SUBACK Payload
      *
      * @var array
      */
-    protected $return_codes = array();
+    protected $returnCodes = array();
 
     /**
      * Get return codes
@@ -34,31 +34,31 @@ class SUBACK extends Base
      */
     public function getReturnCodes()
     {
-        return $this->return_codes;
+        return $this->returnCodes;
     }
 
     public function setReturnCodes($codes)
     {
-        $this->return_codes = $codes;
+        $this->returnCodes = $codes;
     }
     /**
      * Decode Payload
      *
-     * @param string & $packet_data
-     * @param int    & $payload_pos
+     * @param string & $packetData
+     * @param int    & $payloadPos
      * @return void
      */
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    protected function decodePayload(& $packetData, & $payloadPos)
     {
-        $return_code = array();
+        $returnCode = array();
 
-        while (isset($packet_data[$payload_pos])) {
-            $return_code[] = ord($packet_data[$payload_pos]);
+        while (isset($packetData[$payloadPos])) {
+            $returnCode[] = ord($packetData[$payloadPos]);
 
-            ++ $payload_pos;
+            ++ $payloadPos;
         }
 
-        $this->return_codes = $return_code;
+        $this->returnCodes = $returnCode;
     }
 
     protected function payload()
@@ -66,12 +66,10 @@ class SUBACK extends Base
         $buffer = "";
 
         # Payload
-        foreach ($this->return_codes as $qos_max) {
+        foreach ($this->returnCodes as $qos_max) {
             $buffer .= chr($qos_max);
         }
 
         return $buffer;
     }
 }
-
-# EOF

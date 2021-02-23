@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message\Header;
@@ -23,14 +23,14 @@ class PUBLISH extends Base
      *
      * @var int
      */
-    protected $reserved_flags = 0x00;
+    protected $reservedFlags = 0x00;
 
     /**
      * Required when QoS > 0
      *
      * @var bool
      */
-    protected $require_msgid = false;
+    protected $requireMsgId = false;
 
     protected $dup    = 0; # 1-bit
     protected $qos    = 0; # 2-bit
@@ -72,12 +72,12 @@ class PUBLISH extends Base
               SUBSCRIBE, UNSUBSCRIBE, and PUBLISH (in cases where QoS > 0) Control Packets MUST contain a
               non-zero 16-bit Packet Identifier [MQTT-2.3.1-1].
              */
-            $this->require_msgid = true;
+            $this->requireMsgId = true;
         } else {
             /*
               A PUBLISH Packet MUST NOT contain a Packet Identifier if its QoS value is set to 0 [MQTT-2.3.1-5].
              */
-            $this->require_msgid = false;
+            $this->requireMsgId = false;
         }
     }
 
@@ -130,18 +130,18 @@ class PUBLISH extends Base
     /**
      * Set Packet Identifier
      *
-     * @param int $msgid
+     * @param int $msgId
      * @throws MqttException
      */
-    public function setMsgID($msgid)
+    public function setMsgId($msgId)
     {
         /*
          A PUBLISH Packet MUST NOT contain a Packet Identifier if its QoS value is set to 0 [MQTT-2.3.1-5].
          */
         if ($this->qos) {
-            parent::setMsgID($msgid);
-        } else if ($msgid) {
-            throw new MqttException('MsgID MUST NOT be set if QoS is set to 0.');
+            parent::setMsgId($msgId);
+        } else if ($msgId) {
+            throw new MqttException('MsgId MUST NOT be set if QoS is set to 0.');
         }
     }
 
@@ -169,7 +169,7 @@ class PUBLISH extends Base
         # Message ID if QoS > 0
         if ($this->getQos()) {
             if (!$this->msgid) {
-                throw new MqttException('MsgID MUST be set if QoS is not 0.');
+                throw new MqttException('MsgId MUST be set if QoS is not 0.');
             }
 
             $header .= $this->packPacketIdentifer();
@@ -182,18 +182,18 @@ class PUBLISH extends Base
      * Decode Variable Header
      * Topic, Packet Identifier
      *
-     * @param string & $packet_data
+     * @param string & $packetData
      * @param int    & $pos
      * @return bool
      */
-    protected function decodeVariableHeader(& $packet_data, & $pos)
+    protected function decodeVariableHeader(& $packetData, & $pos)
     {
-        $topic = Utility::UnpackStringWithLength($packet_data, $pos);
+        $topic = Utility::UnpackStringWithLength($packetData, $pos);
         $this->message->setTopic($topic);
 
         if ($this->getQos() > 0) {
             # Decode Packet Identifier if QoS > 0
-            $this->decodePacketIdentifier($packet_data, $pos);
+            $this->decodePacketIdentifier($packetData, $pos);
         }
 
         return true;
@@ -231,10 +231,8 @@ class PUBLISH extends Base
         $flags |= ($this->qos << 1);
         $flags |= $this->retain;
 
-        $this->reserved_flags = $flags;
+        $this->reservedFlags = $flags;
 
         return parent::build();
     }
 }
-
-# EOF

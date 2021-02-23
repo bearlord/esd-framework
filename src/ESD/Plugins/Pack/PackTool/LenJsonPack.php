@@ -33,6 +33,7 @@ class LenJsonPack extends AbstractPack
     {
         $this->portConfig = $portConfig;
         return $this->encode(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+//        return $this->encode(json_encode($data, JSON_UNESCAPED_UNICODE));
     }
 
     /**

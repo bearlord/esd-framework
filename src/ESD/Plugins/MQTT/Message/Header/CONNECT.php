@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message\Header;
@@ -24,14 +24,14 @@ class CONNECT extends Base
      *
      * @var int
      */
-    protected $reserved_flags = 0x00;
+    protected $reservedFlags = 0x00;
 
     /**
      * CONNECT does not have Packet Identifier
      *
      * @var bool
      */
-    protected $require_msgid = false;
+    protected $requireMsgId = false;
 
     /**
      * Clean Session
@@ -165,23 +165,23 @@ class CONNECT extends Base
     /**
      * Decode Variable Header
      *
-     * @param string & $packet_data
+     * @param string & $packetData
      * @param int & $pos
      * @return bool
      * @throws MqttException
      */
-    protected function decodeVariableHeader(& $packet_data, & $pos)
+    protected function decodeVariableHeader(& $packetData, & $pos)
     {
-        Debug::Log(Debug::DEBUG, "CONNECT", $packet_data);
+        Debug::Log(Debug::DEBUG, "CONNECT", $packetData);
         $pos++;
         //Protocol Name
-        $length = ord($packet_data[$pos]);
+        $length = ord($packetData[$pos]);
         $pos += $length + 1;
         //Protocol Level
-        $level = ord($packet_data[$pos]);
+        $level = ord($packetData[$pos]);
         $pos++;
         //Connect Flags
-        $flags = ord($packet_data[$pos]);
+        $flags = ord($packetData[$pos]);
         $reserved = $flags & 0x01;
         $this->clean = ($flags & 0x02) >> 1;
         $this->will_flag = ($flags & 0x04) >> 2;
@@ -191,12 +191,10 @@ class CONNECT extends Base
         $this->password_flag = ($flags & 0x40) >> 6;
         $pos++;
         //Keep Alive
-        $keep_alive_msb = ord($packet_data[$pos]);
+        $keep_alive_msb = ord($packetData[$pos]);
         $pos++;
-        $keep_alive_lsb = ord($packet_data[$pos]);
+        $keep_alive_lsb = ord($packetData[$pos]);
         $this->keepalive = $keep_alive_msb * 128 + $keep_alive_lsb;
         $pos++;
     }
 }
-
-# EOF

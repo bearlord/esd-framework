@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -22,27 +22,27 @@ abstract class Base
      *
      * CONNECT, CONNACK, PINGREQ, PINGRESP, DISCONNECT
      */
-    const FIXED_ONLY     = 0x01;
+    const FIXED_ONLY = 0x01;
 
     /**
      * Message with Variable Header
      * Fixed Header + Variable Header
      *
      */
-    const WITH_VARIABLE  = 0x02;
+    const WITH_VARIABLE = 0x02;
     /**
      * Message with Payload
      * Fixed Header + Variable Header + Payload
      *
      */
-    const WITH_PAYLOAD   = 0x03;
+    const WITH_PAYLOAD = 0x03;
     /**
      * Protocol Type
      * Constants FIXED_ONLY, WITH_VARIABLE, WITH_PAYLOAD
      *
      * @var int
      */
-    protected $protocol_type = self::FIXED_ONLY;
+    protected $protocolType = self::FIXED_ONLY;
 
     /**
      * @var IMqtt
@@ -54,7 +54,7 @@ abstract class Base
      *
      * @var int
      */
-    protected $read_bytes = 0;
+    protected $readBytes = 0;
 
     /**
      * @var header\Base
@@ -66,26 +66,41 @@ abstract class Base
      *
      * @var int
      */
-    protected $message_type = 0;
+    protected $messageType = 0;
 
+    /**
+     * Base constructor.
+     * @param IMqtt $mqtt
+     */
     public function __construct(IMqtt $mqtt)
     {
         $this->mqtt = $mqtt;
 
-        $header_class = __NAMESPACE__ . '\\Header\\' . Message::$name[$this->message_type];
+        $headerClass = __NAMESPACE__ . '\\Header\\' . Message::$name[$this->messageType];
 
-        $this->header = new $header_class($this);
+        $this->header = new $headerClass($this);
     }
 
-    final public function decode($packet_data, $remaining_length)
+    /**
+     * @param $packetData
+     * @param $remainingLength
+     * @return bool
+     * @throws MqttException
+     */
+    final public function decode($packetData, $remainingLength)
     {
-        $payload_pos = 0;
+        $payloadPos = 0;
 
-        $this->header->decode($packet_data, $remaining_length, $payload_pos);
-        return $this->decodePayload($packet_data, $payload_pos);
+        $this->header->decode($packetData, $remainingLength, $payloadPos);
+        return $this->decodePayload($packetData, $payloadPos);
     }
 
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    /**
+     * @param $packetData
+     * @param $payloadPos
+     * @return bool
+     */
+    protected function decodePayload(&$packetData, &$payloadPos)
     {
         return true;
     }
@@ -97,7 +112,7 @@ abstract class Base
      */
     public function getMessageType()
     {
-        return $this->message_type;
+        return $this->messageType;
     }
 
     /**
@@ -107,17 +122,17 @@ abstract class Base
      */
     public function getProtocolType()
     {
-        return $this->protocol_type;
+        return $this->protocolType;
     }
 
     /**
      * Set Packet Identifier
      *
-     * @param int $msgid
+     * @param int $msgId
      */
-    public function setMsgID($msgid)
+    public function setMsgId($msgId)
     {
-        $this->header->setMsgID($msgid);
+        $this->header->setMsgId($msgId);
     }
 
     /**
@@ -125,9 +140,9 @@ abstract class Base
      *
      * @return int
      */
-    public function getMsgID()
+    public function getMsgId()
     {
-        return $this->header->getMsgID();
+        return $this->header->getMsgId();
     }
 
 
@@ -138,13 +153,13 @@ abstract class Base
      * @return string
      * @throws MqttException
      */
-    final public function build(&$length=0)
+    final public function build(&$length = 0)
     {
-        if ($this->protocol_type == self::FIXED_ONLY) {
+        if ($this->protocolType == self::FIXED_ONLY) {
             $payload = $this->payload();
-        } else if ($this->protocol_type == self::WITH_VARIABLE) {
+        } else if ($this->protocolType == self::WITH_VARIABLE) {
             $payload = $this->payload();
-        } else if ($this->protocol_type == self::WITH_PAYLOAD) {
+        } else if ($this->protocolType == self::WITH_PAYLOAD) {
             $payload = $this->payload();
         } else {
             throw new MqttException('Invalid protocol type');
@@ -154,7 +169,7 @@ abstract class Base
         $this->header->setPayloadLength($length);
 
         $length = $this->header->getFullLength();
-        Debug::Log(Debug::DEBUG, 'Message Build: total length='.$length);
+        Debug::Log(Debug::DEBUG, 'Message Build: total length=' . $length);
 
         return $this->header->build() . $payload;
     }
@@ -178,12 +193,12 @@ abstract class Base
      * @param string $message
      * @return array|bool
      */
-    final protected function processReadFixedHeaderWithMsgID($message)
+    final protected function processReadFixedHeaderWithMsgId($message)
     {
-        $packet_length = 4;
-        $name = Message::$name[$this->message_type];
+        $packetLength = 4;
+        $name = Message::$name[$this->messageType];
 
-        if (!isset($message[$packet_length - 1])) {
+        if (!isset($message[$packetLength - 1])) {
             # error
             Debug::Log(Debug::DEBUG, "Message {$name}: error on reading");
             return false;
@@ -202,6 +217,10 @@ abstract class Base
         }
     }
 
+    /**
+     * @param $messages
+     * @return array
+     */
     protected function readUTF($messages)
     {
         $arr = [];
@@ -214,5 +233,3 @@ abstract class Base
         return $arr;
     }
 }
-
-# EOF

@@ -54,5 +54,3 @@ class PacketIdentifier
         $this->pi->set($new_id);
     }
 }
-
-# EOF
