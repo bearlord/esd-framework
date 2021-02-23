@@ -57,14 +57,14 @@ class MQTT implements IMqtt
      *
      * @var bool
      */
-    protected $connect_clean = true;
+    protected $connectClean = true;
 
     /**
      * Connect Will
      *
      * @var Will
      */
-    protected $connect_will;
+    protected $connectWill;
 
     /**
      * Version Code
@@ -73,6 +73,7 @@ class MQTT implements IMqtt
     const VERSION_3_0 = 3;
     const VERSION_3_1 = 3;
     const VERSION_3_1_1 = 4;
+    
     /**
      * Current version
      *
@@ -99,14 +100,14 @@ class MQTT implements IMqtt
     /**
      * @var CMDStore
      */
-    protected $cmdstore = null;
+    protected $cmdStore = null;
 
     /**
      * Retry Timeout
      *
      * @var int
      */
-    protected $retry_timeout = 5;
+    protected $retryTimeout = 5;
 
     /**
      * Constructor
@@ -120,7 +121,7 @@ class MQTT implements IMqtt
         # Create Socket Client Object
         $this->socket = new SocketClient($address);
         # New Command Store
-        $this->cmdstore = new CMDStore();
+        $this->cmdStore = new CMDStore();
 
         # Check Client ID
         Utility::CheckClientID($clientid);
@@ -131,12 +132,12 @@ class MQTT implements IMqtt
     /**
      * Retry Timeout for PUBLISH and Following Commands
      *
-     * @param int $retry_timeout
+     * @param int $retryTimeout
      */
-    public function setRetryTimeout($retry_timeout)
+    public function setRetryTimeout($retryTimeout)
     {
-        if ($retry_timeout > 1) {
-            $this->retry_timeout = (int)$retry_timeout;
+        if ($retryTimeout > 1) {
+            $this->retryTimeout = (int)$retryTimeout;
         }
     }
 
@@ -206,7 +207,7 @@ class MQTT implements IMqtt
      */
     public function setConnectClean($clean)
     {
-        $this->connect_clean = $clean ? true : false;
+        $this->connectClean = $clean ? true : false;
     }
 
     /**
@@ -220,7 +221,7 @@ class MQTT implements IMqtt
      */
     public function setWill($topic, $message, $qos = 0, $retain = 0)
     {
-        $this->connect_will = new Will($topic, $message, $qos, $retain);
+        $this->connectWill = new Will($topic, $message, $qos, $retain);
     }
 
     /**
@@ -326,7 +327,7 @@ class MQTT implements IMqtt
          */
         $connectobj = $this->getMessageObject(Message::CONNECT);
 
-        if (!$this->connect_clean && empty($this->clientid)) {
+        if (!$this->connectClean && empty($this->clientid)) {
             throw new MqttException('Client id must be provided if Clean Session flag is set false.');
         }
 
@@ -343,10 +344,10 @@ class MQTT implements IMqtt
         $connectobj->setAuth($this->username, $this->password);
         Debug::Log(Debug::DEBUG, 'connect(): username=' . $this->username . ' password=' . $this->password);
 
-        $connectobj->setClean($this->connect_clean);
+        $connectobj->setClean($this->connectClean);
 
-        if ($this->connect_will instanceof Will) {
-            $connectobj->setWill($this->connect_will);
+        if ($this->connectWill instanceof Will) {
+            $connectobj->setWill($this->connectWill);
         }
 
         $length = 0;
@@ -489,7 +490,7 @@ class MQTT implements IMqtt
         if ($qos == 1) {
             # QoS = 1, PUBLISH + PUBACK
             if (!$dup) {
-                $this->cmdstore->addWait(
+                $this->cmdStore->addWait(
                     Message::PUBACK,
                     $msgId,
                     array(
@@ -499,14 +500,14 @@ class MQTT implements IMqtt
                             'topic' => $topic,
                             'message' => $message,
                         ),
-                        'retry_after' => time() + $this->retry_timeout,
+                        'retry_after' => time() + $this->retryTimeout,
                     )
                 );
             }
         } else if ($qos == 2) {
             # QoS = 2, PUBLISH + PUBREC + PUBREL + PUBCOMP
             if (!$dup) {
-                $this->cmdstore->addWait(
+                $this->cmdStore->addWait(
                     Message::PUBREC,
                     $msgId,
                     array(
@@ -516,7 +517,7 @@ class MQTT implements IMqtt
                             'topic' => $topic,
                             'message' => $message,
                         ),
-                        'retry_after' => time() + $this->retry_timeout,
+                        'retry_after' => time() + $this->retryTimeout,
                     )
                 );
             }
@@ -754,12 +755,12 @@ class MQTT implements IMqtt
                     $pubrec_bytes_written = $this->simpleCommand(Message::PUBREC, $msgId);
                     Debug::Log(Debug::DEBUG, 'loop(): PUBLISH QoS=2 PUBREC written=' . $pubrec_bytes_written);
 
-                    $this->cmdstore->addWait(
+                    $this->cmdStore->addWait(
                         Message::PUBREL,
                         $msgId,
                         array(
                             'msgid' => $msgId,
-                            'retry_after' => time() + $this->retry_timeout,
+                            'retry_after' => time() + $this->retryTimeout,
                         )
                     );
 
@@ -788,7 +789,7 @@ class MQTT implements IMqtt
                 # Verify Packet Identifier
                 $this->call_handler('puback', array($this, $messageObject));
 
-                $this->cmdstore->delWait(Message::PUBACK, $msgId);
+                $this->cmdStore->delWait(Message::PUBACK, $msgId);
                 break;
 
             # Process PUBREC, send PUBREL
@@ -801,19 +802,19 @@ class MQTT implements IMqtt
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received PUBREC msgid=' . $msgId);
 
-                $this->cmdstore->delWait(Message::PUBREC, $msgId);
+                $this->cmdStore->delWait(Message::PUBREC, $msgId);
 
                 # PUBREL
                 Debug::Log(Debug::INFO, 'loop(): send PUBREL msgid=' . $msgId);
                 $pubrel_bytes_written = $this->simpleCommand(Message::PUBREL, $msgId);
 
 
-                $this->cmdstore->addWait(
+                $this->cmdStore->addWait(
                     Message::PUBCOMP,
                     $msgId,
                     array(
                         'msgid' => $msgId,
-                        'retry_after' => time() + $this->retry_timeout,
+                        'retry_after' => time() + $this->retryTimeout,
                     )
                 );
 
@@ -833,7 +834,7 @@ class MQTT implements IMqtt
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received PUBREL msgid=' . $msgId);
 
-                $this->cmdstore->delWait(Message::PUBREL, $msgId);
+                $this->cmdStore->delWait(Message::PUBREL, $msgId);
 
                 # PUBCOMP
                 Debug::Log(Debug::INFO, 'loop(): send PUBCOMP msgid=' . $msgId);
@@ -857,7 +858,7 @@ class MQTT implements IMqtt
                 $msgId = $messageObject->getMsgId();
                 Debug::Log(Debug::INFO, 'loop(): received PUBCOMP msgid=' . $msgId);
 
-                $this->cmdstore->delWait(Message::PUBCOMP, $msgId);
+                $this->cmdStore->delWait(Message::PUBCOMP, $msgId);
 
                 $this->call_handler('pubcomp', array($this, $messageObject));
                 break;
@@ -937,10 +938,10 @@ class MQTT implements IMqtt
             $time = time();
 
             # QoS 1
-            if (!$this->cmdstore->isEmpty(Message::PUBACK, $msgId)) {
+            if (!$this->cmdStore->isEmpty(Message::PUBACK, $msgId)) {
                 # resend PUBLISH with dup=1
 
-                $wait = $this->cmdstore->getWait(Message::PUBACK, $msgId);
+                $wait = $this->cmdStore->getWait(Message::PUBACK, $msgId);
 
                 if (empty($wait['retry_after']) || $wait['retry_after'] < $time) {
                     $rt = $wait['retry'];
@@ -957,10 +958,10 @@ class MQTT implements IMqtt
             }
 
             # QoS 2
-            if (!$this->cmdstore->isEmpty(Message::PUBREC, $msgid)) {
+            if (!$this->cmdStore->isEmpty(Message::PUBREC, $msgid)) {
                 # resend PUBLISH with dup=1
 
-                $wait = $this->cmdstore->getWait(Message::PUBREC, $msgid);
+                $wait = $this->cmdStore->getWait(Message::PUBREC, $msgid);
                 if (empty($wait['retry_after']) || $wait['retry_after'] < $time) {
                     $rt = $wait['retry'];
 
@@ -977,10 +978,10 @@ class MQTT implements IMqtt
 
             # ??? 干掉?
             # 服务端在下发PUBLISH之后,客户端返回PUBREC,如果长时间客户端不发PUBREL,客户端是否需要重发PUBREC
-            if (!$this->cmdstore->isEmpty(Message::PUBREL, $msgid)) {
+            if (!$this->cmdStore->isEmpty(Message::PUBREL, $msgid)) {
                 Debug::Log(Debug::DEBUG, 'handle_publish(): read PUBREL msgid=' . $msgid);
 
-                $wait = $this->cmdstore->getWait(Message::PUBREC, $msgid);
+                $wait = $this->cmdStore->getWait(Message::PUBREC, $msgid);
                 if (empty($wait['retry_after']) || $wait['retry_after'] < $time) {
                     # resend PUBREC
                     Debug::Log(Debug::INFO, 'Resend PUBREC msgid=' . $msgid);
@@ -988,10 +989,10 @@ class MQTT implements IMqtt
                 }
             }
 
-            if (!$this->cmdstore->isEmpty(Message::PUBCOMP, $msgid)) {
+            if (!$this->cmdStore->isEmpty(Message::PUBCOMP, $msgid)) {
                 Debug::Log(Debug::DEBUG, 'handle_publish(): read PUBCOMP msgid=' . $msgid);
 
-                $wait = $this->cmdstore->getWait(Message::PUBCOMP, $msgid);
+                $wait = $this->cmdStore->getWait(Message::PUBCOMP, $msgid);
                 if (empty($wait['retry_after']) || $wait['retry_after'] < $time) {
                     # resend PUBREL
                     Debug::Log(Debug::INFO, 'Resend PUBREL msgid=' . $msgid);
@@ -1009,8 +1010,8 @@ class MQTT implements IMqtt
             );
 
             foreach ($scan_items as $s) {
-                if (!$this->cmdstore->isEmpty($s)) {
-                    $waits = $this->cmdstore->getWaits($s);
+                if (!$this->cmdStore->isEmpty($s)) {
+                    $waits = $this->cmdStore->getWaits($s);
 
                     foreach ($waits as $msgid => $detail) {
                         $this->handle_publish($msgid);
