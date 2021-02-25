@@ -58,7 +58,7 @@ abstract class Base
     protected $readBytes = 0;
 
     /**
-     * @var header\Base
+     * @var \ESD\Plugins\MQTT\Message\Header\Base
      */
     public $header = null;
 
@@ -91,7 +91,6 @@ abstract class Base
     final public function decode($packetData, $remainingLength)
     {
         $payloadPos = 0;
-
         $this->header->decode($packetData, $remainingLength, $payloadPos);
         return $this->decodePayload($packetData, $payloadPos);
     }

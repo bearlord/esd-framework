@@ -9,14 +9,6 @@ namespace ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Utility;
 
-/**
- * Message CONNECT
- * Client -> Server
- *
- * 3.1 CONNECT – Client requests a connection to a Server
- *
- * @property header\CONNECT $header
- */
 
 /**
  * Message CONNECT

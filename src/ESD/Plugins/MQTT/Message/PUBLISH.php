@@ -15,7 +15,7 @@ use ESD\Plugins\MQTT\Message;
  *
  * 3.3 PUBLISH – Publish Message
  *
- * @property header\PUBLISH $header
+ * @property \ESD\Plugins\MQTT\Message\Header\PUBLISH $header
  */
 class PUBLISH extends Base
 {
