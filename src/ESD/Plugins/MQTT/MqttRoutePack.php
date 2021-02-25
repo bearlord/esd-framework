@@ -284,7 +284,7 @@ class MqttRoutePack implements IPack, IMqtt
      */
     public function getMessageObject($messageType)
     {
-        return Message::Create($messageType, $this);
+        return Message::create($messageType, $this);
     }
 
     /**
