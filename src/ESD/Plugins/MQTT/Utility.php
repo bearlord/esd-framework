@@ -18,7 +18,7 @@ class Utility
      * @param string $replace   Default Control Character to '.'
      * @return string
      */
-    static public function ascii2Visible($char, $replace='.')
+    public static function ascii2Visible($char, $replace='.')
     {
         $c = ord($char);
         if ($c >= 0x20 && $c <= 0x7F) {
@@ -37,7 +37,7 @@ class Utility
      * @param bool   $with_ascii
      * @return void|string
      */
-    static public function printHex($chars, $return=false, $width=0, $with_ascii=false)
+    public static function printHex($chars, $return=false, $width=0, $with_ascii=false)
     {
         $output = '';
 
@@ -97,7 +97,7 @@ class Utility
      * @return string      returned string
      * @throws MqttException
      */
-    static public function packStringWithLength($str)
+    public static function packStringWithLength($str)
     {
         $len = strlen($str);
         # UTF-8
@@ -114,7 +114,7 @@ class Utility
      * @param int &  $pos
      * @return string
      */
-    static public function unpackStringWithLength($str, &$pos)
+    public static function unpackStringWithLength($str, &$pos)
     {
         $length = self::extractUShort($str, $pos);
 
@@ -131,7 +131,7 @@ class Utility
      * @param int &  $pos
      * @return int
      */
-    static public function extractUShort($str, &$pos)
+    public static function extractUShort($str, &$pos)
     {
         $bytes = substr($str, $pos, 2);
         $ushort = Utility::word2UShort($bytes);
@@ -146,7 +146,7 @@ class Utility
      * @param int $length
      * @throws MqttException
      */
-    static public function checkMessageLength($length)
+    public static function checkMessageLength($length)
     {
         if ($length > Message::MAX_DATA_LENGTH) {
             throw new MqttException('Too much data');
@@ -160,7 +160,7 @@ class Utility
      * @return string
      * @throws MqttException
      */
-    static public function encodeLength($length)
+    public static function encodeLength($length)
     {
         self::checkMessageLength($length);
 
@@ -183,7 +183,7 @@ class Utility
      * @param int &  $pos
      * @return int
      */
-    static public function decodeLength($msg, &$pos)
+    public static function decodeLength($msg, &$pos)
     {
         $multiplier = 1;
         $value = 0 ;
@@ -203,7 +203,7 @@ class Utility
      * @param int $qos
      * @throws MqttException
      */
-    static public function checkQoS($qos)
+    public static function checkQoS($qos)
     {
         if ($qos > 2 || $qos < 0) {
             throw new MqttException('QoS must be an integer in (0,1,2).');
@@ -215,7 +215,7 @@ class Utility
      * @param string $clientId
      * @throws MqttException
      */
-    static public function checkClientId($clientId)
+    public static function checkClientId($clientId)
     {
         if (strlen($clientId) > 23) {
             throw new MqttException('Client identifier exceeds 23 bytes.');
@@ -228,7 +228,7 @@ class Utility
      * @param int $msgId
      * @throws MqttException
      */
-    static public function checkPacketIdentifier($msgId)
+    public static function checkPacketIdentifier($msgId)
     {
         if (!is_int($msgId) || $msgId < 1 || $msgId > 65535) {
             throw new MqttException('Packet identifier must be non-zero 16-bit.');
@@ -241,7 +241,7 @@ class Utility
      * @param int $keepalive
      * @throws MqttException
      */
-    static public function checkKeepAlive($keepalive)
+    public static function checkKeepAlive($keepalive)
     {
         if (!is_int($keepalive) || $keepalive < 1 || $keepalive > 65535) {
             throw new MqttException('Keep alive must be non-zero 16-bit.');
@@ -256,7 +256,7 @@ class Utility
      * @param string $topicName
      * @throws MqttException
      */
-    static public function checkTopicName($topicName)
+    public static function checkTopicName($topicName)
     {
         if (!isset($topicName[0]) || isset($topicName[65535])) {
             throw new MqttException('Topic name must be at 1~65535 bytes long');
@@ -283,7 +283,7 @@ class Utility
      * @param string $topicFilter
      * @throws MqttException
      */
-    static public function checkTopicFilter($topicFilter)
+    public static function checkTopicFilter($topicFilter)
     {
         if (!isset($topicFilter[0]) || isset($topicFilter[65535])) {
             throw new MqttException('Topic filter must be at 1~65535 bytes long');
@@ -332,7 +332,7 @@ class Utility
      * @param string $word
      * @return int
      */
-    static public function word2UShort($word)
+    public static function word2UShort($word)
     {
         $c = unpack('n', $word);
         return $c[1];
@@ -344,7 +344,7 @@ class Utility
      * @param int $cmd
      * @return array array(message_type=>int, flags=>int)
      */
-    static public function parseCommand($cmd)
+    public static function parseCommand($cmd)
     {
         # check Message type
         $messageType = $cmd >> 4;
@@ -364,7 +364,7 @@ class Utility
      * @param int $flags
      * @return array     array(dup=>int, qos=>int, retain=>int)
      */
-    static public function parseFlags($flags)
+    public static function parseFlags($flags)
     {
         $dup = ($flags & 0x08) >> 3;
         $qos = ($flags & 0x06) >> 1;
@@ -383,7 +383,7 @@ class Utility
      * @param int $cmd
      * @return array
      */
-    static public function unpackCommand($cmd)
+    public static function unpackCommand($cmd)
     {
         # check Message type
         $messageType = $cmd >> 4;
@@ -406,7 +406,7 @@ class Utility
      * @return bool
      * @throws Exception\BadUTF8
      */
-    static public function validateUTF8($string)
+    public static function validateUTF8($string)
     {
         $pop_10s = 0;
 
@@ -493,6 +493,9 @@ class Utility
         return true;
     }
 
+    /**
+     * @return string
+     */
     public static function genClientId()
     {
         return 'mqtt' . substr(md5(uniqid('mqtt', true)), 8, 16);

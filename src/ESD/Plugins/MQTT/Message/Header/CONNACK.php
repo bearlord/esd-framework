@@ -49,7 +49,7 @@ class CONNACK extends Base
      *
      * @var array
      */
-    static public $connectErrors = array(
+    public static $connectErrors = array(
         0 => 'Connection Accepted',
         1 => 'Connection Refused: unacceptable protocol version',
         2 => 'Connection Refused: identifier rejected',

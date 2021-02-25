@@ -46,45 +46,70 @@ class CONNECT extends Base
      */
     protected $keepalive = 60;
 
-    protected $will_flag;
-    protected $will_qos;
-    protected $will_retain;
-    protected $user_name_flag;
-    protected $password_flag;
+    protected $willFlag;
 
+    protected $willQos;
+
+    protected $willRetain;
+
+    protected $usernameFlag;
+
+    protected $passwordFlag;
+
+    /**
+     * @return int
+     */
     public function getClean()
     {
         return $this->clean;
     }
 
+    /**
+     * @return int
+     */
     public function getKeepAlive()
     {
         return $this->keepalive;
     }
 
+    /**
+     * @return mixed
+     */
     public function getWillFlag()
     {
-        return $this->will_flag;
+        return $this->willFlag;
     }
 
+    /**
+     * @return mixed
+     */
     public function getWillQos()
     {
-        return $this->will_qos;
+        return $this->willQos;
     }
 
+    /**
+     * @return mixed
+     */
     public function getWillRetain()
     {
-        return $this->will_retain;
+        return $this->willRetain;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUserNameFlag()
     {
-        return $this->user_name_flag;
+        return $this->usernameFlag;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPassWordFlag()
     {
-        return $this->password_flag;
+        return $this->passwordFlag;
     }
 
     /**
@@ -183,11 +208,11 @@ class CONNECT extends Base
         $flags = ord($packetData[$pos]);
         $reserved = $flags & 0x01;
         $this->clean = ($flags & 0x02) >> 1;
-        $this->will_flag = ($flags & 0x04) >> 2;
-        $this->will_qos = ($flags & 0x18) >> 3;
-        $this->will_retain = ($flags & 0x20) >> 5;
-        $this->user_name_flag = ($flags & 0x80) >> 7;
-        $this->password_flag = ($flags & 0x40) >> 6;
+        $this->willFlag = ($flags & 0x04) >> 2;
+        $this->willQos = ($flags & 0x18) >> 3;
+        $this->willRetain = ($flags & 0x20) >> 5;
+        $this->usernameFlag = ($flags & 0x80) >> 7;
+        $this->passwordFlag = ($flags & 0x40) >> 6;
         $pos++;
         //Keep Alive
         $keep_alive_msb = ord($packetData[$pos]);

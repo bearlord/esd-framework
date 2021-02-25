@@ -29,12 +29,12 @@ class Debug
      *
      * @var bool
      */
-    static protected $enabled = false;
+    protected static $enabled = false;
 
     /**
      * Enable Debug
      */
-    static public function enable()
+    public static function enable()
     {
         self::$enabled = true;
     }
@@ -42,7 +42,7 @@ class Debug
     /**
      * Disable Debug
      */
-    static public function disable()
+    public static function disable()
     {
         self::$enabled = false;
     }
@@ -52,14 +52,14 @@ class Debug
      *
      * @var int
      */
-    static protected $priority = self::WARN;
+    protected static $priority = self::WARN;
 
     /**
      * Log Priority
      *
      * @param int $priority
      */
-    static public function setLogPriority($priority)
+    public static function setLogPriority($priority)
     {
         self::$priority = (int)$priority;
     }
@@ -74,7 +74,7 @@ class Debug
      * @param string $message
      * @param string $bin_dump If $bin_dump is not empty, hex/ascii char will be dumped
      */
-    static public function log($priority, $message, $bin_dump = '')
+    public static function log($priority, $message, $bin_dump = '')
     {
         if ($bin_dump) {
             $bin_dump = Utility::printHex($bin_dump, true, 16, true);

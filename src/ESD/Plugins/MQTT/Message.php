@@ -68,7 +68,7 @@ class Message
      */
     const DISCONNECT = 0x0E;
 
-    static public $name = array(
+    public static $name = array(
         Message::CONNECT => 'CONNECT',
         Message::CONNACK => 'CONNACK',
         Message::PUBLISH => 'PUBLISH',
@@ -93,7 +93,7 @@ class Message
      * @return mixed
      * @throws MqttException
      */
-    static public function create($messageType, IMqtt $mqtt)
+    public static function create($messageType, IMqtt $mqtt)
     {
         if (!isset(Message::$name[$messageType])) {
             throw new MqttException('Message type not defined');
