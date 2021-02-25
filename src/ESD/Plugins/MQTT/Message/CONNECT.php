@@ -17,6 +17,15 @@ use ESD\Plugins\MQTT\Utility;
  *
  * @property header\CONNECT $header
  */
+
+/**
+ * Message CONNECT
+ * Client -> Server
+ *
+ * Class CONNECT
+ * @package ESD\Plugins\MQTT\Message
+ * @property \ESD\Plugins\MQTT\Message\Header\CONNECT $header
+ */
 class CONNECT extends Base
 {
     protected $messageType = Message::CONNECT;

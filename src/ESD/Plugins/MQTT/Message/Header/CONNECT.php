@@ -11,7 +11,6 @@ use ESD\Plugins\MQTT\MqttException;
 use ESD\Plugins\MQTT\MQTT;
 use ESD\Plugins\MQTT\Utility;
 
-
 /**
  * Fixed Header definition for CONNECT
  *

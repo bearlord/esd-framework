@@ -5,8 +5,8 @@
  */
 
 namespace ESD\Plugins\MQTT\Message;
-use ESD\Plugins\MQTT\Message;
 
+use ESD\Plugins\MQTT\Message;
 
 /**
  * Message CONNACK

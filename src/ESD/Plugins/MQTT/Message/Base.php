@@ -13,7 +13,8 @@ use ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Utility;
 
 /**
- * Base class for MQTT Messages
+ * Class Base for MQTT Messages
+ * @package ESD\Plugins\MQTT\Message
  */
 abstract class Base
 {
