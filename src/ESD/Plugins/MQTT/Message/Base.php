@@ -169,7 +169,7 @@ abstract class Base
         $this->header->setPayloadLength($length);
 
         $length = $this->header->getFullLength();
-        Debug::Log(Debug::DEBUG, 'Message Build: total length=' . $length);
+        Debug::log(Debug::DEBUG, 'Message Build: total length=' . $length);
 
         return $this->header->build() . $payload;
     }
@@ -200,19 +200,19 @@ abstract class Base
 
         if (!isset($message[$packetLength - 1])) {
             # error
-            Debug::Log(Debug::DEBUG, "Message {$name}: error on reading");
+            Debug::log(Debug::DEBUG, "Message {$name}: error on reading");
             return false;
         }
 
         $packet = unpack('Ccmd/Clength/nmsgid', $message);
 
-        $packet['cmd'] = Utility::UnpackCommand($packet['cmd']);
+        $packet['cmd'] = Utility::unpackCommand($packet['cmd']);
 
         if ($packet['cmd']['message_type'] != $this->getMessageType()) {
-            Debug::Log(Debug::DEBUG, "Message {$name}: type mismatch");
+            Debug::log(Debug::DEBUG, "Message {$name}: type mismatch");
             return false;
         } else {
-            Debug::Log(Debug::DEBUG, "Message {$name}: success");
+            Debug::log(Debug::DEBUG, "Message {$name}: success");
             return $packet;
         }
     }

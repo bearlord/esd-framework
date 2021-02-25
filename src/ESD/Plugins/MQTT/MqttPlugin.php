@@ -33,7 +33,7 @@ class MqttPlugin extends AbstractPlugin
     public function __construct(?MqttPluginConfig $mqttPluginConfig = null)
     {
         parent::__construct();
-        Debug::Disable();
+        Debug::disable();
         $this->atBefore(PackPlugin::class);
         if ($mqttPluginConfig == null) {
             $mqttPluginConfig = new MqttPluginConfig();

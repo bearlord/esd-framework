@@ -1,6 +1,7 @@
 <?php
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
@@ -33,7 +34,7 @@ class Debug
     /**
      * Enable Debug
      */
-    static public function Enable()
+    static public function enable()
     {
         self::$enabled = true;
     }
@@ -41,7 +42,7 @@ class Debug
     /**
      * Disable Debug
      */
-    static public function Disable()
+    static public function disable()
     {
         self::$enabled = false;
     }
@@ -58,7 +59,7 @@ class Debug
      *
      * @param int $priority
      */
-    static public function SetLogPriority($priority)
+    static public function setLogPriority($priority)
     {
         self::$priority = (int)$priority;
     }
@@ -73,10 +74,10 @@ class Debug
      * @param string $message
      * @param string $bin_dump If $bin_dump is not empty, hex/ascii char will be dumped
      */
-    static public function Log($priority, $message, $bin_dump = '')
+    static public function log($priority, $message, $bin_dump = '')
     {
         if ($bin_dump) {
-            $bin_dump = Utility::PrintHex($bin_dump, true, 16, true);
+            $bin_dump = Utility::printHex($bin_dump, true, 16, true);
             $message .= "\n" . $bin_dump;
         }
 

@@ -160,7 +160,7 @@ class CONNECT extends Base
     {
         $payload = '';
 
-        $payload .= Utility::PackStringWithLength($this->client_id);
+        $payload .= Utility::packStringWithLength($this->client_id);
 
         # Adding Connect Will
         if ($this->will && $this->will->get()) {
@@ -169,17 +169,17 @@ class CONNECT extends Base
              MUST be set to zero and the Will Topic and Will Message fields MUST NOT be present in
              the payload [MQTT-3.1.2-11].
              */
-            $payload .= Utility::PackStringWithLength($this->will->getTopic());
-            $payload .= Utility::PackStringWithLength($this->will->getMessage());
+            $payload .= Utility::packStringWithLength($this->will->getTopic());
+            $payload .= Utility::packStringWithLength($this->will->getMessage());
         }
 
         # Append Username
         if ($this->username != NULL) {
-            $payload .= Utility::PackStringWithLength($this->username);
+            $payload .= Utility::packStringWithLength($this->username);
         }
         # Append Password
         if ($this->password != NULL) {
-            $payload .= Utility::PackStringWithLength($this->password);
+            $payload .= Utility::packStringWithLength($this->password);
         }
 
         return $payload;

@@ -68,13 +68,13 @@ class SocketClient
      */
     public function connect()
     {
-        Debug::Log(Debug::DEBUG, 'socket_connect()');
+        Debug::log(Debug::DEBUG, 'socket_connect()');
         if (!$this->context) {
             $context = stream_context_create();
         } else {
             $context = $this->context;
         }
-        Debug::Log(Debug::DEBUG, 'socket_connect(): connect to=' . $this->address);
+        Debug::log(Debug::DEBUG, 'socket_connect(): connect to=' . $this->address);
         $this->socket = stream_socket_client(
             $this->address,
             $errno,
@@ -84,7 +84,7 @@ class SocketClient
             $context
         );
         if (!$this->socket) {
-            Debug::Log(Debug::DEBUG, "stream_socket_client() {$errno}, {$errstr}");
+            Debug::log(Debug::DEBUG, "stream_socket_client() {$errno}, {$errstr}");
             return false;
         }
         stream_set_timeout($this->socket, 5);
@@ -99,7 +99,7 @@ class SocketClient
     public function set_blocking()
     {
         if (!$this->socket || !is_resource($this->socket)) return false;
-        Debug::Log(Debug::DEBUG, 'SOCKET: blocking mode: ON');
+        Debug::log(Debug::DEBUG, 'SOCKET: blocking mode: ON');
         stream_set_blocking($this->socket, true);
         return true;
     }
@@ -110,7 +110,7 @@ class SocketClient
     public function set_non_blocking()
     {
         if (!$this->socket || !is_resource($this->socket)) return false;
-        Debug::Log(Debug::DEBUG, 'SOCKET: blocking mode: OFF');
+        Debug::log(Debug::DEBUG, 'SOCKET: blocking mode: OFF');
         stream_set_blocking($this->socket, false);
         return true;
     }
@@ -125,7 +125,7 @@ class SocketClient
     public function write($packet, $packet_size)
     {
         if (!$this->socket || !is_resource($this->socket)) return false;
-        Debug::Log(Debug::DEBUG, "socket_write(length={$packet_size})", $packet);
+        Debug::log(Debug::DEBUG, "socket_write(length={$packet_size})", $packet);
         return fwrite($this->socket, $packet, $packet_size);
     }
 
@@ -138,7 +138,7 @@ class SocketClient
     public function read($length = 8192)
     {
         if (!$this->socket || !is_resource($this->socket)) return false;
-        Debug::Log(Debug::DEBUG, "socket_read({$length})");
+        Debug::log(Debug::DEBUG, "socket_read({$length})");
         $string = "";
         $togo = $length;
         while (!feof($this->socket) && $togo > 0) {
@@ -156,7 +156,7 @@ class SocketClient
     public function close()
     {
         if (is_resource($this->socket)) {
-            Debug::Log(Debug::DEBUG, 'socket_close()');
+            Debug::log(Debug::DEBUG, 'socket_close()');
             return fclose($this->socket);
         }
         return true;

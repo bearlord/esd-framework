@@ -17,7 +17,9 @@ use ESD\Plugins\MQTT\Message;
 class SUBACK extends Base
 {
     protected $messageType = Message::SUBACK;
+
     protected $protocolType = self::WITH_VARIABLE;
+
     protected $readBytes = 4;
 
     /**
@@ -54,22 +56,22 @@ class SUBACK extends Base
 
         while (isset($packetData[$payloadPos])) {
             $returnCode[] = ord($packetData[$payloadPos]);
-
             ++ $payloadPos;
         }
 
         $this->returnCodes = $returnCode;
     }
 
+    /**
+     * @return string
+     */
     protected function payload()
     {
         $buffer = "";
-
         # Payload
-        foreach ($this->returnCodes as $qos_max) {
-            $buffer .= chr($qos_max);
+        foreach ($this->returnCodes as $qosMax) {
+            $buffer .= chr($qosMax);
         }
-
         return $buffer;
     }
 }

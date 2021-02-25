@@ -60,12 +60,12 @@ class Will
             throw new MqttException('Topic/Message MUST NOT be empty in Will Message');
         }
 
-        Utility::CheckTopicName($topic);
+        Utility::checkTopicName($topic);
 
         $this->topic   = $topic;
         $this->message = $message;
 
-        Utility::CheckQoS($qos);
+        Utility::checkQoS($qos);
         $this->qos     = (int) $qos;
         $this->retain  = $retain ? 1 : 0;
     }

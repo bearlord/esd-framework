@@ -122,10 +122,10 @@ class CONNECT extends Base
 
         # Protocol Name
         if ($this->message->mqtt->version() == MQTT::VERSION_3_1_1) {
-            $buffer .= Utility::PackStringWithLength('MQTT');
+            $buffer .= Utility::packStringWithLength('MQTT');
 
         } else {
-            $buffer .= Utility::PackStringWithLength('MQIsdp');
+            $buffer .= Utility::packStringWithLength('MQIsdp');
         }
         # End of Protocol Name
 
@@ -172,7 +172,7 @@ class CONNECT extends Base
      */
     protected function decodeVariableHeader(& $packetData, & $pos)
     {
-        Debug::Log(Debug::DEBUG, "CONNECT", $packetData);
+        Debug::log(Debug::DEBUG, "CONNECT", $packetData);
         $pos++;
         //Protocol Name
         $length = ord($packetData[$pos]);

@@ -77,7 +77,7 @@ class Base
      */
     final public function decode(&$packetData, $remainingLength, &$payloadPos)
     {
-        $cmd = Utility::ParseCommand(ord($packetData[0]));
+        $cmd = Utility::parseCommand(ord($packetData[0]));
         $messageType = $cmd['message_type'];
         if ($this->message->getMessageType() != $messageType) {
             throw new MqttException('Unexpected Control Packet Type');
@@ -87,7 +87,7 @@ class Base
         $this->setFlags($flags);
 
         $pos = 1;
-        $rl_len = strlen(($this->remainingLengthBytes = Utility::EncodeLength($remainingLength)));
+        $rl_len = strlen(($this->remainingLengthBytes = Utility::encodeLength($remainingLength)));
         $pos += $rl_len;
 
         $this->remainingLength = $remainingLength;
@@ -141,7 +141,7 @@ class Base
     public function setRemainingLength($length)
     {
         $this->remainingLength = $length;
-        $this->remainingLengthBytes = Utility::EncodeLength($this->remainingLength);
+        $this->remainingLengthBytes = Utility::encodeLength($this->remainingLength);
     }
 
     /**
@@ -187,7 +187,7 @@ class Base
      */
     public function setMsgId($msgId)
     {
-        Utility::CheckPacketIdentifier($msgId);
+        Utility::checkPacketIdentifier($msgId);
 
         $this->msgid = $msgId;
     }
@@ -226,13 +226,13 @@ class Base
             throw new MqttException('Invalid Packet Identifier');
         }
 
-        Debug::Log(Debug::DEBUG, 'msgid=' . $this->msgid);
+        Debug::log(Debug::DEBUG, 'msgid=' . $this->msgid);
         return pack('n', $this->msgid);
     }
 
     final protected function decodePacketIdentifier(&$packetData, &$pos)
     {
-        $msgId = Utility::ExtractUShort($packetData, $pos);
+        $msgId = Utility::extractUShort($packetData, $pos);
         $this->setMsgId($msgId);
 
         return true;

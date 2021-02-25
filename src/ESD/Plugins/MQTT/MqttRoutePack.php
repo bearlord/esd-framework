@@ -11,6 +11,8 @@ use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Server;
 use ESD\Plugins\MQTT\Auth\MqttAuth;
 use ESD\Plugins\MQTT\Handler\Handler;
+use ESD\Plugins\MQTT\IMqtt;
+use ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Message\Base;
 use ESD\Plugins\MQTT\Message\CONNACK;
 use ESD\Plugins\MQTT\Message\CONNECT;
@@ -24,6 +26,10 @@ use ESD\Plugins\MQTT\Message\SUBACK;
 use ESD\Plugins\MQTT\Message\SUBSCRIBE;
 use ESD\Plugins\MQTT\Message\UNSUBACK;
 use ESD\Plugins\MQTT\Message\UNSUBSCRIBE;
+use ESD\Plugins\MQTT\MQTT;
+use ESD\Plugins\MQTT\MqttException;
+use ESD\Plugins\MQTT\MqttPluginConfig;
+use ESD\Plugins\MQTT\Utility;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\GetBoostSend;
 use ESD\Plugins\Pack\PackTool\IPack;
@@ -31,10 +37,10 @@ use ESD\Plugins\Topic\GetTopic;
 use ESD\Plugins\Uid\GetUid;
 
 /**
- * Class MqttPack
+ * Class MqttRoutePack
  * @package ESD\Plugins\MQTT
  */
-class MqttPack implements IPack, IMqtt
+class MqttRoutePack implements IPack, IMqtt
 {
     use GetUid;
     use GetBoostSend;
@@ -125,6 +131,7 @@ class MqttPack implements IPack, IMqtt
         $uid = $this->getFdUid($fd);
         setContextValue("uid", $uid);
         $messageObject = $this->messageRead($data);
+
         switch ($messageObject->getMessageType()) {
             case Message::CONNECT:
                 $connack = new CONNACK($this);

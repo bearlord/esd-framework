@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
@@ -18,7 +18,7 @@ class Utility
      * @param string $replace   Default Control Character to '.'
      * @return string
      */
-    static public function ASCII2Visible($char, $replace='.')
+    static public function ascii2Visible($char, $replace='.')
     {
         $c = ord($char);
         if ($c >= 0x20 && $c <= 0x7F) {
@@ -37,7 +37,7 @@ class Utility
      * @param bool   $with_ascii
      * @return void|string
      */
-    static public function PrintHex($chars, $return=false, $width=0, $with_ascii=false)
+    static public function printHex($chars, $return=false, $width=0, $with_ascii=false)
     {
         $output = '';
 
@@ -48,7 +48,7 @@ class Utility
         if (!$width) {
             for ($i=0; isset($chars[$i]); $i++) {
                 $hexStr   .= sprintf('%02x ', ord($chars[$i]));
-                $asciiStr .= sprintf('%s  ', self::ASCII2Visible($chars[$i], '.'));
+                $asciiStr .= sprintf('%s  ', self::ascii2Visible($chars[$i], '.'));
             }
 
             $output .= "HEX DUMP:\t" . $hexStr . "\n";
@@ -59,7 +59,7 @@ class Utility
         } else {
             for ($i=0; isset($chars[$i]); $i++) {
                 $hexStr   .= sprintf('%02x ', ord($chars[$i]));
-                $asciiStr .= sprintf('%s', self::ASCII2Visible($chars[$i], '.'));
+                $asciiStr .= sprintf('%s', self::ascii2Visible($chars[$i], '.'));
             }
             $ph = $pa = 0;
             $wh = 3;
@@ -97,11 +97,11 @@ class Utility
      * @return string      returned string
      * @throws MqttException
      */
-    static public function PackStringWithLength($str)
+    static public function packStringWithLength($str)
     {
         $len = strlen($str);
         # UTF-8
-        if (!self::ValidateUTF8($str)) {
+        if (!self::validateUTF8($str)) {
             throw new MqttException('Bad UTF-8 String');
         }
         return pack('n', $len) . $str;
@@ -114,9 +114,9 @@ class Utility
      * @param int &  $pos
      * @return string
      */
-    static public function UnpackStringWithLength($str, &$pos)
+    static public function unpackStringWithLength($str, &$pos)
     {
-        $length = self::ExtractUShort($str, $pos);
+        $length = self::extractUShort($str, $pos);
 
         $data = substr($str, $pos, $length);
         $pos += $length;
@@ -131,10 +131,10 @@ class Utility
      * @param int &  $pos
      * @return int
      */
-    static public function ExtractUShort($str, &$pos)
+    static public function extractUShort($str, &$pos)
     {
         $bytes = substr($str, $pos, 2);
-        $ushort = Utility::Word2UShort($bytes);
+        $ushort = Utility::word2UShort($bytes);
         $pos += 2;
 
         return $ushort;
@@ -146,7 +146,7 @@ class Utility
      * @param int $length
      * @throws MqttException
      */
-    static public function CheckMessageLength($length)
+    static public function checkMessageLength($length)
     {
         if ($length > Message::MAX_DATA_LENGTH) {
             throw new MqttException('Too much data');
@@ -160,9 +160,9 @@ class Utility
      * @return string
      * @throws MqttException
      */
-    static public function EncodeLength($length)
+    static public function encodeLength($length)
     {
-        self::CheckMessageLength($length);
+        self::checkMessageLength($length);
 
         $string = "";
         do{
@@ -183,7 +183,7 @@ class Utility
      * @param int &  $pos
      * @return int
      */
-    static public function DecodeLength($msg, &$pos)
+    static public function decodeLength($msg, &$pos)
     {
         $multiplier = 1;
         $value = 0 ;
@@ -203,7 +203,7 @@ class Utility
      * @param int $qos
      * @throws MqttException
      */
-    static public function CheckQoS($qos)
+    static public function checkQoS($qos)
     {
         if ($qos > 2 || $qos < 0) {
             throw new MqttException('QoS must be an integer in (0,1,2).');
@@ -212,12 +212,12 @@ class Utility
     /**
      * Check Client ID
      *
-     * @param string $client_id
+     * @param string $clientId
      * @throws MqttException
      */
-    static public function CheckClientID($client_id)
+    static public function checkClientId($clientId)
     {
-        if (strlen($client_id) > 23) {
+        if (strlen($clientId) > 23) {
             throw new MqttException('Client identifier exceeds 23 bytes.');
         }
     }
@@ -228,7 +228,7 @@ class Utility
      * @param int $msgId
      * @throws MqttException
      */
-    static public function CheckPacketIdentifier($msgId)
+    static public function checkPacketIdentifier($msgId)
     {
         if (!is_int($msgId) || $msgId < 1 || $msgId > 65535) {
             throw new MqttException('Packet identifier must be non-zero 16-bit.');
@@ -241,7 +241,7 @@ class Utility
      * @param int $keepalive
      * @throws MqttException
      */
-    static public function CheckKeepAlive($keepalive)
+    static public function checkKeepAlive($keepalive)
     {
         if (!is_int($keepalive) || $keepalive < 1 || $keepalive > 65535) {
             throw new MqttException('Keep alive must be non-zero 16-bit.');
@@ -253,24 +253,24 @@ class Utility
      *
      * Based on 4.7 Topic Names and Topic Filters
      *
-     * @param string $topic_name
+     * @param string $topicName
      * @throws MqttException
      */
-    static public function CheckTopicName($topic_name)
+    static public function checkTopicName($topicName)
     {
-        if (!isset($topic_name[0]) || isset($topic_name[65535])) {
+        if (!isset($topicName[0]) || isset($topicName[65535])) {
             throw new MqttException('Topic name must be at 1~65535 bytes long');
         }
 
-        self::ValidateUTF8($topic_name);
+        self::validateUTF8($topicName);
 
-        if (false !== strpos($topic_name, chr(0))) {
+        if (false !== strpos($topicName, chr(0))) {
             throw new MqttException('null character is not allowed in topic');
         }
-        if (false !== strpos($topic_name, '#')) {
+        if (false !== strpos($topicName, '#')) {
             throw new MqttException('# is not allowed in topic');
         }
-        if (false !== strpos($topic_name, '+')) {
+        if (false !== strpos($topicName, '+')) {
             throw new MqttException('+ is not allowed in topic');
         }
     }
@@ -280,35 +280,35 @@ class Utility
      *
      * Based on 4.7 Topic Names and Topic Filters
      *
-     * @param string $topic_filter
+     * @param string $topicFilter
      * @throws MqttException
      */
-    static public function CheckTopicFilter($topic_filter)
+    static public function checkTopicFilter($topicFilter)
     {
-        if (!isset($topic_filter[0]) || isset($topic_filter[65535])) {
+        if (!isset($topicFilter[0]) || isset($topicFilter[65535])) {
             throw new MqttException('Topic filter must be at 1~65535 bytes long');
         }
-        self::ValidateUTF8($topic_filter);
+        self::validateUTF8($topicFilter);
 
-        if (false !== strpos($topic_filter, chr(0))) {
+        if (false !== strpos($topicFilter, chr(0))) {
             throw new MqttException('Null character is not allowed in topic');
         }
 
-        $length = strlen($topic_filter);
+        $length = strlen($topicFilter);
 
         /*
          The multi-level wildcard character MUST be specified either on its own or following a topic level separator.
          In either case it MUST be the last character specified in the Topic Filter [MQTT-4.7.1-2].
          */
-        if (($p = strpos($topic_filter, '#')) !== false) {
+        if (($p = strpos($topicFilter, '#')) !== false) {
             if ($p != $length - 1) {
                 throw new MqttException('"#" MUST be the last char in topic filter');
-            } else if ($length > 1 && $topic_filter[$length - 2] != '/') {
+            } else if ($length > 1 && $topicFilter[$length - 2] != '/') {
                 throw new MqttException('"#" MUST occupy an entire level of the filter');
             }
         }
 
-        $levels = explode('/', $topic_filter);
+        $levels = explode('/', $topicFilter);
         foreach ($levels as $l) {
             if ($l == '') {
                 continue;
@@ -321,8 +321,8 @@ class Utility
             }
         }
 
-        if ($topic_filter[0] == '#') {
-            Debug::Log(Debug::DEBUG, 'If you want to subscribe topic begin with $, please subscribe both "#" and "$SOMETOPIC/#"');
+        if ($topicFilter[0] == '#') {
+            Debug::log(Debug::DEBUG, 'If you want to subscribe topic begin with $, please subscribe both "#" and "$SOMETOPIC/#"');
         }
     }
 
@@ -332,7 +332,7 @@ class Utility
      * @param string $word
      * @return int
      */
-    static public function Word2UShort($word)
+    static public function word2UShort($word)
     {
         $c = unpack('n', $word);
         return $c[1];
@@ -344,7 +344,7 @@ class Utility
      * @param int $cmd
      * @return array array(message_type=>int, flags=>int)
      */
-    static public function ParseCommand($cmd)
+    static public function parseCommand($cmd)
     {
         # check Message type
         $messageType = $cmd >> 4;
@@ -364,7 +364,7 @@ class Utility
      * @param int $flags
      * @return array     array(dup=>int, qos=>int, retain=>int)
      */
-    static public function ParseFlags($flags)
+    static public function parseFlags($flags)
     {
         $dup = ($flags & 0x08) >> 3;
         $qos = ($flags & 0x06) >> 1;
@@ -383,7 +383,7 @@ class Utility
      * @param int $cmd
      * @return array
      */
-    static public function UnpackCommand($cmd)
+    static public function unpackCommand($cmd)
     {
         # check Message type
         $messageType = $cmd >> 4;
@@ -406,7 +406,7 @@ class Utility
      * @return bool
      * @throws Exception\BadUTF8
      */
-    static public function ValidateUTF8($string)
+    static public function validateUTF8($string)
     {
         $pop_10s = 0;
 

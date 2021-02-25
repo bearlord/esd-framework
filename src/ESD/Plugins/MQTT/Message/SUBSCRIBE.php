@@ -31,8 +31,8 @@ class SUBSCRIBE extends Base
      */
     public function addTopic($topicFilter, $qosMax)
     {
-        Utility::CheckTopicFilter($topicFilter);
-        Utility::CheckQoS($qosMax);
+        Utility::checkTopicFilter($topicFilter);
+        Utility::checkQoS($qosMax);
         $this->topics[$topicFilter] = $qosMax;
     }
 
@@ -60,9 +60,9 @@ class SUBSCRIBE extends Base
 
         $buffer = "";
         # Payload
-        foreach ($this->topics as $topic => $qos_max) {
-            $buffer .= Utility::PackStringWithLength($topic);
-            $buffer .= chr($qos_max);
+        foreach ($this->topics as $topic => $qosMax) {
+            $buffer .= Utility::packStringWithLength($topic);
+            $buffer .= chr($qosMax);
         }
         return $buffer;
     }
@@ -75,7 +75,7 @@ class SUBSCRIBE extends Base
     protected function decodePayload(&$packetData, &$payloadPos)
     {
         while (isset($packetData[$payloadPos])) {
-            $topic = Utility::UnpackStringWithLength($packetData, $payloadPos);
+            $topic = Utility::unpackStringWithLength($packetData, $payloadPos);
             $qos = ord($packetData[$payloadPos]);
             $this->topics[$topic] = $qos;
             ++$payloadPos;

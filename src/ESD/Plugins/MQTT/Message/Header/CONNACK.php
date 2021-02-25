@@ -74,7 +74,7 @@ class CONNACK extends Base
 
         if ($this->returnCode != 0) {
             $error = isset(self::$connectErrors[$this->returnCode]) ? self::$connectErrors[$this->returnCode] : 'Unknown error';
-            Debug::Log(
+            Debug::log(
                 Debug::ERR,
                 sprintf(
                     "Connection failed! (Error: 0x%02x 0x%02x|%s)",
@@ -92,9 +92,9 @@ class CONNACK extends Base
         }
 
         if ($this->sessionPresent) {
-            Debug::Log(Debug::DEBUG, "CONNACK: Session Present Flag: ON");
+            Debug::log(Debug::DEBUG, "CONNACK: Session Present Flag: ON");
         } else {
-            Debug::Log(Debug::DEBUG, "CONNACK: Session Present Flag: OFF");
+            Debug::log(Debug::DEBUG, "CONNACK: Session Present Flag: OFF");
         }
     }
 

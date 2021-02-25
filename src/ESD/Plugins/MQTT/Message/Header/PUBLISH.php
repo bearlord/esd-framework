@@ -64,7 +64,7 @@ class PUBLISH extends Base
      */
     public function setQos($qos)
     {
-        Utility::CheckQoS($qos);
+        Utility::checkQoS($qos);
         $this->qos = (int) $qos;
 
         if ($this->qos > 0) {
@@ -119,7 +119,7 @@ class PUBLISH extends Base
      */
     public function setFlags($flags)
     {
-        $flags = Utility::ParseFlags($flags);
+        $flags = Utility::parseFlags($flags);
 
         $this->setDup($flags['dup']);
         $this->setQos($flags['qos']);
@@ -159,12 +159,12 @@ class PUBLISH extends Base
 
         $topic = $this->message->getTopic();
         # Topic
-        $header .= Utility::PackStringWithLength($topic);
-        Debug::Log(Debug::DEBUG, 'Message PUBLISH: topic='.$topic);
+        $header .= Utility::packStringWithLength($topic);
+        Debug::log(Debug::DEBUG, 'Message PUBLISH: topic='.$topic);
 
-        Debug::Log(Debug::DEBUG, 'Message PUBLISH: QoS='.$this->getQos());
-        Debug::Log(Debug::DEBUG, 'Message PUBLISH: DUP='.$this->getDup());
-        Debug::Log(Debug::DEBUG, 'Message PUBLISH: RETAIN='.$this->getRetain());
+        Debug::log(Debug::DEBUG, 'Message PUBLISH: QoS='.$this->getQos());
+        Debug::log(Debug::DEBUG, 'Message PUBLISH: DUP='.$this->getDup());
+        Debug::log(Debug::DEBUG, 'Message PUBLISH: RETAIN='.$this->getRetain());
 
         # Message ID if QoS > 0
         if ($this->getQos()) {
@@ -188,7 +188,7 @@ class PUBLISH extends Base
      */
     protected function decodeVariableHeader(& $packetData, & $pos)
     {
-        $topic = Utility::UnpackStringWithLength($packetData, $pos);
+        $topic = Utility::unpackStringWithLength($packetData, $pos);
         $this->message->setTopic($topic);
 
         if ($this->getQos() > 0) {

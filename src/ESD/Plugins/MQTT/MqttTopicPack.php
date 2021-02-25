@@ -31,10 +31,10 @@ use ESD\Plugins\Topic\GetTopic;
 use ESD\Plugins\Uid\GetUid;
 
 /**
- * Class MqttPack
+ * Class MqttTopicPack
  * @package ESD\Plugins\MQTT
  */
-class MqttPack implements IPack, IMqtt
+class MqttTopicPack implements IPack, IMqtt
 {
     use GetUid;
     use GetBoostSend;
@@ -97,14 +97,7 @@ class MqttPack implements IPack, IMqtt
             $message = new PUBLISH($this);
             $message->setDup(0);
             $message->setQos($this->mqttConfig->getServerQos());
-            if ($topic == null && $this->mqttConfig->isUseRoute()) {
-                $message->setTopic($this->mqttConfig->getServerTopic() . "/" . getContextValue("uid"));
-                $message->setQos(getContextValue("qos"));
-                $message->setMsgId(getContextValue("msgId"));
-                $data = $this->handler->pack($data);
-            } else {
-                $message->setTopic($topic);
-            }
+            $message->setTopic($topic);
             $message->setMessage($data);
             $data = $message->build();
         }
@@ -175,25 +168,19 @@ class MqttPack implements IPack, IMqtt
                     $topic = $publish->getTopic();
                     $data = $publish->getMessage();
                     $msgId = $publish->getMsgId();
-                    if (!$this->mqttConfig->isUseRoute()) {
-                        $this->pub($topic, $data);
-                        switch ($qos) {
-                            case 1:
-                                $puback = new PUBACK($this);
-                                $puback->setMsgId($msgId);
-                                $this->autoBoostSend($fd, $puback);
-                                break;
-                            case 2:
-                                $pubrec = new PUBREC($this);
-                                $pubrec->setMsgId($msgId);
-                                $this->autoBoostSend($fd, $pubrec);
-                                break;
-                        }
-                    } else {
-                        $clientData = new ClientData($fd, $portConfig->getBaseType(), $topic, $this->handler->upPack($data));
-                        setContextValue("msgId", $msgId);
-                        setContextValue("qos", $publish->getQos());
-                        return $clientData;
+
+                    $this->pub($topic, $data);
+                    switch ($qos) {
+                        case 1:
+                            $puback = new PUBACK($this);
+                            $puback->setMsgId($msgId);
+                            $this->autoBoostSend($fd, $puback);
+                            break;
+                        case 2:
+                            $pubrec = new PUBREC($this);
+                            $pubrec->setMsgId($msgId);
+                            $this->autoBoostSend($fd, $pubrec);
+                            break;
                     }
                 }
                 break;
@@ -292,10 +279,10 @@ class MqttPack implements IPack, IMqtt
      * @param PortConfig $portConfig
      * @throws \Exception
      */
-    public static function changePortConfig(PortConfig $portConfig)
+    public static function changePortConfig(PortConfig $portConfig): bool
     {
         if ($portConfig->isOpenMqttProtocol()) {
-            return;
+            return true;
         } else {
             Server::$instance->getLog()->warning("MqttPack is used but Mqtt protocol is not enabled ,we are automatically turn on MqttProtocol for you.");
             $portConfig->setOpenMqttProtocol(true);

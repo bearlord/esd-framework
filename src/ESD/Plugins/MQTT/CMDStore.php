@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
@@ -41,7 +41,7 @@ class CMDStore
     public function addWait($messageType, $msgId, array $data)
     {
         if (!isset($this->commandAwaits[$messageType][$msgId])) {
-            Debug::Log(Debug::DEBUG, "Waiting for " . Message::$name[$messageType] . " msgid={$msgId}");
+            Debug::log(Debug::DEBUG, "Waiting for " . Message::$name[$messageType] . " msgid={$msgId}");
 
             $this->commandAwaits[$messageType][$msgId] = $data;
             ++$this->commandAwaitsCounter;
@@ -57,7 +57,7 @@ class CMDStore
     public function deleteWait($messageType, $msgId)
     {
         if (isset($this->commandAwaits[$messageType][$msgId])) {
-            Debug::Log(Debug::DEBUG, "Forget " . Message::$name[$messageType] . " msgid={$msgId}");
+            Debug::log(Debug::DEBUG, "Forget " . Message::$name[$messageType] . " msgid={$msgId}");
 
             unset($this->commandAwaits[$messageType][$msgId]);
             --$this->commandAwaitsCounter;

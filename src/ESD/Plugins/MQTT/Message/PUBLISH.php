@@ -32,7 +32,7 @@ class PUBLISH extends Base
      */
     public function setTopic($topic)
     {
-        Utility::CheckTopicName($topic);
+        Utility::checkTopicName($topic);
 
         $this->topic = $topic;
     }
@@ -138,7 +138,7 @@ class PUBLISH extends Base
 
         # Payload
         $buffer .= $this->message;
-        Debug::Log(Debug::DEBUG, 'Message PUBLISH: Message='.$this->message);
+        Debug::log(Debug::DEBUG, 'Message PUBLISH: Message='.$this->message);
 
         return  $buffer;
     }
