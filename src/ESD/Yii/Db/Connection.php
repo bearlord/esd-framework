@@ -451,6 +451,8 @@ class Connection extends Component
      */
     private $_quotedColumnNames;
 
+    /** @var string pool name */
+    public $poolName;
 
     /**
      * Returns a value indicating whether the DB connection is established.
@@ -645,7 +647,7 @@ class Connection extends Component
                 $this->pdo = null;
             }
 
-            $this->_master->close();
+//            $this->_master->close();
             $this->_master = false;
         }
 
@@ -657,7 +659,7 @@ class Connection extends Component
         }
 
         if ($this->_slave) {
-            $this->_slave->close();
+//            $this->_slave->close();
             $this->_slave = false;
         }
     }
@@ -710,9 +712,12 @@ class Connection extends Component
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->emulatePrepare);
         }
 
-        if ($this->charset !== null && in_array($this->getDriverName(), ['pgsql', 'mysql', 'mysqli', 'cubrid'], true)) {
+        if ($this->charset !== null && in_array($this->getDriverName(), ['pgsql', 'mysql', 'mysqli', 'cubrid', 'oci'], true)) {
             $this->pdo->exec('SET NAMES ' . $this->pdo->quote($this->charset));
         }
+
+        $this->generateFinger();
+
         $this->trigger(self::EVENT_AFTER_OPEN);
     }
 
@@ -1081,70 +1086,35 @@ class Connection extends Component
     }
 
     /**
-     * Opens the connection to a server in the pool.
-     * This method implements the load balancing among the given list of the servers.
-     * Connections will be tried in random order.
-     * @param array $pool the list of connection configurations in the server pool
-     * @param array $sharedConfig the configuration common to those given in `$pool`.
-     * @return Connection the opened DB connection, or `null` if no server is available
-     * @throws InvalidConfigException if a configuration does not specify "dsn"
+     * @var string
      */
-    protected function openFromPool(array $pool, array $sharedConfig)
+    public string $fingerPrint = '';
+
+    /**
+     * Get Fingerprint
+     * @return string
+     */
+    public function getFingerPrint(): string
     {
-        shuffle($pool);
-        return $this->openFromPoolSequentially($pool, $sharedConfig);
+        return $this->fingerPrint;
     }
 
     /**
-     * Opens the connection to a server in the pool.
-     * This method implements the load balancing among the given list of the servers.
-     * Connections will be tried in sequential order.
-     * @param array $pool the list of connection configurations in the server pool
-     * @param array $sharedConfig the configuration common to those given in `$pool`.
-     * @return Connection the opened DB connection, or `null` if no server is available
-     * @throws InvalidConfigException if a configuration does not specify "dsn"
-     * @since 2.0.11
+     * Set Fingerprint
+     * @param string $fingerPrint
      */
-    protected function openFromPoolSequentially(array $pool, array $sharedConfig)
+    public function setFingerPrint(string $fingerPrint): void
     {
-        if (empty($pool)) {
-            return null;
-        }
+        $this->fingerPrint = $fingerPrint;
+    }
 
-        if (!isset($sharedConfig['class'])) {
-            $sharedConfig['class'] = get_class($this);
-        }
-
-        $cache = is_string($this->serverStatusCache) ? Yii::$app->get($this->serverStatusCache, false) : $this->serverStatusCache;
-
-        foreach ($pool as $config) {
-            $config = array_merge($sharedConfig, $config);
-            if (empty($config['dsn'])) {
-                throw new InvalidConfigException('The "dsn" option must be specified.');
-            }
-
-            $key = [__METHOD__, $config['dsn']];
-            if ($cache instanceof CacheInterface && $cache->get($key)) {
-                // should not try this dead server now
-                continue;
-            }
-
-            /* @var $db Connection */
-            $db = Yii::createObject($config);
-
-            try {
-                $db->open();
-                return $db;
-            } catch (\Exception $e) {
-                Yii::warning("Connection ({$config['dsn']}) failed: " . $e->getMessage(), __METHOD__);
-                if ($cache instanceof CacheInterface) {
-                    // mark this server as dead and only retry it after the specified interval
-                    $cache->set($key, 1, $this->serverRetryInterval);
-                }
-            }
-        }
-
-        return null;
+    /**
+     * Generate Fingerprint
+     */
+    public function generateFinger()
+    {
+        $fingerPrint = sha1($this->dsn . microtime(true));
+        $this->setFingerPrint($fingerPrint);
     }
 
     /**

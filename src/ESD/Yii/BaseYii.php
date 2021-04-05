@@ -65,7 +65,7 @@ class BaseYii
      */
     public static function getVersion()
     {
-        return '2.0.32-dev';
+        return '2.0.36';
     }
 
     /**
@@ -511,7 +511,7 @@ class BaseYii
     {
 
         if (static::$app !== null) {
-            return Application::instance()->getI18n()->translate($category, $message, $params, $language ?: static::$app->language);
+            return Application::instance()->getI18n()->translate($category, $message, $params, $language ?: static::$app->getLanguage());
         }
 
         $placeholders = [];

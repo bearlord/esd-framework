@@ -40,13 +40,14 @@ class PdoPool
     }
 
     /**
-     * @param $config
+     * @param Config $config
      * @return Connection
      * @throws \ESD\Yii\Db\Exception
      */
-    protected function connect($config)
+    protected function connect(Config $config)
     {
         $db = new Connection();
+        $db->poolName = $config->getName();
         $db->dsn = $config->getDsn();
         $db->username = $config->getUsername();
         $db->password = $config->getPassword();
@@ -64,14 +65,16 @@ class PdoPool
      */
     public function db()
     {
-        $contextKey = "Pdo:{$this->getConfig()->getName()}";
+        $contextKey = sprintf("Pdo:%s", $this->getConfig()->getName());
+
         $db = getContextValue($contextKey);
  
         if ($db == null) {
             /** @var Connection $db */
             $db = $this->pool->pop();
-
-            \Swoole\Coroutine::defer(function () use ($db) {
+            
+            \Swoole\Coroutine::defer(function () use ($contextKey) {
+                $db = getContextValue($contextKey);
                 $this->pool->push($db);
             });
             setContextValue($contextKey, $db);
@@ -80,7 +83,7 @@ class PdoPool
     }
 
     /**
-     * @return PdoOneConfig
+     * @return Config
      */
     public function getConfig()
     {

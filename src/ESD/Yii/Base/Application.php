@@ -67,9 +67,9 @@ class Application extends ServiceLocator
     private $_basePath;
 
     /**
-     * @var static[] static instances in format: `[className => object]`
+     * @var Application
      */
-    private static $_instances = [];
+    private static $_instances;
 
     /**
      * Application constructor.
@@ -90,7 +90,9 @@ class Application extends ServiceLocator
     {
         $className = get_called_class();
         if ($refresh || !isset(self::$_instances[$className])) {
-            self::$_instances[$className] = Yii::createObject($className);
+            /** @var Application $instance */
+            $instance = new self();
+            self::$_instances[$className] = $instance;
         }
         return self::$_instances[$className];
     }
@@ -137,6 +139,8 @@ class Application extends ServiceLocator
         }
 
         $this->setComponents($newConfig['components']);
+        
+        $this->getLog();
         unset($newConfig);
     }
 

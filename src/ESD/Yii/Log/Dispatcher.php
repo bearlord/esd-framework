@@ -79,6 +79,7 @@ class Dispatcher extends Component
      */
     public function __construct($config = [])
     {
+        var_dump('__construct');
         // ensure logger gets set before any other config option
         if (isset($config['logger'])) {
             $this->setLogger($config['logger']);
@@ -114,7 +115,6 @@ class Dispatcher extends Component
         if ($this->_logger === null) {
             $this->setLogger(Yii::getLogger());
         }
-
         return $this->_logger;
     }
 

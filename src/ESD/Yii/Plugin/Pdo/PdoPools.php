@@ -18,6 +18,14 @@ class PdoPools
     protected $poolList = [];
 
     /**
+     * @return array
+     */
+    public function getPoolList(): array
+    {
+        return $this->poolList;
+    }
+
+    /**
      * @param string $name
      * @return PdoPool|mixed|null
      */
