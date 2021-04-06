@@ -96,7 +96,7 @@ class ApplicationAspectKernel extends AspectKernel
         $this->order();
         foreach ($this->orderList as $order) {
             if ($order instanceof Aspect) {
-                Server::$instance->getLog()->debug("Add {$order->getName()} aspect");
+                //Server::$instance->getLog()->debug("Add {$order->getName()} aspect");
                 $this->container->registerAspect($order);
             }
         }

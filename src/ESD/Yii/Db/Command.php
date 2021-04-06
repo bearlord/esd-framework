@@ -1169,33 +1169,44 @@ class Command extends Component
 
             $profile and Yii::endProfile($rawSql, 'ESD\Yii\Db\Command::query');
         } catch (Exception $e) {
-            if ($this->reconnectTimes < $this->reconnectMaxTimes && $this->isBreak($e)) {
-                ++$this->reconnectTimes;
+            try {
+                if ($this->reconnectTimes < $this->reconnectMaxTimes && $this->isBreak($e)) {
+                    ++$this->reconnectTimes;
 
-                Yii::debug(sprintf("Reconnect times ...%d", $this->reconnectTimes));
+                    Yii::debug(sprintf("Reconnect times ...%d", $this->reconnectTimes));
 
-                $this->db->close();
-                $this->db->open();
+                    $this->db->close();
+                    $this->db->open();
 
-                $this->pdoStatement = $this->db->pdo->prepare($rawSql);
-                $this->bindPendingParams();
-                $this->internalExecute($rawSql);
+                    //PDO handle changed with new PDO connection, so pdoStatement need to reacquire.
+                    //'prepare' and 'bindPendingParams' function makes no sense but just to generate new pdoStatement
+                    //'rawSql' is same as before.
+                    $this->pdoStatement = $this->db->pdo->prepare($this->getSql());
+                    $this->bindPendingParams();
+                    list($profile, $rawSql) = $this->logQuery('ESD\Yii\Db\Command::query');
 
-                if ($method === '') {
-                    $result = new DataReader($this);
-                } else {
-                    if ($fetchMode === null) {
-                        $fetchMode = $this->fetchMode;
+                    $this->internalExecute($rawSql);
+
+                    if ($method === '') {
+                        $result = new DataReader($this);
+                    } else {
+                        if ($fetchMode === null) {
+                            $fetchMode = $this->fetchMode;
+                        }
+                        $result = call_user_func_array([$this->pdoStatement, $method], (array)$fetchMode);
+                        $this->pdoStatement->closeCursor();
                     }
-                    $result = call_user_func_array([$this->pdoStatement, $method], (array)$fetchMode);
-                    $this->pdoStatement->closeCursor();
-                }
 
-                $contextKey = sprintf("Pdo:%s", $this->db->poolName);
-                setContextValue($contextKey, $this->db);
+                    $contextKey = sprintf("Pdo:%s", $this->db->poolName);
+                    setContextValue($contextKey, $this->db);
+
+                    $profile and Yii::endProfile($rawSql, 'ESD\Yii\Db\Command::query');
+                }
+            } catch (Exception $e2) {
+                throw $e2;
+            } catch (Exception $e) {
+                throw $e;
             }
-            $profile and Yii::endProfile($rawSql, 'ESD\Yii\Db\Command::query');
-//            throw $e;
         }
 
         if (isset($cache, $cacheKey, $info)) {
