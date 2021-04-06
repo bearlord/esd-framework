@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -9,18 +9,19 @@ namespace ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Utility;
 
+
 /**
  * Message CONNECT
  * Client -> Server
  *
- * 3.1 CONNECT – Client requests a connection to a Server
- *
- * @property header\CONNECT $header
+ * Class CONNECT
+ * @package ESD\Plugins\MQTT\Message
+ * @property \ESD\Plugins\MQTT\Message\Header\CONNECT $header
  */
 class CONNECT extends Base
 {
-    protected $message_type = Message::CONNECT;
-    protected $protocol_type = self::WITH_PAYLOAD;
+    protected $messageType = Message::CONNECT;
+    protected $protocolType = self::WITH_PAYLOAD;
 
     /**
      * Connect Will
@@ -137,9 +138,9 @@ class CONNECT extends Base
         $this->password = $password;
     }
 
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    protected function decodePayload(& $packetData, & $payloadPos)
     {
-        $message = substr($packet_data, $payload_pos);
+        $message = substr($packetData, $payloadPos);
         $messages = $this->readUTF($message);
         $this->client_id = array_shift($messages);
         if ($this->header->getWillFlag()) {
@@ -160,7 +161,7 @@ class CONNECT extends Base
     {
         $payload = '';
 
-        $payload .= Utility::PackStringWithLength($this->client_id);
+        $payload .= Utility::packStringWithLength($this->client_id);
 
         # Adding Connect Will
         if ($this->will && $this->will->get()) {
@@ -169,21 +170,19 @@ class CONNECT extends Base
              MUST be set to zero and the Will Topic and Will Message fields MUST NOT be present in
              the payload [MQTT-3.1.2-11].
              */
-            $payload .= Utility::PackStringWithLength($this->will->getTopic());
-            $payload .= Utility::PackStringWithLength($this->will->getMessage());
+            $payload .= Utility::packStringWithLength($this->will->getTopic());
+            $payload .= Utility::packStringWithLength($this->will->getMessage());
         }
 
         # Append Username
         if ($this->username != NULL) {
-            $payload .= Utility::PackStringWithLength($this->username);
+            $payload .= Utility::packStringWithLength($this->username);
         }
         # Append Password
         if ($this->password != NULL) {
-            $payload .= Utility::PackStringWithLength($this->password);
+            $payload .= Utility::packStringWithLength($this->password);
         }
 
         return $payload;
     }
 }
-
-# EOF

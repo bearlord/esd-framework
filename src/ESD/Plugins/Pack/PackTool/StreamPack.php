@@ -74,7 +74,7 @@ class StreamPack extends AbstractPack
         $this->portConfig = $portConfig;
         //Value can be empty
         $value = $this->decode($data);
-        $clientData = new ClientData($fd, $portConfig->getBaseType(), 'actionTcp', $value);
+        $clientData = new ClientData($fd, $portConfig->getBaseType(), 'onReceive', $value);
         return $clientData;
     }
 

@@ -1,36 +1,39 @@
 <?php
 
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
 
+/**
+ * Interface MessageHandler
+ * @package ESD\Plugins\MQTT
+ */
 interface MessageHandler
 {
 
-    public function connack(MQTT $mqtt, Message\CONNACK $connack_object);
+    public function connack(MQTT $mqtt, Message\CONNACK $connackObject);
 
     public function disconnect(MQTT $mqtt);
 
-    public function suback(MQTT $mqtt, Message\SUBACK $suback_object);
+    public function suback(MQTT $mqtt, Message\SUBACK $subackObject);
 
-    public function unsuback(MQTT $mqtt, Message\UNSUBACK $unsuback_object);
+    public function unsuback(MQTT $mqtt, Message\UNSUBACK $unsubackObject);
 
-    public function publish(MQTT $mqtt, Message\PUBLISH $publish_object);
+    public function publish(MQTT $mqtt, Message\PUBLISH $publishObject);
 
-    public function puback(MQTT $mqtt, Message\PUBACK $puback_object);
+    public function puback(MQTT $mqtt, Message\PUBACK $pubackObject);
 
-    public function pubrec(MQTT $mqtt, Message\PUBREC $pubrec_object);
+    public function pubrec(MQTT $mqtt, Message\PUBREC $pubrecObject);
 
-    public function pubrel(MQTT $mqtt, Message\PUBREL $pubrel_object);
+    public function pubrel(MQTT $mqtt, Message\PUBREL $pubrelObject);
 
-    public function pubcomp(MQTT $mqtt, Message\PUBCOMP $pubcomp_object);
+    public function pubcomp(MQTT $mqtt, Message\PUBCOMP $pubcompObject);
 
-    public function pingreq(MQTT $mqtt, Message\PINGREQ $pubcomp_object);
+    public function pingreq(MQTT $mqtt, Message\PINGREQ $pubcompObject);
 
-    public function pingresp(MQTT $mqtt, Message\PINGRESP $pubcomp_object);
+    public function pingresp(MQTT $mqtt, Message\PINGRESP $pubcompObject);
 
 }
-
-# EOF

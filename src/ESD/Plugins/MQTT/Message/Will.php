@@ -1,8 +1,9 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
+
 namespace ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\MqttException;
 use ESD\Plugins\MQTT\Utility;
@@ -59,12 +60,12 @@ class Will
             throw new MqttException('Topic/Message MUST NOT be empty in Will Message');
         }
 
-        Utility::CheckTopicName($topic);
+        Utility::checkTopicName($topic);
 
         $this->topic   = $topic;
         $this->message = $message;
 
-        Utility::CheckQoS($qos);
+        Utility::checkQoS($qos);
         $this->qos     = (int) $qos;
         $this->retain  = $retain ? 1 : 0;
     }
@@ -109,5 +110,3 @@ class Will
         return $var;
     }
 }
-
-# EOF

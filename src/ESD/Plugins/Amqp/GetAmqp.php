@@ -16,7 +16,7 @@ trait GetAmqp
 {
     /**
      * @param string $name
-     * @return \ESD\Core\Context\Context|mixed
+     * @return \ESD\Yii\Queue\Drivers\Amqp\Context|mixed
      * @throws AmqpException
      */
     public function amqp(string $name = 'default')

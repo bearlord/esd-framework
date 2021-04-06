@@ -1,21 +1,18 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
-
-
 namespace ESD\Plugins\MQTT\Exception;
+
 use ESD\Plugins\MQTT\MqttException;
 
 /**
- * Exception: Connect failed with return value
- *
- *
- *
+ * Class ConnectError
+ * @package ESD\Plugins\MQTT\Exception
  */
-class ConnectError extends MqttException {}
-
-
-# EOF
+class ConnectError extends MqttException
+{
+    
+}

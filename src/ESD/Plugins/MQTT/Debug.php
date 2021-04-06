@@ -1,6 +1,7 @@
 <?php
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
@@ -28,12 +29,12 @@ class Debug
      *
      * @var bool
      */
-    static protected $enabled = false;
+    protected static $enabled = false;
 
     /**
      * Enable Debug
      */
-    static public function Enable()
+    public static function enable()
     {
         self::$enabled = true;
     }
@@ -41,7 +42,7 @@ class Debug
     /**
      * Disable Debug
      */
-    static public function Disable()
+    public static function disable()
     {
         self::$enabled = false;
     }
@@ -51,14 +52,14 @@ class Debug
      *
      * @var int
      */
-    static protected $priority = self::WARN;
+    protected static $priority = self::WARN;
 
     /**
      * Log Priority
      *
      * @param int $priority
      */
-    static public function SetLogPriority($priority)
+    public static function setLogPriority($priority)
     {
         self::$priority = (int)$priority;
     }
@@ -73,10 +74,10 @@ class Debug
      * @param string $message
      * @param string $bin_dump If $bin_dump is not empty, hex/ascii char will be dumped
      */
-    static public function Log($priority, $message, $bin_dump = '')
+    public static function log($priority, $message, $bin_dump = '')
     {
         if ($bin_dump) {
-            $bin_dump = Utility::PrintHex($bin_dump, true, 16, true);
+            $bin_dump = Utility::printHex($bin_dump, true, 16, true);
             $message .= "\n" . $bin_dump;
         }
 
@@ -97,5 +98,3 @@ class Debug
         }
     }
 }
-
-# EOF

@@ -94,13 +94,13 @@ class MqttPack implements IPack, IMqtt
         if ($data instanceof Base) {
             $data = $data->build();
         } else {
-            $message = new Message\PUBLISH($this);
+            $message = new PUBLISH($this);
             $message->setDup(0);
             $message->setQos($this->mqttConfig->getServerQos());
             if ($topic == null && $this->mqttConfig->isUseRoute()) {
                 $message->setTopic($this->mqttConfig->getServerTopic() . "/" . getContextValue("uid"));
                 $message->setQos(getContextValue("qos"));
-                $message->setMsgID(getContextValue("msgId"));
+                $message->setMsgId(getContextValue("msgId"));
                 $data = $this->handler->pack($data);
             } else {
                 $message->setTopic($topic);
@@ -124,12 +124,12 @@ class MqttPack implements IPack, IMqtt
     {
         $uid = $this->getFdUid($fd);
         setContextValue("uid", $uid);
-        $message_object = $this->message_read($data);
-        switch ($message_object->getMessageType()) {
+        $messageObject = $this->messageRead($data);
+        switch ($messageObject->getMessageType()) {
             case Message::CONNECT:
                 $connack = new CONNACK($this);
-                if ($message_object instanceof CONNECT) {
-                    $connect = $message_object;
+                if ($messageObject instanceof CONNECT) {
+                    $connect = $messageObject;
                     if ($connect->getUserNameFlag()) {
                         list($auth, $uid) = $this->mqttAuth->auth($fd, $connect->username, $connect->password);
                         if ($auth) {
@@ -167,29 +167,29 @@ class MqttPack implements IPack, IMqtt
                     }
                 }
                 break;
+
             case Message::PUBLISH:
-                if ($message_object instanceof PUBLISH) {
-                    $publish = $message_object;
+                if ($messageObject instanceof PUBLISH) {
+                    $publish = $messageObject;
                     $qos = $publish->getQos();
                     $topic = $publish->getTopic();
                     $data = $publish->getMessage();
-                    $msgId = $publish->getMsgID();
+                    $msgId = $publish->getMsgId();
                     if (!$this->mqttConfig->isUseRoute()) {
                         $this->pub($topic, $data);
                         switch ($qos) {
                             case 1:
                                 $puback = new PUBACK($this);
-                                $puback->setMsgID($msgId);
+                                $puback->setMsgId($msgId);
                                 $this->autoBoostSend($fd, $puback);
                                 break;
                             case 2:
                                 $pubrec = new PUBREC($this);
-                                $pubrec->setMsgID($msgId);
+                                $pubrec->setMsgId($msgId);
                                 $this->autoBoostSend($fd, $pubrec);
                                 break;
                         }
                     } else {
-                        //这里将会当做路由信息
                         $clientData = new ClientData($fd, $portConfig->getBaseType(), $topic, $this->handler->upPack($data));
                         setContextValue("msgId", $msgId);
                         setContextValue("qos", $publish->getQos());
@@ -197,18 +197,20 @@ class MqttPack implements IPack, IMqtt
                     }
                 }
                 break;
+
             case Message::PUBREL:
-                if ($message_object instanceof PUBREL) {
-                    $pubrel = $message_object;
-                    $msgId = $pubrel->getMsgID();
+                if ($messageObject instanceof PUBREL) {
+                    $pubrel = $messageObject;
+                    $msgId = $pubrel->getMsgId();
                     $pubcomp = new PUBCOMP($this);
-                    $pubcomp->setMsgID($msgId);
+                    $pubcomp->setMsgId($msgId);
                     $this->autoBoostSend($fd, $pubcomp);
                 }
                 break;
+
             case Message::SUBSCRIBE:
-                if ($message_object instanceof SUBSCRIBE) {
-                    $subscribe = $message_object;
+                if ($messageObject instanceof SUBSCRIBE) {
+                    $subscribe = $messageObject;
                     $topics = $subscribe->getTopic();
                     $codes = [];
                     foreach ($topics as $topic => $qos) {
@@ -216,27 +218,30 @@ class MqttPack implements IPack, IMqtt
                         $this->addSub($topic, $uid);
                     }
                     $suback = new SUBACK($this);
-                    $suback->setMsgID($subscribe->getMsgID());
+                    $suback->setMsgId($subscribe->getMsgId());
                     $suback->setReturnCodes($codes);
                     $this->autoBoostSend($fd, $suback);
                 }
                 break;
+
             case Message::UNSUBSCRIBE:
-                if ($message_object instanceof UNSUBSCRIBE) {
-                    $unsubscribe = $message_object;
+                if ($messageObject instanceof UNSUBSCRIBE) {
+                    $unsubscribe = $messageObject;
                     $topics = $unsubscribe->getTopic();
                     foreach ($topics as $topic) {
                         $this->removeSub($topic, $uid);
                     }
                     $unsuback = new UNSUBACK($this);
-                    $unsuback->setMsgID($unsubscribe->getMsgID());
+                    $unsuback->setMsgId($unsubscribe->getMsgId());
                     $this->autoBoostSend($fd, $unsuback);
                 }
                 break;
+
             case Message::PINGREQ:
                 $pingresp = new PINGRESP($this);
                 $this->autoBoostSend($fd, $pingresp);
                 break;
+
             case Message::DISCONNECT:
                 Server::$instance->closeFd($fd);
                 break;
@@ -252,27 +257,27 @@ class MqttPack implements IPack, IMqtt
      * @return Base
      * @throws MqttException
      */
-    protected function message_read($data)
+    protected function messageRead($data)
     {
-        $cmd = Utility::ParseCommand(ord($data[0]));
-        $message_type = $cmd['message_type'];
+        $cmd = Utility::parseCommand(ord($data[0]));
+        $messageType = $cmd['message_type'];
         $pos = 1;
-        $remaining_length = Utility::DecodeLength($data, $pos);
-        $message_object = $this->getMessageObject($message_type);
-        $message_object->decode($data, $remaining_length);
-        return $message_object;
+        $remainingLength = Utility::decodeLength($data, $pos);
+        $messageObject = $this->getMessageObject($messageType);
+        $messageObject->decode($data, $remainingLength);
+        return $messageObject;
     }
 
     /**
      * Create Message\Base object
      *
-     * @param int $message_type
+     * @param int $messageType
      * @return Message\Base
      * @throws MqttException
      */
-    public function getMessageObject($message_type)
+    public function getMessageObject($messageType)
     {
-        return Message::Create($message_type, $this);
+        return Message::create($messageType, $this);
     }
 
     /**

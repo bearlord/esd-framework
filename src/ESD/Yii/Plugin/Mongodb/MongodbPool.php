@@ -75,7 +75,7 @@ class MongodbPool
     }
 
     /**
-     * @return PdoOneConfig
+     * @return Config
      */
     public function getConfig()
     {

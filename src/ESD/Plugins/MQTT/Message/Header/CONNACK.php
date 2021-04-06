@@ -1,10 +1,11 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message\Header;
+
 use ESD\Plugins\MQTT\Debug;
 use ESD\Plugins\MQTT\Exception\ConnectError;
 use ESD\Plugins\MQTT\MqttException;
@@ -20,65 +21,65 @@ class CONNACK extends Base
      *
      * @var int
      */
-    protected $reserved_flags = 0x00;
+    protected $reservedFlags = 0x00;
 
     /**
      * CONNACK does not have Packet Identifier
      *
      * @var bool
      */
-    protected $require_msgid = false;
+    protected $requireMsgId = false;
 
     /**
      * Session Present
      *
      * @var int
      */
-    protected $session_present = 0;
+    protected $sessionPresent = 0;
 
     /**
      * Connect Return code
      *
      * @var int
      */
-    protected $return_code = 0;
+    protected $returnCode = 0;
 
     /**
      * Default error definitions
      *
      * @var array
      */
-    static public $connect_errors = array(
-        0   =>  'Connection Accepted',
-        1   =>  'Connection Refused: unacceptable protocol version',
-        2   =>  'Connection Refused: identifier rejected',
-        3   =>  'Connection Refused: server unavailable',
-        4   =>  'Connection Refused: bad user name or password',
-        5   =>  'Connection Refused: not authorized',
+    public static $connectErrors = array(
+        0 => 'Connection Accepted',
+        1 => 'Connection Refused: unacceptable protocol version',
+        2 => 'Connection Refused: identifier rejected',
+        3 => 'Connection Refused: server unavailable',
+        4 => 'Connection Refused: bad user name or password',
+        5 => 'Connection Refused: not authorized',
     );
 
     /**
      * Decode Variable Header
      *
-     * @param string & $packet_data
+     * @param string & $packetData
      * @param int    & $pos
      * @return bool
      * @throws MqttException
      */
-    protected function decodeVariableHeader(& $packet_data, & $pos)
+    protected function decodeVariableHeader(&$packetData, &$pos)
     {
-        $this->session_present = ord($packet_data[2]) & 0x01;
+        $this->sessionPresent = ord($packetData[2]) & 0x01;
 
-        $this->return_code = ord($packet_data[3]);
+        $this->returnCode = ord($packetData[3]);
 
-        if ($this->return_code != 0) {
-            $error = isset(self::$connect_errors[$this->return_code]) ? self::$connect_errors[$this->return_code] : 'Unknown error';
-            Debug::Log(
+        if ($this->returnCode != 0) {
+            $error = isset(self::$connectErrors[$this->returnCode]) ? self::$connectErrors[$this->returnCode] : 'Unknown error';
+            Debug::log(
                 Debug::ERR,
                 sprintf(
                     "Connection failed! (Error: 0x%02x 0x%02x|%s)",
-                    ord($packet_data[2]),
-                    $this->return_code,
+                    ord($packetData[2]),
+                    $this->returnCode,
                     $error
                 )
             );
@@ -90,10 +91,10 @@ class CONNACK extends Base
             throw new ConnectError($error);
         }
 
-        if ($this->session_present) {
-            Debug::Log(Debug::DEBUG, "CONNACK: Session Present Flag: ON");
+        if ($this->sessionPresent) {
+            Debug::log(Debug::DEBUG, "CONNACK: Session Present Flag: ON");
         } else {
-            Debug::Log(Debug::DEBUG, "CONNACK: Session Present Flag: OFF");
+            Debug::log(Debug::DEBUG, "CONNACK: Session Present Flag: OFF");
         }
     }
 
@@ -105,23 +106,24 @@ class CONNACK extends Base
     protected function buildVariableHeader()
     {
         $buffer = "";
-        $buffer .= chr($this->session_present);
-        $buffer .= chr($this->return_code);
+        $buffer .= chr($this->sessionPresent);
+        $buffer .= chr($this->returnCode);
         return $buffer;
     }
 
     /**
-     * @param $return_code
+     * @param $returnCode
      */
-    public function setReturnCode($return_code)
+    public function setReturnCode($returnCode)
     {
-        $this->return_code = $return_code;
+        $this->returnCode = $returnCode;
     }
 
-    public function setSessionPresent($session_present)
+    /**
+     * @param $sessionPresent
+     */
+    public function setSessionPresent($sessionPresent)
     {
-        $this->session_present = $session_present;
+        $this->sessionPresent = $sessionPresent;
     }
 }
-
-# EOF

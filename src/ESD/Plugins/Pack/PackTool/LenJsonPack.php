@@ -11,8 +11,6 @@ use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Server;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\PackException;
-use ESD\Yii\Helpers\Json;
-use ESD\Yii\Yii;
 
 /**
  * Class LenJsonPack
@@ -34,7 +32,8 @@ class LenJsonPack extends AbstractPack
     public function pack($data, PortConfig $portConfig, ?string $topic = null)
     {
         $this->portConfig = $portConfig;
-        return $this->encode(Json::encode($data));
+        return $this->encode(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+//        return $this->encode(json_encode($data, JSON_UNESCAPED_UNICODE));
     }
 
     /**
@@ -52,7 +51,7 @@ class LenJsonPack extends AbstractPack
         $this->portConfig = $portConfig;
         $value = json_decode($this->decode($data), true);
         if (empty($value)) {
-            $this->warn(Yii::t('esd', 'Packet unpack failed'));
+            $this->warn('Packet unpack failed');
             return null;
         }
         $clientData = new ClientData($fd, $portConfig->getBaseType(), $value['p'], $value);

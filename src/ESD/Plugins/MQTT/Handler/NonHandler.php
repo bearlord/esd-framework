@@ -18,7 +18,7 @@ class NonHandler implements Handler
      */
     public function pack($data): string
     {
-        return $data."";
+        return $data . "";
     }
 
     /**
@@ -27,6 +27,6 @@ class NonHandler implements Handler
      */
     public function upPack($data)
     {
-       return $data;
+        return $data;
     }
 }

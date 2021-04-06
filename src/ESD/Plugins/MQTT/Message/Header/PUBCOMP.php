@@ -1,10 +1,11 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message\Header;
+
 use ESD\Plugins\MQTT\Debug;
 use ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Utility;
@@ -20,29 +21,27 @@ class PUBCOMP extends Base
      *
      * @var int
      */
-    protected $reserved_flags = 0x00;
+    protected $reservedFlags = 0x00;
 
     /**
      * PUBCOMP requires have Packet Identifier
      *
      * @var bool
      */
-    protected $require_msgid = true;
+    protected $requireMsgId = true;
 
     /**
      * Decode Variable Header
      *
      * Packet Identifier
      *
-     * @param string & $packet_data
+     * @param string & $packetData
      * @param int    & $pos
      * @return bool
      */
-    protected function decodeVariableHeader(& $packet_data, & $pos)
+    protected function decodeVariableHeader(&$packetData, &$pos)
     {
-        return $this->decodePacketIdentifier($packet_data, $pos);
+        return $this->decodePacketIdentifier($packetData, $pos);
     }
 
 }
-
-# EOF

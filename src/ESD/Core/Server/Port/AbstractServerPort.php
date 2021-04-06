@@ -311,7 +311,6 @@ abstract class AbstractServerPort
         Server::$instance->getProcessManager()->getCurrentProcess()->waitReady();
         try {
             if (isset($frame->code)) {
-                //是个CloseFrame
                 $this->onWsMessage(new WebSocketCloseFrame($frame));
             } else {
                 $this->onWsMessage(new WebSocketFrame($frame));

@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message\Header;
@@ -10,7 +10,6 @@ use ESD\Plugins\MQTT\Debug;
 use ESD\Plugins\MQTT\MqttException;
 use ESD\Plugins\MQTT\MQTT;
 use ESD\Plugins\MQTT\Utility;
-
 
 /**
  * Fixed Header definition for CONNECT
@@ -24,14 +23,14 @@ class CONNECT extends Base
      *
      * @var int
      */
-    protected $reserved_flags = 0x00;
+    protected $reservedFlags = 0x00;
 
     /**
      * CONNECT does not have Packet Identifier
      *
      * @var bool
      */
-    protected $require_msgid = false;
+    protected $requireMsgId = false;
 
     /**
      * Clean Session
@@ -47,45 +46,70 @@ class CONNECT extends Base
      */
     protected $keepalive = 60;
 
-    protected $will_flag;
-    protected $will_qos;
-    protected $will_retain;
-    protected $user_name_flag;
-    protected $password_flag;
+    protected $willFlag;
 
+    protected $willQos;
+
+    protected $willRetain;
+
+    protected $usernameFlag;
+
+    protected $passwordFlag;
+
+    /**
+     * @return int
+     */
     public function getClean()
     {
         return $this->clean;
     }
 
+    /**
+     * @return int
+     */
     public function getKeepAlive()
     {
         return $this->keepalive;
     }
 
+    /**
+     * @return mixed
+     */
     public function getWillFlag()
     {
-        return $this->will_flag;
+        return $this->willFlag;
     }
 
+    /**
+     * @return mixed
+     */
     public function getWillQos()
     {
-        return $this->will_qos;
+        return $this->willQos;
     }
 
+    /**
+     * @return mixed
+     */
     public function getWillRetain()
     {
-        return $this->will_retain;
+        return $this->willRetain;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUserNameFlag()
     {
-        return $this->user_name_flag;
+        return $this->usernameFlag;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPassWordFlag()
     {
-        return $this->password_flag;
+        return $this->passwordFlag;
     }
 
     /**
@@ -122,10 +146,10 @@ class CONNECT extends Base
 
         # Protocol Name
         if ($this->message->mqtt->version() == MQTT::VERSION_3_1_1) {
-            $buffer .= Utility::PackStringWithLength('MQTT');
+            $buffer .= Utility::packStringWithLength('MQTT');
 
         } else {
-            $buffer .= Utility::PackStringWithLength('MQIsdp');
+            $buffer .= Utility::packStringWithLength('MQIsdp');
         }
         # End of Protocol Name
 
@@ -165,38 +189,36 @@ class CONNECT extends Base
     /**
      * Decode Variable Header
      *
-     * @param string & $packet_data
+     * @param string & $packetData
      * @param int & $pos
      * @return bool
      * @throws MqttException
      */
-    protected function decodeVariableHeader(& $packet_data, & $pos)
+    protected function decodeVariableHeader(& $packetData, & $pos)
     {
-        Debug::Log(Debug::DEBUG, "CONNECT", $packet_data);
+        Debug::log(Debug::DEBUG, "CONNECT", $packetData);
         $pos++;
         //Protocol Name
-        $length = ord($packet_data[$pos]);
+        $length = ord($packetData[$pos]);
         $pos += $length + 1;
         //Protocol Level
-        $level = ord($packet_data[$pos]);
+        $level = ord($packetData[$pos]);
         $pos++;
         //Connect Flags
-        $flags = ord($packet_data[$pos]);
+        $flags = ord($packetData[$pos]);
         $reserved = $flags & 0x01;
         $this->clean = ($flags & 0x02) >> 1;
-        $this->will_flag = ($flags & 0x04) >> 2;
-        $this->will_qos = ($flags & 0x18) >> 3;
-        $this->will_retain = ($flags & 0x20) >> 5;
-        $this->user_name_flag = ($flags & 0x80) >> 7;
-        $this->password_flag = ($flags & 0x40) >> 6;
+        $this->willFlag = ($flags & 0x04) >> 2;
+        $this->willQos = ($flags & 0x18) >> 3;
+        $this->willRetain = ($flags & 0x20) >> 5;
+        $this->usernameFlag = ($flags & 0x80) >> 7;
+        $this->passwordFlag = ($flags & 0x40) >> 6;
         $pos++;
         //Keep Alive
-        $keep_alive_msb = ord($packet_data[$pos]);
+        $keep_alive_msb = ord($packetData[$pos]);
         $pos++;
-        $keep_alive_lsb = ord($packet_data[$pos]);
+        $keep_alive_lsb = ord($packetData[$pos]);
         $this->keepalive = $keep_alive_msb * 128 + $keep_alive_lsb;
         $pos++;
     }
 }
-
-# EOF

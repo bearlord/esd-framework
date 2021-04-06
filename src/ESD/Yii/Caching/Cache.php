@@ -201,6 +201,7 @@ abstract class Cache extends Component implements CacheInterface
             $keyMap[$key] = $this->buildKey($key);
         }
         $values = $this->getValues(array_values($keyMap));
+
         $results = [];
         foreach ($keyMap as $key => $newKey) {
             $results[$key] = false;

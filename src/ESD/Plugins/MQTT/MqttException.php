@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT;
@@ -13,6 +13,3 @@ class MqttException extends \ESD\Core\Exception
 {
 
 }
-
-
-# EOF

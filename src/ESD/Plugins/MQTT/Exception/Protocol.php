@@ -1,21 +1,18 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
-
-
 namespace ESD\Plugins\MQTT\Exception;
+
 use ESD\Plugins\MQTT\MqttException;
 
 /**
- * Exception: Protocol Exception
- *
- * Those clients MUST close connections.
- *
+ * Class Protocol
+ * @package ESD\Plugins\MQTT\Exception
  */
-class Protocol extends MqttException {}
-
-
-# EOF
+class Protocol extends MqttException
+{
+    
+}

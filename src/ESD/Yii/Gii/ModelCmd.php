@@ -41,6 +41,7 @@ class ModelCmd extends Command
         $this->addOption('tableName', null, InputOption::VALUE_REQUIRED, 'table name?', '');
         $this->addOption('namespace', 'nc', InputOption::VALUE_OPTIONAL, 'namespace?', 'App\Model');
         $this->addOption('modelClass', 'mc', InputOption::VALUE_OPTIONAL, 'model class?', '');
+        $this->addOption('modelSuffix', 'ms', InputOption::VALUE_OPTIONAL, 'model suffix?', '');
         $this->addOption('standardizeCapitals', null, InputOption::VALUE_OPTIONAL, 'standardize capitals?', 0);
         $this->addOption('singularize', null, InputOption::VALUE_OPTIONAL, 'singularize?', 0);
     }
@@ -60,6 +61,7 @@ class ModelCmd extends Command
         $tableName = $input->getOption("tableName");
         $namespace = $input->getOption('namespace');
         $modelClass = $input->getOption('modelClass');
+        $modelSuffix = $input->getOption('modelSuffix');
         $standardizeCapitals = $input->getOption('standardizeCapitals');
         $singularize = $input->getOption('singularize');
 
@@ -92,6 +94,7 @@ class ModelCmd extends Command
             'tableName' => $tableName,
             'ns' => $namespace,
             'modelClass' => $modelClass,
+            'modelSuffix' => $modelSuffix,
             'generateLabelsFromComments' => $generateLabelsFromComments,
             'useTablePrefix' => $useTablePrefix,
             'standardizeCapitals' => $standardizeCapitals,

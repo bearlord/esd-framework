@@ -14,13 +14,13 @@ namespace ESD\Plugins\MQTT;
 class PacketIdentifier
 {
     /**
-     * @var ifPacketIdentifierStore
+     * @var IfPacketIdentifierStore
      */
     protected $pi;
 
     public function __construct()
     {
-        $this->pi = new PacketIdentifierStore_Static();
+        $this->pi = new PacketIdentifierStoreStatic();
     }
 
     /**
@@ -54,5 +54,3 @@ class PacketIdentifier
         $this->pi->set($new_id);
     }
 }
-
-# EOF

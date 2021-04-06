@@ -1,10 +1,11 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
+
 use ESD\Plugins\MQTT\MqttException;
 use ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Utility;
@@ -18,22 +19,35 @@ use ESD\Plugins\MQTT\Utility;
  */
 class SUBSCRIBE extends Base
 {
-    protected $message_type = Message::SUBSCRIBE;
-    protected $protocol_type = self::WITH_PAYLOAD;
+    protected $messageType = Message::SUBSCRIBE;
+    protected $protocolType = self::WITH_PAYLOAD;
 
     protected $topics = array();
 
-    public function addTopic($topic_filter, $qos_max)
+    /**
+     * @param $topicFilter
+     * @param $qosMax
+     * @throws MqttException
+     */
+    public function addTopic($topicFilter, $qosMax)
     {
-        Utility::CheckTopicFilter($topic_filter);
-        Utility::CheckQoS($qos_max);
-        $this->topics[$topic_filter] = $qos_max;
+        Utility::checkTopicFilter($topicFilter);
+        Utility::checkQoS($qosMax);
+        $this->topics[$topicFilter] = $qosMax;
     }
 
+    /**
+     * @return array
+     */
     public function getTopic()
     {
         return $this->topics;
     }
+
+    /**
+     * @return string
+     * @throws MqttException
+     */
     protected function payload()
     {
         if (empty($this->topics)) {
@@ -45,25 +59,26 @@ class SUBSCRIBE extends Base
         }
 
         $buffer = "";
-
         # Payload
-        foreach ($this->topics as $topic=>$qos_max) {
-            $buffer .= Utility::PackStringWithLength($topic);
-            $buffer .= chr($qos_max);
+        foreach ($this->topics as $topic => $qosMax) {
+            $buffer .= Utility::packStringWithLength($topic);
+            $buffer .= chr($qosMax);
         }
-
         return $buffer;
     }
 
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    /**
+     * @param $packetData
+     * @param $payloadPos
+     * @return bool|void
+     */
+    protected function decodePayload(&$packetData, &$payloadPos)
     {
-        while (isset($packet_data[$payload_pos])) {
-            $topic = Utility::UnpackStringWithLength($packet_data, $payload_pos);
-            $qos = ord($packet_data[$payload_pos]);
+        while (isset($packetData[$payloadPos])) {
+            $topic = Utility::unpackStringWithLength($packetData, $payloadPos);
+            $qos = ord($packetData[$payloadPos]);
             $this->topics[$topic] = $qos;
-            ++$payload_pos;
+            ++$payloadPos;
         }
     }
 }
-
-# EOF

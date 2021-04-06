@@ -161,7 +161,7 @@ class Cache extends \ESD\Yii\Caching\Cache
      */
     protected function getValues($keys)
     {
-        $response = $this->getReplica()->executeCommand('MGET', $keys);
+        $response = $this->getReplica()->executeCommand('MGET', [$keys]);
         $result = [];
         $i = 0;
         foreach ($keys as $key) {
@@ -188,19 +188,13 @@ class Cache extends \ESD\Yii\Caching\Cache
      */
     protected function setValues($data, $expire)
     {
-        $args = [];
-        foreach ($data as $key => $value) {
-            $args[] = $key;
-            $args[] = $value;
-        }
-
         $failedKeys = [];
         if ($expire == 0) {
-            $this->redis->executeCommand('MSET', $args);
+            $this->redis->executeCommand('MSET', [$data]);
         } else {
             $expire = (int) ($expire * 1000);
             $this->redis->executeCommand('MULTI');
-            $this->redis->executeCommand('MSET', $args);
+            $this->redis->executeCommand('MSET', [$args]);
             $index = [];
             foreach ($data as $key => $value) {
                 $this->redis->executeCommand('PEXPIRE', [$key, $expire]);

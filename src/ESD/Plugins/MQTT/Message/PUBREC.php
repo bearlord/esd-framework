@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -16,10 +16,8 @@ use ESD\Plugins\MQTT\Message;
  */
 class PUBREC extends Base
 {
-    protected $message_type = Message::PUBREC;
-    protected $protocol_type = self::WITH_VARIABLE;
-    protected $read_bytes = 4;
+    protected $messageType = Message::PUBREC;
+    protected $protocolType = self::WITH_VARIABLE;
+    protected $readBytes = 4;
 
 }
-
-# EOF

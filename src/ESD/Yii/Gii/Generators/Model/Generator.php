@@ -34,6 +34,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     public $ns = 'App\Model';
     public $tableName;
     public $modelClass;
+    public $modelSuffix;
     public $baseClass = 'ESD\Yii\Db\ActiveRecord';
     public $generateRelations = self::RELATIONS_ALL;
     public $generateRelationsFromCurrentSchema = true;
@@ -943,6 +944,10 @@ class Generator extends \ESD\Yii\Gii\Generator
 
         if ($this->singularize) {
             $this->classNames[$fullTableName] = Inflector::singularize($this->classNames[$fullTableName]);
+        }
+
+        if (!empty($this->modelSuffix)) {
+            $this->classNames[$fullTableName] = $this->classNames[$fullTableName]. $this->modelSuffix;
         }
 
         return $this->classNames[$fullTableName];

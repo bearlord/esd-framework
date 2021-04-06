@@ -1,7 +1,7 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
@@ -15,8 +15,6 @@ use ESD\Plugins\MQTT\Message;
  */
 class PINGREQ extends Base
 {
-    protected $message_type = Message::PINGREQ;
-    protected $protocol_type = self::FIXED_ONLY;
+    protected $messageType = Message::PINGREQ;
+    protected $protocolType = self::FIXED_ONLY;
 }
-
-# EOF

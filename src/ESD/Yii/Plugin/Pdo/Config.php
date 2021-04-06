@@ -63,7 +63,7 @@ class Config extends BaseConfig
     /**
      * @var Schema cache component
      */
-    protected $schemaCache = "";
+    protected $schemaCache = "cache";
 
     /**
      * Config constructor.
@@ -248,7 +248,9 @@ class Config extends BaseConfig
      */
     public function setSchemaCache($cache): void
     {
-        $this->schemaCache = $cache;
+        if (!empty($cache)) {
+            $this->schemaCache = $cache;
+        }
     }
 
     /**

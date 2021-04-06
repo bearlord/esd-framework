@@ -1,12 +1,12 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
-use ESD\Plugins\MQTT\Message;
 
+use ESD\Plugins\MQTT\Message;
 
 /**
  * Message UNSUBACK
@@ -16,10 +16,8 @@ use ESD\Plugins\MQTT\Message;
  */
 class UNSUBACK extends Base
 {
-    protected $message_type = Message::UNSUBACK;
-    protected $protocol_type = self::FIXED_ONLY;
-    protected $read_bytes = 4;
+    protected $messageType = Message::UNSUBACK;
+    protected $protocolType = self::FIXED_ONLY;
+    protected $readBytes = 4;
 
 }
-
-# EOF

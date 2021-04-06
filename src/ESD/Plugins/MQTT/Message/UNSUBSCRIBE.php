@@ -1,10 +1,11 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
+
 use ESD\Plugins\MQTT\MqttException;
 use ESD\Plugins\MQTT\Message;
 use ESD\Plugins\MQTT\Utility;
@@ -18,22 +19,30 @@ use ESD\Plugins\MQTT\Utility;
  */
 class UNSUBSCRIBE extends Base
 {
-    protected $message_type = Message::UNSUBSCRIBE;
-    protected $protocol_type = self::WITH_PAYLOAD;
+    protected $messageType = Message::UNSUBSCRIBE;
+
+    protected $protocolType = self::WITH_PAYLOAD;
 
     protected $topics = array();
 
-    public function addTopic($topic_filter)
+    public function addTopic($topicFilter)
     {
-        Utility::CheckTopicFilter($topic_filter);
-        $this->topics[] = $topic_filter;
+        Utility::checkTopicFilter($topicFilter);
+        $this->topics[] = $topicFilter;
     }
 
+    /**
+     * @return array
+     */
     public function getTopic()
     {
         return $this->topics;
     }
 
+    /**
+     * @return string
+     * @throws MqttException
+     */
     protected function payload()
     {
         if (empty($this->topics)) {
@@ -45,19 +54,20 @@ class UNSUBSCRIBE extends Base
         }
 
         $buffer = "";
-
         # Payload
         foreach ($this->topics as $topic) {
-            $buffer .= Utility::PackStringWithLength($topic);
+            $buffer .= Utility::packStringWithLength($topic);
         }
-
         return $buffer;
     }
 
-    protected function decodePayload(& $packet_data, & $payload_pos)
+    /**
+     * @param $packetData
+     * @param $payloadPos
+     * @return bool|void
+     */
+    protected function decodePayload(&$packetData, &$payloadPos)
     {
-        $this->topics = $this->readUTF($packet_data);
+        $this->topics = $this->readUTF($packetData);
     }
 }
-
-# EOF

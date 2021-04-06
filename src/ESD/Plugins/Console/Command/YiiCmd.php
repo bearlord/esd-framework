@@ -64,6 +64,7 @@ class YiiCmd extends Command
 
         $route = $input->getArgument('route');
         unset($arguments['command'], $arguments['route']);
+        
         $content = Application::instance()->runAction($route, $arguments);
 
         $io->success(sprintf("Route %s execute success", $route));

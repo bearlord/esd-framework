@@ -1,10 +1,11 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message\Header;
+
 use ESD\Plugins\MQTT\Debug;
 use ESD\Plugins\MQTT\MqttException;
 use ESD\Plugins\MQTT\Utility;
@@ -25,35 +26,35 @@ class Base
      *
      * @var int
      */
-    protected $reserved_flags = 0x0;
+    protected $reservedFlags = 0x0;
 
     /**
      * Remaining Length
      *
      * @var int
      */
-    protected $remaining_length = 0;
+    protected $remainingLength = 0;
 
     /**
      * Encoded Remaining Length
      *
      * @var string
      */
-    protected $remaining_length_bytes = '';
+    protected $remainingLengthBytes = '';
 
     /**
      * Is Packet Identifier A MUST
      *
      * @var bool
      */
-    protected $require_msgid = false;
+    protected $requireMsgId = false;
 
     /**
      * Packet Identifier
      *
      * @var int
      */
-    public $msgid = 0;
+    public $msgId = 0;
 
     /**
      *
@@ -69,29 +70,29 @@ class Base
     /**
      * Decode Packet Header and returns payload position.
      *
-     * @param string & $packet_data
-     * @param int    $remaining_length
-     * @param int    & $payload_pos
+     * @param string & $packetData
+     * @param int $remainingLength
+     * @param int    & $payloadPos
      * @throws \ESD\Plugins\MQTT\MqttException
      */
-    final public function decode(& $packet_data, $remaining_length, & $payload_pos)
+    final public function decode(&$packetData, $remainingLength, &$payloadPos)
     {
-        $cmd = Utility::ParseCommand(ord($packet_data[0]));
-        $message_type = $cmd['message_type'];
-        if ($this->message->getMessageType() != $message_type) {
+        $cmd = Utility::parseCommand(ord($packetData[0]));
+        $messageType = $cmd['message_type'];
+        if ($this->message->getMessageType() != $messageType) {
             throw new MqttException('Unexpected Control Packet Type');
         }
 
-        $flags        = $cmd['flags'];
+        $flags = $cmd['flags'];
         $this->setFlags($flags);
 
         $pos = 1;
-        $rl_len = strlen(($this->remaining_length_bytes = Utility::EncodeLength($remaining_length)));
+        $rl_len = strlen(($this->remainingLengthBytes = Utility::encodeLength($remainingLength)));
         $pos += $rl_len;
 
-        $this->remaining_length = $remaining_length;
-        $this->decodeVariableHeader($packet_data, $pos);
-        $payload_pos = $pos;
+        $this->remainingLength = $remainingLength;
+        $this->decodeVariableHeader($packetData, $pos);
+        $payloadPos = $pos;
     }
 
     /**
@@ -103,7 +104,7 @@ class Base
      */
     protected function setFlags($flags)
     {
-        if ($flags != $this->reserved_flags) {
+        if ($flags != $this->reservedFlags) {
             throw new MqttException('Flags mismatch.');
         }
 
@@ -113,11 +114,11 @@ class Base
     /**
      * Decode Variable Header
      *
-     * @param string & $packet_data
+     * @param string & $packetData
      * @param int    & $pos
      * @return bool
      */
-    protected function decodeVariableHeader(& $packet_data, & $pos)
+    protected function decodeVariableHeader(&$packetData, &$pos)
     {
         return true;
     }
@@ -139,8 +140,8 @@ class Base
      */
     public function setRemainingLength($length)
     {
-        $this->remaining_length = $length;
-        $this->remaining_length_bytes = Utility::EncodeLength($this->remaining_length);
+        $this->remainingLength = $length;
+        $this->remainingLengthBytes = Utility::encodeLength($this->remainingLength);
     }
 
     /**
@@ -161,7 +162,7 @@ class Base
      */
     public function getRemainingLength()
     {
-        return $this->remaining_length;
+        return $this->remainingLength;
     }
 
     /**
@@ -171,24 +172,24 @@ class Base
      */
     public function getFullLength()
     {
-        $cmd_length = 1;
+        $cmdLength = 1;
 
-        $rl_length = strlen($this->remaining_length_bytes);
+        $rlLength = strlen($this->remainingLengthBytes);
 
-        return $cmd_length + $rl_length + $this->remaining_length;
+        return $cmdLength + $rlLength + $this->remainingLength;
     }
 
     /**
      * Set Packet Identifier
      *
-     * @param int $msgid
+     * @param int $msgId
      * @throws MqttException
      */
-    public function setMsgID($msgid)
+    public function setMsgId($msgId)
     {
-        Utility::CheckPacketIdentifier($msgid);
+        Utility::checkPacketIdentifier($msgId);
 
-        $this->msgid = $msgid;
+        $this->msgid = $msgId;
     }
 
     /**
@@ -196,7 +197,7 @@ class Base
      *
      * @return int
      */
-    public function getMsgID()
+    public function getMsgId()
     {
         return $this->msgid;
     }
@@ -212,7 +213,7 @@ class Base
         $buffer = '';
         # Variable Header
         # Packet Identifier
-        if ($this->require_msgid) {
+        if ($this->requireMsgId) {
             $buffer .= $this->packPacketIdentifer();
         }
 
@@ -225,14 +226,14 @@ class Base
             throw new MqttException('Invalid Packet Identifier');
         }
 
-        Debug::Log(Debug::DEBUG, 'msgid='.$this->msgid);
+        Debug::log(Debug::DEBUG, 'msgid=' . $this->msgid);
         return pack('n', $this->msgid);
     }
 
-    final protected function decodePacketIdentifier(& $packet_data, & $pos)
+    final protected function decodePacketIdentifier(&$packetData, &$pos)
     {
-        $msgid = Utility::ExtractUShort($packet_data, $pos);
-        $this->setMsgID($msgid);
+        $msgId = Utility::extractUShort($packetData, $pos);
+        $this->setMsgId($msgId);
 
         return true;
     }
@@ -249,14 +250,12 @@ class Base
         # Control Packet Type
         $cmd = $this->getMessageType() << 4;
 
-        $cmd |= ($this->reserved_flags & 0x0F);
+        $cmd |= ($this->reservedFlags & 0x0F);
 
-        $header = chr($cmd) . $this->remaining_length_bytes;
+        $header = chr($cmd) . $this->remainingLengthBytes;
 
         $header .= $this->buildVariableHeader();
 
         return $header;
     }
 }
-
-# EOF

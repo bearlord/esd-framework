@@ -1,12 +1,12 @@
 <?php
-
 /**
- * MQTT Client
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
-use ESD\Plugins\MQTT\Message;
 
+use ESD\Plugins\MQTT\Message;
 
 /**
  * Message CONNACK
@@ -17,22 +17,20 @@ use ESD\Plugins\MQTT\Message;
  */
 class CONNACK extends Base
 {
-    protected $message_type = Message::CONNACK;
-    protected $protocol_type = self::WITH_VARIABLE;
-    protected $read_bytes = 4;
+    protected $messageType = Message::CONNACK;
+    protected $protocolType = self::WITH_VARIABLE;
+    protected $readBytes = 4;
 
     /**
-     * @param $return_code
+     * @param $returnCode
      */
-    public function setReturnCode($return_code)
+    public function setReturnCode($returnCode)
     {
-        $this->header->setReturnCode($return_code);
+        $this->header->setReturnCode($returnCode);
     }
 
-    public function setSessionPresent($session_present)
+    public function setSessionPresent($sessionPresent)
     {
-        $this->header->setSessionPresent($session_present);
+        $this->header->setSessionPresent($sessionPresent);
     }
 }
-
-# EOF
