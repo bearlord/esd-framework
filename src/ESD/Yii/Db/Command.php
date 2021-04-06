@@ -1122,16 +1122,13 @@ class Command extends Component
                     $profile and Yii::endProfile($rawSql, __METHOD__);
 
                     $this->refreshTableSchema();
+                    return $n;
                 }
             } catch (Exception $e2) {
                 throw $e2;
             } catch (Exception $e) {
                 throw $e;
             }
-
-
-            $profile and Yii::endProfile($rawSql, __METHOD__);
-            throw $e;
         }
     }
 
