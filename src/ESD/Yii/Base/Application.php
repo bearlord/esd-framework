@@ -139,8 +139,14 @@ class Application extends ServiceLocator
         }
 
         $this->setComponents($newConfig['components']);
-        
+
+        //Instance log component, and crete object ESD\Yii\Log\Logger, set property as Logger::flushInterval, logger::traceLevel.
+        //If ESD\Yii\Log\Logger is created, it can be stored in container. the next time to be created, it will return
+        //the stored object that kept the defined propertied.
+        //If don't this, ESD\Yii\Log\Logger would not be created, 'flushInterval' and 'traceLevel' would not be set customize value
+        //but default value.
         $this->getLog();
+
         unset($newConfig);
     }
 
