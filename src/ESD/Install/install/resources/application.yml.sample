@@ -17,15 +17,15 @@ esd:
     workerNum: 8
     maxConn: 65535
     debug: true
-    document_root: /root/esd-framework-demo/web
-    enable_static_handler: true
+    documentRoot: /root/esd-framework-demo/web
+    enableStaticHandler: true
 
   port:
     http:
       host: 0.0.0.0
       port: 8080
-      open_http_protocol: true
-      sock_type: 1
+      openHttpProtocol: true
+      sockType: 1
 
     https:
       host: 0.0.0.0

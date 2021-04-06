@@ -1097,6 +1097,39 @@ class Command extends Component
 
             return $n;
         } catch (Exception $e) {
+            try {
+                if ($this->reconnectTimes < $this->reconnectMaxTimes && $this->isBreak($e)) {
+                    ++$this->reconnectTimes;
+
+                    Yii::debug(sprintf("Reconnect times ...%d", $this->reconnectTimes));
+
+                    $this->db->close();
+                    $this->db->open();
+
+                    //PDO handle changed with new PDO connection, so pdoStatement need to reacquire.
+                    //'prepare' and 'bindPendingParams' function makes no sense but just to generate new pdoStatement
+                    //'rawSql' is same as before.
+                    $this->pdoStatement = $this->db->pdo->prepare($this->getSql());
+                    $this->bindPendingParams();
+                    list($profile, $rawSql) = $this->logQuery(__METHOD__);
+
+                    $this->internalExecute($rawSql);
+                    $n = $this->pdoStatement->rowCount();
+
+                    $contextKey = sprintf("Pdo:%s", $this->db->poolName);
+                    setContextValue($contextKey, $this->db);
+
+                    $profile and Yii::endProfile($rawSql, __METHOD__);
+
+                    $this->refreshTableSchema();
+                }
+            } catch (Exception $e2) {
+                throw $e2;
+            } catch (Exception $e) {
+                throw $e;
+            }
+
+
             $profile and Yii::endProfile($rawSql, __METHOD__);
             throw $e;
         }

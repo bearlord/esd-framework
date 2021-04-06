@@ -68,7 +68,7 @@ class StatusCmd extends Command
                     PHP_VERSION,
                     SWOOLE_VERSION,
                     Server::$version,
-                    $this->config->get('esd.server.worker_num', 0),
+                    $this->config->get('esd.server.workerNum', 0),
                 ]
             ]
         );
