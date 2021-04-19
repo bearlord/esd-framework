@@ -835,7 +835,7 @@ class PortConfig extends BaseConfig
             }
         }
         if ($count > 1) {
-            throw new ConfigException("PortConfig中只能指定一种协议");
+            throw new ConfigException("Only one protocol can be specified in PortConfig ");
         }
         if ($this->isEnableReusePort()) {
             $build['enable_reuse_port'] = $this->isEnableReusePort();
@@ -942,4 +942,24 @@ class PortConfig extends BaseConfig
         }
         return "unknown";
     }
+
+    protected $autoSendReturnValue;
+
+    /**
+     * @return mixed
+     */
+    public function getAutoSendReturnValue()
+    {
+        return $this->autoSendReturnValue;
+    }
+
+    /**
+     * @param mixed $autoSendReturnValue
+     */
+    public function setAutoSendReturnValue($autoSendReturnValue): void
+    {
+        $this->autoSendReturnValue = $autoSendReturnValue;
+    }
+
+
 }
