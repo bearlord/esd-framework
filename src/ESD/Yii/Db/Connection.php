@@ -1088,7 +1088,7 @@ class Connection extends Component
     /**
      * @var string
      */
-    public string $fingerPrint = '';
+    public $fingerPrint = '';
 
     /**
      * Get Fingerprint
