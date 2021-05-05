@@ -4,7 +4,7 @@
  * @author tmtbe <565364226@qq.com>
  */
 
-namespace ESD\Plugins\JsonRpc;
+namespace ESD\Plugins\JsonRpc\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 
