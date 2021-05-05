@@ -205,7 +205,9 @@ class AnnotationRoute implements IRoute
      */
     public function getControllerName()
     {
-        if ($this->clientData == null) return null;
+        if ($this->clientData == null) {
+            return null;
+        }
         return $this->clientData->getControllerName();
     }
 
