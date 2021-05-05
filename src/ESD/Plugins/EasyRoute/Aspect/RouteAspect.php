@@ -115,9 +115,11 @@ class RouteAspect extends OrderAspect
             if (!$routeTool->handleClientData($clientData, $easyRouteConfig)) return;
             $controllerInstance = $this->getController($routeTool->getControllerName());
             $clientData->setResponseRaw($controllerInstance->handle($routeTool->getControllerName(), $routeTool->getMethodName(), $routeTool->getParams()));
+
             if ($this->filterManager->filter(AbstractFilter::FILTER_ROUTE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
                 return;
             }
+            
             $clientData->getResponse()->append($clientData->getResponseRaw());
             $this->filterManager->filter(AbstractFilter::FILTER_PRO, $clientData);
         } catch (\Throwable $e) {

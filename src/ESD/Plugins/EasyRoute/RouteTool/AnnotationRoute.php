@@ -13,6 +13,7 @@ use ESD\Plugins\EasyRoute\Annotation\ModelAttribute;
 use ESD\Plugins\EasyRoute\Annotation\PathVariable;
 use ESD\Plugins\EasyRoute\Annotation\RequestBody;
 use ESD\Plugins\EasyRoute\Annotation\RequestFormData;
+use ESD\Plugins\EasyRoute\Annotation\RequestJsonRpc;
 use ESD\Plugins\EasyRoute\Annotation\RequestParam;
 use ESD\Plugins\EasyRoute\Annotation\RequestRaw;
 use ESD\Plugins\EasyRoute\Annotation\RequestRawJson;
@@ -118,7 +119,9 @@ class AnnotationRoute implements IRoute
                     if ($annotation instanceof PathVariable) {
                         $result = $vars[$annotation->value] ?? null;
                         if ($annotation->required) {
-                            if ($result == null) throw new RouteException("path {$annotation->value} not find");
+                            if ($result == null) {
+                                throw new RouteException("path {$annotation->value} not find");
+                            }
                         }
                         $params[$annotation->param ?? $annotation->value] = $result;
                     } else if ($annotation instanceof RequestParam) {
@@ -147,12 +150,11 @@ class AnnotationRoute implements IRoute
                             $this->warning('RequestRawJson errror, raw:' . $request->getBody()->getContents());
                             throw new RouteException('RawJson Format error');
                         }
-                        $params[$annotation->value] = $json;
-                    } else if ($annotation instanceof ModelAttribute) {
-                        if ($request == null) {
-                            continue;
+                        if (!empty($annotation->value)) {
+                            $params[$annotation->value] = $json;
+                        } else {
+                            $params = $json;
                         }
-                        $params[$annotation->value] = $request->post();
                     } else if ($annotation instanceof RequestRaw) {
                         if ($request == null) {
                             continue;
@@ -169,6 +171,8 @@ class AnnotationRoute implements IRoute
                             throw new RouteException('RawXml Format error');
                         }
                         $params[$annotation->value] = json_decode(json_encode($xml), true);
+                    } else if ($annotation instanceof RequestJsonRpc) {
+                        //Do nothing
                     }
                 }
                 $realParams = [];
@@ -187,10 +191,11 @@ class AnnotationRoute implements IRoute
                                 $realParams[$parameter->getPosition()] = null;
                             }
                         } else {
-                            $realParams[$parameter->getPosition()] = $params[$parameter->name];
+                            $realParams[$parameter->getPosition()] = $params[$parameter->name] ?? '';
                         }
                     }
                 }
+
                 if (!empty($realParams)) {
                     $this->clientData->setParams($realParams);
                 }
@@ -217,7 +222,9 @@ class AnnotationRoute implements IRoute
      */
     public function getMethodName()
     {
-        if ($this->clientData == null) return null;
+        if ($this->clientData == null) {
+            return null;
+        }
         return $this->clientData->getMethodName();
     }
 
@@ -227,7 +234,9 @@ class AnnotationRoute implements IRoute
      */
     public function getPath()
     {
-        if ($this->clientData == null) return null;
+        if ($this->clientData == null) {
+            return null;
+        }
         return $this->clientData->getPath();
     }
 
@@ -237,7 +246,9 @@ class AnnotationRoute implements IRoute
      */
     public function getParams()
     {
-        if ($this->clientData == null) return null;
+        if ($this->clientData == null) {
+            return null;
+        }
         return $this->clientData->getParams();
     }
 

@@ -1,13 +1,12 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * ESD framework
+ * @author bearload <565364226@qq.com>
  */
-
-namespace ESD\Yii\Base;
+namespace ESD\Plugins\JsonRpc;
 
 use ESD\Yii\Yii;
+use ESD\Yii\Base\Action;
 
 /**
  * InlineAction represents an action that is defined as a controller method.
@@ -20,12 +19,17 @@ use ESD\Yii\Yii;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class InlineAction extends Action
+class InlineAction extends \ESD\Yii\Base\InlineAction
 {
     /**
      * @var string the controller method that this inline action is associated with
      */
     public $actionMethod;
+
+    /**
+     * @var \ESD\Plugins\JsonRpc\ServiceController the controller that owns this action
+     */
+    public $controller;
 
 
     /**
@@ -37,7 +41,7 @@ class InlineAction extends Action
     public function __construct($id, $controller, $actionMethod, $config = [])
     {
         $this->actionMethod = $actionMethod;
-        parent::__construct($id, $controller, $config);
+        parent::__construct($id, $controller, $actionMethod, $config);
     }
 
     /**
@@ -51,6 +55,13 @@ class InlineAction extends Action
         $args = $this->controller->bindActionParams($this, $params);
         Yii::debug('Running action: ' . get_class($this->controller) . '::' . $this->actionMethod . '()', __METHOD__);
 
-        return call_user_func_array([$this->controller, $this->actionMethod], $args);
+        $result = call_user_func_array([$this->controller, $this->actionMethod], $args);
+
+        $jsonResult = [
+            "jsonrpc" => "2.0",
+            "result" => $result,
+            "id" => $this->controller->getRpcId()
+        ];
+        return $jsonResult;
     }
 }

@@ -186,7 +186,50 @@ class Controller extends Component implements ViewContextInterface
      */
     public function bindActionParams($action, $params)
     {
-        return [];
+        var_dump(get_class($this), $action->actionMethod);
+        if ($action instanceof InlineAction) {
+            $method = new \ReflectionMethod($this, $action->actionMethod);
+        } else {
+            $method = new \ReflectionMethod($action, 'run');
+        }
+
+        $args = [];
+        $missing = [];
+        $actionParams = [];
+        $requestedParams = [];
+        foreach ($method->getParameters() as $i => $param) {
+            $name = $param->getName();
+            $key = null;
+            if (array_key_exists($i, $params)) {
+                $key = $i;
+            } elseif (array_key_exists($name, $params)) {
+                $key = $name;
+            }
+
+            if ($key !== null) {
+                if ($param->isArray()) {
+                    $params[$key] = $params[$key] === '' ? [] : preg_split('/\s*,\s*/', $params[$key]);
+                }
+                $args[] = $actionParams[$key] = $params[$key];
+                unset($params[$key]);
+            } elseif (PHP_VERSION_ID >= 70100 && ($type = $param->getType()) !== null && !$type->isBuiltin()) {
+                try {
+                    $this->bindInjectedParams($type, $name, $args, $requestedParams);
+                } catch (Exception $e) {
+                    throw new Exception($e->getMessage());
+                }
+            } elseif ($param->isDefaultValueAvailable()) {
+                $args[] = $actionParams[$i] = $param->getDefaultValue();
+            } else {
+                $missing[] = $name;
+            }
+        }
+
+        if (!empty($missing)) {
+            throw new Exception(Yii::t('yii', 'Missing required arguments: {params}', ['params' => implode(', ', $missing)]));
+        }
+
+        return $args;
     }
 
     /**
@@ -480,5 +523,32 @@ class Controller extends Component implements ViewContextInterface
         }
 
         return $path;
+    }
+
+    /**
+     * Fills parameters based on types and names in action method signature.
+     * @param \ReflectionType $type The reflected type of the action parameter.
+     * @param string $name The name of the parameter.
+     * @param array &$args The array of arguments for the action, this function may append items to it.
+     * @param array &$requestedParams The array with requested params, this function may write specific keys to it.
+     * @throws ErrorException when we cannot load a required service.
+     * @throws InvalidConfigException Thrown when there is an error in the DI configuration.
+     * @throws NotInstantiableException Thrown when a definition cannot be resolved to a concrete class
+     * (for example an interface type hint) without a proper definition in the container.
+     * @since 2.0.36
+     */
+    final protected function bindInjectedParams(\ReflectionType $type, $name, &$args, &$requestedParams)
+    {
+        // Since it is not a builtin type it must be DI injection.
+        $typeName = $type->getName();
+        if (Yii::$container->has($typeName) && ($service = Yii::$container->get($typeName)) instanceof $typeName) {
+            $args[] = $service;
+            $requestedParams[$name] = "Container DI: $typeName \$$name";
+        } elseif ($type->allowsNull()) {
+            $args[] = null;
+            $requestedParams[$name] = "Unavailable service: $name";
+        } else {
+            throw new Exception('Could not load required service: ' . $name);
+        }
     }
 }
