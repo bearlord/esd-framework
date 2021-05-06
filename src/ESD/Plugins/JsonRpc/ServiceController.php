@@ -9,6 +9,8 @@ namespace ESD\Plugins\JsonRpc;
 use ESD\Go\GoController;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Yii\Base\Action;
+use ESD\Yii\Helpers\ArrayHelper;
+use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
 
 /**
@@ -43,64 +45,81 @@ class ServiceController extends GoController
                     "id" => null
                 ];
             }
-
-            $json = json_decode($_clientData, true);
-            //rpc call with invalid JSON:
-            if (empty($json)) {
-                return [
-                    "jsonrpc" => "2.0",
-                    "error" => [
-                        "code" => -32700,
-                        "message" => "Parse error"
-                    ],
-                    "id" => null
-                ];
+            /** @var array | \stdClass $json */
+            $json = Json::decode($_clientData, false);
+            if (is_array($json)) {
+                $result = [];
+                foreach ($json as $key => $value) {
+                    $result[] = $this->subProcess($value);
+                }
+                return $result;
             }
-
-            if (empty($json['method']) || empty($json['params']) || empty($json['id'])) {
-                return [
-                    "jsonrpc" => "2.0",
-                    "error" => [
-                        "code" => -32600,
-                        "message" => "Invalid Request"
-                    ],
-                    "id" => null
-                ];
-            }
-
-            //Method
-            $callMethodName = $json['method'];
-            //params
-            $realParams = $json['params'];
-            //id
-            $id = $json['id'];
-
-            $action = $this->createAction($callMethodName);
-
-            //rpc call of non-existent method
-            if (empty($action)) {
-                return [
-                    "jsonrpc" => "2.0",
-                    "error" => [
-                        "code" => -32601,
-                        "message" => "Method not found"
-                    ],
-                    "id" => $id
-                ];
-            }
-
-            $result = null;
-            if ($this->beforeAction($action)) {
-                // run the action
-                $result = $action->runWithParams($realParams);
-                $result = $this->afterAction($action, $result);
-            }
-            var_dump($result);
-            return $result;
+            return $this->subProcess($json);
         } catch (\Throwable $exception) {
             setContextValue("lastException", $exception);
             return $this->onExceptionHandle($exception);
         }
+    }
+
+    protected function subProcess($jsonObject)
+    {
+        $parseData = ArrayHelper::toArray($jsonObject);
+        //rpc call with invalid JSON:
+        if (empty($parseData)) {
+            return [
+                "jsonrpc" => "2.0",
+                "error" => [
+                    "code" => -32700,
+                    "message" => "Parse error"
+                ],
+                "id" => null
+            ];
+        }
+
+        if (empty($parseData['method']) || empty($parseData['params']) || empty($parseData['id'])) {
+            return [
+                "jsonrpc" => "2.0",
+                "error" => [
+                    "code" => -32600,
+                    "message" => "Invalid Request"
+                ],
+                "id" => null
+            ];
+        }
+
+        //Method
+        $callMethodName = $parseData['method'];
+        //params
+        $realParams = $parseData['params'];
+        //id
+        $id = $parseData['id'];
+
+        $action = $this->createAction($callMethodName);
+
+        //rpc call of non-existent method
+        if (empty($action)) {
+            return [
+                "jsonrpc" => "2.0",
+                "error" => [
+                    "code" => -32601,
+                    "message" => "Method not found"
+                ],
+                "id" => $id
+            ];
+        }
+
+        $result = null;
+        if ($this->beforeAction($action)) {
+            // run the action
+            $result = $action->runWithParams($realParams);
+            $result = $this->afterAction($action, $result);
+        }
+        $array = [
+            "jsonrpc" => "2.0",
+            "result" => $result,
+            "id" => $id
+        ];
+        return $array;
     }
 
     /**

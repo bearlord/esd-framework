@@ -56,12 +56,6 @@ class InlineAction extends \ESD\Yii\Base\InlineAction
         Yii::debug('Running action: ' . get_class($this->controller) . '::' . $this->actionMethod . '()', __METHOD__);
 
         $result = call_user_func_array([$this->controller, $this->actionMethod], $args);
-
-        $jsonResult = [
-            "jsonrpc" => "2.0",
-            "result" => $result,
-            "id" => $this->controller->getRpcId()
-        ];
-        return $jsonResult;
+        return $result;
     }
 }
