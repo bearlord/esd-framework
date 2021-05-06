@@ -3,6 +3,7 @@
  * ESD framework
  * @author bearload <565364226@qq.com>
  */
+
 namespace ESD\Plugins\JsonRpc;
 
 use ESD\Go\GoController;
@@ -16,26 +17,6 @@ use ESD\Yii\Yii;
  */
 class ServiceController extends GoController
 {
-    /** @var int */
-    protected $rpcId;
-
-    /**
-     * @return int
-     */
-    public function getRpcId(): int
-    {
-        return $this->rpcId;
-    }
-
-    /**
-     * @param int $rpcId
-     */
-    public function setRpcId(int $rpcId): void
-    {
-        $this->rpcId = $rpcId;
-    }
-
-
     /**
      * @inheritDoc
      * @param string|null $controllerName
@@ -50,16 +31,63 @@ class ServiceController extends GoController
             /** @var ClientData $clientData */
             $clientData = getContextValueByClassName(ClientData::class);
             $_clientData = $clientData->getData();
+
+            //rpc call with an empty String or Array:
+            if (empty($_clientData)) {
+                return [
+                    "jsonrpc" => "2.0",
+                    "error" => [
+                        "code" => -32600,
+                        "message" => "Invalid Request"
+                    ],
+                    "id" => null
+                ];
+            }
+
             $json = json_decode($_clientData, true);
+            //rpc call with invalid JSON:
+            if (empty($json)) {
+                return [
+                    "jsonrpc" => "2.0",
+                    "error" => [
+                        "code" => -32700,
+                        "message" => "Parse error"
+                    ],
+                    "id" => null
+                ];
+            }
 
+            if (empty($json['method']) || empty($json['params']) || empty($json['id'])) {
+                return [
+                    "jsonrpc" => "2.0",
+                    "error" => [
+                        "code" => -32600,
+                        "message" => "Invalid Request"
+                    ],
+                    "id" => null
+                ];
+            }
+
+            //Method
             $callMethodName = $json['method'];
+            //params
             $realParams = $json['params'];
-
-            $this->setRpcId($json['id']);
-
-            var_dump($realParams);
+            //id
+            $id = $json['id'];
 
             $action = $this->createAction($callMethodName);
+
+            //rpc call of non-existent method
+            if (empty($action)) {
+                return [
+                    "jsonrpc" => "2.0",
+                    "error" => [
+                        "code" => -32601,
+                        "message" => "Method not found"
+                    ],
+                    "id" => $id
+                ];
+            }
 
             $result = null;
             if ($this->beforeAction($action)) {
@@ -87,10 +115,6 @@ class ServiceController extends GoController
      */
     public function createAction($id)
     {
-        if ($id === '') {
-            $id = $this->defaultAction;
-        }
-
         $actionMap = $this->actions();
 
         if (isset($actionMap[$id])) {
@@ -106,7 +130,6 @@ class ServiceController extends GoController
                 }
             }
         }
-
         return null;
     }
 }
