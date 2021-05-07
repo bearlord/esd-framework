@@ -21,7 +21,7 @@ ESD协议：Apache License 2.0，Yii2协议：BSD 3-Clause。
 
 ## 帮助文档：
 
-保留了ESD原有的用法，文档地址：https://www.kancloud.cn/tmtbe/goswoole/1067764 。
+文档地址：https://www.kancloud.cn/bearlord/esd-framework/2159534。
 
 
 
@@ -35,6 +35,7 @@ ESD协议：Apache License 2.0，Yii2协议：BSD 3-Clause。
    2. Gii/Model、View、Assets、Widgets、Bootstrap4。
    3. 替换原有的AMQP的第三方驱动，改为官方PECL扩展。
    4. 整合了Yii-Queue，驱动包含了Redis和AMQP。
+5. 支持TCP集群部署。
 
 
 
