@@ -186,7 +186,6 @@ class Controller extends Component implements ViewContextInterface
      */
     public function bindActionParams($action, $params)
     {
-        var_dump(get_class($this), $action->actionMethod);
         if ($action instanceof InlineAction) {
             $method = new \ReflectionMethod($this, $action->actionMethod);
         } else {

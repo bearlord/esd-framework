@@ -20,6 +20,8 @@ use ESD\Yii\Yii;
  */
 class ServiceController extends GoController
 {
+    protected $serviceProvider = [];
+
     /**
      * @inheritDoc
      * @param string|null $controllerName
@@ -147,18 +149,17 @@ class ServiceController extends GoController
      */
     public function createAction($id)
     {
-        $actionMap = $this->actions();
-
-        if (isset($actionMap[$id])) {
-            return Yii::createObject($actionMap[$id], [$id, $this]);
+        if (empty($this->serviceProvider)) {
+            return null;
         }
 
+        $serviceProviderInstance = Yii::createObject($this->serviceProvider);
         if (preg_match('/^(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]+$/', $id)) {
             $methodName = $id;
-            if (method_exists($this, $methodName)) {
-                $method = new \ReflectionMethod($this, $methodName);
+            if (method_exists($serviceProviderInstance, $methodName)) {
+                $method = new \ReflectionMethod($serviceProviderInstance, $methodName);
                 if (!$method->isPrivate() && $method->getName() === $methodName) {
-                    return new InlineAction($id, $this, $methodName);
+                    return new InlineAction($id, $serviceProviderInstance, $methodName);
                 }
             }
         }
