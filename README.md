@@ -29,7 +29,7 @@ ESD协议：Apache License 2.0，Yii2协议：BSD 3-Clause。
 
 1. 代码安装已与原有的ESD没有依赖，是单独的仓库。
 2. 去除了原有的 MySQLi 驱动，替换为 PDO驱动。
-3. 支持的数据库包含 MySQL、PostgreSQL、SQL Server、Cubrid、Oracle、Mongodb。
+3. 支持的数据库包含 MySQL、PostgreSQL、SQL Server、Cubrid、Oracle、Mongodb、Clickhouse。
 4. 引入Yii2 的文件包含：
    1. Connection、Query、Model、ActiveRecord、Validator、I18n、  Di、Component、Logger、Security、Cache、Redis、User、Identity、helpers、 behaviors、events。
    2. Gii/Model、View、Assets、Widgets、Bootstrap4。
@@ -77,7 +77,7 @@ HTTP Client == wait ==> HTTP Server => TCP Server == wait ==> TCP Client => TCP 
 1. 虚拟机2核、4G内存，4个Worker进程，PostgreSQL 单条SQL查询，AB测试，RPS 3500左右。
 2. 虚拟机4核、8G内存，8个Worker进程，PostgreSQL 单条SQL查询，AB测试，RPS 6500左右。
 3. 笔记本6核12线程，16G内存，12个Worker进程，PostgreSQL 单条SQL查询，AB测试，RPS 8000左右。
-4. 笔记本6核12线程，16G内存，12个Worker进程，开启AMQP队列，AB测试，RPS 13000左右，与AB 压测 Hello world差不多，毕竟走的队列。AMQP消费时，CPU瞬时压力暴增。
+4. 笔记本6核12线程，16G内存，12个Worker进程，开启AMQP队列，AB测试，RPS 13000左右。AMQP消费时，CPU瞬时压力暴增。
 
 
 
