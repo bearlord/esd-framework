@@ -13,7 +13,6 @@ use ESD\Plugins\EasyRoute\Annotation\ModelAttribute;
 use ESD\Plugins\EasyRoute\Annotation\PathVariable;
 use ESD\Plugins\EasyRoute\Annotation\RequestBody;
 use ESD\Plugins\EasyRoute\Annotation\RequestFormData;
-use ESD\Plugins\EasyRoute\Annotation\RequestJsonRpc;
 use ESD\Plugins\EasyRoute\Annotation\RequestParam;
 use ESD\Plugins\EasyRoute\Annotation\RequestRaw;
 use ESD\Plugins\EasyRoute\Annotation\RequestRawJson;
@@ -23,6 +22,7 @@ use ESD\Plugins\EasyRoute\EasyRouteConfig;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\EasyRoute\MethodNotAllowedException;
 use ESD\Plugins\EasyRoute\RouteException;
+use ESD\Plugins\JsonRpc\Annotation\ResponeJsonRpc;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Validate\Annotation\ValidatedFilter;
 use ESD\Yii\Helpers\Json;
@@ -44,7 +44,7 @@ class AnnotationRoute implements IRoute
 
     /**
      * @inheritDoc
-     * @param ClientData $data
+     * @param ClientData $clientData
      * @param EasyRouteConfig $easyRouteConfig
      * @return bool
      * @throws MethodNotAllowedException
@@ -53,9 +53,9 @@ class AnnotationRoute implements IRoute
      * @throws \ESD\Plugins\Validate\ValidationException
      * @throws \ReflectionException
      */
-    public function handleClientData(ClientData $data, EasyRouteConfig $easyRouteConfig): bool
+    public function handleClientData(ClientData $clientData, EasyRouteConfig $easyRouteConfig): bool
     {
-        $this->clientData = $data;
+        $this->clientData = $clientData;
         //Port
         $port = $this->clientData->getClientInfo()->getServerPort();
         //Request method
@@ -114,7 +114,7 @@ class AnnotationRoute implements IRoute
                 $methodReflection = $handler[1]->getReflectionMethod();
                 foreach (EasyRoutePlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection) as $annotation) {
                     if ($annotation instanceof ResponseBody) {
-                        $data->getResponse()->withHeader("Content-Type", $annotation->value);
+                        $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
                     }
                     if ($annotation instanceof PathVariable) {
                         $result = $vars[$annotation->value] ?? null;
@@ -171,8 +171,8 @@ class AnnotationRoute implements IRoute
                             throw new RouteException('RawXml Format error');
                         }
                         $params[$annotation->value] = json_decode(json_encode($xml), true);
-                    } else if ($annotation instanceof RequestJsonRpc) {
-                        //Do nothing
+                    } else if ($annotation instanceof ResponeJsonRpc) {
+                        $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
                     }
                 }
                 $realParams = [];

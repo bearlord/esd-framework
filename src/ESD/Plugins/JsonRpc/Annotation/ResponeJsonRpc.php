@@ -4,7 +4,7 @@
  * @author tmtbe <565364226@qq.com>
  */
 
-namespace ESD\Plugins\EasyRoute\Annotation;
+namespace ESD\Plugins\JsonRpc\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 
@@ -12,10 +12,10 @@ use Doctrine\Common\Annotations\Annotation;
  * @Annotation
  * @Target("METHOD")
  */
-class RequestJsonRpc extends Annotation
+class ResponeJsonRpc extends Annotation
 {
     /**
      * @var string
      */
-    public $value;
+    public $value = "application/json;charset=UTF-8";
 }

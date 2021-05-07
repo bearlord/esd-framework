@@ -16,11 +16,11 @@ use ESD\Plugins\Pack\ClientData;
 interface IRoute
 {
     /**
-     * @param ClientData $data
+     * @param ClientData $clientData
      * @param EasyRouteConfig $easyRouteConfig
      * @return bool
      */
-    public function handleClientData(ClientData $data, EasyRouteConfig $easyRouteConfig): bool;
+    public function handleClientData(ClientData $clientData, EasyRouteConfig $easyRouteConfig): bool;
 
     /**
      * Get Controller name

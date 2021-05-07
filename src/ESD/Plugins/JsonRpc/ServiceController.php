@@ -9,6 +9,7 @@ namespace ESD\Plugins\JsonRpc;
 use ESD\Go\GoController;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Yii\Base\Action;
+use ESD\Yii\Base\Exception;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
@@ -109,11 +110,23 @@ class ServiceController extends GoController
         }
 
         $result = null;
-        if ($this->beforeAction($action)) {
-            // run the action
-            $result = $action->runWithParams($realParams);
-            $result = $this->afterAction($action, $result);
+        try {
+            if ($this->beforeAction($action)) {
+                // run the action
+                $result = $action->runWithParams($realParams);
+                $result = $this->afterAction($action, $result);
+            }
+        } catch (Exception $exception) {
+            return [
+                "jsonrpc" => "2.0",
+                "error" => [
+                    "code" => -32602,
+                    "message" => "Invalid params"
+                ],
+                "id" => $id
+            ];
         }
+
         $array = [
             "jsonrpc" => "2.0",
             "result" => $result,
