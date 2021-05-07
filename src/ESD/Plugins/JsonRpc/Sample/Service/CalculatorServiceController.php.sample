@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Service;
+
+use App\Plugins\EasyRoute\Annotation\AppRestController;
+use App\Service\JsonRpc\CalculatorService;
+use ESD\Plugins\JsonRpc\Annotation\ResponeJsonRpc;
+use ESD\Plugins\EasyRoute\Annotation\RequestMapping;
+use ESD\Plugins\EasyRoute\Annotation\PostMapping;
+use ESD\Plugins\EasyRoute\Annotation\RequestRawJson;
+use ESD\Plugins\JsonRpc\ServiceController;
+
+/**
+ * @AppRestController("calculator")
+ *
+ * Class CalculatorServiceController
+ * @package App\Service\JsonRpc
+ */
+class CalculatorServiceController extends ServiceController
+{
+    protected $serviceProvider = CalculatorService::class;
+
+    /**
+     * @PostMapping("index")
+     * @ResponeJsonRpc()
+     */
+    public function index()
+    {
+        return '';
+    }
+
+}

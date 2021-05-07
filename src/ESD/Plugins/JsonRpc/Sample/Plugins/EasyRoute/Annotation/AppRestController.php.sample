@@ -1,0 +1,34 @@
+<?php
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
+
+namespace App\Plugins\EasyRoute\Annotation;
+
+use ESD\Plugins\EasyRoute\Annotation\Controller;
+
+/**
+ * @Annotation
+ * @Target("CLASS")
+ * Class AppTcpController
+ * @package App\Plugins\EasyRoute\Annotation
+ */
+class AppRestController extends Controller
+{
+    /**
+     * @var array
+     */
+    public $portTypes = ["http"];
+
+    /**
+     * Port name, unlimited if empty array
+     * @var array
+     */
+    public $portNames = ["jsonRpcHttp"];
+
+    /**
+     * @var string
+     */
+    public $defaultMethod = "GET";
+}

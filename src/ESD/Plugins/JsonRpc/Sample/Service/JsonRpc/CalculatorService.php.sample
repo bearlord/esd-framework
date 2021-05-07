@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Service\JsonRpc;
+
+use ESD\Plugins\JsonRpc\Service;
+
+/**
+ * Class CalculatorService
+ * @package App\Service\JsonRpc
+ */
+class CalculatorService extends Service
+{
+    public function hello()
+    {
+        return 'hello';
+    }
+
+    public function add(int $a, int $b): int
+    {
+        return $a + $b;
+    }
+}
