@@ -752,7 +752,7 @@ class ServerConfig extends BaseConfig
             throw new ConfigException("ServerConfig dispatchMode cannot be empty or less than 1");
         }
         if ($this->getMaxConn() != null && $this->getMaxConn() > 0) {
-            $build['max_conn'] = $this->getMaxConn();
+            $build['max_connection'] = $this->getMaxConn();
         } else {
             throw new ConfigException("ServerConfig maxConn cannot be empty or less than 1");
         }
