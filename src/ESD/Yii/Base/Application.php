@@ -109,7 +109,7 @@ class Application extends ServiceLocator
         $this->setBasePath($srcDir);
 
         //Set vendor path
-        $vendorPath =  realpath(dirname($srcDir) . '/vendor');
+        $vendorPath = realpath(dirname($srcDir) . '/vendor');
         $this->setVendorPath($vendorPath);
 
         //Set web path
@@ -142,7 +142,7 @@ class Application extends ServiceLocator
 
         //Instance log component, and crete object ESD\Yii\Log\Logger, set property as Logger::flushInterval, logger::traceLevel.
         //If ESD\Yii\Log\Logger is created, it can be stored in container. the next time to be created, it will return
-        //the stored object that kept the defined propertied.
+        //the stored object that kept the defined properties.
         //If don't this, ESD\Yii\Log\Logger would not be created, 'flushInterval' and 'traceLevel' would not be set customize value
         //but default value.
         $this->getLog();
@@ -255,51 +255,56 @@ class Application extends ServiceLocator
      */
     public function getDb($name = "default")
     {
-        if ($name === "default") {
-            $poolKey = "default";
-            $contextKey = "Pdo:default";
-        } elseif ($name === "slave") {
-            $slaveConfigs = Server::$instance->getConfigContext()->get("yii.db.default.slaves");
-            if (empty($slaveConfigs)) {
+        switch ($name) {
+            case "slave":
+                $slaveConfigs = Server::$instance->getConfigContext()->get("yii.db.default.slaves");
+                if (empty($slaveConfigs)) {
+                    $poolKey = "default";
+                    $contextKey = "Pdo:default";
+                } else {
+                    $slaveRandKey = array_rand($slaveConfigs);
+
+                    $poolKey = sprintf("default.slave.%s", $slaveRandKey);
+                    $contextKey = sprintf("Pdo:default.slave.%s", $slaveRandKey);
+                }
+                break;
+
+            case "master":
+                $masterConfigs = Server::$instance->getConfigContext()->get("yii.db.default.masters");
+                if (empty($masterConfigs)) {
+                    $poolKey = "default";
+                    $contextKey = "Pdo:default";
+                } else {
+                    $masterRandKey = array_rand($masterConfigs);
+
+                    $poolKey = sprintf("default.master.%s", $masterRandKey);
+                    $contextKey = sprintf("Pdo:default.master.%s", $masterRandKey);
+                }
+                break;
+
+            case "default":
+            default:
                 $poolKey = "default";
                 $contextKey = "Pdo:default";
-            } else {
-                $slaveRandKey = array_rand($slaveConfigs);
-
-                $poolKey = sprintf("default.slave.%s", $slaveRandKey);
-                $contextKey = sprintf("Pdo:default.slave.%s", $slaveRandKey);
-            }
-
-        } elseif ($name === "master") {
-            $masterConfigs = Server::$instance->getConfigContext()->get("yii.db.default.masters");
-            if (empty($masterConfigs)) {
-                $poolKey = "default";
-                $contextKey = "Pdo:default";
-            } else {
-                $masterRandKey = array_rand($masterConfigs);
-
-                $poolKey = sprintf("default.master.%s", $masterRandKey);
-                $contextKey = sprintf("Pdo:default.master.%s", $masterRandKey);
-            }
+                break;
         }
 
         $db = getContextValue($contextKey);
 
-        if ($db == null) {
-            /** @var PdoPools $pdoPools */
-            $pdoPools = getDeepContextValueByClassName(PdoPools::class);
-            if (!empty($pdoPools)) {
-                $pool = $pdoPools->getPool($poolKey);
-                if ($pool == null) {
-                    throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
-                }
-                return $pool->db();
-            } else {
-                return $this->getDbOnce();
-            }
-
-        } else {
+        if (!empty($db)) {
             return $db;
+        }
+        
+        /** @var PdoPools $pdoPools */
+        $pdoPools = getDeepContextValueByClassName(PdoPools::class);
+        if (!empty($pdoPools)) {
+            $pool = $pdoPools->getPool($poolKey);
+            if ($pool == null) {
+                throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+            }
+            return $pool->db();
+        } else {
+            return $this->getDbOnce();
         }
     }
 
@@ -471,7 +476,6 @@ class Application extends ServiceLocator
     }
 
 
-
     /**
      * @return Connection|mixed
      * @throws \ESD\Yii\Db\Exception
@@ -529,7 +533,7 @@ class Application extends ServiceLocator
      */
     public function createController($route)
     {
-        $route = "/". trim($route, "/");
+        $route = "/" . trim($route, "/");
         if (strpos($route, '/') !== false) {
             list($id, $_route) = explode('/', $route, 2);
         } else {
