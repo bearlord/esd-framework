@@ -2,6 +2,7 @@
 /**
  * ESD framework
  * @author tmtbe <896369042@qq.com>
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Plugins\EasyRoute\Aspect;
@@ -119,7 +120,7 @@ class RouteAspect extends OrderAspect
             if ($this->filterManager->filter(AbstractFilter::FILTER_ROUTE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
                 return;
             }
-            
+
             $clientData->getResponse()->append($clientData->getResponseRaw());
             $this->filterManager->filter(AbstractFilter::FILTER_PRO, $clientData);
         } catch (\Throwable $e) {
@@ -159,6 +160,38 @@ class RouteAspect extends OrderAspect
             }
         } else {
             return $this->controllers[$controllerName];
+        }
+    }
+
+    /**
+     * After onTcpConnect
+     *
+     * @param MethodInvocation $invocation Invocation
+     * @throws \Throwable
+     * @After("within(ESD\Core\Server\Port\IServerPort+) && execution(public **->onTcpConnect(*))")
+     */
+    protected function afterTcpConnect(MethodInvocation $invocation)
+    {
+        list($fd, $reactorId) = $invocation->getArguments();
+
+        $clientInfo = Server::$instance->getClientInfo($fd);
+        //Server port
+        $serverPort = $clientInfo->getServerPort();
+        //Request method
+        $requestMethod = 'TCP';
+        //Defined path
+        $onClosePath = '/onConnect';
+        //Route info
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+
+        if ($routeInfo[0] !== Dispatcher::FOUND) {
+            return false;
+        }
+
+        try {
+            call_user_func_array([$routeInfo[1][0]->name, $routeInfo[1][1]->name], [$fd, $reactorId]);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
         }
     }
 
