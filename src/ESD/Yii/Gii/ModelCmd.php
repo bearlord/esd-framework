@@ -80,14 +80,10 @@ class ModelCmd extends Command
         $generateLabelsFromComments = true;
         $useTablePrefix = true;
 
-        /*
-         *
-        $tablePrefix = Server::$instance->getConfigContext()->get("yii.db.default.tablePrefix");
-        if (empty($modelClass)) {
-            $modelClass = ltrim($tableName, $tablePrefix);
-            $modelClass = Inflector::camelize($modelClass);
-        }
-        */
+        //Disable Schema Cache
+        $configContext = Server::$instance->getConfigContext();
+        $array['yii']['db']['default']['enableSchemaCache'] = false;
+        $configContext->appendDeepConfig($array, 7);
 
         $controller = new GenerateController();
         $controller->runAction("model", [
