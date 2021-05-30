@@ -21,7 +21,7 @@ ESD协议：Apache License 2.0，Yii2协议：BSD 3-Clause。
 
 ## 帮助文档：
 
-文档地址：https://www.kancloud.cn/bearlord/esd-framework/2159534。
+文档地址：https://www.kancloud.cn/bearlord/esd-framework/2159534
 
 
 
