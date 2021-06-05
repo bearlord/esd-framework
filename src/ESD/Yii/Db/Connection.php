@@ -599,16 +599,6 @@ class Connection extends Component
             return;
         }
 
-        if (!empty($this->masters)) {
-            $db = $this->getMaster();
-            if ($db !== null) {
-                $this->pdo = $db->pdo;
-                return;
-            }
-
-            throw new InvalidConfigException('None of the master DB servers is available.');
-        }
-
         if (empty($this->dsn)) {
             throw new InvalidConfigException('Connection::dsn cannot be empty.');
         }
@@ -643,10 +633,6 @@ class Connection extends Component
     public function close()
     {
         if ($this->_master) {
-            if ($this->pdo === $this->_master->pdo) {
-                $this->pdo = null;
-            }
-
             $this->_master = false;
         }
 
