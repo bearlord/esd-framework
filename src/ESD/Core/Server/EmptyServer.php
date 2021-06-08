@@ -6,7 +6,10 @@
 
 namespace ESD\Core\Server;
 
-
+/**
+ * Class EmptyServer
+ * @package ESD\Core\Server
+ */
 class EmptyServer
 {
     public function __call($name, $arguments)

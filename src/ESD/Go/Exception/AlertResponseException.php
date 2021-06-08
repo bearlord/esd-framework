@@ -8,6 +8,10 @@ namespace ESD\Go\Exception;
 
 use ESD\Core\Plugins\Logger\GetLogger;
 
+/**
+ * Class AlertResponseException
+ * @package ESD\Go\Exception
+ */
 class AlertResponseException extends \Exception{
 
     use GetLogger;

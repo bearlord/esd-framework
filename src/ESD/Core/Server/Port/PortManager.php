@@ -10,6 +10,10 @@ use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Server;
 
+/**
+ * Class PortManager
+ * @package ESD\Core\Server\Port
+ */
 class PortManager
 {
     /**

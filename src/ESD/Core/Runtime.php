@@ -6,7 +6,10 @@
 
 namespace ESD\Core;
 
-
+/**
+ * Class Runtime
+ * @package ESD\Core
+ */
 class Runtime
 {
     /**

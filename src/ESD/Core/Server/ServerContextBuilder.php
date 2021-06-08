@@ -9,6 +9,10 @@ namespace ESD\Core\Server;
 use ESD\Core\Context\Context;
 use ESD\Core\Context\ContextBuilder;
 
+/**
+ * Class ServerContextBuilder
+ * @package ESD\Core\Server
+ */
 class ServerContextBuilder implements ContextBuilder
 {
     protected $context;

@@ -8,6 +8,10 @@ namespace ESD\Core;
 
 use Throwable;
 
+/**
+ * Class Exception
+ * @package ESD\Core
+ */
 class Exception extends \Exception
 {
     protected $trace = true;

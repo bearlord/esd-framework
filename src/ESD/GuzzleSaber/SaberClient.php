@@ -17,6 +17,10 @@ use Psr\Http\Message\UriInterface;
 use Swlib\Saber\Response;
 use Swlib\SaberGM;
 
+/**
+ * Class SaberClient
+ * @package ESD\GuzzleSaber
+ */
 class SaberClient implements ClientInterface
 {
 
