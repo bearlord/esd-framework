@@ -17,7 +17,6 @@ use ESD\Yii\Yii;
  */
 class GoProcess extends Process
 {
-
     /**
      * @inheritDoc
      * @return mixed

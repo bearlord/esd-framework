@@ -21,7 +21,9 @@ use ESD\Coroutine\Beans\ChannelStats;
 class ChannelImpl implements Channel
 {
     const CHANNEL_OK = SWOOLE_CHANNEL_OK;
+
     const CHANNEL_TIMEOUT = SWOOLE_CHANNEL_TIMEOUT;
+
     const CHANNEL_CLOSED = SWOOLE_CHANNEL_CLOSED;
 
     public $swooleChannel;
@@ -73,7 +75,9 @@ class ChannelImpl implements Channel
         goWithContext(function () use ($callback) {
             while (true) {
                 $result = $this->pop();
-                if ($result === false) break;
+                if ($result === false) {
+                    break;
+                }
                 $callback($result);
             }
         });

@@ -17,7 +17,6 @@ use ESD\Core\Server\Port\ServerPort;
  */
 class GoPort extends ServerPort
 {
-
     /**
      * @param int $fd
      * @param int $reactorId
