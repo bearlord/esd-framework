@@ -15,6 +15,9 @@ namespace ESD\Core\Memory\CrossProcess;
  */
 class Atomic
 {
+    /**
+     * @var \Swoole\Atomic
+     */
     private $swooleAtomic;
 
     /**

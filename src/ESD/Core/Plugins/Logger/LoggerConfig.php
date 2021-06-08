@@ -6,9 +6,12 @@
 
 namespace ESD\Core\Plugins\Logger;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 
+/**
+ * Class LoggerConfig
+ * @package ESD\Core\Plugins\Logger
+ */
 class LoggerConfig extends BaseConfig
 {
     const key = "esd.logger";

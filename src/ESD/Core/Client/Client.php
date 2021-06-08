@@ -9,8 +9,15 @@ namespace ESD\Core\Client;
 use ESD\Core\Server\Config\PortConfig;
 use Swoole;
 
+/**
+ * Class Client
+ * @package ESD\Core\Client
+ */
 class Client
 {
+    /**
+     * @var Swoole\Coroutine\Client
+     */
     protected $swooleClient;
 
     /**

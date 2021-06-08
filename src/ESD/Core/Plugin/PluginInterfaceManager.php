@@ -14,9 +14,10 @@ use ESD\Core\Plugins\Event\EventDispatcher;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 
+
 /**
- * Class PlugManager
- * @package ESD\Core\Server\Plug
+ * Class PluginInterfaceManager
+ * @package ESD\Core\Plugin
  */
 class PluginInterfaceManager implements PluginInterface
 {

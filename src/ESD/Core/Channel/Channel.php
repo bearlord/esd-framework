@@ -6,6 +6,10 @@
 
 namespace ESD\Core\Channel;
 
+/**
+ * Interface Channel
+ * @package ESD\Core\Channel
+ */
 interface Channel
 {
     /**

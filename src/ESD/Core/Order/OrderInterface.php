@@ -6,7 +6,10 @@
 
 namespace ESD\Core\Order;
 
-
+/**
+ * Interface OrderInterface
+ * @package ESD\Core\Order
+ */
 interface OrderInterface
 {
     /**

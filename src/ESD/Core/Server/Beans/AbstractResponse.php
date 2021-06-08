@@ -10,6 +10,10 @@ use ESD\Core\Server\Beans\Http\Cookie;
 use ESD\Core\Server\Beans\Http\HttpStream;
 use ESD\Core\Server\Beans\Http\MessageTrait;
 
+/**
+ * Class AbstractResponse
+ * @package ESD\Core\Server\Beans
+ */
 abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
 {
     use MessageTrait;

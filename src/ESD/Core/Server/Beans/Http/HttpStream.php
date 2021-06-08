@@ -8,6 +8,10 @@ namespace ESD\Core\Server\Beans\Http;
 
 use Psr\Http\Message\StreamInterface;
 
+/**
+ * Class HttpStream
+ * @package ESD\Core\Server\Beans\Http
+ */
 class HttpStream implements StreamInterface
 {
 

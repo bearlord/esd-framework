@@ -6,6 +6,10 @@
 
 namespace ESD\Core\Order;
 
+/**
+ * Trait OrderOwnerTrait
+ * @package ESD\Core\Order
+ */
 trait OrderOwnerTrait
 {
     /**

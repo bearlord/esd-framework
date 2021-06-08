@@ -9,6 +9,10 @@ namespace ESD\Core\Plugins\Event;
 use ESD\Core\Order\OrderOwnerTrait;
 use ESD\Core\Server\Process\Process;
 
+/**
+ * Class EventDispatcher
+ * @package ESD\Core\Plugins\Event
+ */
 class EventDispatcher
 {
     use OrderOwnerTrait;

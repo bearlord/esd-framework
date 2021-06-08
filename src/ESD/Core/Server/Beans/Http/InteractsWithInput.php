@@ -6,6 +6,10 @@
 
 namespace ESD\Core\Server\Beans\Http;
 
+/**
+ * Trait InteractsWithInput
+ * @package ESD\Core\Server\Beans\Http
+ */
 trait InteractsWithInput
 {
 
