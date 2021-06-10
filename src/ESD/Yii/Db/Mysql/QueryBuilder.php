@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Db\Mysql;
 
+use ESD\Core\Server\Server;
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\NotSupportedException;
 use ESD\Yii\Db\Exception;
@@ -377,6 +378,8 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      */
     private function supportsFractionalSeconds()
     {
+        var_dump($this->db->getSlavePdo());
+        var_dump(Server::$instance->getServer()->worker_id);
         $version = $this->db->getSlavePdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
         return version_compare($version, '5.6.4', '>=');
     }
