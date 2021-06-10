@@ -7,6 +7,7 @@
 namespace ESD\Yii\Plugin\Pdo;
 
 use ESD\Core\Channel\Channel;
+use ESD\Core\Pool\Pool;
 use ESD\Coroutine\Coroutine;
 use ESD\Yii\Db\Connection;
 
@@ -14,7 +15,7 @@ use ESD\Yii\Db\Connection;
  * Class PdoPool
  * @package ESD\Yii\Plugin\Pdo
  */
-class PdoPool
+class PdoPool extends Pool
 {
     /**
      * @var Channel
@@ -80,29 +81,5 @@ class PdoPool
             setContextValue($contextKey, $db);
         }
         return $db;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param Config $config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return Channel|mixed
-     */
-    public function getPool()
-    {
-        return $this->pool;
     }
 }

@@ -6,39 +6,13 @@
 
 namespace ESD\Yii\Plugin\Pdo;
 
+use ESD\Core\Pool\Pools;
+
 /**
  * Class PdoPools
  * @package ESD\Yii\Plugin\Pdo
  */
-class PdoPools
+class PdoPools extends Pools
 {
-    /**
-     * @var array
-     */
-    protected $poolList = [];
 
-    /**
-     * @return array
-     */
-    public function getPoolList(): array
-    {
-        return $this->poolList;
-    }
-
-    /**
-     * @param string $name
-     * @return PdoPool|mixed|null
-     */
-    public function getPool($name = "default")
-    {
-        return $this->poolList[$name] ?? null;
-    }
-
-    /**
-     * @param PdoPool $pool
-     */
-    public function addPool(PdoPool $pool)
-    {
-        $this->poolList[$pool->getConfig()->getName()] = $pool;
-    }
 }

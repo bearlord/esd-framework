@@ -1097,8 +1097,11 @@ class Command extends Component
 
             return $n;
         } catch (Exception $e) {
+            if (!$this->isBreak($e)) {
+                throw $e;
+            }
             try {
-                if ($this->reconnectTimes < $this->reconnectMaxTimes && $this->isBreak($e)) {
+                if ($this->reconnectTimes < $this->reconnectMaxTimes) {
                     ++$this->reconnectTimes;
 
                     Yii::debug(sprintf("Reconnect times ...%d", $this->reconnectTimes));
@@ -1165,6 +1168,7 @@ class Command extends Component
     {
         list($profile, $rawSql) = $this->logQuery('ESD\Yii\Db\Command::query');
 
+        $result = [];
         if ($method !== '') {
             $info = $this->db->getQueryCacheInfo($this->queryCacheDuration, $this->queryCacheDependency);
             if (is_array($info)) {
@@ -1199,8 +1203,11 @@ class Command extends Component
 
             $profile and Yii::endProfile($rawSql, 'ESD\Yii\Db\Command::query');
         } catch (Exception $e) {
+            if (!$this->isBreak($e)) {
+                throw $e;
+            }
             try {
-                if ($this->reconnectTimes < $this->reconnectMaxTimes && $this->isBreak($e)) {
+                if ($this->reconnectTimes < $this->reconnectMaxTimes) {
                     ++$this->reconnectTimes;
 
                     Yii::debug(sprintf("Reconnect times ...%d", $this->reconnectTimes));
@@ -1234,8 +1241,8 @@ class Command extends Component
                 }
             } catch (Exception $e2) {
                 throw $e2;
-            } catch (Exception $e) {
-                throw $e;
+            } catch (Exception $e3) {
+                throw $e3;
             }
         }
 

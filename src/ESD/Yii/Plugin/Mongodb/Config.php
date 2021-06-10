@@ -12,20 +12,8 @@ use ESD\Core\Plugins\Config\BaseConfig;
  * Class Config
  * @package ESD\Yii\Plugin\Mongodb
  */
-class Config extends BaseConfig
+class Config extends \ESD\Core\Pool\Config
 {
-    const KEY = "mongodb";
-
-    /**
-     * @var string
-     */
-    protected $name = "default";
-
-    /**
-     * @var int
-     */
-    protected $poolMaxNumber = 5;
-
     /**
      * @var string
      */
@@ -40,46 +28,13 @@ class Config extends BaseConfig
     /** @var array  */
     protected $options = [];
 
-    /**
-     * Config constructor.
-     * @param $name
-     */
-    public function __construct($name)
-    {
-        parent::__construct(self::KEY, true, "name");
-        $this->setName($name);
-    }
 
     /**
      * @return string
      */
-    public function getName(): string
+    protected function getKey()
     {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPoolMaxNumber(): int
-    {
-        return $this->poolMaxNumber;
-    }
-
-    /**
-     * @param int $poolMaxNumber
-     */
-    public function setPoolMaxNumber(int $poolMaxNumber): void
-    {
-        $this->poolMaxNumber = $poolMaxNumber;
+        return 'mongodb';
     }
 
     /**
@@ -161,24 +116,6 @@ class Config extends BaseConfig
             'poolMaxNumber' => $this->poolMaxNumber
         ];
     }
-
-    /**
-     * Build config from array
-     *
-     * @param $array
-     * @return Config
-     */
-    public function buildFromArray($array)
-    {
-        $self = new self();
-        $self->setDsn($array['dsn']);
-        $self->setTablePrefix($array['tablePrefix']);
-        $self->setOptions($array['options']);
-        $self->setPoolMaxNumber($array['poolMaxNumber']);
-
-        return $self;
-    }
-
 
     /**
      * Returns the name of the DB driver. Based on the the current [[dsn]], in case it was not set explicitly

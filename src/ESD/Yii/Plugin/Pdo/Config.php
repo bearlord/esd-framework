@@ -1,6 +1,6 @@
 <?php
 /**
- * ESD Yii pdo plugin
+ * ESD Yii PDO plugin
  * @author bearlord <565364226@qq.com>
  */
 
@@ -12,19 +12,8 @@ use ESD\Core\Plugins\Config\BaseConfig;
  * Class Config
  * @package ESD\Yii\Plugin\Pdo
  */
-class Config extends BaseConfig
+class Config extends \ESD\Core\Pool\Config
 {
-    const KEY = "pdo";
-    /**
-     * @var string
-     */
-    protected $name = "default";
-
-    /**
-     * @var int
-     */
-    protected $poolMaxNumber = 5;
-
     /**
      * @var string
      */
@@ -66,45 +55,11 @@ class Config extends BaseConfig
     protected $schemaCache = "cache";
 
     /**
-     * Config constructor.
-     * @param $name
-     */
-    public function __construct($name)
-    {
-        parent::__construct(self::KEY, true, "name");
-        $this->setName($name);
-    }
-
-    /**
      * @return string
      */
-    public function getName(): string
+    protected function getKey()
     {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPoolMaxNumber(): int
-    {
-        return $this->poolMaxNumber;
-    }
-
-    /**
-     * @param int $poolMaxNumber
-     */
-    public function setPoolMaxNumber(int $poolMaxNumber): void
-    {
-        $this->poolMaxNumber = $poolMaxNumber;
+        return 'pdo';
     }
 
     /**
@@ -260,41 +215,18 @@ class Config extends BaseConfig
     public function buildConfig()
     {
         return [
-            'dsn' => $this->dsn,
-            'name' => $this->name,
-            'username' => $this->username,
-            'password' => $this->password,
-            'tablePrefix' => $this->tablePrefix,
-            'charset' => $this->charset,
-            'poolMaxNumber' => $this->poolMaxNumber,
-            'enableSchemaCache' => $this->enableSchemaCache,
-            'schemaCacheDuration' => $this->schemaCacheDuration,
-            'schemaCache' => $this->schemaCache,
+            'dsn' => $this->getDsn(),
+            'name' => $this->getName(),
+            'username' => $this->getUsername(),
+            'password' => $this->getPassword(),
+            'tablePrefix' => $this->getTablePrefix(),
+            'charset' => $this->getCharset(),
+            'poolMaxNumber' => $this->getPoolMaxNumber(),
+            'enableSchemaCache' => $this->getEnableSchemaCache(),
+            'schemaCacheDuration' => $this->getSchemaCacheDuration(),
+            'schemaCache' => $this->getSchemaCache()
         ];
     }
-
-    /**
-     * Build config from array
-     *
-     * @param $array
-     * @return Config
-     */
-    public function buildFromArray($array)
-    {
-        $self = new self();
-        $self->setDsn($array['dsn']);
-        $self->setUsername($array['username']);
-        $self->setPassword($array['password']);
-        $self->setCharset($array['charset']);
-        $self->setTablePrefix($array['tablePrefix']);
-        $self->setPoolMaxNumber($array['poolMaxNumber']);
-        $self->setEnableSchemaCache($array['enableSchemaCache']);
-        $self->setSchemaCacheDuration($array['schemaCacheDuration']);
-        $self->setSchemaCache($array['schemaCache']);
-
-        return $self;
-    }
-
 
     /**
      * Returns the name of the DB driver. Based on the the current [[dsn]], in case it was not set explicitly

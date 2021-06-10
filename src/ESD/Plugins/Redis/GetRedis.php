@@ -24,10 +24,10 @@ trait GetRedis
     {
         $db = getContextValue("Redis:$name");
         if ($db == null) {
-            /** @var RedisManyPool $redisPool */
-            $redisPool = getDeepContextValueByClassName(RedisManyPool::class);
+            /** @var RedisPools $redisPools */
+            $redisPools = getDeepContextValueByClassName(RedisPools::class);
 
-            $pool = $redisPool->getPool($name);
+            $pool = $redisPools->getPool($name);
 
             if ($pool == null) {
                 throw new Exception(Yii::t('esd', '{driverName} connection pool named {name} not found', [

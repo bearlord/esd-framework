@@ -96,15 +96,18 @@ class WhoopsPlugin extends AbstractPlugin
     {
         parent::init($context);
         $aopConfig = DIGet(AopConfig::class);
-        $this->whoopsConfig->merge();
         $serverConfig = Server::$instance->getServerConfig();
+
+        $this->whoopsConfig->merge();
         $this->whoops = new Run();
         $this->whoops->writeToOutput(false);
         $this->whoops->allowQuit(false);
+
         $handler = new WhoopsHandler();
         $handler->addResourcePath($serverConfig->getVendorDir() . "/filp/whoops/src/Whoops/Resources/");
-        $handler->setPageTitle("出现错误了");
+        $handler->setPageTitle("Whoops! There was an error.");
         $this->whoops->pushHandler($handler);
+        
         $aopConfig->addIncludePath($serverConfig->getVendorDir() . "/esd-framework/src/ESD/");
         $aopConfig->addAspect(new WhoopsAspect($this->whoops, $this->whoopsConfig));
     }

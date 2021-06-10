@@ -174,6 +174,9 @@ class WhoopsHandler extends Handler
          */
         $request = getContextValueByClassName(Request::class);
         // List of variables that will be passed to the layout template.
+
+        var_dump("aaaaa");
+        var_dump($inspector->getPreviousExceptionMessages());
         $vars = [
             "page_title" => $this->getPageTitle(),
 
@@ -203,6 +206,7 @@ class WhoopsHandler extends Handler
             "previousMessages" => $inspector->getPreviousExceptionMessages(),
             "docref_url" => $inspector->getExceptionDocrefUrl(),
             "code" => $code,
+            "previousCodes" => $inspector->getPreviousExceptionCodes(),
             "plain_exception" => Formatter::formatExceptionPlain($inspector),
             "frames" => $frames,
             "has_frames" => !!count($frames),

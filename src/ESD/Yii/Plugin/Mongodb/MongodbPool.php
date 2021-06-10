@@ -1,29 +1,22 @@
 <?php
 /**
- * ESD Yii mongodb plugin
+ * ESD Yii Mongodb plugin
  * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Yii\Plugin\Mongodb;
 
 use ESD\Core\Channel\Channel;
+use ESD\Core\Pool\Pool;
 use ESD\Coroutine\Coroutine;
 use ESD\Yii\Mongodb\Connection;
 
 /**
- * Class PdoPool
+ * Class MongodbPool
  * @package ESD\Yii\Plugin\Mongodb
  */
-class MongodbPool
+class MongodbPool extends Pool
 {
-    /**
-     * @var Channel
-     */
-    protected $pool;
-
-    /** @var Config  */
-    protected $config;
-
     /**
      * Pool constructor.
      * @param Config $config
@@ -72,29 +65,5 @@ class MongodbPool
             setContextValue($contextKey, $db);
         }
         return $db;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param Config $config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return Channel|mixed
-     */
-    public function getPool()
-    {
-        return $this->pool;
     }
 }

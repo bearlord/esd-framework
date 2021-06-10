@@ -21,9 +21,9 @@ class RedisPlugin extends AbstractPlugin
     use GetLogger;
 
     /**
-     * @var RedisConfig
+     * @var Configs
      */
-    protected $redisConfig;
+    protected $configs;
 
     /**
      * RedisPlugin constructor.
@@ -31,8 +31,7 @@ class RedisPlugin extends AbstractPlugin
     public function __construct()
     {
         parent::__construct();
-        $this->redisConfig = new RedisConfig();
-        $this->redisConfig->setRedisConfigs([]);
+        $this->configs = new Configs();
     }
 
     /**
@@ -44,56 +43,28 @@ class RedisPlugin extends AbstractPlugin
         return "Redis";
     }
 
-
-    /**
-     * @return array
-     */
-    public function getConfigList(): array
-    {
-        return $this->redisConfig->getRedisConfigs();
-    }
-
-    /**
-     * @param RedisOneConfig[] $configList
-     */
-    public function setConfigList(array $configList): void
-    {
-        $this->redisConfig->setRedisConfigs($configList);
-    }
-
-    /**
-     * @param RedisOneConfig $redisOneConfig
-     */
-    public function addConfigList(RedisOneConfig $redisOneConfig): void
-    {
-        $this->redisConfig->addRedisOneConfig($redisOneConfig);
-    }
-
     /**
      * @inheritDoc
      * @param Context $context
-     * @return mixed
-     * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @return mixed|void
      * @throws \Exception
      */
     public function beforeServerStart(Context $context)
     {
         ini_set('default_socket_timeout', '-1');
-        foreach ($this->redisConfig->getRedisConfigs() as $config) {
+        foreach ($this->configs->getConfigs() as $config) {
             $config->merge();
         }
 
-        $configs = Server::$instance->getConfigContext()->get(RedisOneConfig::KEY, []);
+        $configs = Server::$instance->getConfigContext()->get('redis', []);
         foreach ($configs as $key => $value) {
-            $redisOneConfig = new RedisOneConfig($key);
-            $this->redisConfig->addRedisOneConfig($redisOneConfig->buildFromConfig($value));
+            $configObject = new Config($key);
+            $this->configs->addConfig($configObject->buildFromConfig($value));
         }
 
         $redisProxy = new RedisProxy();
         $this->setToDIContainer(\Redis::class, $redisProxy);
         $this->setToDIContainer(Redis::class, $redisProxy);
-        $this->setToDIContainer(RedisConfig::class, $this->redisConfig);
-        return;
     }
 
     /**
@@ -104,23 +75,26 @@ class RedisPlugin extends AbstractPlugin
     public function beforeProcessStart(Context $context)
     {
         ini_set('default_socket_timeout', '-1');
-        $redisManyPool = new RedisManyPool();
-        if (empty($this->redisConfig->getRedisConfigs())) {
+        $pools = new RedisPools();
+
+        $configs = $this->configs->getConfigs();
+        if (empty($configs)) {
             $this->warn(Yii::t('esd', '{name} configuration not found', [
                 'name' => 'Redis'
             ]));
         }
-        foreach ($this->redisConfig->getRedisConfigs() as $key => $config) {
-            $redisPool = new RedisPool($config);
-            $redisManyPool->addPool($redisPool);
+        foreach ($configs as $key => $config) {
+            $pool = new RedisPool($config);
+            $pools->addPool($pool);
             $this->debug(Yii::t('esd', '{driverName} connection pool named {name} created', [
                 'driverName' => sprintf("%s", 'Redis'),
                 'name' => $config->getName()
             ]));
         }
-        $context->add("redisPool", $redisManyPool);
-        $this->setToDIContainer(RedisManyPool::class, $redisManyPool);
-        $this->setToDIContainer(RedisPool::class, $redisManyPool->getPool());
+
+        $context->add("redisPool", $pools);
+        $this->setToDIContainer(RedisPools::class, $pools);
+        $this->setToDIContainer(RedisPool::class, $pools->getPool());
         $this->ready();
     }
 }

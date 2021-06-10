@@ -7,34 +7,25 @@
 namespace ESD\Plugins\Redis;
 
 use ESD\Core\Channel\Channel;
+use ESD\Core\Pool\Pool;
 
 /**
  * Class RedisPool
  * @package ESD\Plugins\Redis
  */
-class RedisPool
+class RedisPool extends Pool
 {
     /**
-     * @var Channel
-     */
-    protected $pool;
-
-    /**
-     * @var RedisOneConfig
-     */
-    protected $redisConfig;
-
-    /**
      * RedisPool constructor.
-     * @param RedisOneConfig $redisConfig
+     * @param Config $config
      * @throws RedisException
      */
-    public function __construct(RedisOneConfig $redisConfig)
+    public function __construct(Config $config)
     {
-        $this->redisConfig = $redisConfig;
-        $redisConfig->buildConfig();
-        $this->pool = DIGet(Channel::class, [$redisConfig->getPoolMaxNumber()]);
-        for ($i = 0; $i < $redisConfig->getPoolMaxNumber(); $i++) {
+        $this->config = $config;
+        $config->buildConfig();
+        $this->pool = DIGet(Channel::class, [$config->getPoolMaxNumber()]);
+        for ($i = 0; $i < $config->getPoolMaxNumber(); $i++) {
             $db = new Redis();
             $this->pool->push($db);
         }
@@ -46,26 +37,26 @@ class RedisPool
      */
     public function db(): Redis
     {
-        $contextKey = sprintf("Redis:%s", $this->getRedisConfig()->getName());
+        $contextKey = sprintf("Redis:%s", $this->getConfig()->getName());
         $db = getContextValue($contextKey);
         if ($db == null) {
             /** @var Redis|\Redis $db */
             $db = $this->pool->pop();
             if ($db instanceof Redis) {
                 if (!$db->isConnected()) {
-                    if (!$db->connect($this->redisConfig->getHost(), $this->redisConfig->getPort())) {
+                    if (!$db->connect($this->config->getHost(), $this->config->getPort())) {
                         throw new RedisException($db->getLastError());
                     }
 
                     $db->setOption(\Redis::OPT_READ_TIMEOUT, -1);
 
-                    if (!empty($this->redisConfig->getPassword())) {
-                        if (!$db->auth($this->redisConfig->getPassword())) {
+                    if (!empty($this->config->getPassword())) {
+                        if (!$db->auth($this->config->getPassword())) {
                             throw new RedisException($db->getLastError());
                         }
                     }
 
-                    $db->select($this->redisConfig->getDatabase());
+                    $db->select($this->config->getDatabase());
                 }
             }
             \Swoole\Coroutine::defer(function () use ($db) {
@@ -75,21 +66,4 @@ class RedisPool
         }
         return $db;
     }
-
-    /**
-     * @return RedisOneConfig
-     */
-    public function getRedisConfig(): RedisOneConfig
-    {
-        return $this->redisConfig;
-    }
-
-    /**
-     * @param RedisOneConfig $redisConfig
-     */
-    public function setRedisConfig(RedisOneConfig $redisConfig): void
-    {
-        $this->redisConfig = $redisConfig;
-    }
-
 }

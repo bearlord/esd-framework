@@ -1,6 +1,6 @@
 <?php
 /**
- * ESD Yii mongodb plugin
+ * ESD Yii Mongodb plugin
  * @author bearlord <565364226@qq.com>
  */
 
