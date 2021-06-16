@@ -34,9 +34,15 @@ class AopPlugin extends AbstractPlugin
     private $aopConfig;
 
     /**
+     * @var ApplicationAspectKernel
+     */
+    private $applicationAspectKernel;
+
+    /**
      * @var array
      */
     private $options;
+
 
     /**
      * AopPlugin constructor.
