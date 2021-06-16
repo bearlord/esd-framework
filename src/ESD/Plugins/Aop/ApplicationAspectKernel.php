@@ -13,7 +13,6 @@ use Go\Aop\Aspect;
 use Go\Aop\Features;
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
-use Go\Instrument\ClassLoading\AopComposerLoader;
 use Go\Instrument\ClassLoading\SourceTransformingLoader;
 
 /**
@@ -34,6 +33,9 @@ class ApplicationAspectKernel extends AspectKernel
         $this->aopConfig = $aopConfig;
     }
 
+    /**
+     * @param array $options
+     */
     public function initContainer(array $options)
     {
         $this->options = $this->normalizeOptions($options);
@@ -77,6 +79,23 @@ class ApplicationAspectKernel extends AspectKernel
 
         $this->wasInitialized = true;
     }
+
+    /**
+     * @param AspectContainer $container
+     */
+    protected function addKernelResourcesToContainer(AspectContainer $container)
+    {
+        $cid = \Swoole\Coroutine::getuid();
+        $trace = ($cid === -1) ? debug_backtrace(
+            DEBUG_BACKTRACE_IGNORE_ARGS,
+            2
+        ) : \Swoole\Coroutine::getBackTrace($cid, DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $refClass = new \ReflectionObject($this);
+
+        $container->addResource($trace[1]['file']);
+        $container->addResource($refClass->getFileName());
+    }
+
 
     /**
      * Configure an AspectContainer with advisors, aspects and pointcuts
