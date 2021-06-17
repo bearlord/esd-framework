@@ -130,18 +130,14 @@ class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
         }
 
         $file = $this->original->findFile($class);
-        printf("FIND FILE: %s\n", $file);
-
 
         if ($file !== false) {
             $file = PathResolver::realpath($file) ?: $file;
-            printf("REAL PATH: %s\n", $file);
             if ($isAllowedFilter(new \SplFileInfo($file))) {
                 // can be optimized here with $cacheState even for debug mode, but no needed right now
                 $file = FilterInjectorTransformer::rewrite($file);
             }
         }
-        printf("RETURN FILE: %s\n", $file);
 
         return $file;
     }

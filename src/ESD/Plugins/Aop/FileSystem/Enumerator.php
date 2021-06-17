@@ -68,11 +68,7 @@ class Enumerator
         $finder->files()
             ->name('*.php')
             ->in($this->getInPaths());
-
-        printf("IN: %s\n", json_encode($this->getInPaths(), JSON_UNESCAPED_SLASHES));
-        printf("EXCLUED: %s\n", json_encode($this->getExcludePaths(), JSON_UNESCAPED_SLASHES));
-
-
+        
         foreach ($this->getExcludePaths() as $path) {
             $finder->notPath($path);
         }

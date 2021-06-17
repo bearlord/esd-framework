@@ -189,12 +189,9 @@ class AopPlugin extends AbstractPlugin
                         foreach ($item->getEnumerator()->enumerate() as $file) {
                             $contents = file_get_contents($file);
                             $class = $this->getClassByString($contents);
-
-                            printf("1 --- %s ---\n", $file);
-                            printf("2 === %s ===\n\n\n", $class);
+                            
                             if (!empty($class)) {
                                 $aopFile = $item->findFile($class);
-                                printf("AOP FILE: %s\n\n", $aopFile);
                                 if (strpos($aopFile, 'php://') === 0) {
                                     if (($fp = fopen($file, 'r')) === false) {
                                         throw new \InvalidArgumentException("Unable to open file: {$fileName}");
