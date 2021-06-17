@@ -203,7 +203,6 @@ class AopPlugin extends AbstractPlugin
                                     SourceTransformingLoader::transformCode($metadata);
                                     $context = $metadata->source;
                                     $aopClass = $this->getClassByString($context);
-                                    var_dump($aopClass);
                                     if (strpos($aopClass, '__AopProxied') !== false) {
                                         $dir = $cacheDir . '/' . $file->getPathname();
                                         $this->createDirectory(dirname($dir), 0777);
