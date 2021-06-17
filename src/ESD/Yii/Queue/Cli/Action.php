@@ -7,9 +7,9 @@
 
 namespace ESD\Yii\Queue\Cli;
 
-use yii\base\Action as BaseAction;
-use yii\base\InvalidConfigException;
-use yii\console\Controller as ConsoleController;
+use ESD\Yii\Base\Action as BaseAction;
+use ESD\Yii\Base\InvalidConfigException;
+use ESD\Yii\Console\Controller as ConsoleController;
 
 /**
  * Base Command Action.

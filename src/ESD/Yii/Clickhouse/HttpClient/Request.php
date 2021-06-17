@@ -6,7 +6,7 @@ namespace ESD\Yii\Clickhouse\HttpClient;
  * @package ESD\Yii\Clickhouse\httpclient
  * tmp FIX
  */
-class Request extends \yii\httpclient\Request
+class Request
 {
 
     public function prepare()
