@@ -132,6 +132,7 @@ class AopPlugin extends AbstractPlugin
     public function beforeServerStart(Context $context)
     {
         $serverConfig = Server::$instance->getServerConfig();
+
         $options = [
             //Use 'false' for production mode
             'debug' => $serverConfig->isDebug(),
@@ -202,6 +203,7 @@ class AopPlugin extends AbstractPlugin
                                     SourceTransformingLoader::transformCode($metadata);
                                     $context = $metadata->source;
                                     $aopClass = $this->getClassByString($context);
+                                    var_dump($aopClass);
                                     if (strpos($aopClass, '__AopProxied') !== false) {
                                         $dir = $cacheDir . '/' . $file->getPathname();
                                         $this->createDirectory(dirname($dir), 0777);

@@ -103,12 +103,15 @@ class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
     {
         $file = $this->findFile($class);
 
+        printf("class: %s\n file: %s\n\n", $class, $file);
         if ($file !== false) {
             if (strpos($file, 'php://') === 0) {
                 if (preg_match('/resource=(.+)$/', $file, $matches)) {
                     $file = PathResolver::realpath($matches[1]);
                 }
                 $aopFile = $this->options['cacheDir'] . '/' . $file;
+
+                printf("real path: %s\ncache path: %s\n\n", $file, $aopFile);
                 if (file_exists($aopFile)) {
                     $file = $aopFile;
                 }
