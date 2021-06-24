@@ -86,7 +86,7 @@ class AopPlugin extends AbstractPlugin
         //Add src directory automatically
         $serverConfig = Server::$instance->getServerConfig();
         $this->aopConfig->addIncludePath($serverConfig->getSrcDir());
-        $this->aopConfig->addIncludePath($serverConfig->getVendorDir() . "/bearlord/esd-framework");
+        $this->aopConfig->addIncludePath($serverConfig->getVendorDir() . "/bearlord/esd-framework/src/ESD");
         $this->aopConfig->setCacheDir($cacheDir);
 
         $serverConfig = Server::$instance->getServerConfig();
