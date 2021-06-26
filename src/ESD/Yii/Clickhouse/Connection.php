@@ -4,13 +4,13 @@ namespace ESD\Yii\Clickhouse;
 
 use ESD\Yii\Base\Component;
 use ESD\Yii\Caching\Cache;
-use yii\httpclient\Client;
+use ESD\Yii\HttpClient\Client;
 use ESD\Yii\Yii;
 
 /**
  * Class Connection
  * @package ESD\Yii\Clickhouse
- * @property \yii\httpclient\Client $transport
+ * @property \ESD\Yii\Httpclient\Client $transport
  */
 class Connection extends \ESD\Yii\Db\Connection
 {
@@ -40,7 +40,7 @@ class Connection extends \ESD\Yii\Db\Connection
      */
     public $commandClass = 'ESD\Yii\Clickhouse\Command';
     public $schemaClass = 'ESD\Yii\Clickhouse\Schema';
-    public $transportClass = 'yii\httpclient\CurlTransport';
+    public $transportClass = 'ESD\Yii\HttpClient\CurlTransport';
 
     /**
      * @var array

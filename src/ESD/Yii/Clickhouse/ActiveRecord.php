@@ -10,8 +10,6 @@ use ESD\Yii\Yii;
  */
 class ActiveRecord extends \ESD\Yii\Db\ActiveRecord
 {
-
-
     /**
      * Returns the connection used by this AR class.
      * @return mixed|Connection the database connection used by this AR class.

@@ -2,7 +2,8 @@
 
 namespace ESD\Yii\Clickhouse;
 
-use ESD\Yii\Clickhouse\httpclient\Request;
+use ESD\Yii\Clickhouse\HttpClient\Request;
+use ESD\Yii\HttpClient\Response;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Exception;
 use ESD\Yii\Db\Command as BaseCommand;
@@ -119,6 +120,10 @@ class Command extends BaseCommand
         return $this;
     }
 
+    /**
+     * @param array $values
+     * @return $this|Command
+     */
     public function bindValues($values)
     {
         if (empty($values)) {
@@ -137,7 +142,11 @@ class Command extends BaseCommand
         return $this;
     }
 
-
+    /**
+     * @param false $prepare
+     * @return int|string
+     * @throws Exception
+     */
     public function execute($prepare = false)
     {
         $rawSql = $this->getRawSql();
@@ -155,7 +164,6 @@ class Command extends BaseCommand
         }
         return $response;
     }
-
 
     /**
      * @return array|mixed
@@ -178,6 +186,9 @@ class Command extends BaseCommand
         return (is_numeric($result)) ? ($result + 0) : $result;
     }
 
+    /**
+     * @return string
+     */
     public function getRawSql()
     {
         if (empty($this->params)) {
@@ -295,7 +306,9 @@ class Command extends BaseCommand
         ];
     }
 
-
+    /**
+     * @return mixed
+     */
     protected function getBaseUrl()
     {
         $urlBase = $this->db->transport->baseUrl;
@@ -316,7 +329,13 @@ class Command extends BaseCommand
         }
     }
 
-
+    /**
+     * @param $result
+     * @param null $method
+     * @param null $fetchMode
+     * @return array|false|mixed|null
+     * @throws \Exception
+     */
     private function prepareResult($result, $method = null, $fetchMode = null)
     {
         $this->prepareResponseData($result);
@@ -348,15 +367,11 @@ class Command extends BaseCommand
         return $result;
     }
 
-
     /**
-     * Parse response with data
-     * @param \yii\httpclient\Response $response
-     * @param null|string $method
-     * @param bool $prepareResponse
-     * @return mixed|array
+     * @param Response $response
+     * @return string
      */
-    private function parseResponse(\yii\httpclient\Response $response)
+    private function parseResponse(Response $response)
     {
         $contentType = $response
             ->getHeaders()
@@ -373,6 +388,9 @@ class Command extends BaseCommand
         return $result;
     }
 
+    /**
+     * @param $result
+     */
     private function prepareResponseData($result)
     {
         if (!is_array($result)) {
@@ -387,14 +405,21 @@ class Command extends BaseCommand
         }
     }
 
+    /**
+     * @param $content
+     * @return mixed|null
+     */
     private function parseJson($content)
     {
         return Json::decode($content);
     }
 
+    /**
+     * @throws DbException
+     */
     private function ensureQueryExecuted()
     {
-        if (true !== $this->_is_result) {
+        if (true !== $this->_isResult) {
             throw new DbException('Query was not executed yet');
         }
     }
@@ -415,7 +440,7 @@ class Command extends BaseCommand
      */
     public function getData()
     {
-        if ($this->_is_result === null && !empty($this->getSql())) {
+        if ($this->_isResult === null && !empty($this->getSql())) {
             $this->queryInternal(null);
         }
         $this->ensureQueryExecuted();
@@ -532,7 +557,7 @@ class Command extends BaseCommand
      * @param null $columns columns default columns get schema table
      * @param array $files list files
      * @param string $format file format
-     * @return \yii\httpclient\Response[]
+     * @return \ESD\Yii\Httpclient\Response[]
      */
     public function batchInsertFiles($table, $columns = null, $files = [], $format = 'CSV')
     {
@@ -575,7 +600,7 @@ class Command extends BaseCommand
      * @param array $files
      * @param string $format
      * @param int $size
-     * @return \yii\httpclient\Response[]
+     * @return \ESD\Yii\Httpclient\Response[]
      */
     public function batchInsertFilesDataSize($table, $columns = null, $files = [], $format = 'CSV', $size = 10000)
     {
@@ -652,8 +677,12 @@ class Command extends BaseCommand
         return $this->setSql($sql);
     }
 
+    /**
+     * @return array|\ESD\Yii\Db\DataReader|void
+     * @throws DbException
+     */
     public function query()
     {
-        throw new \ESD\Yii\Db\Exception('Clichouse unsupport cursor');
+        throw new DbException('Clichouse unsupport cursor');
     }
 }

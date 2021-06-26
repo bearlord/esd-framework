@@ -1,5 +1,5 @@
 <?php
-namespace ESD\Yii\Clickhouse\gii\model;
+namespace ESD\Yii\Clickhouse\Gii\model;
 /**
  * Created by PhpStorm.
  * User: PHPdev

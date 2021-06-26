@@ -1,6 +1,6 @@
 <?php
 
-namespace ESD\Yii\Clickhouse
+namespace ESD\Yii\Clickhouse;
 
 use ESD\Yii\Db\ColumnSchema as BaseColumnSchema;
 use ESD\Yii\Db\ExpressionInterface;

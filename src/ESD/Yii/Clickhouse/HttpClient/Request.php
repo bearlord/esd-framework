@@ -3,10 +3,10 @@ namespace ESD\Yii\Clickhouse\HttpClient;
 
 /**
  * Class Request
- * @package ESD\Yii\Clickhouse\httpclient
+ * @package ESD\Yii\Clickhouse\HttpClient
  * tmp FIX
  */
-class Request
+class Request extends \ESD\Yii\HttpClient\Request
 {
 
     public function prepare()
