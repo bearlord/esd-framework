@@ -82,6 +82,7 @@ class Command extends BaseCommand
     public function setFormat($format)
     {
         $this->_format = $format;
+
         return $this;
     }
 
@@ -100,6 +101,7 @@ class Command extends BaseCommand
     public function setOptions($options)
     {
         $this->_options = $options;
+
         return $this;
     }
 
@@ -117,6 +119,7 @@ class Command extends BaseCommand
             }
             $this->_options[$key] = $value;
         }
+
         return $this;
     }
 
@@ -129,7 +132,7 @@ class Command extends BaseCommand
         if (empty($values)) {
             return $this;
         }
-        //$schema = $this->db->getSchema();
+
         foreach ($values as $name => $value) {
             if (is_array($value)) {
                 $this->_pendingParams[$name] = $value;
@@ -340,6 +343,7 @@ class Command extends BaseCommand
     {
         $this->prepareResponseData($result);
         $result = ArrayHelper::getValue($result, 'data', []);
+
         switch ($method) {
             case self::FETCH_COLUMN:
                 return array_map(function ($a) {
@@ -425,8 +429,10 @@ class Command extends BaseCommand
     }
 
     /**
-     * get meta columns information
+     * Get meta columns information
+     *
      * @return mixed
+     * @throws DbException
      */
     public function getMeta()
     {
@@ -435,7 +441,8 @@ class Command extends BaseCommand
     }
 
     /**
-     * get all data result
+     * Get all data result
+     *
      * @return mixed|array
      */
     public function getData()
@@ -444,6 +451,7 @@ class Command extends BaseCommand
             $this->queryInternal(null);
         }
         $this->ensureQueryExecuted();
+
         return $this->_data;
     }
 
@@ -498,7 +506,8 @@ class Command extends BaseCommand
     }
 
     /**
-     *  get count result items
+     * Get count result items
+     *
      * @return mixed
      */
     public function getRows()
@@ -508,7 +517,8 @@ class Command extends BaseCommand
     }
 
     /**
-     * max count result items
+     * Get max count result items
+     *
      * @return mixed
      */
     public function getCountAll()
@@ -549,6 +559,7 @@ class Command extends BaseCommand
     {
         $params = [];
         $sql = $this->db->getQueryBuilder()->insert($table, $columns, $params);
+
         return $this->setSql($sql)->bindValues($params);
     }
 
@@ -584,11 +595,6 @@ class Command extends BaseCommand
         }
 
         $responses = $this->db->transport->batchSend($requests);
-        /*foreach ($responses as $response){
-           var_dump($response->getContent());
-           var_dump($response->getHeaders());
-           var_dump($response->getFormat());
-        }*/
         Yii::beginProfile($sql);
 
         return $responses;
@@ -656,6 +662,7 @@ class Command extends BaseCommand
         $request->setFullUrl($url);
         $request->setMethod('POST');
         $request->setContent($data);
+
         return $request;
     }
 
@@ -674,6 +681,7 @@ class Command extends BaseCommand
     public function batchInsert($table, $columns, $rows)
     {
         $sql = $this->db->getQueryBuilder()->batchInsert($table, $columns, $rows);
+
         return $this->setSql($sql);
     }
 

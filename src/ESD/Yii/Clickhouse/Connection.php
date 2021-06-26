@@ -34,7 +34,6 @@ class Connection extends \ESD\Yii\Db\Connection
      */
     public $port = 8123;
 
-
     /**
      * @var string
      */
@@ -49,15 +48,23 @@ class Connection extends \ESD\Yii\Db\Connection
         'class' => 'ESD\Yii\Clickhouse\HttpClient\Request',
     ];
 
+    /**
+     * @var string[]
+     */
     public $schemaMap = [
         'clickhouse' => 'ESD\Yii\Clickhouse\Schema'
     ];
 
-
-    /** @var bool|Client */
+    /**
+     * @var bool| Client
+     */
     private $_transport = false;
 
+    /**
+     * @var string
+     */
     private $_schema;
+
     /**
      * @var array
      */
@@ -81,7 +88,6 @@ class Connection extends \ESD\Yii\Db\Connection
         $this->_options = $options;
     }
 
-
     /**
      * @param $sql
      * @param array $params
@@ -102,7 +108,6 @@ class Connection extends \ESD\Yii\Db\Connection
         return $command->bindValues($params);
     }
 
-
     /**
      * @return bool|Client
      */
@@ -111,7 +116,9 @@ class Connection extends \ESD\Yii\Db\Connection
         return $this->_transport;
     }
 
-
+    /**
+     * @return bool
+     */
     public function getIsActive()
     {
         return $this->_transport !== false;
@@ -132,6 +139,9 @@ class Connection extends \ESD\Yii\Db\Connection
         ]);
     }
 
+    /**
+     * @return string
+     */
     private function buildDsnUrl()
     {
         if (strpos($this->dsn, '@') !== false) {
@@ -147,7 +157,6 @@ class Connection extends \ESD\Yii\Db\Connection
             }
 
             $url = ($scheme !== '' ? $scheme . '://' : '') . $auth . $dsn . ':' . $this->port;
-
         }
 
         $params = [];
@@ -158,8 +167,12 @@ class Connection extends \ESD\Yii\Db\Connection
         return $url;
     }
 
-
-    public function buildUrl($url, $data = [])
+    /**
+     * @param string $url
+     * @param array $data
+     * @return string
+     */
+    public function buildUrl(string $url, array $data = [])
     {
         $parsed = parse_url($url);
         isset($parsed['query']) ? parse_str($parsed['query'], $parsed['query']) : $parsed['query'] = [];
@@ -182,7 +195,6 @@ class Connection extends \ESD\Yii\Db\Connection
             . $parsed['query'];
     }
 
-
     /**
      * Quotes a string value for use in a query.
      * Note that if the parameter is not a string or int, it will be returned without change.
@@ -194,12 +206,21 @@ class Connection extends \ESD\Yii\Db\Connection
         return $this->getSchema()->quoteValue($str);
     }
 
+    /**
+     * @param string $sql
+     * @return string
+     */
     public function quoteSql($sql)
     {
         return $sql;
     }
 
-
+    /**
+     * @return bool
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Db\Exception
+     * @throws \ESD\Yii\HttpClient\Exception
+     */
     public function ping()
     {
         $this->open();
@@ -214,7 +235,6 @@ class Connection extends \ESD\Yii\Db\Connection
         return trim($response->content) == '1';
     }
 
-
     /**
      * Closes the connection when this component is being serialized.
      * @return array
@@ -224,7 +244,6 @@ class Connection extends \ESD\Yii\Db\Connection
         $this->close();
         return array_keys(get_object_vars($this));
     }
-
 
     /**
      * Closes the currently active DB connection.
@@ -260,16 +279,27 @@ class Connection extends \ESD\Yii\Db\Connection
         ]);
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     public function quoteTableName($name)
     {
         return $name;
     }
 
+    /**
+     * @return string
+     */
     public function getDriverName()
     {
         return 'clickhouse';
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     public function quoteColumnName($name)
     {
         return $name;

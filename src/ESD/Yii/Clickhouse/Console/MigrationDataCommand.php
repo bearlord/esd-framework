@@ -16,23 +16,31 @@ use ESD\Yii\Helpers\VarDumper;
  */
 class MigrationDataCommand extends BaseObject
 {
+
     const FORMAT_CSV = 'CSV';
     const FORMAT_JSON_EACH_ROW = 'JSONEachRow';
 
     /** @var string source table name */
     public $sourceTable;
+
     /** @var \ESD\Yii\Db\Query */
     public $sourceQuery;
+
     /** @var \ESD\Yii\Db\Connection */
     public $sourceDb;
+
     /** @var bool expand aggregate data to not aggregate save */
     public $sourceRowExpandData = false;
+
     /** @var string table name to save data */
     public $storeTable;
+
     /** @var \ESD\Yii\Clickhouse\Connection */
     public $storeDb;
+
     /** @var int size data and step export data */
     public $batchSize = 10000;
+
     public $format = self::FORMAT_JSON_EACH_ROW;
 
     /** @var \Closure($row) if closure return false then skip row save dump */
@@ -45,6 +53,7 @@ class MigrationDataCommand extends BaseObject
 
     /** @var  TableSchema */
     private $_schema;
+
     private $_files = [];
 
     /**

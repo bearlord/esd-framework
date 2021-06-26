@@ -82,7 +82,6 @@ class ActiveRecord extends \ESD\Yii\Db\ActiveRecord
         $this->setOldAttributes($values);
         $this->afterSave(true, $changedAttributes);
         return true;
-
     }
 
 

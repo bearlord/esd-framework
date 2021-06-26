@@ -99,9 +99,12 @@ class Schema extends \ESD\Yii\Db\Schema
         return $this->_builder;
     }
 
+    /**
+     * @return QueryBuilder
+     */
     public function createQueryBuilder()
     {
-        return new \ESD\Yii\Clickhouse\QueryBuilder($this->db);
+        return new QueryBuilder($this->db);
     }
 
     /**

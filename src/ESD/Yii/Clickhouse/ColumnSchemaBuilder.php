@@ -2,13 +2,11 @@
 
 namespace ESD\Yii\Clickhouse;
 
-use ESD\Yii\Db\ColumnSchemaBuilder as BaseColumnSchemaBuilder;
-
 /**
  * Class ColumnSchemaBuilder
  * @package ESD\Yii\Clickhouse
  */
-class ColumnSchemaBuilder extends BaseColumnSchemaBuilder
+class ColumnSchemaBuilder extends \ESD\Yii\Db\ColumnSchemaBuilder
 {
     /**
      * @inheritdoc

@@ -2,21 +2,14 @@
 
 namespace ESD\Yii\Clickhouse;
 
-use ESD\Yii\Db\Query as BaseQuery;
 use ESD\Yii\Db\Exception as DbException;
 use ESD\Yii\Yii;
 
 /**
  * Class Query
- * @package kak\clickhouse
- * @method getCountAll() int
- * @method getTotals() array
- * @method getData() array
- * @method getExtremes() array
- * @method getRows() int
- * @method getMeta() array
+ * @package ESD\Yii\Clickhouse
  */
-class Query extends BaseQuery
+class Query extends \ESD\Yii\Db\Query
 {
 
     /** @var \ESD\Yii\Clickhouse\Command|null */
@@ -33,6 +26,7 @@ class Query extends BaseQuery
 
     /**
      * Creates a DB command that can be used to execute this query.
+     *
      * @param \ESD\Yii\Clickhouse\Connection $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return \ESD\Yii\Clickhouse\Command the created DB command instance.
@@ -51,6 +45,7 @@ class Query extends BaseQuery
 
     /**
      * set section query SAMPLE
+     *
      * @param $n float|int  set value 0.1 .. 1 percent or int 1 .. 1m value
      * @return $this the query object itself
      */
@@ -59,7 +54,6 @@ class Query extends BaseQuery
         $this->sample = $n;
         return $this;
     }
-
 
     /**
      * Sets the PREWHERE part of the query.
@@ -83,7 +77,6 @@ class Query extends BaseQuery
         $this->addParams($params);
         return $this;
     }
-
 
     /**
      * Adds an additional PREWHERE condition to the existing one.
