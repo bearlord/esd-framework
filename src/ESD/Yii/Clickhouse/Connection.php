@@ -46,7 +46,7 @@ class Connection extends \ESD\Yii\Db\Connection
      * @var array
      */
     public $requestConfig = [
-        'class' => 'ESD\Yii\Clickhouse\httpclient\Request',
+        'class' => 'ESD\Yii\Clickhouse\HttpClient\Request',
     ];
 
     public $schemaMap = [
