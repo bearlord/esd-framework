@@ -20,6 +20,9 @@ use ESD\Yii\Yii;
  */
 class ServiceController extends GoController
 {
+    /**
+     * @var array
+     */
     protected $serviceProvider = [];
 
     /**
@@ -63,8 +66,12 @@ class ServiceController extends GoController
             return $this->onExceptionHandle($exception);
         }
     }
-
-    protected function subProcess($jsonObject)
+    
+    /**
+     * @param object $jsonObject
+     * @return array
+     */
+    protected function subProcess(object $jsonObject)
     {
         $parseData = ArrayHelper::toArray($jsonObject);
         //rpc call with invalid JSON:
