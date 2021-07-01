@@ -7,6 +7,7 @@
 namespace ESD\Plugins\JsonRpc\Client;
 
 use ESD\Plugins\JsonRpc\DataFormatter;
+use ESD\Plugins\JsonRpc\Protocol;
 use ESD\Rpc\Client\AbstractServiceClient;
 use ESD\Rpc\IdGenerator\IdGeneratorInterface;
 use ESD\Yii\Base\InvalidArgumentException;
@@ -26,7 +27,7 @@ class ServiceClient extends AbstractServiceClient
     /**
      * @var string The protocol of the target service
      */
-    public $protocol = 'jsonrpc-http';
+    public $protocol = '';
 
     /**
      * @var string
@@ -38,25 +39,11 @@ class ServiceClient extends AbstractServiceClient
      */
     public $idGenerator = 'ESD\Rpc\IdGenerator\UniqidIdGenerator';
 
-    protected $pathGenerator;
-
     /**
      * @var Client
      */
     public $client;
 
-    /**
-     * @var string
-     */
-    private $_transport = 'ESD\Yii\JsonRpc\Transporter\StreamTransport';
-
-    /**
-     * @return string
-     */
-    public function getProtocol(): string
-    {
-        return $this->protocol;
-    }
 
     /**
      * @param string $protocol
@@ -67,25 +54,47 @@ class ServiceClient extends AbstractServiceClient
     }
 
     /**
+     * @return string
+     */
+    public function getProtocol(): string
+    {
+        if (empty($this->protocol)) {
+            $config = $this->getConfig();
+            $this->protocol = !empty($config['protocol']) ? $config['protocol'] : 'jsonrpc-http';
+        }
+
+        return $this->protocol;
+    }
+
+    /**
      * @param string $idGenerator
      */
-    public function setIdGenerator(string $idGenerator)
+    public function setIdGenerator(string $idGenerator): void
     {
         $this->idGenerator = $idGenerator;
     }
 
     /**
-     * @return IdGeneratorInterface
+     * @return string
      */
-    protected function getIdGenerator() :IdGeneratorInterface
+    protected function getIdGenerator(): string
     {
-        $config = $this->getConfig();
-        $idGenerator = !empty($config['idGenerator']) ? $config['idGenerator'] : '';
-        if (empty($idGenerator)) {
-            $idGenerator = $this->idGenerator;
+        if (empty($this->idGenerator)) {
+            $config = $this->getConfig();
+
+            $this->idGenerator = !empty($config['idGenerator']) ? $config['idGenerator'] : 'ESD\Rpc\IdGenerator\UniqidIdGenerator';
         }
 
-        return Yii::createObject($idGenerator);
+        return $this->idGenerator;
+    }
+
+    /**
+     * @return IdGeneratorInterface
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     */
+    public function getIdGeneratorObject(): IdGeneratorInterface
+    {
+        return Yii::createObject($this->getIdGenerator());
     }
 
     /**
@@ -96,7 +105,6 @@ class ServiceClient extends AbstractServiceClient
     {
         return Yii::createObject(DataFormatter::class);
     }
-
 
     /**
      * @param string $methodName
@@ -120,6 +128,7 @@ class ServiceClient extends AbstractServiceClient
     protected function generateData(string $method, array $params, ?string $id)
     {
         $path = $this->generateRpcPath($method);
+
         return $this->getDataFormatter()->formatRequest([$path, $params, $id]);
     }
 
@@ -130,16 +139,18 @@ class ServiceClient extends AbstractServiceClient
      */
     protected function request(string $method, array $params, ?string $id = null)
     {
-        if (!$id && $this->getIdGenerator() instanceof IdGeneratorInterface) {
-            $id = $this->getIdGenerator()->generate();
+        if (!$id && $this->getIdGeneratorObject() instanceof IdGeneratorInterface) {
+            $id = $this->getIdGeneratorObject()->generate();
         }
 
-        $this->client = Yii::createObject(Client::class);
-        var_dump($this->client, $id);
+        $this->client = Yii::createObject([
+            'class' => Client::class,
+            'protocol' => $this->getProtocol(),
+            'config' => $this->getConfig()
+        ]);
 
         $this->client->send($this->generateData($method, $params, $id));
     }
-
 
 
     public function __call($name, $params)

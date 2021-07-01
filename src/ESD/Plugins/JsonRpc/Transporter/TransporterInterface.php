@@ -12,5 +12,11 @@ namespace ESD\Plugins\JsonRpc\Transporter;
  */
 interface TransporterInterface
 {
+    public function send(string $data);
 
+    public function recv();
+
+    public function getLoadBalancer(): ?LoadBalancerInterface;
+
+    public function setLoadBalancer(LoadBalancerInterface $loadBalancer): TransporterInterface;
 }
