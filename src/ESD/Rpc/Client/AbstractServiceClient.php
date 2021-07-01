@@ -49,6 +49,28 @@ abstract class AbstractServiceClient extends Component
      */
     public $client;
 
+
+    /**
+     * @param string $protocol
+     */
+    public function setProtocol(string $protocol): void
+    {
+        $this->protocol = $protocol;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol(): string
+    {
+        if (empty($this->protocol)) {
+            $config = $this->getConfig();
+            $this->protocol = !empty($config['protocol']) ? $config['protocol'] : 'jsonrpc-http';
+        }
+
+        return $this->protocol;
+    }
+
     /**
      * @throws \Exception
      */

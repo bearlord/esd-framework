@@ -126,16 +126,9 @@ class Client extends Component
      */
     public function getTransporterObject()
     {
-        $params = [
-            'class' => $this->getTransporter(),
-            'nodes' => $this->config['nodes']
-        ];
-
-        if (!empty($this->config['setting'])) {
-            $params = array_merge($params, $this->config['setting']);
-        }
-
-        return Yii::createObject($params);
+        return Yii::createObject($this->getTransporter(), [
+            $this->config
+        ]);
     }
 
 
@@ -144,7 +137,7 @@ class Client extends Component
     {
         $packer = $this->getPackerObject();
         $packedData = $packer->pack($data);
-        var_dump($packedData);
+        var_dump($packedData, $this->getTransporterObject());
 
         $response = $this->getTransporterObject()->send($packedData);
 

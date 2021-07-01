@@ -6,12 +6,15 @@
 
 namespace ESD\Plugins\JsonRpc\Client;
 
+use ESD\LoadBalance\LoadBalancerManager;
 use ESD\Plugins\JsonRpc\DataFormatter;
 use ESD\Plugins\JsonRpc\Protocol;
+use ESD\Plugins\JsonRpc\RpcException;
 use ESD\Rpc\Client\AbstractServiceClient;
 use ESD\Rpc\IdGenerator\IdGeneratorInterface;
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Yii;
+use RuntimeException;
 
 /**
  * Class ServiceClient
@@ -44,27 +47,18 @@ class ServiceClient extends AbstractServiceClient
      */
     public $client;
 
-
-    /**
-     * @param string $protocol
-     */
-    public function setProtocol(string $protocol): void
+    public function __construct($config = [])
     {
-        $this->protocol = $protocol;
+        parent::__construct($config);
+
+        $this->client = Yii::createObject([
+            'class' => Client::class,
+            'protocol' => $this->getProtocol(),
+            'config' => $this->getConfig()
+        ]);
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol(): string
-    {
-        if (empty($this->protocol)) {
-            $config = $this->getConfig();
-            $this->protocol = !empty($config['protocol']) ? $config['protocol'] : 'jsonrpc-http';
-        }
-
-        return $this->protocol;
-    }
+    
 
     /**
      * @param string $idGenerator
@@ -137,20 +131,20 @@ class ServiceClient extends AbstractServiceClient
      * @param array $params
      * @param string|null $id
      */
-    protected function request(string $method, array $params, ?string $id = null)
+    public function request(string $method, array $params, ?string $id = null)
     {
         if (!$id && $this->getIdGeneratorObject() instanceof IdGeneratorInterface) {
             $id = $this->getIdGeneratorObject()->generate();
         }
 
-        $this->client = Yii::createObject([
-            'class' => Client::class,
-            'protocol' => $this->getProtocol(),
-            'config' => $this->getConfig()
-        ]);
-
-        $this->client->send($this->generateData($method, $params, $id));
+        $response = $this->client->send($this->generateData($method, $params, $id));
+        if (!is_array($response)) {
+            throw new RpcException('Invalid response.');
+        }
     }
+
+
+
 
 
     public function __call($name, $params)

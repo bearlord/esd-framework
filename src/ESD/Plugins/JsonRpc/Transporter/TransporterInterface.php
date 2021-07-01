@@ -6,6 +6,8 @@
 
 namespace ESD\Plugins\JsonRpc\Transporter;
 
+use ESD\LoadBalance\LoadBalancerInterface;
+
 /**
  * Interface TransporterInterface
  * @package ESD\Plugins\JsonRpc\Transporter
