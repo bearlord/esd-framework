@@ -156,13 +156,17 @@ class ServiceController extends GoController
      */
     public function createAction($id)
     {
-        if (empty($this->serviceProvider)) {
+        if (strpos($id, '/') === false) {
+            return null;
+        }
+        list ($serviceName, $methodName) = explode('/', $id);
+        $serviceProvider = !empty($this->serviceProvider[$serviceName]) ? $this->serviceProvider[$serviceName] : null;
+        if (empty($serviceProvider)) {
             return null;
         }
 
-        $serviceProviderInstance = Yii::createObject($this->serviceProvider);
-        if (preg_match('/^(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]+$/', $id)) {
-            $methodName = $id;
+        $serviceProviderInstance = Yii::createObject($serviceProvider);
+        if (preg_match('/^(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]+$/', $methodName)) {
             if (method_exists($serviceProviderInstance, $methodName)) {
                 $method = new \ReflectionMethod($serviceProviderInstance, $methodName);
                 if (!$method->isPrivate() && $method->getName() === $methodName) {

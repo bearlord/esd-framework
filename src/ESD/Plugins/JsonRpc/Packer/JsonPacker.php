@@ -20,7 +20,7 @@ class JsonPacker extends Component implements PackerInterface
      */
     public function pack($data): string
     {
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
+        return json_encode($data, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
     }
 
     /**

@@ -7,10 +7,10 @@
 namespace ESD\Plugins\JsonRpc\Client;
 
 use ESD\Core\Server\Server;
-use ESD\Plugins\JsonRpc\JsonEofPacker;
-use ESD\Plugins\JsonRpc\JsonLengthPacker;
-use ESD\Plugins\JsonRpc\JsonPacker;
-use ESD\Plugins\JsonRpc\PackerInterface;
+use ESD\Plugins\JsonRpc\Packer\JsonEofPacker;
+use ESD\Plugins\JsonRpc\Packer\JsonLengthPacker;
+use ESD\Plugins\JsonRpc\Packer\JsonPacker;
+use ESD\Plugins\JsonRpc\Packer\PackerInterface;
 use ESD\Plugins\JsonRpc\Protocol;
 use ESD\Plugins\JsonRpc\Transporter\JsonRpcHttpTransporter;
 use ESD\Plugins\JsonRpc\Transporter\JsonRpcPoolTransporter;
@@ -131,13 +131,15 @@ class Client extends Component
         ]);
     }
 
-
-
+    /**
+     * @param $data
+     * @return mixed|null
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     */
     public function send($data)
     {
         $packer = $this->getPackerObject();
         $packedData = $packer->pack($data);
-        var_dump($packedData, $this->getTransporterObject());
 
         $response = $this->getTransporterObject()->send($packedData);
 

@@ -141,12 +141,49 @@ class ServiceClient extends AbstractServiceClient
         if (!is_array($response)) {
             throw new RpcException('Invalid response.');
         }
+
+        $response = $this->checkRequestIdAndTryAgain($response, $id);
+
+        if (array_key_exists('result', $response)) {
+            return $response['result'];
+        }
+        if (array_key_exists('error', $response)) {
+            return $response['error'];
+        }
+        var_dump($response);
     }
 
+    protected function checkRequestIdAndTryAgain(array $response, $id, int $again = 1): array
+    {
+        if (is_null($id)) {
+            // If the request id is null then do not check.
+            return $response;
+        }
 
+        if (isset($response['id']) && $response['id'] === $id) {
+            return $response;
+        }
 
+        if ($again <= 0) {
+            throw new RequestException(sprintf(
+                'Invalid response. Request id[%s] is not equal to response id[%s].',
+                $id,
+                $response['id'] ?? null
+            ));
+        }
 
+        $response = $this->client->recv();
+        --$again;
 
+        return $this->checkRequestIdAndTryAgain($response, $id, $again);
+    }
+
+    /**
+     * @param string $name
+     * @param array $params
+     * @return mixed|void
+     * @throws RpcException
+     */
     public function __call($name, $params)
     {
         return $this->request($name, $params);

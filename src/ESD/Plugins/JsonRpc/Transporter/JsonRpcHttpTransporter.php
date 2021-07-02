@@ -16,7 +16,10 @@ use ESD\LoadBalance\Node;
 use ESD\Yii\Base\BaseObject;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidArgumentException;
+use ESD\Yii\Helpers\Json;
 use ESD\Yii\HttpClient\Client;
+use ESD\Yii\HttpClient\CurlFormatter;
+use ESD\Yii\HttpClient\CurlTransport;
 use ESD\Yii\Yii;
 
 
@@ -88,11 +91,8 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
             $this->loadBalancerAlgorithm = $config['loadBalancer'];
         }
 
-
         $loadBalancer = $this->createLoadBalancer($this->createNodes());
         $this->setLoadBalancer($loadBalancer);
-        var_dump($this);
-
     }
 
     /**
@@ -112,7 +112,10 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
                     if (!is_int($item['port'])) {
                         throw new InvalidArgumentException(sprintf('Invalid node config [%s], the port option has to a integer.', implode(':', $item)));
                     }
-                    $nodes[] = new Node($item['host'], $item['port']);
+                    $schema = $item['schema'] ?? null;
+                    $path = $item['path'] ?? null;
+                    $weigth = $item['weight'] ?? 0;
+                    $nodes[] = new Node($schema, $item['host'], $item['port'], $path, $weigth);
                 }
             }
             return $nodes;
@@ -191,24 +194,29 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
     public function send(string $data)
     {
         $node = $this->getNode();
-        $uri = $node->host . ':' . $node->port;
-        $schema = $node->getSchema();
-        $url = $schema . $uri;
-
-        var_dump($data);
+        $url = sprintf("%s://%s:%s/%s",
+            $node->getSchema(),
+            $node->getHost(),
+            $node->getPort(),
+            $node->getPath()
+        );
 
         $client = new Client();
-        $response = $client->createRequest()
-            ->setFormat(Client::FORMAT_RAW_URLENCODED)
+        $client->setTransport(CurlTransport::class);
+
+        $response = $client
+            ->createRequest()
+            ->setUrl($url)
             ->setMethod('POST')
-            ->setUrl('https://www.163.com/news/article/GDB6GFUS0001899N.html?clickfrom=w_yw')
+            ->setHeaders([
+                'Content-Type' => 'application/json; charset=UTF-8'
+            ])
+            ->setFormat(Client::FORMAT_CURL)
+            ->setData($data)
             ->send();
         if ($response->isOk) {
             $data = $response->content;
-            $channel->push([
-                'index' => $i,
-                'finish_time' => date("Y-m-d H:i:s")
-            ]);
+            return $data;
         }
 
         $this->loadBalancer->removeNode($node);
@@ -219,7 +227,6 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
     {
         // TODO: Implement recv() method.
     }
-
 
 
 }
