@@ -21,6 +21,8 @@ use ESD\Yii\HttpClient\Client;
 use ESD\Yii\HttpClient\CurlFormatter;
 use ESD\Yii\HttpClient\CurlTransport;
 use ESD\Yii\Yii;
+use Swlib\Saber;
+use Swoole\Coroutine\Channel;
 
 
 /**
@@ -190,7 +192,10 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
         return $this;
     }
 
-
+    /**
+     * @param string $data
+     * @return mixed
+     */
     public function send(string $data)
     {
         $node = $this->getNode();
@@ -201,31 +206,27 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
             $node->getPath()
         );
 
-        $client = new Client();
-        $client->setTransport(CurlTransport::class);
+        enableRuntimeCoroutine(true, SWOOLE_HOOK_ALL);
+        $channel = new Channel(1);
+        goWithContext(function () use ($channel, $url, $node, $data) {
+            $saber = Saber::create([
+                'headers' => [
+                    'Content-Type' => 'application/json; charset=UTF-8',
+                ]
+            ]);
+            $responeData = $saber->post($url, $data)->getBody();
+            $channel->push($responeData);
 
-        $response = $client
-            ->createRequest()
-            ->setUrl($url)
-            ->setMethod('POST')
-            ->setHeaders([
-                'Content-Type' => 'application/json; charset=UTF-8'
-            ])
-            ->setFormat(Client::FORMAT_CURL)
-            ->setData($data)
-            ->send();
-        if ($response->isOk) {
-            $data = $response->content;
-            return $data;
-        }
+            $this->loadBalancer->removeNode($node);
+        });
 
-        $this->loadBalancer->removeNode($node);
-
+        $response = $channel->pop();
+        return $response;
     }
 
     public function recv()
     {
-        // TODO: Implement recv() method.
+
     }
 
 
