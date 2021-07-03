@@ -48,7 +48,17 @@ class Client extends Component
      */
     protected $transporter;
 
+    /**
+     * @var null|TransporterInterface
+     */
+    protected $transporterInstance;
 
+    public function __construct(array $config = [], ?string $protocol = null)
+    {
+        $this->config = $config;
+        $this->setProtocol($protocol);
+    }
+    
     /**
      * @param string $protocol
      */
@@ -69,13 +79,11 @@ class Client extends Component
         return $this->protocol;
     }
 
-
-
     /**
      * @return Protocol
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getProtocolObject(): Protocol
+    public function getProtocolInstance(): Protocol
     {
         return Yii::createObject(Protocol::class);
     }
@@ -86,16 +94,14 @@ class Client extends Component
      */
     public function getPacker()
     {
-        $protocol = $this->getProtocolObject();
-
-        return $protocol->getPacker($this->protocol);
+        return $this->getProtocolInstance()->getPacker($this->protocol);
     }
 
     /**
      * @return PackerInterface|JsonEofPacker|JsonLengthPacker|JsonPacker
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getPackerObject()
+    public function getPackerInstance()
     {
         $packer = $this->getPacker();
 
@@ -115,20 +121,22 @@ class Client extends Component
      */
     public function getTransporter()
     {
-        $protocol = $this->getProtocolObject();
-
-        return $protocol->getTransporter($this->protocol);
+        return $this->getProtocolInstance()->getTransporter($this->protocol);
     }
 
     /**
      * @return TransporterInterface|JsonRpcHttpTransporter|JsonRpcTransporter|JsonRpcPoolTransporter
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getTransporterObject()
+    public function getTransporterInstance()
     {
-        return Yii::createObject($this->getTransporter(), [
-            $this->config
-        ]);
+        if (empty($this->transporterInstance)) {
+            $this->transporterInstance = Yii::createObject($this->getTransporter(), [
+                $this->config
+            ]);
+        }
+
+        return $this->transporterInstance;
     }
 
     /**
@@ -138,10 +146,10 @@ class Client extends Component
      */
     public function send($data)
     {
-        $packer = $this->getPackerObject();
+        $packer = $this->getPackerInstance();
         $packedData = $packer->pack($data);
 
-        $response = $this->getTransporterObject()->send($packedData);
+        $response = $this->getTransporterInstance()->send($packedData);
 
         return $packer->unpack((string)$response);
     }

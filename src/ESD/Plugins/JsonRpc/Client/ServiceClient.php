@@ -9,6 +9,7 @@ namespace ESD\Plugins\JsonRpc\Client;
 use ESD\LoadBalance\LoadBalancerManager;
 use ESD\Plugins\JsonRpc\DataFormatter;
 use ESD\Plugins\JsonRpc\Protocol;
+use ESD\Plugins\JsonRpc\RequestException;
 use ESD\Plugins\JsonRpc\RpcException;
 use ESD\Rpc\Client\AbstractServiceClient;
 use ESD\Rpc\IdGenerator\IdGeneratorInterface;
@@ -50,15 +51,21 @@ class ServiceClient extends AbstractServiceClient
     public function __construct($config = [])
     {
         parent::__construct($config);
-
-        $this->client = Yii::createObject([
-            'class' => Client::class,
-            'protocol' => $this->getProtocol(),
-            'config' => $this->getConfig()
-        ]);
     }
 
-    
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        if (empty($this->client)) {
+            $this->client = Yii::createObject(Client::class, [
+                $this->getConfig(),
+                $this->getProtocol()
+            ]);
+        }
+        return $this->client;
+    }
 
     /**
      * @param string $idGenerator
@@ -139,7 +146,7 @@ class ServiceClient extends AbstractServiceClient
 
         $response = $this->client->send($this->generateData($method, $params, $id));
         if (!is_array($response)) {
-            throw new RpcException('Invalid response.');
+            throw new RequestException('Invalid response.');
         }
 
         $response = $this->checkRequestIdAndTryAgain($response, $id);
@@ -150,9 +157,14 @@ class ServiceClient extends AbstractServiceClient
         if (array_key_exists('error', $response)) {
             return $response['error'];
         }
-        var_dump($response);
     }
 
+    /**
+     * @param array $response
+     * @param $id
+     * @param int $again
+     * @return array
+     */
     protected function checkRequestIdAndTryAgain(array $response, $id, int $again = 1): array
     {
         if (is_null($id)) {

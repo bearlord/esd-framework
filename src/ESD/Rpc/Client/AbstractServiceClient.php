@@ -8,6 +8,7 @@ namespace ESD\Rpc\Client;
 
 use ESD\Core\Exception;
 use ESD\Core\Server\Server;
+use ESD\Plugins\JsonRpc\Protocol;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Yii;
@@ -49,7 +50,6 @@ abstract class AbstractServiceClient extends Component
      */
     public $client;
 
-
     /**
      * @param string $protocol
      */
@@ -65,7 +65,7 @@ abstract class AbstractServiceClient extends Component
     {
         if (empty($this->protocol)) {
             $config = $this->getConfig();
-            $this->protocol = !empty($config['protocol']) ? $config['protocol'] : 'jsonrpc-http';
+            $this->protocol = !empty($config['protocol']) ? $config['protocol'] : Protocol::PROTOCOL_JSON_RPC_HTTP;
         }
 
         return $this->protocol;

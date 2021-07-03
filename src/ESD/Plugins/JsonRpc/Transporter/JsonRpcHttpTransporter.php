@@ -60,6 +60,12 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
     public $nodes = [];
 
     /**
+     * Static node, skip loadBalance and select a node from the nodes
+     * @var Node
+     */
+    public $node;
+
+    /**
      * @var null|LoadBalancerInterface|Random|RoundRobin|WeightedRandom|WeightedRoundRobin
      */
     private $loadBalancer;
@@ -92,52 +98,6 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
         if (!empty($config['loadBalancer'])) {
             $this->loadBalancerAlgorithm = $config['loadBalancer'];
         }
-
-        $loadBalancer = $this->createLoadBalancer($this->createNodes());
-        $this->setLoadBalancer($loadBalancer);
-    }
-
-    /**
-     * Create nodes the first time.
-     *
-     * @return array [array, callable]
-     */
-    protected function createNodes(): array
-    {
-        $consumer = $this->config;
-
-        // Not exists the registry config, then looking for the 'nodes' property.
-        if (isset($consumer['nodes'])) {
-            $nodes = [];
-            foreach ($consumer['nodes'] ?? [] as $item) {
-                if (isset($item['host'], $item['port'])) {
-                    if (!is_int($item['port'])) {
-                        throw new InvalidArgumentException(sprintf('Invalid node config [%s], the port option has to a integer.', implode(':', $item)));
-                    }
-                    $schema = $item['schema'] ?? null;
-                    $path = $item['path'] ?? null;
-                    $weigth = $item['weight'] ?? 0;
-                    $nodes[] = new Node($schema, $item['host'], $item['port'], $path, $weigth);
-                }
-            }
-            return $nodes;
-        }
-
-        throw new InvalidArgumentException('Config of registry or nodes missing.');
-    }
-
-    /**
-     * @param array $nodes
-     * @return \ESD\LoadBalance\LoadBalancerInterface
-     * @throws \ESD\Yii\Base\InvalidConfigException
-     */
-    public function createLoadBalancer(array $nodes)
-    {
-        /** @var LoadBalancerManager $loadBalanceManager */
-        $loadBalanceManager = Yii::createObject(LoadBalancerManager::class);
-        $loadBalance = $loadBalanceManager->getInstance($this->serviceName, $this->loadBalancerAlgorithm)->setNodes($nodes);
-
-        return $loadBalance;
     }
 
 
@@ -157,29 +117,18 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
         return $this->nodes;
     }
 
-    private function getEof()
-    {
-        return "\r\n";
-    }
-
     /**
-     * If the load balancer is exists, then the node will select by the load balancer,
-     * otherwise will get a random node.
+     * @param array $nodes
+     * @return \ESD\LoadBalance\LoadBalancerInterface
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    private function getNode(): Node
+    public function createLoadBalancer(array $nodes)
     {
-        if ($this->loadBalancer instanceof LoadBalancerInterface) {
-            return $this->loadBalancer->select();
-        }
-        return $this->nodes[array_rand($this->nodes)];
-    }
+        /** @var LoadBalancerManager $loadBalanceManager */
+        $loadBalanceManager = Yii::createObject(LoadBalancerManager::class);
+        $loadBalance = $loadBalanceManager->getInstance($this->serviceName, $this->loadBalancerAlgorithm)->setNodes($nodes);
 
-    /**
-     * @return LoadBalancerInterface|null
-     */
-    public function getLoadBalancer(): ?LoadBalancerInterface
-    {
-        return $this->loadBalancer;
+        return $loadBalance;
     }
 
     /**
@@ -193,12 +142,88 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
     }
 
     /**
+     * @return LoadBalancerInterface|null
+     */
+    public function getLoadBalancer(): ?LoadBalancerInterface
+    {
+        return $this->loadBalancer;
+    }
+
+    /**
+     * @param array $node
+     */
+    public function setNode(array $node)
+    {
+        if (!is_int($node['port'])) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid node config [%s], the port option has to a integer.',
+                implode(':', $node)));
+        }
+        $schema = $node['schema'] ?? null;
+        $path = $node['path'] ?? null;
+        $weight = $node['weight'] ?? 0;
+        $this->node = new Node($schema, $node['host'], $node['port'], $path, $weight);
+    }
+
+    /**
+     * If the load balancer is exists, then the node will select by the load balancer,
+     * otherwise will get a random node.
+     */
+    public function getNode(): Node
+    {
+        if (!empty($this->node)) {
+            return $this->node;
+        }
+        if ($this->loadBalancer instanceof LoadBalancerInterface) {
+            return $this->loadBalancer->select();
+        }
+        return $this->nodes[array_rand($this->nodes)];
+    }
+
+    /**
+     * Create nodes the first time.
+     *
+     * @return array [array, callable]
+     */
+    protected function createNodes(): array
+    {
+        $consumer = $this->config;
+
+        // Not exists the registry config, then looking for the 'nodes' property.
+        if (isset($consumer['nodes'])) {
+            $nodes = [];
+            foreach ($consumer['nodes'] ?? [] as $item) {
+                if (isset($item['host'], $item['port'])) {
+                    if (!is_int($item['port'])) {
+                        throw new InvalidArgumentException(sprintf(
+                            'Invalid node config [%s], the port option has to a integer.',
+                            implode(':', $item)));
+                    }
+                    $schema = $item['schema'] ?? null;
+                    $path = $item['path'] ?? null;
+                    $weigth = $item['weight'] ?? 0;
+                    $nodes[] = new Node($schema, $item['host'], $item['port'], $path, $weigth);
+                }
+            }
+            return $nodes;
+        }
+
+        throw new InvalidArgumentException('Config of registry or nodes missing.');
+    }
+
+
+
+    /**
      * @param string $data
      * @return mixed
      */
     public function send(string $data)
     {
+        $loadBalancer = $this->createLoadBalancer($this->createNodes());
+        $this->setLoadBalancer($loadBalancer);
+
         $node = $this->getNode();
+
         $url = sprintf("%s://%s:%s/%s",
             $node->getSchema(),
             $node->getHost(),
@@ -224,9 +249,10 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
         return $response;
     }
 
+
     public function recv()
     {
-
+        throw new \RuntimeException(__CLASS__ . ' does not support recv method.');
     }
 
 
