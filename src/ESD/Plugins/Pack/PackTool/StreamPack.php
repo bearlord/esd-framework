@@ -29,7 +29,7 @@ class StreamPack extends AbstractPack
      * @param $buffer
      * @return string
      */
-    public function encode(string $buffer)
+    public function encode($buffer)
     {
         return $buffer . $this->portConfig->getPackageEof();
     }
@@ -37,10 +37,10 @@ class StreamPack extends AbstractPack
     /**
      * Packet decode
      *
-     * @param $buffer
+     * @param string $buffer
      * @return string
      */
-    public function decode(string $buffer)
+    public function decode($buffer)
     {
         $data = str_replace($this->portConfig->getPackageEof(), '', $buffer);
         return $data;
@@ -69,7 +69,7 @@ class StreamPack extends AbstractPack
      * @return mixed
      * @throws \ESD\Core\Plugins\Config\ConfigException
      */
-    public function unPack(int $fd, string $data, PortConfig $portConfig): ?ClientData
+    public function unPack(int $fd, $data, PortConfig $portConfig): ?ClientData
     {
         $this->portConfig = $portConfig;
         //Value can be empty

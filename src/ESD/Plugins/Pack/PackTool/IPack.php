@@ -16,19 +16,19 @@ use ESD\Plugins\Pack\ClientData;
 interface IPack
 {
     /**
-     * @param string $buffer
+     * @param mixed $buffer
      * @return mixed
      */
-    public function encode(string $buffer);
+    public function encode($buffer);
 
     /**
-     * @param string $buffer
+     * @param mixed $buffer
      * @return mixed
      */
-    public function decode(string $buffer);
+    public function decode($buffer);
 
     /**
-     * @param $data
+     * @param mixed $data
      * @param PortConfig $portConfig
      * @param string|null $topic
      * @return mixed
@@ -37,11 +37,11 @@ interface IPack
 
     /**
      * @param int $fd
-     * @param string $data
+     * @param mixed $data
      * @param PortConfig $portConfig
      * @return ClientData|null
      */
-    public function unPack(int $fd, string $data, PortConfig $portConfig): ?ClientData;
+    public function unPack(int $fd, $data, PortConfig $portConfig): ?ClientData;
 
     /**
      * @param PortConfig $portConfig

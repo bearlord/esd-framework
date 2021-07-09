@@ -26,7 +26,7 @@ class EofJsonPack extends AbstractPack
      * @param $buffer
      * @return string
      */
-    public function encode(string $buffer)
+    public function encode($buffer)
     {
         return $buffer . $this->portConfig->getPackageEof();
     }
@@ -37,7 +37,7 @@ class EofJsonPack extends AbstractPack
      * @param $buffer
      * @return string
      */
-    public function decode(string $buffer)
+    public function decode($buffer)
     {
         $data = str_replace($this->portConfig->getPackageEof(), '', $buffer);
         return $data;
@@ -66,7 +66,7 @@ class EofJsonPack extends AbstractPack
      * @return mixed
      * @throws \ESD\Core\Plugins\Config\ConfigException
      */
-    public function unPack(int $fd, string $data, PortConfig $portConfig): ?ClientData
+    public function unPack(int $fd, $data, PortConfig $portConfig): ?ClientData
     {
         $this->portConfig = $portConfig;
         $value = json_decode($this->decode($data), true);

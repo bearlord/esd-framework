@@ -174,6 +174,12 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
         if (!empty($this->node)) {
             return $this->node;
         }
+
+        if (empty($this->loadBalancer)) {
+            $loadBalancer = $this->createLoadBalancer($this->createNodes());
+            $this->setLoadBalancer($loadBalancer);
+        }
+
         if ($this->loadBalancer instanceof LoadBalancerInterface) {
             return $this->loadBalancer->select();
         }
@@ -219,9 +225,6 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
      */
     public function send(string $data)
     {
-        $loadBalancer = $this->createLoadBalancer($this->createNodes());
-        $this->setLoadBalancer($loadBalancer);
-
         $node = $this->getNode();
 
         $url = sprintf("%s://%s:%s/%s",

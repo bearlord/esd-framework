@@ -43,7 +43,7 @@ class NonJsonPack implements IPack
      * @return ClientData
      * @throws \ESD\Core\Plugins\Config\ConfigException
      */
-    public function unPack(int $fd, string $data, PortConfig $portConfig): ?ClientData
+    public function unPack(int $fd, $data, PortConfig $portConfig): ?ClientData
     {
         $value = json_decode($data, true);
         if (empty($value)) {
@@ -58,7 +58,7 @@ class NonJsonPack implements IPack
      * Packet encode
      * @param string $buffer
      */
-    public function encode(string $buffer)
+    public function encode($buffer)
     {
         return;
     }
@@ -68,7 +68,7 @@ class NonJsonPack implements IPack
      *
      * @param string $buffer
      */
-    public function decode(string $buffer)
+    public function decode($buffer)
     {
         return;
     }

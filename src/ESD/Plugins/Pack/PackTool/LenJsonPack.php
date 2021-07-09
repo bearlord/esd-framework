@@ -33,7 +33,6 @@ class LenJsonPack extends AbstractPack
     {
         $this->portConfig = $portConfig;
         return $this->encode(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-//        return $this->encode(json_encode($data, JSON_UNESCAPED_UNICODE));
     }
 
     /**
@@ -46,7 +45,7 @@ class LenJsonPack extends AbstractPack
      * @throws PackException
      * @throws \ESD\Core\Plugins\Config\ConfigException
      */
-    public function unPack(int $fd, string $data, PortConfig $portConfig): ?ClientData
+    public function unPack(int $fd, $data, PortConfig $portConfig): ?ClientData
     {
         $this->portConfig = $portConfig;
         $value = json_decode($this->decode($data), true);
@@ -65,7 +64,7 @@ class LenJsonPack extends AbstractPack
      * @return string
      * @throws PackException
      */
-    public function encode(string $buffer)
+    public function encode($buffer)
     {
         $totalLength = $this->getLength($this->portConfig->getPackageLengthType()) + strlen($buffer) - $this->portConfig->getPackageBodyOffset();
         return pack($this->portConfig->getPackageLengthType(), $totalLength) . $buffer;
@@ -78,7 +77,7 @@ class LenJsonPack extends AbstractPack
      * @return string
      * @throws PackException
      */
-    public function decode(string $buffer)
+    public function decode($buffer)
     {
         return substr($buffer, $this->getLength($this->portConfig->getPackageLengthType()));
     }
