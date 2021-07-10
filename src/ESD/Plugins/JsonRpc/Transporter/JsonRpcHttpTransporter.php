@@ -24,7 +24,6 @@ use ESD\Yii\Yii;
 use Swlib\Saber;
 use Swoole\Coroutine\Channel;
 
-
 /**
  * Class JsonRpcHttpTransporter
  * @package ESD\Plugins\JsonRpc\Transporter
@@ -99,7 +98,6 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
             $this->loadBalancerAlgorithm = $config['loadBalancer'];
         }
     }
-
 
     /**
      * @param array $nodes
@@ -217,8 +215,6 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
         throw new InvalidArgumentException('Config of registry or nodes missing.');
     }
 
-
-
     /**
      * @param string $data
      * @return mixed
@@ -251,7 +247,6 @@ class JsonRpcHttpTransporter extends Component implements TransporterInterface
         $response = $channel->pop();
         return $response;
     }
-
 
     public function recv()
     {

@@ -50,7 +50,7 @@ class JsonLengthPacker extends Component implements PackerInterface
      */
     public function pack($data): string
     {
-        $data = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $data = json_encode($data, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
         return pack($this->type, strlen($data)) . $data;
     }
 

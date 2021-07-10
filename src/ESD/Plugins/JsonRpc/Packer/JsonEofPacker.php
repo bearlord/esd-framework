@@ -25,7 +25,6 @@ class JsonEofPacker extends Component implements PackerInterface
      */
     public function __construct(array $options = [])
     {
-//        $this->eof = $options['settings']['package_eof'] ?? '\r\n';
         $this->eof = $options['settings']['package_eof'] ?? "\r\n";
     }
 
