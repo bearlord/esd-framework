@@ -1,8 +1,10 @@
 <?php
-
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
 
 namespace ESD\Yii\Queue\Drivers\Amqp;
-
 
 use ESD\Yii\Base\Component;
 use AMQPConnection;
@@ -19,7 +21,6 @@ use ESD\Yii\Db\Exception;
  */
 class Context extends Component
 {
-
     /**
      * @var AMQPConnection
      */
@@ -52,7 +53,11 @@ class Context extends Component
         parent::__construct($config);
     }
 
-    
+    /**
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     * @throws \AMQPQueueException
+     */
     public function init()
     {
         if (!empty($this->connection)) {
@@ -122,8 +127,6 @@ class Context extends Component
     {
         return $this->queue;
     }
-
-
 
     /**
      * @param AMQPQueue $queue

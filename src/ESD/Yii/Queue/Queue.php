@@ -31,30 +31,37 @@ abstract class Queue extends Component
      * @event PushEvent
      */
     const EVENT_BEFORE_PUSH = 'beforePush';
+
     /**
      * @event PushEvent
      */
     const EVENT_AFTER_PUSH = 'afterPush';
+
     /**
      * @event ExecEvent
      */
     const EVENT_BEFORE_EXEC = 'beforeExec';
+
     /**
      * @event ExecEvent
      */
     const EVENT_AFTER_EXEC = 'afterExec';
+
     /**
      * @event ExecEvent
      */
     const EVENT_AFTER_ERROR = 'afterError';
+
     /**
      * @see Queue::isWaiting()
      */
     const STATUS_WAITING = 1;
+
     /**
      * @see Queue::isReserved()
      */
     const STATUS_RESERVED = 2;
+
     /**
      * @see Queue::isDone()
      */
@@ -66,23 +73,27 @@ abstract class Queue extends Component
      * @since 2.0.1
      */
     public $strictJobType = true;
+
     /**
      * @var SerializerInterface|array
      */
     public $serializer = PhpSerializer::class;
+
     /**
      * @var int default time to reserve a job
      */
     public $ttr = 300;
+
     /**
      * @var int default attempt count
      */
     public $attempts = 1;
 
     private $pushTtr;
-    private $pushDelay;
-    private $pushPriority;
 
+    private $pushDelay;
+
+    private $pushPriority;
 
     /**
      * @inheritdoc
@@ -220,13 +231,6 @@ abstract class Queue extends Component
     {
         list($job, $error) = $this->unserializeMessage($message);
 
-        /*
-        $this->debug(Yii::t('esd', 'Execute queue job {id}: {job}', [
-            'id' => $id,
-            'job' => sprintf("%s-%s", get_class($job), Json::encode($job))
-        ]));
-        */
-
         $event = new ExecEvent([
             'id' => $id,
             'job' => $job,
@@ -251,6 +255,7 @@ abstract class Queue extends Component
             return $this->handleError($event);
         }
         $this->trigger(self::EVENT_AFTER_EXEC, $event);
+
         return true;
     }
 
@@ -293,6 +298,7 @@ abstract class Queue extends Component
             $event->retry = $event->job->canRetry($event->attempt, $event->error);
         }
         $this->trigger(self::EVENT_AFTER_ERROR, $event);
+        
         return !$event->retry;
     }
 
