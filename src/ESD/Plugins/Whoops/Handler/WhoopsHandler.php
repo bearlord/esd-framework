@@ -47,6 +47,13 @@ class WhoopsHandler extends Handler
     private $customCss = null;
 
     /**
+     * The name of the custom js file.
+     *
+     * @var string|null
+     */
+    private $customJs = null;
+
+    /**
      * @var array[]
      */
     private $extraTables = [];
@@ -96,13 +103,16 @@ class WhoopsHandler extends Handler
      * @var array
      */
     protected $editors = [
-        "sublime" => "subl://open?url=file://%file&line=%line",
+        "sublime"  => "subl://open?url=file://%file&line=%line",
         "textmate" => "txmt://open?url=file://%file&line=%line",
-        "emacs" => "emacs://open?url=file://%file&line=%line",
-        "macvim" => "mvim://open/?url=file://%file&line=%line",
+        "emacs"    => "emacs://open?url=file://%file&line=%line",
+        "macvim"   => "mvim://open/?url=file://%file&line=%line",
         "phpstorm" => "phpstorm://open?file=%file&line=%line",
-        "idea" => "idea://open?file=%file&line=%line",
-        "vscode" => "vscode://file/%file:%line",
+        "idea"     => "idea://open?file=%file&line=%line",
+        "vscode"   => "vscode://file/%file:%line",
+        "atom"     => "atom://core/open/file?filename=%file&line=%line",
+        "espresso" => "x-espresso://open?filepath=%file&lines=%line",
+        "netbeans" => "netbeans://open/?f=%file:%line",
     ];
 
     /**
@@ -156,14 +166,19 @@ class WhoopsHandler extends Handler
     public function handle()
     {
         $templateFile = $this->getResource("views/layout.html.php");
-        $cssFile = $this->getResource("css/whoops.base.css");
-        $zeptoFile = $this->getResource("js/zepto.min.js");
-        $prettifyFile = $this->getResource("js/prettify.min.js");
-        $clipboard = $this->getResource("js/clipboard.min.js");
-        $jsFile = $this->getResource("js/whoops.base.js");
+        $cssFile      = $this->getResource("css/whoops.base.css");
+        $zeptoFile    = $this->getResource("js/zepto.min.js");
+        $prismJs = $this->getResource("js/prism.js");
+        $prismCss = $this->getResource("css/prism.css");
+        $clipboard    = $this->getResource("js/clipboard.min.js");
+        $jsFile       = $this->getResource("js/whoops.base.js");
 
         if ($this->customCss) {
             $customCssFile = $this->getResource($this->customCss);
+        }
+
+        if ($this->customJs) {
+            $customJsFile = $this->getResource($this->customJs);
         }
 
         $inspector = $this->getInspector();
@@ -175,16 +190,15 @@ class WhoopsHandler extends Handler
         $request = getContextValueByClassName(Request::class);
         // List of variables that will be passed to the layout template.
 
-        var_dump("aaaaa");
-        var_dump($inspector->getPreviousExceptionMessages());
         $vars = [
             "page_title" => $this->getPageTitle(),
 
             // @todo: Asset compiler
             "stylesheet" => file_get_contents($cssFile),
-            "zepto" => file_get_contents($zeptoFile),
-            "prettify" => file_get_contents($prettifyFile),
-            "clipboard" => file_get_contents($clipboard),
+            "zepto"      => file_get_contents($zeptoFile),
+            "prismJs"   => file_get_contents($prismJs),
+            "prismCss"   => file_get_contents($prismCss),
+            "clipboard"  => file_get_contents($clipboard),
             "javascript" => file_get_contents($jsFile),
 
             // Template paths:
@@ -229,6 +243,10 @@ class WhoopsHandler extends Handler
 
         if (isset($customCssFile)) {
             $vars["stylesheet"] .= file_get_contents($customCssFile);
+        }
+
+        if (isset($customJsFile)) {
+            $vars["javascript"] .= file_get_contents($customJsFile);
         }
 
         // Add extra entries list of data tables:
@@ -589,6 +607,7 @@ class WhoopsHandler extends Handler
      */
     protected function getResource($resource)
     {
+
         // If the resource was found before, we can speed things up
         // by caching its absolute, resolved path:
         if (isset($this->resourceCache[$resource])) {
@@ -597,8 +616,11 @@ class WhoopsHandler extends Handler
 
         // Search through available search paths, until we find the
         // resource we're after:
+        printf("===============\n");
         foreach ($this->searchPaths as $path) {
             $fullPath = $path . "/$resource";
+
+            var_dump($fullPath, is_file($fullPath));
 
             if (is_file($fullPath)) {
                 // Cache the result:
@@ -606,6 +628,8 @@ class WhoopsHandler extends Handler
                 return $fullPath;
             }
         }
+        printf("===============\n\n");
+        return;
 
         // If we got this far, nothing was found.
         throw new RuntimeException(
