@@ -616,11 +616,8 @@ class WhoopsHandler extends Handler
 
         // Search through available search paths, until we find the
         // resource we're after:
-        printf("===============\n");
         foreach ($this->searchPaths as $path) {
             $fullPath = $path . "/$resource";
-
-            var_dump($fullPath, is_file($fullPath));
 
             if (is_file($fullPath)) {
                 // Cache the result:
@@ -628,8 +625,6 @@ class WhoopsHandler extends Handler
                 return $fullPath;
             }
         }
-        printf("===============\n\n");
-        return;
 
         // If we got this far, nothing was found.
         throw new RuntimeException(
