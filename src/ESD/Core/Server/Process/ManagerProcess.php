@@ -16,6 +16,7 @@ use ESD\Core\Server\Server;
 class ManagerProcess extends Process
 {
     const NAME = "manager";
+
     const ID = "-2";
 
     /**

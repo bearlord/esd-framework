@@ -16,6 +16,7 @@ use ESD\Core\Server\Server;
 class MasterProcess extends Process
 {
     const NAME = "master";
+
     const ID = "-1";
 
     /**

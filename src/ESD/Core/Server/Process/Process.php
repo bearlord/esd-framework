@@ -24,10 +24,15 @@ use Psr\Log\LoggerInterface;
 abstract class Process
 {
     const DEFAULT_GROUP = "DefaultGroup";
+
     const WORKER_GROUP = "WorkerGroup";
+
     const SERVER_GROUP = "ServerGroup";
+
     const SOCK_DGRAM = 2;
+
     const PROCESS_TYPE_WORKER = 1;
+
     const PROCESS_TYPE_CUSTOM = 3;
 
     /**
@@ -146,6 +151,7 @@ abstract class Process
     public function createProcess(): Process
     {
         $this->swooleProcess = new \Swoole\Process([$this, "_onProcessStart"], false, self::SOCK_DGRAM, true);
+
         return $this;
     }
 

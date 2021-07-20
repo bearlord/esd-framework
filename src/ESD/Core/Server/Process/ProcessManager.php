@@ -217,6 +217,7 @@ class ProcessManager
         }
         $processGroup = new ProcessGroup($this, $groupName, $group);
         $this->groups[$groupName] = $processGroup;
+
         return $processGroup;
     }
 
