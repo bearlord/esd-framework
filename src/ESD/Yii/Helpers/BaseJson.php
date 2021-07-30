@@ -58,12 +58,7 @@ class BaseJson
     {
         $expressions = [];
         $value = static::processData($value, $expressions, uniqid('', true));
-        set_error_handler(function () {
-            static::handleJsonError(JSON_ERROR_SYNTAX);
-        }, E_WARNING);
         $json = json_encode($value, $options);
-        restore_error_handler();
-        static::handleJsonError(json_last_error());
 
         return $expressions === [] ? $json : strtr($json, $expressions);
     }
@@ -103,7 +98,6 @@ class BaseJson
             return null;
         }
         $decode = json_decode((string) $json, $asArray);
-        static::handleJsonError(json_last_error());
 
         return $decode;
     }

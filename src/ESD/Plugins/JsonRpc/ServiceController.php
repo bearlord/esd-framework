@@ -60,6 +60,16 @@ class ServiceController extends GoController
                 }
                 return $result;
             }
+            if (!is_object($json)) {
+                return [
+                    "jsonrpc" => "2.0",
+                    "error" => [
+                        "code" => -32600,
+                        "message" => "Invalid Request"
+                    ],
+                    "id" => null
+                ];
+            }
             return $this->subProcess($json);
         } catch (\Throwable $exception) {
             setContextValue("lastException", $exception);
