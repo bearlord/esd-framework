@@ -114,13 +114,15 @@ class AnnotationRoute implements IRoute
                 $methodReflection = $handler[1]->getReflectionMethod();
                 foreach (EasyRoutePlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection) as $annotation) {
                     if ($annotation instanceof ResponseBody) {
-                        $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
+                        if (!empty($clientData->getResponse())) {
+                            $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
+                        }
                     }
                     if ($annotation instanceof PathVariable) {
                         $result = $vars[$annotation->value] ?? null;
                         if ($annotation->required) {
                             if ($result == null) {
-                                throw new RouteException("path {$annotation->value} not find");
+                                throw new RouteException("path {$annotation->value} not found");
                             }
                         }
                         $params[$annotation->param ?? $annotation->value] = $result;
