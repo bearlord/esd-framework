@@ -12,7 +12,7 @@ use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Db\ActiveQueryInterface;
 
 /**
- * ActiveDataProvider is an enhanced version of [[\yii\data\ActiveDataProvider]] specific to the Elasticsearch.
+ * ActiveDataProvider is an enhanced version of [[\ESD\Yii\Data\ActiveDataProvider]] specific to the Elasticsearch.
  * It allows to fetch not only rows and total rows count, but full query results including aggregations and so on.
  *
  * Note: this data provider fetches result models and total count using single Elasticsearch query, so results total
