@@ -235,7 +235,7 @@ class Application extends ServiceLocator
     public function getRuntimePath()
     {
         if ($this->_runtimePath === null) {
-            $this->setRuntimePath($this->getBasePath() . DIRECTORY_SEPARATOR . 'runtime');
+            $this->setRuntimePath(realpath(dirname($this->getBasePath())) . DIRECTORY_SEPARATOR . 'bin/runtime');
         }
 
         return $this->_runtimePath;
