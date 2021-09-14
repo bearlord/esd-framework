@@ -120,6 +120,9 @@ class Application extends ServiceLocator
             }
             $this->setWebPath(Server::$instance->getServerConfig()->getDocumentRoot());
         }
+		
+		// set "@runtime"
+        $this->getRuntimePath();
 
         //Set language
         if (!empty($config['language'])) {
