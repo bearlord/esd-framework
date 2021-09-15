@@ -9,16 +9,15 @@ namespace ESD\Plugins\MQTT\Message;
 
 use ESD\Plugins\MQTT\Hex\ReasonCode;
 use ESD\Plugins\MQTT\Protocol\Types;
-use ESD\Plugins\MQTT\Protocol\ProtocolV3;
 use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 
 /**
  * Class AbstractMessage
- * @package ESD\Plugins\MQTT\Message
+ * @package ESD\Plugins\MQTT\Message;
  */
-class DisConnect extends AbstractMessage
+class Auth extends AbstractMessage
 {
-    protected $code = ReasonCode::NORMAL_DISCONNECTION;
+    protected $code = ReasonCode::SUCCESS;
 
     /**
      * @return int
@@ -40,29 +39,23 @@ class DisConnect extends AbstractMessage
     }
 
     /**
+     * AUTH type is only available in MQTT5
+     *
      * @param bool $getArray
      * @return array|mixed|string
-     * @throws \Throwable
      */
     public function getContents(bool $getArray = false)
     {
         $buffer = [
-            'type' => Types::DISCONNECT,
+            'type' => Types::AUTH,
+            'code' => $this->getCode(),
+            'properties' => $this->getProperties(),
         ];
-
-        if ($this->isMQTT5()) {
-            $buffer['code'] = $this->getCode();
-            $buffer['properties'] = $this->getProperties();
-        }
 
         if ($getArray) {
             return $buffer;
         }
 
-        if ($this->isMQTT5()) {
-            return ProtocolV5::pack($buffer);
-        }
-
-        return ProtocolV3::pack($buffer);
+        return ProtocolV5::pack($buffer);
     }
 }

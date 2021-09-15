@@ -1,112 +1,138 @@
 <?php
 /**
  * ESD framework
- * @author tmtbe <896369042@qq.com>
+ * @author Lu Fei <lufei@simps.io>
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Message;
-use ESD\Plugins\MQTT\MqttException;
-use ESD\Plugins\MQTT\Utility;
+
+use ESD\Plugins\MQTT\Protocol\ProtocolInterface;
 
 /**
- * Connect Will
- *
+ * Class Will
+ * @package ESD\Plugins\MQTT\Message
  */
-class Will
+class Will extends AbstractMessage
 {
     /**
-     * Will Retain
-     *
-     * @var int
-     */
-    protected $retain = 0;
-    /**
-     * Will QoS
-     *
-     * @var int
-     */
-    protected $qos = 0;
-    /**
-     * Will Topic
-     *
      * @var string
      */
-    protected $topic = '';
+    protected $topic = "";
+
     /**
-     * Will Message
-     *
+     * @var int
+     */
+    protected $qos = ProtocolInterface::MQTT_QOS_0;
+
+    /**
+     * @var int
+     */
+    protected $retain = ProtocolInterface::MQTT_RETAIN_0;
+
+    /**
      * @var string
      */
-    protected $message = '';
+    protected $message = "";
 
     /**
-     * Will
-     *
-     * @param string $topic     Will Topic
-     * @param string $message   Will Message
-     * @param int    $qos       Will QoS
-     * @param int    $retain    Will Retain
-     * @throws MqttException
-     */
-    public function __construct($topic, $message, $qos=1, $retain=0)
-    {
-        /*
-         If the Will Flag is set to 0 the Will QoS and Will Retain fields in the Connect Flags
-         MUST be set to zero and the Will Topic and Will Message fields MUST NOT be present in
-         the payload [MQTT-3.1.2-11].
-         */
-
-        if (!$topic || !$message) {
-            throw new MqttException('Topic/Message MUST NOT be empty in Will Message');
-        }
-
-        Utility::checkTopicName($topic);
-
-        $this->topic   = $topic;
-        $this->message = $message;
-
-        Utility::checkQoS($qos);
-        $this->qos     = (int) $qos;
-        $this->retain  = $retain ? 1 : 0;
-    }
-
-    /**
-     * Get Will Topic
-     *
      * @return string
      */
-    public function getTopic()
+    public function getTopic(): string
     {
         return $this->topic;
     }
 
     /**
-     * Get Will Message
-     *
+     * @param string $topic
+     * @return $this
+     */
+    public function setTopic(string $topic): self
+    {
+        $this->topic = $topic;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
-     * Get Will flags
-     *
+     * @param string $message
+     * @return $this
+     */
+    public function setMessage(string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
-    public function get()
+    public function getQos(): int
     {
-        $var = 0;
-        # Will flag
-        $var |= 0x04;
-        # Will QoS
-        $var |= $this->qos << 3;
-        # Will RETAIN
-        if ($this->retain) {
-            $var |= 0x20;
+        return $this->qos;
+    }
+
+    /**
+     * @param int $qos
+     * @return $this
+     */
+    public function setQos(int $qos): self
+    {
+        $this->qos = $qos;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRetain(): int
+    {
+        return $this->retain;
+    }
+
+    /**
+     * @param int $retain
+     * @return $this
+     */
+    public function setRetain(int $retain): self
+    {
+        $this->retain = $retain;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $getArray
+     * @return array|string
+     */
+    public function getContents(bool $getArray = false)
+    {
+        $buffer = [
+            'topic' => $this->getTopic(),
+            'qos' => $this->getQos(),
+            'retain' => $this->getRetain(),
+            'message' => $this->getMessage(),
+        ];
+
+        if ($this->isMQTT5()) {
+            $buffer['properties'] = $this->getProperties();
         }
 
-        return $var;
+        if ($getArray) {
+            return $buffer;
+        }
+
+        // The will message can only be an array
+        return [];
     }
 }
