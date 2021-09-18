@@ -156,4 +156,16 @@ class Context
     {
         return array_keys($this->contain);
     }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function delete($key)
+    {
+        if (array_key_exists($key, array_keys($this->contain))) {
+            unset($this->contain[$key]);
+        }
+        return true;
+    }
 }

@@ -175,6 +175,18 @@ function getContext()
 }
 
 /**
+ * Set context value
+ *
+ * @param $key
+ * @param $value
+ * @return mixed
+ */
+function setContextValue($key, $value)
+{
+    getContext()->add($key, $value);
+}
+
+/**
  * Get context value
  *
  * @param $key
@@ -186,27 +198,12 @@ function getContextValue($key)
 }
 
 /**
- * Get context value by class name
- *
  * @param $key
- * @return mixed
+ * @return bool
  */
-function getContextValueByClassName($key)
+function deleteContextValue($key)
 {
-    return getContext()->getByClassName($key);
-}
-
-
-/**
- * Set context value
- *
- * @param $key
- * @param $value
- * @return mixed
- */
-function setContextValue($key, $value)
-{
-    getContext()->add($key, $value);
+    return getContext()->delete($key);
 }
 
 /**
@@ -220,6 +217,17 @@ function setContextValue($key, $value)
 function setContextValueWithClass($key, $value, $class)
 {
     getContext()->addWithClass($key, $value, $class);
+}
+
+/**
+ * Get context value by class name
+ *
+ * @param $key
+ * @return mixed
+ */
+function getContextValueByClassName($key)
+{
+    return getContext()->getByClassName($key);
 }
 
 /**

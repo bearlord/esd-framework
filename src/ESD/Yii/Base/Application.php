@@ -480,7 +480,7 @@ class Application extends ServiceLocator
 
 
     /**
-     * @return Connection|mixed
+     * @return \ESD\Yii\Mongodb\Connection|mixed
      * @throws \ESD\Yii\Db\Exception
      */
     public function getMongodb()
