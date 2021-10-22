@@ -315,7 +315,6 @@ class Command extends Component
         foreach ($this->_pendingParams as $name => $value) {
             $this->pdoStatement->bindValue($name, $value[0], $value[1]);
         }
-        $this->_pendingParams = [];
     }
 
     /**
@@ -1453,5 +1452,11 @@ class Command extends Component
         }
 
         return false;
+    }
+
+
+    public function __destruct()
+    {
+        $this->reset();
     }
 }
