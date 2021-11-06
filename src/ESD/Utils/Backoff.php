@@ -1,7 +1,7 @@
 <?php
 /**
  * ESD framework
- * @author tmtbe <565364226@qq.com>
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Utils;
