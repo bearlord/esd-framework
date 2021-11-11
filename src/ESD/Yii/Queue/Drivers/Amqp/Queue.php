@@ -13,6 +13,7 @@ use AMQPExchange;
 use AMQPQueue;
 use AMQPEnvelope;
 use ESD\Plugins\Amqp\GetAmqp;
+use ESD\Plugins\Amqp\Handle;
 use ESD\Yii\Base\Event;
 use ESD\Yii\Base\NotSupportedException;
 use ESD\Yii\Queue\Cli\Queue as CliQueue;
@@ -210,9 +211,9 @@ class Queue extends CliQueue
     public $maxPriority = 10;
     
     /**
-     * @var Context;
+     * @var Handle;
      */
-    protected $context;
+    protected $handle;
 
     /**
      * The property tells whether the setupBroker method was called or not.
@@ -229,7 +230,7 @@ class Queue extends CliQueue
     public function init()
     {
         parent::init();
-        $this->context = $this->amqp();
+        $this->handle = $this->amqp();
     }
 
     /**
@@ -279,19 +280,18 @@ class Queue extends CliQueue
                     }
                 };
 
-                $this->context->getQueue()->consume($callback);
+                $this->handle->getQueue()->consume($callback);
                 return true;
             }
         });
     }
 
-
     /**
-     * @return AmqpContext
+     * @return Handle
      */
-    public function getContext()
+    public function getHandle()
     {
-        return $this->context;
+        return $this->handle;
     }
 
     /**
@@ -313,7 +313,7 @@ class Queue extends CliQueue
         if ($priority) {
             $attributes['headers'][self::PRIORITY] = $priority;
         }
-        $this->context->getExchange()->publish($payload, $this->routingKey, AMQP_DURABLE, $attributes);
+        $this->handle->getExchange()->publish($payload, $this->routingKey, AMQP_DURABLE, $attributes);
         return $messageId;
     }
 
@@ -325,31 +325,36 @@ class Queue extends CliQueue
         throw new NotSupportedException('Status is not supported in the driver.');
     }
 
-    protected function setupBroker()
-    {
-        if ($this->setupBrokerDone) {
-            return;
-        }
-
-        $this->context->getExchange()->setName($this->exchangeName);
-        $this->context->getExchange()->setType(self::AMQP_X_DELAYED_MESSAGE);
-        $this->context->getExchange()->setArgument(self::AMQP_X_DELAYED_TYPE, AMQP_EX_TYPE_DIRECT);
-        $this->context->getExchange()->declareExchange();
-
-        $this->context->getQueue()->setName($this->queueName);
-        $this->context->getQueue()->setFlags(AMQP_DURABLE);
-        $this->context->getQueue()->setArgument('x-max-priority', $this->maxPriority);
-        $this->context->getQueue()->declareQueue();
-
-        $this->context->getQueue()->bind($this->exchangeName, $this->routingKey);
-        $this->setupBrokerDone = true;
-    }
-
     /**
      * {@inheritdoc}
      */
     protected function redeliver(AmqpMessage $message)
     {
         return true;
+    }
+
+    /**
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     */
+    protected function setupBroker()
+    {
+        if ($this->setupBrokerDone) {
+            return;
+        }
+
+        $this->handle->getExchange()->setName($this->exchangeName);
+        $this->handle->getExchange()->setType(self::AMQP_X_DELAYED_MESSAGE);
+        $this->handle->getExchange()->setArgument(self::AMQP_X_DELAYED_TYPE, AMQP_EX_TYPE_DIRECT);
+        $this->handle->getExchange()->declareExchange();
+
+        $this->handle->getQueue()->setName($this->queueName);
+        $this->handle->getQueue()->setFlags(AMQP_DURABLE);
+        $this->handle->getQueue()->setArgument('x-max-priority', $this->maxPriority);
+        $this->handle->getQueue()->declareQueue();
+
+        $this->handle->getQueue()->bind($this->exchangeName, $this->routingKey);
+        $this->setupBrokerDone = true;
     }
 }

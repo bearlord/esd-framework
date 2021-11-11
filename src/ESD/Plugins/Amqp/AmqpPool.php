@@ -41,18 +41,18 @@ class AmqpPool
 
     /**
      * @param $config
-     * @return \ESD\Yii\Queue\Drivers\Amqp\Context
+     * @return Handle
      * @throws \Exception
      */
     protected function connect($config)
     {
-        return new \ESD\Yii\Queue\Drivers\Amqp\Context([
+        return new Handle([
             'connection' => (new Connection($config))->getConnection()
         ]);
     }
 
     /**
-     * @return \ESD\Yii\Queue\Drivers\Amqp\Context
+     * @return Handle
      */
     public function db()
     {
@@ -60,7 +60,7 @@ class AmqpPool
         $db = getContextValue($contextKey);
 
         if ($db == null) {
-            /** @var \ESD\Yii\Queue\Drivers\Amqp\Context $db */
+            /** @var Handle $db */
             $db = $this->pool->pop();
 
             \Swoole\Coroutine::defer(function () use ($db) {

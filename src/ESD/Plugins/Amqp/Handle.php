@@ -4,7 +4,7 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Yii\Queue\Drivers\Amqp;
+namespace ESD\Plugins\Amqp;
 
 use ESD\Yii\Base\Component;
 use AMQPConnection;
@@ -16,10 +16,10 @@ use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Db\Exception;
 
 /**
- * Class Context
- * @package ESD\Yii\Queue\Drivers\Amqp
+ * Class Handle
+ * @package ESD\Plugins\Amqp
  */
-class Context extends Component
+class Handle
 {
     /**
      * @var AMQPConnection
@@ -50,7 +50,9 @@ class Context extends Component
         if (empty($config['connection'])) {
             throw new InvalidArgumentException('Invalid Argument connection');
         }
-        parent::__construct($config);
+
+        $this->connection = $config['connection'];
+        $this->preInit();
     }
 
     /**
@@ -58,17 +60,17 @@ class Context extends Component
      * @throws \AMQPExchangeException
      * @throws \AMQPQueueException
      */
-    public function init()
+    public function preInit()
     {
         if (!empty($this->connection)) {
             //Set channel
             $this->setChannel(new AMQPChannel($this->connection));
 
-            //Set queue
-            $this->setQueue(new AMQPQueue($this->getChannel()));
-
             //Set exchange
             $this->setExchange(new AMQPExchange($this->getChannel()));
+
+            //Set queue
+            $this->setQueue(new AMQPQueue($this->getChannel()));
         }
     }
 

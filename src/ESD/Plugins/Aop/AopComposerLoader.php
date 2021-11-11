@@ -107,7 +107,7 @@ class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
 
         if ($file !== false) {
             if (strpos($file, 'php://') === 0) {
-                if (strpos($file, "Swoole")) {
+                if (strpos($file, "Swoole") || strpos($file, "Yii")) {
                     $oldfile = $file;
                     if (preg_match('/resource=(.+)$/', $file, $matches)) {
                         $file = PathResolver::realpath($matches[1]);
