@@ -5,6 +5,7 @@
  */
 namespace ESD\Plugins\Amqp;
 
+use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Amqp\Message\ConsumerMessage;
 
 /**
@@ -13,6 +14,7 @@ use ESD\Plugins\Amqp\Message\ConsumerMessage;
 class Consumer extends Builder
 {
     use GetAmqp;
+    use GetLogger;
 
     /**
      * @throws \AMQPChannelException
@@ -38,6 +40,13 @@ class Consumer extends Builder
         $this->setupBrokerDone = true;
     }
 
+    /**
+     * @param ConsumerMessage $consumerMessage
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPEnvelopeException
+     * @throws \AMQPExchangeException
+     */
     public function consume(ConsumerMessage $consumerMessage): void
     {
         $maxConsumption = $consumerMessage->getMaxConsumption();
@@ -47,12 +56,24 @@ class Consumer extends Builder
             }
 
             $ttr = $attempt = null;
-            if ($consumerMessage->consume($message->getBody())) {
-                $q->ack($message->getDeliveryTag());
-            } else {
-                $q->ack($message->getDeliveryTag());
-                $this->redeliver($message);
+            $result = $consumerMessage->consume($message->getBody());
+            if ($result == Result::ACK) {
+                $this->debug($deliveryTag . ' acked.');
+                return $q->ack($message->getDeliveryTag());
             }
+
+            if ($result === Result::NACK) {
+                $this->debug($deliveryTag . ' uacked.');
+                return $q->nack($message->getDeliveryTag());
+            }
+
+            if ($consumerMessage->isRequeue() && $result === Result::REQUEUE) {
+                $this->debug($deliveryTag . ' requeued.');
+                return $q->reject($message->getDeliveryTag(), AMQP_REQUEUE);
+            }
+
+            $this->debug($deliveryTag . ' requeued.');
+            return $q->reject($message->getDeliveryTag());
         };
 
         $this->setupBroker();
