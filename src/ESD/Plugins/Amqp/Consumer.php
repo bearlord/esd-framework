@@ -28,7 +28,7 @@ class Consumer extends Builder
         }
 
         $this->handle->getExchange()->setName($this->exchangeName);
-        $this->handle->getExchange()->setType(AMQP_EX_TYPE_DIRECT);
+        $this->handle->getExchange()->setType(AMQP_EX_TYPE_TOPIC);
         $this->handle->getExchange()->setFlags(AMQP_DURABLE);
         $this->handle->getExchange()->declareExchange();
 
@@ -49,6 +49,11 @@ class Consumer extends Builder
      */
     public function consume(ConsumerMessage $consumerMessage): void
     {
+        $this->setExchangeName($consumerMessage->getExchange());
+        $this->setRoutingKey($consumerMessage->getRoutingKey());
+        $this->setQueueName($consumerMessage->getQueue());
+        $this->setupBroker();
+
         $maxConsumption = $consumerMessage->getMaxConsumption();
         $callback = function (\AMQPEnvelope $message, \AMQPQueue $q) use ($consumerMessage, &$maxConsumption) {
             $deliveryTag = $message->getDeliveryTag();
@@ -76,9 +81,7 @@ class Consumer extends Builder
             $this->debug($deliveryTag . ' requeued.');
             return $q->reject($deliveryTag);
         };
-
-        $this->setupBroker();
-
+        
         goWithContext(function () use ($callback){
             $this->handle->getQueue()->consume($callback);
         });
