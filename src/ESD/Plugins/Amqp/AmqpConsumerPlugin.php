@@ -70,6 +70,16 @@ class AmqpConsumerPlugin extends AbstractPlugin
 
     }
 
+    /**
+     * @param Context $context
+     * @return mixed|void
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPEnvelopeException
+     * @throws \AMQPExchangeException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
     public function beforeProcessStart(Context $context)
     {
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {

@@ -129,30 +129,6 @@ class Builder
     }
 
     /**
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     */
-    protected function setupBroker()
-    {
-        if ($this->setupBrokerDone) {
-            return;
-        }
-
-        $this->handle->getExchange()->setName($this->exchangeName);
-        $this->handle->getExchange()->setType(AMQP_EX_TYPE_DIRECT);
-        $this->handle->getExchange()->setFlags(AMQP_DURABLE);
-        $this->handle->getExchange()->declareExchange();
-
-        $this->handle->getQueue()->setName($this->queueName);
-        $this->handle->getQueue()->setFlags(AMQP_DURABLE);
-        $this->handle->getQueue()->declareQueue();
-
-        $this->handle->getQueue()->bind($this->exchangeName, $this->routingKey);
-        $this->setupBrokerDone = true;
-    }
-
-    /**
      * @param $value
      * @return false|string
      */

@@ -16,6 +16,25 @@ class Producer extends Builder
     use GetAmqp;
 
     /**
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     */
+    protected function setupBroker()
+    {
+        if ($this->setupBrokerDone) {
+            return;
+        }
+
+        $this->handle->getExchange()->setName($this->exchangeName);
+        $this->handle->getExchange()->setType(AMQP_EX_TYPE_TOPIC);
+        $this->handle->getExchange()->setFlags(AMQP_DURABLE);
+        $this->handle->getExchange()->declareExchange();
+
+        $this->setupBrokerDone = true;
+    }
+
+    /**
      * @param $payload
      * @param string $routingKey
      * @throws \AMQPChannelException
