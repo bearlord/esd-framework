@@ -17,30 +17,6 @@ class Consumer extends Builder
     use GetLogger;
 
     /**
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     */
-    protected function setupBroker()
-    {
-        if ($this->setupBrokerDone) {
-            return;
-        }
-
-        $this->handle->getExchange()->setName($this->exchangeName);
-        $this->handle->getExchange()->setType(AMQP_EX_TYPE_TOPIC);
-        $this->handle->getExchange()->setFlags(AMQP_DURABLE);
-        $this->handle->getExchange()->declareExchange();
-
-        $this->handle->getQueue()->setName($this->queueName);
-        $this->handle->getQueue()->setFlags(AMQP_DURABLE);
-        $this->handle->getQueue()->declareQueue();
-
-        $this->handle->getQueue()->bind($this->exchangeName, $this->routingKey);
-        $this->setupBrokerDone = true;
-    }
-
-    /**
      * @param ConsumerMessage $consumerMessage
      * @throws \AMQPChannelException
      * @throws \AMQPConnectionException
@@ -81,7 +57,7 @@ class Consumer extends Builder
             $this->debug($deliveryTag . ' requeued.');
             return $q->reject($deliveryTag);
         };
-        
+
         goWithContext(function () use ($callback){
             $this->handle->getQueue()->consume($callback);
         });
