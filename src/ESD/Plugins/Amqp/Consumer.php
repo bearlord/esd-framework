@@ -51,29 +51,30 @@ class Consumer extends Builder
     {
         $maxConsumption = $consumerMessage->getMaxConsumption();
         $callback = function (\AMQPEnvelope $message, \AMQPQueue $q) use ($consumerMessage, &$maxConsumption) {
+            $deliveryTag = $message->getDeliveryTag();
             if ($message->isRedelivery()) {
-                $q->ack($message->getDeliveryTag());
+                $q->ack($deliveryTag);
             }
 
             $ttr = $attempt = null;
             $result = $consumerMessage->consume($message->getBody());
             if ($result == Result::ACK) {
                 $this->debug($deliveryTag . ' acked.');
-                return $q->ack($message->getDeliveryTag());
+                return $q->ack($deliveryTag);
             }
 
             if ($result === Result::NACK) {
                 $this->debug($deliveryTag . ' uacked.');
-                return $q->nack($message->getDeliveryTag());
+                return $q->nack($deliveryTag);
             }
 
             if ($consumerMessage->isRequeue() && $result === Result::REQUEUE) {
                 $this->debug($deliveryTag . ' requeued.');
-                return $q->reject($message->getDeliveryTag(), AMQP_REQUEUE);
+                return $q->reject($deliveryTag, AMQP_REQUEUE);
             }
 
             $this->debug($deliveryTag . ' requeued.');
-            return $q->reject($message->getDeliveryTag());
+            return $q->reject($deliveryTag);
         };
 
         $this->setupBroker();
