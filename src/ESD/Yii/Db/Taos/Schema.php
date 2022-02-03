@@ -18,6 +18,11 @@ use ESD\Yii\Db\TableSchema;
  */
 class Schema extends \ESD\Yii\Db\Schema implements ConstraintFinderInterface
 {
+
+    const TYPE_INT = 'int';
+    const TYPE_BOOL = 'bool';
+    const TYPE_NCHAR = 'nchar';
+
     public function getTablePrimaryKey($name, $refresh = false)
     {
         // TODO: Implement getTablePrimaryKey() method.
@@ -81,6 +86,15 @@ class Schema extends \ESD\Yii\Db\Schema implements ConstraintFinderInterface
     protected function loadTableSchema($name)
     {
         // TODO: Implement loadTableSchema() method.
+    }
+
+    /**
+     * Creates a query builder for the PostgreSQL database.
+     * @return QueryBuilder query builder instance
+     */
+    public function createQueryBuilder()
+    {
+        return new QueryBuilder($this->db);
     }
 
     /**

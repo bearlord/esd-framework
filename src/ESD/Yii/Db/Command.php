@@ -91,25 +91,25 @@ class Command extends Component
     /**
      * @var array pending parameters to be bound to the current PDO statement.
      */
-    private $_pendingParams = [];
+    protected $_pendingParams = [];
     /**
      * @var string the SQL statement that this command represents
      */
-    private $_sql;
+    protected $_sql;
     /**
      * @var string name of the table, which schema, should be refreshed after command execution.
      */
-    private $_refreshTableName;
+    protected $_refreshTableName;
     /**
      * @var string|false|null the isolation level to use for this transaction.
      * See [[Transaction::begin()]] for details.
      */
-    private $_isolationLevel = false;
+    protected $_isolationLevel = false;
     /**
      * @var callable a callable (e.g. anonymous function) that is called when [[\ESD\Yii\Db\Exception]] is thrown
      * when executing the command.
      */
-    private $_retryHandler;
+    protected $_retryHandler;
 
 
     /**

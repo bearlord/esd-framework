@@ -285,6 +285,7 @@ class Connection extends Component
         'mssql' => 'ESD\Yii\Db\Mssql\Schema', // older MSSQL driver on MS Windows hosts
         'dblib' => 'ESD\Yii\Db\Mssql\Schema', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
         'cubrid' => 'ESD\Yii\Db\Cubrid\Schema', // CUBRID
+        'taos' => 'ESD\Yii\Db\Taos\Schema', // Taos
     ];
     /**
      * @var string Custom PDO wrapper class. If not set, it will use [[PDO]] or [[\ESD\Yii\Db\mssql\PDO]] when MSSQL is used.
@@ -322,6 +323,7 @@ class Connection extends Component
         'mssql' => 'ESD\Yii\Db\Command', // older MSSQL driver on MS Windows hosts
         'dblib' => 'ESD\Yii\Db\Command', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
         'cubrid' => 'ESD\Yii\Db\Command', // CUBRID
+        'taos' => 'ESD\Yii\Db\Taos\Command', // Taos
     ];
     /**
      * @var bool whether to enable [savepoint](http://en.wikipedia.org/wiki/Savepoint).
@@ -1011,7 +1013,7 @@ class Connection extends Component
         }
 
         if ($this->_slave === false) {
-            $this->_slave = Yii::$app->getDb('slave');
+            $this->_slave = Yii::$app->getDb($this->poolName . ".slave");
         }
         return $this->_slave === null && $fallbackToMaster ? $this : $this->_slave;
     }
@@ -1025,7 +1027,7 @@ class Connection extends Component
     public function getMaster()
     {
         if ($this->_master === false) {
-            $this->_master = Yii::$app->getDb('master');
+            $this->_master = Yii::$app->getDb($this->poolName . ".master");
         }
 
         return $this->_master;
