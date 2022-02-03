@@ -34,9 +34,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      */
     public function insert($table, $columns, &$params)
     {
-        printf("Taos\QueryBuilder insert\n");
         list($names, $placeholders, $values, $params) = $this->prepareInsertValues($table, $columns, $params);
-        var_dump($names, $placeholders, $values, $params);
 
         return 'INSERT INTO ' . $table
             . (!empty($names) ? ' (' . implode(', ', $names) . ')' : '')
