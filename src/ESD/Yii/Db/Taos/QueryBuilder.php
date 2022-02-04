@@ -4,6 +4,8 @@ namespace ESD\Yii\Db\Taos;
 
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\NotSupportedException;
+use ESD\Yii\Db\Conditions\ConditionInterface;
+use ESD\Yii\Db\Conditions\HashCondition;
 use ESD\Yii\Db\Exception;
 use ESD\Yii\Db\ExpressionInterface;
 use ESD\Yii\Db\Query;
@@ -12,6 +14,43 @@ use ESD\Yii\Yii;
 
 class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function defaultExpressionBuilders()
+    {
+        return array_merge(parent::defaultExpressionBuilders(), [
+            'ESD\Yii\Db\Conditions\InCondition' => 'ESD\Yii\Db\Toas\Conditions\InConditionBuilder',
+            'ESD\Yii\Db\Conditions\LikeCondition' => 'ESD\Yii\Db\Toas\conditions\LikeConditionBuilder',
+        ]);
+    }
+
+    /**
+     * Transforms $condition defined in array format (as described in [[Query::where()]]
+     * to instance of [[ESD\Yii\Db\condition\ConditionInterface|ConditionInterface]] according to
+     * [[conditionClasses]] map.
+     *
+     * @param string|array $condition
+     * @see conditionClasses
+     * @return ConditionInterface
+     * @since 2.0.14
+     */
+    public function createConditionFromArray($condition)
+    {
+        if (isset($condition[0])) { // operator format: operator, operand 1, operand 2, ...
+            $operator = strtoupper(array_shift($condition));
+            if (isset($this->conditionClasses[$operator])) {
+                $className = $this->conditionClasses[$operator];
+            } else {
+                $className = 'ESD\Yii\Db\Conditions\SimpleCondition';
+            }
+            /** @var ConditionInterface $className */
+            return $className::fromArrayDefinition($operator, $condition);
+        }
+
+        // hash format: 'column1' => 'value1', 'column2' => 'value2', ...
+        return new HashCondition($condition);
+    }
 
     /**
      * Creates an INSERT SQL statement.

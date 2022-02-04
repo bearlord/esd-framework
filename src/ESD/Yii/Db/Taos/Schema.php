@@ -117,4 +117,31 @@ class Schema extends \ESD\Yii\Db\Schema implements ConstraintFinderInterface
         return implode('.', $parts);
     }
 
+    /**
+     * Quotes a column name for use in a query.
+     * If the column name contains prefix, the prefix will also be properly quoted.
+     * If the column name is already quoted or contains '(', '[[' or '{{',
+     * then this method will do nothing.
+     * @param string $name column name
+     * @return string the properly quoted column name
+     * @see quoteSimpleColumnName()
+     */
+    public function quoteColumnName($name)
+    {
+        if (strpos($name, '(') !== false || strpos($name, '[[') !== false) {
+            return $name;
+        }
+        if (($pos = strrpos($name, '.')) !== false) {
+            $prefix = $this->quoteTableName(substr($name, 0, $pos)) . '.';
+            $name = substr($name, $pos + 1);
+        } else {
+            $prefix = '';
+        }
+        if (strpos($name, '{{') !== false) {
+            return $name;
+        }
+
+        return $prefix . $name;
+    }
+
 }

@@ -52,6 +52,51 @@ class Command extends \ESD\Yii\Db\Command
     }
 
     /**
+     * Specifies the SQL statement to be executed. The SQL statement will be quoted using [[Connection::quoteSql()]].
+     * The previous SQL (if any) will be discarded, and [[params]] will be cleared as well. See [[reset()]]
+     * for details.
+     *
+     * @param string $sql the SQL statement to be set.
+     * @return \ESD\Yii\Db\Command this command instance
+     * @see reset()
+     * @see cancel()
+     */
+    public function setSql($sql)
+    {
+        if ($sql !== $this->_sql) {
+            $this->cancel();
+            $this->reset();
+            $this->_sql = $this->quoteSql($sql);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Processes a SQL statement by quoting table and column names that are enclosed within double brackets.
+     * Tokens enclosed within double curly brackets are treated as table names, while
+     * tokens enclosed within double square brackets are column names. They will be quoted accordingly.
+     * Also, the percentage character "%" at the beginning or ending of a table name will be replaced
+     * with [[tablePrefix]].
+     * @param string $sql the SQL to be quoted
+     * @return string the quoted SQL
+     */
+    public function quoteSql($sql)
+    {
+        return preg_replace_callback(
+            '/(\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\])/',
+            function ($matches) {
+                if (isset($matches[3])) {
+                    return $matches[3];
+                }
+
+                return str_replace('%', $this->db->tablePrefix, $matches[2]);
+            },
+            $sql
+        );
+    }
+
+    /**
      * Executes a prepared statement.
      *
      * It's a wrapper around [[\PDOStatement::execute()]] to support transactions
