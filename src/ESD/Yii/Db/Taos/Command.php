@@ -96,45 +96,6 @@ class Command extends \ESD\Yii\Db\Command
         );
     }
 
-    /**
-     * Executes a prepared statement.
-     *
-     * It's a wrapper around [[\PDOStatement::execute()]] to support transactions
-     * and retry handlers.
-     *
-     * @param string|null $rawSql the rawSql if it has been created.
-     * @throws Exception if execution failed.
-     * @since 2.0.14
-     */
-    protected function internalExecute($rawSql)
-    {
-        $attempt = 0;
-        while (true) {
-            try {
-                if (
-                    ++$attempt === 1
-                    && $this->_isolationLevel !== false
-                    && $this->db->getTransaction() === null
-                ) {
-                    $this->db->transaction(function () use ($rawSql) {
-                        $this->internalExecute($rawSql);
-                    }, $this->_isolationLevel);
-                } else {
-                    $this->pdoStatement->execute();
-                }
-
-                $this->reconnectTimes = 0;
-                break;
-            } catch (\Exception $e) {
-                $rawSql = $rawSql ?: $this->getRawSql();
-                $e = $this->db->getSchema()->convertException($e, $rawSql);
-
-                if ($this->_retryHandler === null || !call_user_func($this->_retryHandler, $e, $attempt)) {
-                    throw $e;
-                }
-            }
-        }
-    }
 
     /**
      * Creates a SQL command for changing the definition of a column.
@@ -152,10 +113,64 @@ class Command extends \ESD\Yii\Db\Command
         return $this->setSql($sql)->requireTableSchemaRefresh($table);
     }
 
+    /**
+     * @param $table
+     * @param $tag
+     * @param $type
+     * @return \ESD\Yii\Db\Command
+     */
     public function addTag($table ,$tag, $type)
     {
         $sql = $this->db->getQueryBuilder()->alterColumn($table, $column, $type);
 
         return $this->setSql($sql)->requireTableSchemaRefresh($table);
+    }
+
+
+    /**
+     * Creates a SQL command for creating a new super table.
+     *
+     * @param $table
+     * @param $columns
+     * @param array $tags
+     * @return \ESD\Yii\Db\Command
+     */
+    public function createSTable($table, $columns, $tags = [])
+    {
+        $sql = $this->db->getQueryBuilder()->createSTable($table, $columns, $tags);
+
+        return $this->setSql($sql)->requireTableSchemaRefresh($table);
+    }
+
+    /**
+     * Creates a SQL command for creating a new sub table.
+     *
+     * @param $table
+     * @param $stable
+     * @param array $tags
+     * @return \ESD\Yii\Db\Command
+     */
+    public function createSubTable($table, $stable, $tags = [])
+    {
+        $sql = $this->db->getQueryBuilder()->createSubTable($table, $stable, $tags);
+
+        return $this->setSql($sql)->requireTableSchemaRefresh($table);
+    }
+
+    /**
+     * Creates an INSERT SQL statement.
+     *
+     * @param $table
+     * @param $columns
+     * @param $stable
+     * @param array $tags
+     * @return \ESD\Yii\Db\Command
+     */
+    public function insertUsingSTable($table, $columns, $stable, $tags = [])
+    {
+        $params = [];
+        $sql = $this->db->getQueryBuilder()->insertUsingSTable($table, $columns, $params, $stable, $tags);
+
+        return $this->setSql($sql)->bindValues($params);
     }
 }

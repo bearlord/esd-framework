@@ -149,6 +149,40 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     }
 
     /**
+     * Creates an INSERT SQL statement.
+     *
+     * @param $table
+     * @param $columns
+     * @param $params
+     * @param $stable
+     * @param array $tags
+     * @return string
+     */
+    public function insertUsingSTable($table, $columns, &$params, $stable, $tags = [])
+    {
+        list($names, $placeholders, $values, $params) = $this->prepareInsertValues($table, $columns, $params);
+
+        $sql = 'INSERT INTO ' . $table
+            . ' USING ' . $stable;
+
+        if ($tags) {
+            $_tags = [];
+            foreach ($tags as $tag) {
+                if (is_string($tag)) {
+                    $_tags[] = '"' . $tag . '"';
+                } else {
+                    $_tags[] = $tag;
+                }
+            }
+            $sql .= ' TAGS ' . " (\n" . implode(",\n", $_tags) . "\n)";
+        }
+
+        return $sql
+            . (!empty($names) ? ' (' . implode(', ', $names) . ')' : '')
+            . (!empty($placeholders) ? ' VALUES (' . implode(', ', $placeholders) . ')' : $values);
+    }
+
+    /**
      * Generates a batch INSERT SQL statement.
      *
      * For example,
@@ -280,11 +314,69 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
         return $options === null ? $sql : $sql . ' ' . $options;
     }
 
+    /**
+     * Creates a SQL command for creating a new super table.
+     *
+     * @param $table
+     * @param $columns
+     * @param array $tags
+     * @return string
+     */
+    public function createSTable($table, $columns, $tags = [])
+    {
+        $cols = [];
+        foreach ($columns as $name => $type) {
+            if (is_string($name)) {
+                $cols[] = "\t" . $name . ' ' . $this->getColumnType($type);
+            } else {
+                $cols[] = "\t" . $type;
+            }
+        }
+        $sql = 'CREATE TABLE ' . $table . " (\n" . implode(",\n", $cols) . "\n)";
+
+        if (!empty($tags)) {
+            $_tags = [];
+            foreach ($tags as $_name => $_type) {
+                if (is_string($_name)) {
+                    $_tags[] = "\t" . $_name . ' ' . $this->getColumnType($_type);
+                } else {
+                    $_tags[] = "\t" . $_type;
+                }
+            }
+            $sql .= ' TAGS' . " (\n" . implode(",\n", $_tags) . "\n)";
+        }
+
+        return $sql;
+    }
+
+    /**
+     * @param $table
+     * @param $stable
+     * @param array $tags
+     */
+    public function createSubTable($table, $stable, $tags = [])
+    {
+        $sql = 'CREATE TABLE ' . $table . ' USING ' . $stable;
+        if ($tags) {
+            $_tags = [];
+            foreach ($tags as $tag) {
+                if (is_string($tag)) {
+                    $_tags[] = '"' . $tag . '"';
+                } else {
+                    $_tags[] = $tag;
+                }
+            }
+            $sql .= ' TAGS ' . " (\n" . implode(",\n", $_tags) . "\n)";
+        }
+
+        return $sql;
+    }
 
     /**
      * Builds a SQL statement for renaming a DB table.
-     * @param string $oldName the table to be renamed. The name will be properly quoted by the method.
-     * @param string $newName the new table name. The name will be properly quoted by the method.
+     *
+     * @param string $oldName the table to be renamed.
+     * @param string $newName the new table name.
      * @return string the SQL statement for renaming a DB table.
      */
     public function renameTable($oldName, $newName)
@@ -325,7 +417,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * Builds a SQL statement for adding a new DB column.
      * @param string $table the table that the new column will be added to.
-     * @param string $column the name of the new column. The name will be properly quoted by the method.
+     * @param string $column the name of the new column.
      * @param string $type the column type. The [[getColumnType()]] method will be invoked to convert abstract column type (if any)
      * into the physical one. Anything that is not recognized as abstract type will be kept in the generated SQL.
      * For example, 'string' will be turned into 'varchar(255)', while 'string not null' will become 'varchar(255) not null'.
@@ -340,8 +432,8 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
 
     /**
      * Builds a SQL statement for dropping a DB column.
-     * @param string $table the table whose column is to be dropped. The name will be properly quoted by the method.
-     * @param string $column the name of the column to be dropped. The name will be properly quoted by the method.
+     * @param string $table the table whose column is to be dropped.
+     * @param string $column the name of the column to be dropped.
      * @return string the SQL statement for dropping a DB column.
      */
     public function dropColumn($table, $column)
