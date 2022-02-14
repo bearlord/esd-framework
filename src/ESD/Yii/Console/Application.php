@@ -288,32 +288,31 @@ class Application extends \ESD\Yii\Base\Application
      */
     public function getDb($name = "default")
     {
-        if ($name === "default") {
-            $poolKey = "default";
-            $contextKey = "Pdo:default";
-        } elseif ($name === "slave") {
-            $slaveConfigs = Server::$instance->getConfigContext()->get("yii.db.default.slaves");
-            if (empty($slaveConfigs)) {
-                $poolKey = "default";
-                $contextKey = "Pdo:default";
-            } else {
-                $slaveRandKey = array_rand($slaveConfigs);
+        $subname = "";
+        if (strpos($name, ".") > 0) {
+            list($name, $subname) = explode(".", $name, 2);
+        }
 
-                $poolKey = sprintf("default.slave.%s", $slaveRandKey);
-                $contextKey = sprintf("Pdo:default.slave.%s", $slaveRandKey);
-            }
+        switch ($subname) {
+            case "slave":
+            case "master":
+                $_configKey = sprintf("yii.db.%s.%ss", $name, $subname);
+                $_configs = Server::$instance->getConfigContext()->get($_configKey);
+                if (empty($_configs)) {
+                    $poolKey = $name;
+                    $contextKey = sprintf("Pdo:%s", $name);
+                } else {
+                    $_randKey = array_rand($_configs);
 
-        } elseif ($name === "master") {
-            $masterConfigs = Server::$instance->getConfigContext()->get("yii.db.default.masters");
-            if (empty($masterConfigs)) {
-                $poolKey = "default";
-                $contextKey = "Pdo:default";
-            } else {
-                $masterRandKey = array_rand($masterConfigs);
+                    $poolKey = sprintf("%s.%s.%s", $name, $subname, $_randKey);
+                    $contextKey = sprintf("Pdo:{$name}%s.%s.%s", $name, $subname, $_randKey);
+                }
+                break;
 
-                $poolKey = sprintf("default.master.%s", $masterRandKey);
-                $contextKey = sprintf("Pdo:default.master.%s", $masterRandKey);
-            }
+            default:
+                $poolKey = $name;
+                $contextKey = sprintf("Pdo:%s", $name);
+                break;
         }
 
         $db = getContextValue($contextKey);

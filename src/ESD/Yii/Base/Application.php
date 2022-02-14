@@ -258,56 +258,50 @@ class Application extends ServiceLocator
      */
     public function getDb($name = "default")
     {
-        switch ($name) {
+        $subname = "";
+        if (strpos($name, ".") > 0) {
+            list($name, $subname) = explode(".", $name, 2);
+        }
+
+        switch ($subname) {
             case "slave":
-                $slaveConfigs = Server::$instance->getConfigContext()->get("yii.db.default.slaves");
-                if (empty($slaveConfigs)) {
-                    $poolKey = "default";
-                    $contextKey = "Pdo:default";
-                } else {
-                    $slaveRandKey = array_rand($slaveConfigs);
-
-                    $poolKey = sprintf("default.slave.%s", $slaveRandKey);
-                    $contextKey = sprintf("Pdo:default.slave.%s", $slaveRandKey);
-                }
-                break;
-
             case "master":
-                $masterConfigs = Server::$instance->getConfigContext()->get("yii.db.default.masters");
-                if (empty($masterConfigs)) {
-                    $poolKey = "default";
-                    $contextKey = "Pdo:default";
+                $_configKey = sprintf("yii.db.%s.%ss", $name, $subname);
+                $_configs = Server::$instance->getConfigContext()->get($_configKey);
+                if (empty($_configs)) {
+                    $poolKey = $name;
+                    $contextKey = sprintf("Pdo:%s", $name);
                 } else {
-                    $masterRandKey = array_rand($masterConfigs);
+                    $_randKey = array_rand($_configs);
 
-                    $poolKey = sprintf("default.master.%s", $masterRandKey);
-                    $contextKey = sprintf("Pdo:default.master.%s", $masterRandKey);
+                    $poolKey = sprintf("%s.%s.%s", $name, $subname, $_randKey);
+                    $contextKey = sprintf("Pdo:{$name}%s.%s.%s", $name, $subname, $_randKey);
                 }
                 break;
 
-            case "default":
             default:
-                $poolKey = "default";
-                $contextKey = "Pdo:default";
+                $poolKey = $name;
+                $contextKey = sprintf("Pdo:%s", $name);
                 break;
         }
 
         $db = getContextValue($contextKey);
 
-        if (!empty($db)) {
-            return $db;
-        }
-        
-        /** @var PdoPools $pdoPools */
-        $pdoPools = getDeepContextValueByClassName(PdoPools::class);
-        if (!empty($pdoPools)) {
-            $pool = $pdoPools->getPool($poolKey);
-            if ($pool == null) {
-                throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+        if ($db == null) {
+            /** @var PdoPools $pdoPools */
+            $pdoPools = getDeepContextValueByClassName(PdoPools::class);
+            if (!empty($pdoPools)) {
+                $pool = $pdoPools->getPool($poolKey);
+                if ($pool == null) {
+                    throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+                }
+                return $pool->db();
+            } else {
+                return $this->getDbOnce();
             }
-            return $pool->db();
+
         } else {
-            return $this->getDbOnce();
+            return $db;
         }
     }
 
