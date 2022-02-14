@@ -21,21 +21,6 @@ class PortConfig extends BaseConfig
     const SWOOLE_SOCK_UDP6 = SWOOLE_SOCK_UDP6;
     const SWOOLE_SOCK_UNIX_DGRAM = SWOOLE_SOCK_UNIX_DGRAM;
     const SWOOLE_SOCK_UNIX_STREAM = SWOOLE_SOCK_UNIX_STREAM;
-    const SWOOLE_SSL = SWOOLE_SSL;
-
-    const SWOOLE_SSLv3_METHOD = SWOOLE_SSLv3_METHOD;
-    const SWOOLE_SSLv3_SERVER_METHOD = SWOOLE_SSLv3_SERVER_METHOD;
-    const SWOOLE_SSLv3_CLIENT_METHOD = SWOOLE_SSLv3_CLIENT_METHOD;
-    const SWOOLE_SSLv23_METHOD = SWOOLE_SSLv23_METHOD;
-    const SWOOLE_SSLv23_SERVER_METHOD = SWOOLE_SSLv23_SERVER_METHOD;
-    const SWOOLE_SSLv23_CLIENT_METHOD = SWOOLE_SSLv23_CLIENT_METHOD;
-    const SWOOLE_TLSv1_METHOD = SWOOLE_TLSv1_METHOD;
-    const SWOOLE_TLSv1_SERVER_METHOD = SWOOLE_TLSv1_SERVER_METHOD;
-    const SWOOLE_TLSv1_CLIENT_METHOD = SWOOLE_TLSv1_CLIENT_METHOD;
-    const SWOOLE_TLSv1_1_METHOD = SWOOLE_TLSv1_1_METHOD;
-    const SWOOLE_TLSv1_1_SERVER_METHOD = SWOOLE_TLSv1_1_SERVER_METHOD;
-    const SWOOLE_TLSv1_1_CLIENT_METHOD = SWOOLE_TLSv1_1_CLIENT_METHOD;
-    const SWOOLE_TLSv1_2_METHOD = SWOOLE_TLSv1_2_METHOD;
 
     const WEBSOCKET_OPCODE_TEXT = WEBSOCKET_OPCODE_TEXT;
     const WEBSOCKET_OPCODE_BINARY = WEBSOCKET_OPCODE_BINARY;
@@ -734,7 +719,7 @@ class PortConfig extends BaseConfig
     {
         ConfigException::AssertNull($this, "sockType", $this->getSockType());
         if ($this->isEnableSsl()) {
-            return $this->getSockType() | self::SWOOLE_SSL;
+            return $this->getSockType() | SWOOLE_SSL;
         } else {
             return $this->getSockType();
         }
