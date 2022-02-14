@@ -46,6 +46,11 @@ abstract class Server extends \ESD\Core\Server\Server
             $serverConfig = new ServerConfig();
         }
 
+        if ($serverConfig->isDebug()) {
+            error_reporting(E_ALL);
+            ini_set("display_errors", "On");
+        }
+
         parent::__construct($serverConfig, $defaultPortClass, $defaultProcessClass);
     }
 
