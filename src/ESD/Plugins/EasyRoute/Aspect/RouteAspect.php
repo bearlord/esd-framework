@@ -189,7 +189,8 @@ class RouteAspect extends OrderAspect
         }
 
         try {
-            call_user_func_array([$routeInfo[1][0]->name, $routeInfo[1][1]->name], [$fd, $reactorId]);
+            $instance = new $routeInfo[1][0]->name();
+            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
@@ -270,7 +271,8 @@ class RouteAspect extends OrderAspect
         }
 
         try {
-            call_user_func_array([$routeInfo[1][0]->name, $routeInfo[1][1]->name], [$fd, $reactorId]);
+            $instance = new $routeInfo[1][0]->name();
+            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
@@ -350,7 +352,8 @@ class RouteAspect extends OrderAspect
         }
 
         try {
-            call_user_func_array([$routeInfo[1][0]->name, $routeInfo[1][1]->name], [$fd, $reactorId]);
+            $instance = new $routeInfo[1][0]->name();
+            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
