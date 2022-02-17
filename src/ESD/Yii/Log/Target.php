@@ -175,12 +175,11 @@ abstract class Target extends Component
         /** @var ClientData $clientData */
         $clientData = getContextValueByClassName(ClientData::class);
         if (!$clientData) {
-            return false;
+            return '';
         }
 
-        $result[] = "Fd = " . $clientData->getFd();
-        $result[] = "WorkerId = " . Server::$instance->getServer()->worker_id;
-        $result[] = "ClientData = " . VarDumper::dumpAsString($clientData);
+        $result[] = sprintf("Fd = %d, WorkerId = %d, ClientData = %s",
+            $clientData->getFd(), Server::$instance->getServer()->worker_id, VarDumper::dumpAsString($clientData));
 
         $request = $clientData->getRequest();
         if (!empty($request)) {
@@ -191,7 +190,9 @@ abstract class Target extends Component
             $result[] = "\$_COOKIE = " . VarDumper::dumpAsString(Yii::$app->getRequest()->cookie());
             $result[] = "\$_SESSION = " . VarDumper::dumpAsString(Yii::$app->getSession()->getAttribute());
         }
-        return implode("\n\n", $result);
+        if ($result) {
+            return implode("\n\n", $result);
+        }
     }
 
     /**
