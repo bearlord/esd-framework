@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Db;
 
+use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\NotSupportedException;
@@ -1097,7 +1098,13 @@ class Command extends Component
             return $n;
         } catch (Exception $e) {
             if (!$this->isBreak($e)) {
-                throw $e;
+                $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
+                    $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
+                Server::$instance->getLog()->error($_message);
+
+                Yii::error($_message);
+                $profile and Yii::endProfile($rawSql, __METHOD__);
+                throw $this->db->getSchema()->convertException($e, $rawSql ?: $this->getRawSql());
             }
             try {
                 if ($this->reconnectTimes < $this->reconnectMaxTimes) {
@@ -1126,10 +1133,14 @@ class Command extends Component
                     $this->refreshTableSchema();
                     return $n;
                 }
-            } catch (Exception $e2) {
-                throw $e2;
             } catch (Exception $e) {
-                throw $e;
+                $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
+                    $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
+                Server::$instance->getLog()->error($_message);
+
+                Yii::error($_message);
+                $profile and Yii::endProfile($rawSql, __METHOD__);
+                throw $this->db->getSchema()->convertException($e, $rawSql ?: $this->getRawSql());
             }
         }
     }
@@ -1203,7 +1214,13 @@ class Command extends Component
             $profile and Yii::endProfile($rawSql, 'ESD\Yii\Db\Command::query');
         } catch (Exception $e) {
             if (!$this->isBreak($e)) {
-                throw $e;
+                $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
+                    $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
+                Server::$instance->getLog()->error($_message);
+
+                Yii::error($_message);
+                $profile and Yii::endProfile($rawSql, __METHOD__);
+                throw $this->db->getSchema()->convertException($e, $rawSql ?: $this->getRawSql());
             }
             try {
                 if ($this->reconnectTimes < $this->reconnectMaxTimes) {
@@ -1238,10 +1255,14 @@ class Command extends Component
 
                     $profile and Yii::endProfile($rawSql, 'ESD\Yii\Db\Command::query');
                 }
-            } catch (Exception $e2) {
-                throw $e2;
-            } catch (Exception $e3) {
-                throw $e3;
+            } catch (Exception $e) {
+                $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
+                    $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
+                Server::$instance->getLog()->error($_message);
+
+                Yii::error($_message);
+                $profile and Yii::endProfile($rawSql, __METHOD__);
+                throw $this->db->getSchema()->convertException($e, $rawSql ?: $this->getRawSql());
             }
         }
 
