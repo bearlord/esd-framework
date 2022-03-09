@@ -146,7 +146,7 @@ class GoApplication extends Server
      */
     public function configureReady()
     {
-        $this->info(Yii::t('esd', 'Configure ready'));
+        $this->debug(Yii::t('esd', 'Configure ready'));
     }
 
     /**
@@ -155,7 +155,7 @@ class GoApplication extends Server
      */
     public function onStart()
     {
-        $this->info(Yii::t('esd', 'Application start'));
+        $this->debug(Yii::t('esd', 'Application start'));
     }
 
     /**
@@ -164,7 +164,7 @@ class GoApplication extends Server
      */
     public function onShutdown()
     {
-        $this->info(Yii::t('esd', 'Application shutdown'));
+        $this->debug(Yii::t('esd', 'Application shutdown'));
     }
 
     /**
@@ -184,7 +184,7 @@ class GoApplication extends Server
      */
     public function onManagerStart()
     {
-        $this->info(Yii::t('esd', 'Manager process start'));
+        $this->debug(Yii::t('esd', 'Manager process start'));
     }
 
     /**
@@ -193,7 +193,7 @@ class GoApplication extends Server
      */
     public function onManagerStop()
     {
-        $this->info(Yii::t('esd', 'Manager process stop'));
+        $this->debug(Yii::t('esd', 'Manager process stop'));
     }
 
     /**

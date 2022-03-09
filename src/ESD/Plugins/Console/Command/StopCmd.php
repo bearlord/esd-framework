@@ -84,7 +84,7 @@ class StopCmd extends Command
                 continue;
             }
             // Stop success.
-            $io->success("Server $serverName stop success");
+            $io->note("Server $serverName stop success");
             break;
         }
         return ConsolePlugin::SUCCESS_EXIT;
