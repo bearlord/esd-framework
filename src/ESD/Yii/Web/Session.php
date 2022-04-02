@@ -191,8 +191,13 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      */
     public function close()
     {
+        $debug = Server::$instance->getConfigContext()->get('yii.debug');
         if ($this->getIsActive()) {
-            $debug ? session_write_close() : @session_write_close();
+            if ($debug) {
+                session_write_close();
+            } else {
+                @session_write_close();
+            }
         }
     }
 
