@@ -1455,7 +1455,8 @@ class Command extends Component
         'SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: Name or service not known',
         'SQLSTATE[HY000] [2002] Connection timed out',
         'SQLSTATE[42000]: Syntax error or access violation: 1064',
-        'SQLSTATE[HY093]: Invalid parameter number'
+        'SQLSTATE[HY093]: Invalid parameter number',
+		'Error while sending QUERY packet'
     ];
 
     /**
