@@ -297,7 +297,7 @@ class Application extends ServiceLocator
                 }
                 return $pool->db();
             } else {
-                return $this->getDbOnce();
+                return $this->getDbOnce($name);
             }
 
         } else {
@@ -310,9 +310,10 @@ class Application extends ServiceLocator
      * @return Connection
      * @throws \ESD\Yii\Db\Exception
      */
-    public function getDbOnce()
+    public function getDbOnce($name)
     {
-        $config = Server::$instance->getConfigContext()->get("yii.db.default");
+        $_configKey = sprintf("yii.db.%s", $name);
+        $config = Server::$instance->getConfigContext()->get($_configKey);
         $db = new Connection();
         $db->dsn = $config['dsn'];
         $db->username = $config['username'];
