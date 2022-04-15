@@ -1381,6 +1381,10 @@ class Command extends Component
                     }, $this->_isolationLevel);
                 } else {
                     $this->pdoStatement->execute();
+                    $error = error_get_last();
+                    if (!empty($error)) {
+                        throw new \Exception($error['message']);
+                    }
                 }
 
                 $this->reconnectTimes = 0;
@@ -1456,7 +1460,7 @@ class Command extends Component
         'SQLSTATE[HY000] [2002] Connection timed out',
         'SQLSTATE[42000]: Syntax error or access violation: 1064',
         'SQLSTATE[HY093]: Invalid parameter number',
-		'Error while sending QUERY packet'
+        'Error while sending QUERY packet'
     ];
 
     /**
