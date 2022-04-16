@@ -67,28 +67,30 @@ class AnnotationRoute implements IRoute
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
+                $message = Yii::t('esd', '{path} Not Found', [
+                    'path' => $this->clientData->getPath()
+                ]);
+
                 $debug = Server::$instance->getConfigContext()->get("esd.server.debug");
-                if (!$debug) {
-                    $_contentType = $this->clientData->getRequest()->getHeader('content-type');
-                    if (!empty($_contentType)) {
-                        $contentType = strtolower($_contentType[0]);
-                        if (strpos($contentType, 'application/json') !== false) {
-                            $this->clientData->getResponse()->withHeader("Content-Type", $contentType);
-                            $message = Yii::t('esd', '{path} 404 Not Found', [
-                                'path' => $this->clientData->getPath()
-                            ]);
-                            $exceptionJson = Json::encode([
-                                'code' => 400,
-                                'data' => [],
-                                'message' => $message
-                            ]);
-                            $this->clientData->getResponse()->withContent($exceptionJson)->end();
-                        }
-                        return true;
-                    }
+                if ($debug) {
+                    throw new RouteException($message . 'aaaa');
+                    break;
                 }
 
-                throw new RouteException("{$this->clientData->getPath()} 404 Not found");
+                $contentType = '';
+                $_contentType = $this->clientData->getRequest()->getHeader('content-type');
+                if (!empty($_contentType)) {
+                    $contentType = strtolower($_contentType[0]);
+                }
+                if (strpos($contentType, 'application/json') !== false) {
+                    $this->clientData->getResponse()->withHeader("Content-Type", $contentType);
+                    $exceptionJson = Json::encode([
+                        'code' => 400,
+                        'data' => [],
+                        'message' => $message
+                    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_FORCE_OBJECT);
+                    $this->clientData->getResponse()->withContent($exceptionJson)->end();
+                }
                 break;
 
             case Dispatcher::METHOD_NOT_ALLOWED:
@@ -104,6 +106,7 @@ class AnnotationRoute implements IRoute
                 } else {
                     throw new MethodNotAllowedException("Method not allowed");
                 }
+                break;
 
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
