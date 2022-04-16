@@ -4,7 +4,7 @@ return [
     '{driverName} connection pool named {name} not found' => '{driverName} {name} 连接池未设置',
     '{name} cannot be empty' => '{name} 不能为空',
     '{name} configuration not found' => '{name} 配置未设置',
-    '{path} 404 Not Found' => '{path} 404 请求未找到',
+    '{path} Not Found' => '{path} 请求未找到',
     'onto' => '->',
     'Aspect {name} created' => '创建切片 {name}',
     'Actor {actor} not exist' => 'Actor {actor} 不存在',

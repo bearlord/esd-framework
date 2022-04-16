@@ -4,7 +4,7 @@ return [
     '{driverName} connection pool named {name} not found' => '{driverName} Verbindungspool mit dem Namen {name} wurde nicht gefunden',
     '{name} cannot be empty' => '{name} Kann nicht leer sein',
     '{name} configuration not found' => ' Die {name}-Konfiguration ist nicht festgelegt',
-    '{path} 404 Not Found' => '{path} 404 Anfrage nicht gefunden',
+    '{path} Not Found' => '{path} Anfrage nicht gefunden',
     'onto' => '->',
     'Aspect {name} created' => 'Aspekt {name} erstellt',
     'Actor {actor} not exist' => 'Schauspieler {actor} existiert nicht',

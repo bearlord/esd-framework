@@ -4,7 +4,7 @@ return [
     '{driverName} connection pool named {name} not found' => '{name}という名前の{driverName}接続プールが見つかりません',
     '{name} cannot be empty' => '{method} のメソッドアノテーション{annotationClass}',
     '{name} configuration not found' => '{name} 配置未设置',
-    '{path} 404 Not Found' => '{パス} 404が見つかりません',
+    '{path} Not Found' => '{パス} が見つかりません',
     'onto' => '->',
     'Aspect {name} created' => 'アスペクト {name} が作成されました',
     'Actor {actor} not exist' => '俳優 {actor} は存在しません',
