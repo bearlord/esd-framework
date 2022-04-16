@@ -73,7 +73,7 @@ class AnnotationRoute implements IRoute
 
                 $debug = Server::$instance->getConfigContext()->get("esd.server.debug");
                 if ($debug) {
-                    throw new RouteException($message . 'aaaa');
+                    throw new RouteException($message);
                     break;
                 }
 
