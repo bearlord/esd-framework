@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Db;
 
+use ESD\Core\Server\Server;
 use PDO;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
@@ -639,7 +640,9 @@ class Connection extends Component
         }
 
         if ($this->pdo !== null) {
+            Server::$instance->getLog()->debug('Closing DB connection: ' . $this->dsn);
             Yii::debug('Closing DB connection: ' . $this->dsn, __METHOD__);
+
             $this->pdo = null;
             $this->_schema = null;
             $this->_transaction = null;
