@@ -399,7 +399,7 @@ abstract class Server
      */
     public function _onWorkerExit($serv, int $worker_id)
     {
-        \Swoole\Timer::clearAll();
+        //\Swoole\Timer::clearAll();
         return true;
     }
 
