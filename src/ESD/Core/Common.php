@@ -10,62 +10,13 @@ use ESD\Core\Runtime;
 use Psr\Log\LoggerInterface;
 
 /**
- * TCP Socket Stream
- */
-const HOOK_TCP = SWOOLE_HOOK_TCP;
-
-/**
- * UDP Socket Stream
- */
-const HOOK_UDP = SWOOLE_HOOK_UDP;
-
-/**
- * Unix Stream Socket Stream
- */
-const HOOK_UNIX = SWOOLE_HOOK_UNIX;
-
-/**
- * Unix Dgram Socket Stream
- */
-const HOOK_UDG = SWOOLE_HOOK_UDG;
-
-/**
- * SSL Socket Stream
- */
-const HOOK_SSL = SWOOLE_HOOK_SSL;
-
-/**
- * TLS Socket Stream
- */
-const HOOK_TLS = SWOOLE_HOOK_TLS;
-
-/**
- * Hook sleep
- */
-const HOOK_SLEEP = SWOOLE_HOOK_SLEEP;
-
-/**
- * Hook file
- */
-const HOOK_FILE = SWOOLE_HOOK_FILE;
-
-/**
- * Hook blocking function
- */
-const HOOK_BLOCKING_FUNCTION = SWOOLE_HOOK_BLOCKING_FUNCTION;
-
-/**
- * Hook all
- */
-const HOOK_ALL = SWOOLE_HOOK_ALL;
-
-/**
  * Global enable runtime coroutine
  *
  * @param bool $enable
  * @param int $flags
+ * @return bool|void
  */
-function enableRuntimeCoroutine(bool $enable = true, int $flags = HOOK_ALL ^ HOOK_FILE)
+function enableRuntimeCoroutine(bool $enable = true, int $flags = SWOOLE_HOOK_ALL ^ SWOOLE_HOOK_FILE)
 {
     if (!$enable) {
         \Swoole\Runtime::enableCoroutine($enable);
