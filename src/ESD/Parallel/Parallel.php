@@ -6,8 +6,8 @@
 
 namespace ESD\Parallel;
 
-use ESD\Coroutine\Coroutine;
 use ESD\Parallel\WaitGroup;
+use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 
 /**
@@ -56,23 +56,23 @@ class Parallel
     public function wait(bool $throw = true): array
     {
         $result = $throwables = [];
-        $wg = new WaitGroup();
-        $wg->add(count($this->callbacks));
+        $waitGroup = new WaitGroup();
+        $waitGroup->add(count($this->callbacks));
 
         foreach ($this->callbacks as $key => $callback) {
             $this->concurrentChannel && $this->concurrentChannel->push(true);
-            \Swoole\Coroutine::create(function () use ($callback, $key, $wg, &$result, &$throwables) {
+            Coroutine::create(function () use ($callback, $key, $waitGroup, &$result, &$throwables) {
                 try {
                     $result[$key] = call($callback);
                 } catch (\Throwable $throwable) {
                     $throwables[$key] = $throwable;
                 } finally {
                     $this->concurrentChannel && $this->concurrentChannel->pop();
-                    $wg->done();
+                    $waitGroup->done();
                 }
             });
         }
-        $wg->wait();
+        $waitGroup->wait();
 
         if ($throw && ($throwableCount = count($throwables)) > 0) {
             $message = 'Detecting ' . $throwableCount . ' throwable occurred during parallel execution:' . PHP_EOL . $this->formatThrowables($throwables);
