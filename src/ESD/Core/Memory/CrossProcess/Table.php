@@ -52,9 +52,9 @@ class Table implements \Iterator, \Countable
     /**
      * Add column
      *
-     * @param string $name 字段的名称
+     * @param string $name filed name
      * @param int $type Field type, supports 3 types, TYPE_INT, TYPE_FLOAT, TYPE_STRING
-     * @param int $size 字符串字段的最大长度，单位为字节。字符串类型的字段必须指定$size
+     * @param int $size The maximum length of the string field, in bytes. Fields of type string must specify $size
      */
     public function column(string $name, int $type, int $size = 0)
     {
