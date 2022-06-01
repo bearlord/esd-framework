@@ -180,9 +180,9 @@ class RouteAspect extends OrderAspect
         //Request method
         $requestMethod = 'TCP';
         //Defined path
-        $onClosePath = '/onConnect';
+        $onConnectPath = '/onConnect';
         //Route info
-        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onConnectPath);
 
         if ($routeInfo[0] !== Dispatcher::FOUND) {
             return false;
@@ -278,6 +278,42 @@ class RouteAspect extends OrderAspect
         }
     }
 
+    /**
+     * After onWsOpen
+     *
+     * @param MethodInvocation $invocation Invocation
+     * @throws \Throwable
+     * @After("within(ESD\Core\Server\Port\IServerPort+) && execution(public **->onWsOpen(*))")
+     */
+    protected function afterWsOpen(MethodInvocation $invocation)
+    {
+        $request = $invocation->getArguments()[0];
+        //fd
+        $fd = $request->getFd();
+        //Client Info
+        $clientInfo = Server::$instance->getClientInfo($fd);
+        //ReactorId
+        $reactorId = $clientInfo->getReactorId();
+        //Server port
+        $serverPort = $clientInfo->getServerPort();
+        //Request method
+        $requestMethod = 'WS';
+        //Defined path
+        $onConnectPath = '/onWsOpen';
+        //Route info
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onConnectPath);
+
+        if ($routeInfo[0] !== Dispatcher::FOUND) {
+            return false;
+        }
+
+        try {
+            $instance = new $routeInfo[1][0]->name();
+            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId]);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+    }
 
     /**
      * Around onWsMessage
