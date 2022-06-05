@@ -287,6 +287,7 @@ class Connection extends Component
         'dblib' => 'ESD\Yii\Db\Mssql\Schema', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
         'cubrid' => 'ESD\Yii\Db\Cubrid\Schema', // CUBRID
         'taos' => 'ESD\Yii\Db\Taos\Schema', // Taos
+        'taosw' => 'ESD\Yii\Db\Taos\Schema', // Taos
     ];
     /**
      * @var string Custom PDO wrapper class. If not set, it will use [[PDO]] or [[\ESD\Yii\Db\mssql\PDO]] when MSSQL is used.
@@ -325,6 +326,7 @@ class Connection extends Component
         'dblib' => 'ESD\Yii\Db\Command', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
         'cubrid' => 'ESD\Yii\Db\Command', // CUBRID
         'taos' => 'ESD\Yii\Db\Taos\Command', // Taos
+        'taosw' => 'ESD\Yii\Db\Taos\Command', // Taos
     ];
     /**
      * @var bool whether to enable [savepoint](http://en.wikipedia.org/wiki/Savepoint).
