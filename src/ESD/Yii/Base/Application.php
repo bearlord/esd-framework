@@ -315,6 +315,7 @@ class Application extends ServiceLocator
         $_configKey = sprintf("yii.db.%s", $name);
         $config = Server::$instance->getConfigContext()->get($_configKey);
         $db = new Connection();
+        $db->poolName = $name;
         $db->dsn = $config['dsn'];
         $db->username = $config['username'];
         $db->password = $config['password'];
