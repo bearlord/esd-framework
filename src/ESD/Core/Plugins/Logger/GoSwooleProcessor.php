@@ -144,7 +144,7 @@ class GoSwooleProcessor implements ProcessorInterface
             $class = implode(".", $array);
         }
 
-//        $class = str_replace("\\", ".", $class);
+        $class = str_replace("\\", ".", $class);
         if (stristr($func, "{closure}")) {
             $func = "{closure}";
         }
