@@ -5,6 +5,7 @@ namespace ESD\Yii\Db\Taos;
 use ESD\Yii\Db\Exception;
 use ESD\Yii\Db\PdoValue;
 use ESD\Yii\Yii;
+use PDO;
 
 /**
  * Command represents an TDengine's SQL statement to be executed against a database.
@@ -36,6 +37,7 @@ class Command extends \ESD\Yii\Db\Command
         $schema = $this->db->getSchema();
         foreach ($values as $name => $value) {
             if (is_array($value)) {
+                $value = $this->formatPdoValue($value);
                 $this->_pendingParams[$name] = $value;
                 $this->params[$name] = $value[0];
             } elseif ($value instanceof PdoValue) {
@@ -49,6 +51,42 @@ class Command extends \ESD\Yii\Db\Command
         }
 
         return $this;
+    }
+
+    protected function formatPdoValue(array $value)
+    {
+        switch ($value[1]) {
+            case PDO::PARAM_TAOS_TIMESTAMP:
+            case PDO::PARAM_TAOS_TINYINT:
+            case PDO::PARAM_TAOS_SMALLINT:
+            case PDO::PARAM_TAOS_INT:
+            case PDO::PARAM_TAOS_BIGINT:
+            case PDO::PARAM_TAOS_UTINYINT:
+            case PDO::PARAM_TAOS_USMALLINT:
+            case PDO::PARAM_TAOS_UINT:
+            case PDO::PARAM_TAOS_UBIGINT:
+                $value[0] = (int)$value[0];
+                break;
+
+            case PDO::PARAM_TAOS_FLOAT:
+            case PDO::PARAM_TAOS_DOUBLE:
+                $value[0] = (float)$value[0];
+                break;
+
+            case PDO::PARAM_TAOS_BINARY:
+            case PDO::PARAM_TAOS_NCHAR:
+                $value[0] = (string)$value[0];
+                break;
+
+            case PDO::PARAM_TAOS_NULL:
+                $value[0] = null;
+                break;
+
+            case PDO::PARAM_TAOS_BOOL:
+                $value[0] = (bool)$value[0];
+                break;
+        }
+        return $value;
     }
 
     /**
@@ -119,7 +157,7 @@ class Command extends \ESD\Yii\Db\Command
      * @param $type
      * @return \ESD\Yii\Db\Command
      */
-    public function addTag($table ,$tag, $type)
+    public function addTag($table, $tag, $type)
     {
         $sql = $this->db->getQueryBuilder()->alterColumn($table, $column, $type);
 
