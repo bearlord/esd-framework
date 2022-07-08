@@ -31,7 +31,7 @@ class Command extends BaseCommand
 
     private $_format = null;
 
-    private $_pendingParams = [];
+    protected $_pendingParams = [];
 
     private $_is_result;
 
