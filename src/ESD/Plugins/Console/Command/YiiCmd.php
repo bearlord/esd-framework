@@ -47,6 +47,11 @@ class YiiCmd extends Command
     {
         $this->setName('yii')->setDescription("Yii console");
         $this->addArgument('route', InputOption::VALUE_NONE, 'Route');
+
+        $argMaxNumber = 50;
+        for ($i = 1; $i <= $argMaxNumber; $i++) {
+            $this->addArgument('arg' . $i, 2, 'arg' . $i);
+        }
     }
 
     /**
@@ -57,15 +62,15 @@ class YiiCmd extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-        $serverConfig = Server::$instance->getServerConfig();
-
         $arguments = $input->getArguments();
-
-        $route = $input->getArgument('route');
         unset($arguments['command'], $arguments['route']);
-        
-        $content = Application::instance()->runAction($route, $arguments);
+
+        $prettyArguments = array_values($arguments);
+        $route = $input->getArgument('route');
+        $content = Application::instance()->runAction($route, $prettyArguments);
+
+        $io = new SymfonyStyle($input, $output);
+        $io->text($content);
 
         $io->success(sprintf("Route %s execute success", $route));
         return ConsolePlugin::SUCCESS_EXIT;
