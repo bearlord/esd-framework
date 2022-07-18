@@ -9,6 +9,8 @@ namespace ESD\Plugins\Amqp;
 use Exception;
 use AMQPConnection;
 use AMQPChannel;
+use PhpAmqpLib\Connection\AbstractConnection;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 /**
  * Class Connection
@@ -23,10 +25,14 @@ class Connection
     protected $config;
 
     /**
-     * @var AMQPConnection
+     * @var AMQPStreamConnection
      */
     protected $connection = null;
 
+    /**
+     * @var float
+     */
+    protected $lastHeartbeatTime = 0.0;
 
     /**
      * @return Config
@@ -45,9 +51,9 @@ class Connection
     }
 
     /**
-     * @return AMQPConnection
+     * @return
      */
-    public function getConnection(): AMQPConnection
+    public function getConnection()
     {
         return $this->connection;
     }
@@ -55,7 +61,7 @@ class Connection
     /**
      * @param AMQPConnection $connection
      */
-    public function setConnection(AMQPConnection $connection)
+    public function setConnection($connection)
     {
         $this->connection = $connection;
     }
@@ -74,25 +80,104 @@ class Connection
 
     /**
      * Connect
+     *
      * @throws Exception
      */
     public function connect(): void
     {
-        if($this->connection && !$this->connection->isConnected()) {
-            $this->connection->reconnect();
-        } else if (!$this->connection) {
-            foreach ($this->config->getHosts() as $key => $value) {
-                $connection = new AMQPConnection($value);
-                try {
-                    $connection->connect();
-                    if ($connection->isConnected()) {
-                        $this->setConnection($connection);
-                    }
-                    break;
-                } catch (AmqpException $exception) {
-                    throw $exception;
-                }
-            }
+        $this->lastHeartbeatTime = microtime(true);
+        
+        /** @var AbstractConnection $connection */
+        $connection = AMQPStreamConnection::create_connection($this->config->getHosts(), [
+            'insist' => $this->config->isInsist(),
+            'login_method' => $this->config->getLoginMethod(),
+            'login_response' => $this->config->getLoginResponse(),
+            'locale' => $this->config->getLocale(),
+            'connection_timeout' => $this->config->getConnectionTimeout(),
+            'read_write_timeout' => $this->config->getReadWriteTimeout(),
+            'context' => $this->config->getContext(),
+            'keepalive' => $this->config->isKeepAlive(),
+            'heartbeat' => $this->config->getHeartBeat()
+        ]);
+
+        $this->connection = $connection;
+    }
+
+    /**
+     * Get active connection
+     *
+     * @return AbstractConnection
+     * @throws Exception
+     */
+    public function getActiveConnection(): AbstractConnection
+    {
+        if ($this->check()) {
+            return $this->connection;
         }
+        $this->reconnect();
+
+        return $this->connection;
+    }
+
+    /**
+     * Reconnect
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function reconnect(): bool
+    {
+        if ($this->connection) {
+            $this->connection->close();
+        }
+        $this->connect();
+        return true;
+    }
+
+    /**
+     * Check
+     *
+     * @return bool
+     */
+    public function check(): bool
+    {
+        $result = isset($this->connection) && $this->connection instanceof AbstractConnection && $this->connection->isConnected() && ! $this->isHeartbeatTimeout();
+        if ($result) {
+            // The connection is valid, reset the last heartbeat time.
+            $currentTime = microtime(true);
+            $this->lastHeartbeatTime = $currentTime;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Is heaertbeat timeout
+     *
+     * @return bool
+     */
+    protected function isHeartbeatTimeout(): bool
+    {
+        if ($this->config->getHeartbeat() === 0) {
+            return false;
+        }
+
+        if (microtime(true) - $this->lastHeartbeatTime > $this->config->getHeartbeat()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * __call
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        return $this->connection->{$name}(...$arguments);
     }
 }

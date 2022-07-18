@@ -9,6 +9,7 @@ namespace ESD\Plugins\Amqp;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
 use ESD\Coroutine\Coroutine;
+use PhpAmqpLib\Connection\AbstractConnection;
 
 /**
  * Class PdoPool
@@ -38,21 +39,19 @@ class AmqpPool
             $this->pool->push($db);
         }
     }
-
+    
     /**
      * @param $config
-     * @return Handle
+     * @return AbstractConnection
      * @throws \Exception
      */
     protected function connect($config)
     {
-        return new Handle([
-            'connection' => (new Connection($config))->getConnection()
-        ]);
+        return (new Connection($config))->getActiveConnection();
     }
 
     /**
-     * @return Handle
+     * @return AbstractConnection
      */
     public function db()
     {
@@ -60,7 +59,7 @@ class AmqpPool
         $db = getContextValue($contextKey);
 
         if ($db == null) {
-            /** @var Handle $db */
+            /** @var AbstractConnection $db */
             $db = $this->pool->pop();
 
             \Swoole\Coroutine::defer(function () use ($db) {

@@ -7,6 +7,7 @@ namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Amqp\Message\ConsumerMessage;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 /**
  * Class consumer
@@ -21,24 +22,24 @@ class Consumer extends Builder
      * @throws \AMQPConnectionException
      * @throws \AMQPExchangeException
      */
-    protected function setupBroker()
-    {
-        if ($this->setupBrokerDone) {
-            return;
-        }
-
-        $this->handle->getExchange()->setName($this->exchangeName);
-        $this->handle->getExchange()->setType(AMQP_EX_TYPE_TOPIC);
-        $this->handle->getExchange()->setFlags(AMQP_DURABLE);
-        $this->handle->getExchange()->declareExchange();
-
-        $this->handle->getQueue()->setName($this->queueName);
-        $this->handle->getQueue()->setFlags(AMQP_DURABLE);
-        $this->handle->getQueue()->declareQueue();
-
-        $this->handle->getQueue()->bind($this->exchangeName, $this->routingKey);
-        $this->setupBrokerDone = true;
-    }
+//    protected function setupBroker()
+//    {
+//        if ($this->setupBrokerDone) {
+//            return;
+//        }
+//
+//        $this->handle->getExchange()->setName($this->exchangeName);
+//        $this->handle->getExchange()->setType(AMQP_EX_TYPE_TOPIC);
+//        $this->handle->getExchange()->setFlags(AMQP_DURABLE);
+//        $this->handle->getExchange()->declareExchange();
+//
+//        $this->handle->getQueue()->setName($this->queueName);
+//        $this->handle->getQueue()->setFlags(AMQP_DURABLE);
+//        $this->handle->getQueue()->declareQueue();
+//
+//        $this->handle->getQueue()->bind($this->exchangeName, $this->routingKey);
+//        $this->setupBrokerDone = true;
+//    }
 
     /**
      * @param ConsumerMessage $consumerMessage
@@ -54,7 +55,25 @@ class Consumer extends Builder
         $this->setQueueName($consumerMessage->getQueue());
         $this->setupBroker();
 
+        $poolName = $consumerMessage->getPoolName();
+        $exchange = $consumerMessage->getExchange();
+        $routingKey = $consumerMessage->getRoutingKey();
+        $queue = $consumerMessage->getQueue();
         $maxConsumption = $consumerMessage->getMaxConsumption();
+
+        /** @var AMQPStreamConnection $connection */
+        $connection = $this->amqp($poolName);
+
+        try {
+
+            $channel = $connection->getConfirmChannel();
+            
+        } finally {
+            $connection->close();
+        }
+
+
+
         $callback = function (\AMQPEnvelope $message, \AMQPQueue $q) use ($consumerMessage, &$maxConsumption) {
             $deliveryTag = $message->getDeliveryTag();
             if ($message->isRedelivery()) {

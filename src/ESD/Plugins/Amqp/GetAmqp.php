@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Amqp;
 use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
+use PhpAmqpLib\Connection\AbstractConnection;
 
 /**
  * Trait GetAmqp
@@ -16,8 +17,8 @@ trait GetAmqp
 {
     /**
      * @param string $name
-     * @return Handle|mixed
-     * @throws AmqpException
+     * @return mixed|AbstractConnection
+     * @throws \Exception
      */
     public function amqp(string $name = 'default')
     {
@@ -30,7 +31,7 @@ trait GetAmqp
             $pdoPools = getDeepContextValueByClassName(AmqpPools::class);
             $pool = $pdoPools->getPool($poolKey);
             if ($pool == null) {
-                throw new AmqpException("No Amqp connection pool named {$poolKey} was found");
+                throw new \Exception("No Amqp connection pool named {$poolKey} was found");
             }
             return $pool->db();
         } else {
@@ -40,9 +41,8 @@ trait GetAmqp
 
     /**
      * @param string $name
-     * @return \AMQPConnection
-     * @throws AmqpException
-     * @throws \ReflectionException
+     * @return AbstractConnection
+     * @throws \Exception
      */
     public function amqpOnce(string $name = 'default')
     {
@@ -52,7 +52,7 @@ trait GetAmqp
             $configObject->setHosts($config['hosts']);
             try {
                 $connection = new Connection($configObject);
-                return $connection->getConnection();
+                return $connection->getActiveConnection();
             } catch (AmqpException $exception) {
                 throw $exception;
             }
