@@ -83,8 +83,12 @@ class Concurrent
     public function create(callable $callable): void
     {
         $this->channel->push(true);
-
-        \Swoole\Coroutine::create(function () use ($callable) {
+        
+        $context = getContext();
+        \Swoole\Coroutine::create(function () use ($callable, $context) {
+            $currentContext = getContext();
+            //Reset parent context
+            $currentContext->setParentContext($context);
             try {
                 $callable();
             } catch (\Throwable $exception) {
