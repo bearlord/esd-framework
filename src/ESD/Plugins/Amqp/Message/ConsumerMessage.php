@@ -6,6 +6,10 @@
 
 namespace ESD\Plugins\Amqp\Message;
 
+use ESD\Plugins\Amqp\QueueBuilder;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Message\AMQPMessage;
+
 /**
  * Class ConsumerMessage
  * @package ESD\Plugins\Amqp\Message
@@ -99,6 +103,11 @@ class ConsumerMessage extends Message
         $this->qos = $qos;
     }
 
+    public function getQueueBuilder(): QueueBuilder
+    {
+        return (new QueueBuilder())->setQueue($this->getQueue());
+    }
+
     /**
      * @return bool
      */
@@ -146,5 +155,27 @@ class ConsumerMessage extends Message
     {
         $this->waitTimeout = $waitTimeout;
     }
-    
+
+    public function getConsumerTag(): string
+    {
+        return implode(',', (array) $this->getRoutingKey());
+    }
+
+    /**
+     * @param $data
+     * @param AMQPMessage $message
+     * @return void
+     */
+    protected function reply($data, AMQPMessage $message)
+    {
+        /** @var AMQPChannel $channel */
+        $channel = $message->delivery_info['channel'];
+        $channel->basic_publish(
+            new AMQPMessage($data, [
+                'correlation_id' => $message->get('correlation_id'),
+            ]),
+            '',
+            $message->get('reply_to')
+        );
+    }
 }

@@ -6,15 +6,22 @@
 
 namespace ESD\Plugins\Amqp\Message;
 
+use ESD\Plugins\Amqp\ExchangeBuilder;
+
 /**
  * Class Message
  * @package ESD\Plugins\Amqp\Message
  */
-abstract class Message
+abstract class Message implements MessageInterface
 {
     const DELIVERY_MODE_NON_PERSISTENT = 1;
 
     const DELIVERY_MODE_PERSISTENT = 2;
+
+    /**
+     * @var string
+     */
+    protected $poolName = 'default';
 
     /**
      * @var string
@@ -77,5 +84,21 @@ abstract class Message
     public function setRoutingKey($routingKey): void
     {
         $this->routingKey = $routingKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPoolName(): string
+    {
+        return $this->poolName;
+    }
+
+    /**
+     * @return ExchangeBuilder
+     */
+    public function getExchangeBuilder(): ExchangeBuilder
+    {
+        return (new ExchangeBuilder())->setExchange($this->getExchange())->setType($this->getType());
     }
 }

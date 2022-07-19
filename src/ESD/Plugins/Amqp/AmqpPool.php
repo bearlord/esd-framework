@@ -42,12 +42,13 @@ class AmqpPool
     
     /**
      * @param $config
-     * @return AbstractConnection
+     * @return Connection
      * @throws \Exception
      */
     protected function connect($config)
     {
-        return (new Connection($config))->getActiveConnection();
+//        return (new Connection($config))->getActiveConnection();
+        return (new Connection($config));
     }
 
     /**

@@ -10,52 +10,11 @@ use ESD\Core\Exception;
 use ESD\Plugins\Amqp\Message\ProducerMessage;
 use ESD\Plugins\Amqp\Message\Type;
 use ESD\Plugins\AnnotationsScan\ScanClass;
+use PhpAmqpLib\Message\AMQPMessage;
 
 class Producer extends Builder
 {
     use GetAmqp;
-
-    /**
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     */
-    protected function setupBroker()
-    {
-        if ($this->setupBrokerDone) {
-            return;
-        }
-
-        $this->handle->getExchange()->setName($this->exchangeName);
-        $this->handle->getExchange()->setType(AMQP_EX_TYPE_TOPIC);
-        $this->handle->getExchange()->setFlags(AMQP_DURABLE);
-        $this->handle->getExchange()->declareExchange();
-
-        $this->setupBrokerDone = true;
-    }
-
-    /**
-     * @param $payload
-     * @param string $routingKey
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     */
-    public function publish($payload, string $routingKey, bool $isEncode = true): bool
-    {
-        $this->setupBroker();
-
-        if ($isEncode) {
-            $message = $this->encode($payload);
-        } else {
-            $message = $payload;
-        }
-        try {
-            return $this->handle->getExchange()->publish($message, $routingKey, AMQP_MANDATORY, ['delivery_mode' => 2]);
-        } catch (Exception $exception) {
-            throw $exception;
-        }
-    }
 
     /**
      * @param ProducerMessage $producerMessage
@@ -85,9 +44,27 @@ class Producer extends Builder
         $result = false;
         $this->injectMessageProperty($producerMessage);
 
-        $this->setExchangeName($producerMessage->getExchange());
-        $this->setRoutingKey($producerMessage->getRoutingKey());
-        return $this->publish($producerMessage->payload(), $producerMessage->getRoutingKey());
+        $message = new AMQPMessage($this->encode($producerMessage->payload()), $producerMessage->getProperties());
+
+        $connection = $this->amqp();
+        try {
+            if ($confirm) {
+                $channel = $connection->getConfirmChannel();
+            } else {
+                $channel = $connection->getChannel();
+            }
+            $channel->set_ack_handler(function () use (&$result) {
+                $result = true;
+            });
+            $channel->basic_publish($message, $producerMessage->getExchange(), $producerMessage->getRoutingKey());
+            $channel->wait_for_pending_acks_returns($timeout);
+        } catch (\Throwable $exception) {
+            // Reconnect the connection before release.
+            $connection->reconnect();
+            throw $exception;
+        }
+
+        return $confirm ? $result : true;
     }
 
     /**

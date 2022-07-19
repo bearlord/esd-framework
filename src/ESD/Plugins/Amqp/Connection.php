@@ -7,8 +7,7 @@
 namespace ESD\Plugins\Amqp;
 
 use Exception;
-use AMQPConnection;
-use AMQPChannel;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
@@ -33,6 +32,16 @@ class Connection
      * @var float
      */
     protected $lastHeartbeatTime = 0.0;
+
+    /**
+     * @var null|\PhpAmqpLib\Channel\AMQPChannel
+     */
+    protected $channel;
+
+    /**
+     * @var null|AMQPChannel
+     */
+    protected $confirmChannel;
 
     /**
      * @return Config
@@ -86,7 +95,7 @@ class Connection
     public function connect(): void
     {
         $this->lastHeartbeatTime = microtime(true);
-        
+
         /** @var AbstractConnection $connection */
         $connection = AMQPStreamConnection::create_connection($this->config->getHosts(), [
             'insist' => $this->config->isInsist(),
@@ -120,6 +129,29 @@ class Connection
     }
 
     /**
+     * @return AMQPChannel
+     */
+    public function getChannel(): AMQPChannel
+    {
+        if (!$this->channel || !$this->check()) {
+            $this->channel = $this->getConnection()->channel();
+        }
+        return $this->channel;
+    }
+
+    /**
+     * @return AMQPChannel
+     */
+    public function getConfirmChannel(): AMQPChannel
+    {
+        if (!$this->confirmChannel || !$this->check()) {
+            $this->confirmChannel = $this->getConnection()->channel();
+            $this->confirmChannel->confirm_select();
+        }
+        return $this->confirmChannel;
+    }
+
+    /**
      * Reconnect
      *
      * @return bool
@@ -141,7 +173,7 @@ class Connection
      */
     public function check(): bool
     {
-        $result = isset($this->connection) && $this->connection instanceof AbstractConnection && $this->connection->isConnected() && ! $this->isHeartbeatTimeout();
+        $result = isset($this->connection) && $this->connection instanceof AbstractConnection && $this->connection->isConnected() && !$this->isHeartbeatTimeout();
         if ($result) {
             // The connection is valid, reset the last heartbeat time.
             $currentTime = microtime(true);

@@ -6,6 +6,10 @@
 
 namespace ESD\Plugins\Amqp;
 
+use PhpAmqpLib\Channel\AMQPChannel;
+use ESD\Plugins\Amqp\Message\Message;
+use PhpAmqpLib\Wire\AMQPTable;
+
 /**
  * Class Builder
  * @package ESD\Plugins\Amqp
@@ -13,11 +17,6 @@ namespace ESD\Plugins\Amqp;
 class Builder
 {
     use GetAmqp;
-
-    /**
-     * @var Handle;
-     */
-    protected $handle;
 
     const AMQP_X_DELAY = 'x-delay';
     const AMQP_X_DELAYED_MESSAGE = 'x-delayed-message';
@@ -59,73 +58,127 @@ class Builder
      */
     public $maxPriority = 10;
 
-    public function __construct($name = 'default')
+
+    /**
+     * @var bool
+     */
+    protected $passive = false;
+
+    /**
+     * @var bool
+     */
+    protected $durable = true;
+
+    /**
+     * @var bool
+     */
+    protected $autoDelete = false;
+
+    /**
+     * @var bool
+     */
+    protected $nowait = false;
+
+    /**
+     * @var AMQPTable|array
+     */
+    protected $arguments = [];
+
+    /**
+     * @var null|int
+     */
+    protected $ticket;
+
+    public function isPassive(): bool
     {
-        $this->handle = $this->amqp($name);
+        return $this->passive;
     }
 
     /**
-     * @return string
+     * @return static
      */
-    public function getQueueName(): string
+    public function setPassive(bool $passive): self
     {
-        return $this->queueName;
+        $this->passive = $passive;
+        return $this;
+    }
+
+    public function isDurable(): bool
+    {
+        return $this->durable;
     }
 
     /**
-     * @param string $queueName
+     * @return static
      */
-    public function setQueueName(string $queueName): void
+    public function setDurable(bool $durable): self
     {
-        $this->queueName = $queueName;
+        $this->durable = $durable;
+        return $this;
+    }
+
+    public function isAutoDelete(): bool
+    {
+        return $this->autoDelete;
     }
 
     /**
-     * @return string
+     * @return static
      */
-    public function getExchangeName(): string
+    public function setAutoDelete(bool $autoDelete): self
     {
-        return $this->exchangeName;
+        $this->autoDelete = $autoDelete;
+        return $this;
+    }
+
+    public function isNowait(): bool
+    {
+        return $this->nowait;
     }
 
     /**
-     * @param string $exchangeName
+     * @return static
      */
-    public function setExchangeName(string $exchangeName): void
+    public function setNowait(bool $nowait): self
     {
-        $this->exchangeName = $exchangeName;
+        $this->nowait = $nowait;
+        return $this;
     }
 
     /**
-     * @return string
+     * @return AMQPTable|array
      */
-    public function getRoutingKey(): string
+    public function getArguments()
     {
-        return $this->routingKey;
+        return $this->arguments;
     }
 
     /**
-     * @param string $routingKey
+     * @param AMQPTable|array $arguments
+     * @return static
      */
-    public function setRoutingKey(string $routingKey): void
+    public function setArguments($arguments): self
     {
-        $this->routingKey = $routingKey;
+        $this->arguments = $arguments;
+        return $this;
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getMaxPriority(): int
+    public function getTicket()
     {
-        return $this->maxPriority;
+        return $this->ticket;
     }
 
     /**
-     * @param int $maxPriority
+     * @param null|int $ticket
+     * @return static
      */
-    public function setMaxPriority(int $maxPriority): void
+    public function setTicket($ticket): self
     {
-        $this->maxPriority = $maxPriority;
+        $this->ticket = $ticket;
+        return $this;
     }
 
     /**
@@ -150,5 +203,29 @@ class Builder
             return $value;
         }
         return json_decode($value, true);
+    }
+
+    /**
+     * @throws AMQPProtocolChannelException when the channel operation is failed
+     */
+    public function declare(Message $message, ?AMQPChannel $channel = null, bool $release = false): void
+    {
+        try {
+            if (!$channel) {
+                /** @var Connection $connection */
+                $connection = $this->amqp($message->getPoolName());
+                $channel = $connection->getChannel();
+            }
+
+            $builder = $message->getExchangeBuilder();
+
+            $channel->exchange_declare($builder->getExchange(), $builder->getType(), $builder->isPassive(),
+                $builder->isDurable(), $builder->isAutoDelete(), $builder->isInternal(), $builder->isNowait(),
+                $builder->getArguments(), $builder->getTicket());
+        } finally {
+            if (isset($connection) && $release) {
+                $connection->release();
+            }
+        }
     }
 }

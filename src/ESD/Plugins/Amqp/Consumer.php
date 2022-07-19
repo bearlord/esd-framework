@@ -3,11 +3,17 @@
  * ESD framework
  * @author bearlord <565364226@qq.com>
  */
+
 namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Plugins\Logger\GetLogger;
+use ESD\Core\Server\Server;
+use ESD\Coroutine\Concurrent;
 use ESD\Plugins\Amqp\Message\ConsumerMessage;
+use ESD\Plugins\Amqp\Message\Message;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 /**
  * Class consumer
@@ -17,29 +23,6 @@ class Consumer extends Builder
     use GetAmqp;
     use GetLogger;
 
-    /**
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     */
-//    protected function setupBroker()
-//    {
-//        if ($this->setupBrokerDone) {
-//            return;
-//        }
-//
-//        $this->handle->getExchange()->setName($this->exchangeName);
-//        $this->handle->getExchange()->setType(AMQP_EX_TYPE_TOPIC);
-//        $this->handle->getExchange()->setFlags(AMQP_DURABLE);
-//        $this->handle->getExchange()->declareExchange();
-//
-//        $this->handle->getQueue()->setName($this->queueName);
-//        $this->handle->getQueue()->setFlags(AMQP_DURABLE);
-//        $this->handle->getQueue()->declareQueue();
-//
-//        $this->handle->getQueue()->bind($this->exchangeName, $this->routingKey);
-//        $this->setupBrokerDone = true;
-//    }
 
     /**
      * @param ConsumerMessage $consumerMessage
@@ -50,59 +33,166 @@ class Consumer extends Builder
      */
     public function consume(ConsumerMessage $consumerMessage): void
     {
-        $this->setExchangeName($consumerMessage->getExchange());
-        $this->setRoutingKey($consumerMessage->getRoutingKey());
-        $this->setQueueName($consumerMessage->getQueue());
-        $this->setupBroker();
-
         $poolName = $consumerMessage->getPoolName();
         $exchange = $consumerMessage->getExchange();
         $routingKey = $consumerMessage->getRoutingKey();
         $queue = $consumerMessage->getQueue();
         $maxConsumption = $consumerMessage->getMaxConsumption();
 
-        /** @var AMQPStreamConnection $connection */
+        /** @var Connection $connection */
         $connection = $this->amqp($poolName);
 
-        try {
 
+        try {
             $channel = $connection->getConfirmChannel();
-            
-        } finally {
-            $connection->close();
+
+            $this->declare($consumerMessage, $channel);
+            $concurrent = $this->getConcurrent($consumerMessage->getPoolName());
+
+            $maxConsumption = $consumerMessage->getMaxConsumption();
+            $currentConsumption = 0;
+
+            $channel->basic_consume(
+                $consumerMessage->getQueue(),
+                $consumerMessage->getConsumerTag(),
+                false,
+                false,
+                false,
+                false,
+                function (AMQPMessage $message) use ($consumerMessage, $concurrent) {
+                    $callback = $this->getCallback($consumerMessage, $message);
+                    if (!$concurrent instanceof Concurrent) {
+                        return parallel([$callback]);
+                    }
+
+                    $concurrent->create($callback);
+                }
+            );
+
+            while ($channel->is_consuming()) {
+                try {
+                    $channel->wait(null, false, $consumerMessage->getWaitTimeout());
+                    if ($maxConsumption > 0 && ++$currentConsumption >= $maxConsumption) {
+                        break;
+                    }
+                } catch (\Throwable $exception) {
+                    Server::$instance->getLog()->error($exception);
+                    break;
+                }
+            }
+
+            $this->waitConcurrentHandled($concurrent);
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    public function declare(ConsumerMessage $message, ?AMQPChannel $channel = null, bool $release = false): void
+    {
+        if (!$message instanceof ConsumerMessage) {
+            throw new MessageException('Message must instanceof ' . Message::class);
         }
 
-
-
-        $callback = function (\AMQPEnvelope $message, \AMQPQueue $q) use ($consumerMessage, &$maxConsumption) {
-            $deliveryTag = $message->getDeliveryTag();
-            if ($message->isRedelivery()) {
-                $q->ack($deliveryTag);
+        try {
+            if (!$channel) {
+                /** @var Connection $connection */
+                $connection = $this->amqp($message->getPoolName());
+                $channel = $connection->getChannel();
             }
 
-            $ttr = $attempt = null;
-            $result = $consumerMessage->consume($message->getBody());
-            if ($result == Result::ACK) {
-                $this->debug($deliveryTag . ' acked.');
-                return $q->ack($deliveryTag);
+            parent::declare($message, $channel);
+
+            $builder = $message->getQueueBuilder();
+
+            $channel->queue_declare($builder->getQueue(), $builder->isPassive(), $builder->isDurable(), $builder->isExclusive(), $builder->isAutoDelete(), $builder->isNowait(), $builder->getArguments(), $builder->getTicket());
+
+            $routineKeys = (array)$message->getRoutingKey();
+            foreach ($routineKeys as $routingKey) {
+                $channel->queue_bind($message->getQueue(), $message->getExchange(), $routingKey);
             }
 
+            if (empty($routineKeys) && $message->getType() === Type::FANOUT) {
+                $channel->queue_bind($message->getQueue(), $message->getExchange());
+            }
+
+            if (is_array($qos = $message->getQos())) {
+                $size = $qos['prefetch_size'] ?? null;
+                $count = $qos['prefetch_count'] ?? null;
+                $global = $qos['global'] ?? null;
+                $channel->basic_qos($size, $count, $global);
+            }
+        } finally {
+            if (isset($connection) && $release) {
+                $connection->release();
+            }
+        }
+    }
+
+    /**
+     * Wait the tasks in concurrent handled, the max wait time is 5s.
+     * @param int $interval The wait interval ms
+     * @param int $count The wait count
+     */
+    protected function waitConcurrentHandled(?Concurrent $concurrent, int $interval = 10, int $count = 500): void
+    {
+        $index = 0;
+        while ($concurrent && !$concurrent->isEmpty()) {
+            usleep($interval * 1000);
+            if ($index++ > $count) {
+                break;
+            }
+        }
+    }
+
+    protected function getConcurrent(string $pool): ?Concurrent
+    {
+        $concurrent = (int)Server::$instance->getConfigContext()->get("amqp.{$pool}.concurrent.limit", 0);
+        if ($concurrent > 1) {
+            return new Concurrent($concurrent);
+        }
+
+        return null;
+    }
+
+    protected function getCallback(ConsumerMessage $consumerMessage, AMQPMessage $message)
+    {
+        return function () use ($consumerMessage, $message) {
+            $data = $consumerMessage->unserialize($message->getBody());
+            /** @var AMQPChannel $channel */
+            $channel = $message->delivery_info['channel'];
+            $deliveryTag = $message->delivery_info['delivery_tag'];
+
+            try {
+                $this->eventDispatcher && $this->eventDispatcher->dispatch(new BeforeConsume($consumerMessage));
+                $result = $consumerMessage->consumeMessage($data, $message);
+                $this->eventDispatcher && $this->eventDispatcher->dispatch(new AfterConsume($consumerMessage, $result));
+            } catch (Throwable $exception) {
+                $this->eventDispatcher && $this->eventDispatcher->dispatch(new FailToConsume($consumerMessage, $exception));
+                if ($this->container->has(FormatterInterface::class)) {
+                    $formatter = $this->container->get(FormatterInterface::class);
+                    $this->logger->error($formatter->format($exception));
+                } else {
+                    $this->logger->error($exception->getMessage());
+                }
+
+                $result = Result::DROP;
+            }
+
+            if ($result === Result::ACK) {
+                $this->logger->debug($deliveryTag . ' acked.');
+                return $channel->basic_ack($deliveryTag);
+            }
             if ($result === Result::NACK) {
-                $this->debug($deliveryTag . ' uacked.');
-                return $q->nack($deliveryTag);
+                $this->logger->debug($deliveryTag . ' uacked.');
+                return $channel->basic_nack($deliveryTag);
             }
-
             if ($consumerMessage->isRequeue() && $result === Result::REQUEUE) {
-                $this->debug($deliveryTag . ' requeued.');
-                return $q->reject($deliveryTag, AMQP_REQUEUE);
+                $this->logger->debug($deliveryTag . ' requeued.');
+                return $channel->basic_reject($deliveryTag, true);
             }
 
-            $this->debug($deliveryTag . ' requeued.');
-            return $q->reject($deliveryTag);
+            $this->logger->debug($deliveryTag . ' rejected.');
+            return $channel->basic_reject($deliveryTag, false);
         };
-
-        goWithContext(function () use ($callback){
-            $this->handle->getQueue()->consume($callback);
-        });
     }
 }

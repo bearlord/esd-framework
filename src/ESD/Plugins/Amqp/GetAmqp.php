@@ -17,7 +17,7 @@ trait GetAmqp
 {
     /**
      * @param string $name
-     * @return mixed|AbstractConnection
+     * @return mixed|Connection
      * @throws \Exception
      */
     public function amqp(string $name = 'default')
