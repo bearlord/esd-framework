@@ -164,35 +164,27 @@ class Consumer extends Builder
             $deliveryTag = $message->delivery_info['delivery_tag'];
 
             try {
-                $this->eventDispatcher && $this->eventDispatcher->dispatch(new BeforeConsume($consumerMessage));
                 $result = $consumerMessage->consumeMessage($data, $message);
-                $this->eventDispatcher && $this->eventDispatcher->dispatch(new AfterConsume($consumerMessage, $result));
-            } catch (Throwable $exception) {
-                $this->eventDispatcher && $this->eventDispatcher->dispatch(new FailToConsume($consumerMessage, $exception));
-                if ($this->container->has(FormatterInterface::class)) {
-                    $formatter = $this->container->get(FormatterInterface::class);
-                    $this->logger->error($formatter->format($exception));
-                } else {
-                    $this->logger->error($exception->getMessage());
-                }
+            } catch (\Throwable $exception) {
+                Server::$instance->getLog()->error($exception);
 
                 $result = Result::DROP;
             }
 
             if ($result === Result::ACK) {
-                $this->logger->debug($deliveryTag . ' acked.');
+                Server::$instance->getLog()->debug($deliveryTag . ' acked.');
                 return $channel->basic_ack($deliveryTag);
             }
             if ($result === Result::NACK) {
-                $this->logger->debug($deliveryTag . ' uacked.');
+                Server::$instance->getLog()->debug($deliveryTag . ' uacked.');
                 return $channel->basic_nack($deliveryTag);
             }
             if ($consumerMessage->isRequeue() && $result === Result::REQUEUE) {
-                $this->logger->debug($deliveryTag . ' requeued.');
+                Server::$instance->getLog()->debug($deliveryTag . ' requeued.');
                 return $channel->basic_reject($deliveryTag, true);
             }
 
-            $this->logger->debug($deliveryTag . ' rejected.');
+            Server::$instance->getLog()->debug($deliveryTag . ' rejected.');
             return $channel->basic_reject($deliveryTag, false);
         };
     }

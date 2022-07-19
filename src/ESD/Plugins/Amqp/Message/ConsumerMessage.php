@@ -187,4 +187,23 @@ class ConsumerMessage extends Message
     {
         return json_decode($data, true);
     }
+
+    /**
+     * @param $data
+     * @param AMQPMessage $message
+     * @return string
+     */
+    public function consumeMessage($data, AMQPMessage $message): string
+    {
+        return $this->consume($data);
+    }
+
+    /**
+     * @param $data
+     * @return string
+     */
+    public function consume($data): string
+    {
+        return Result::ACK;
+    }
 }
