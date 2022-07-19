@@ -7,6 +7,7 @@
 use ESD\Core\Context\ContextManager;
 use ESD\Core\DI\DI;
 use ESD\Core\Runtime;
+use ESD\Parallel\Parallel;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -271,4 +272,19 @@ function call($callback, array $args = [])
         $result = call_user_func_array($callback, $args);
     }
     return $result;
+}
+
+if (! function_exists('parallel')) {
+    /**
+     * @param callable[] $callables
+     * @param int $concurrent if $concurrent is equal to 0, that means unlimit
+     */
+    function parallel(array $callables, int $concurrent = 0)
+    {
+        $parallel = new Parallel($concurrent);
+        foreach ($callables as $key => $callable) {
+            $parallel->add($callable, $key);
+        }
+        return $parallel->wait();
+    }
 }
