@@ -6,7 +6,7 @@
 
 namespace ESD\Plugins\Amqp\Message;
 
-use ESD\Plugins\Amqp\QueueBuilder;
+use ESD\Plugins\Amqp\Builder\QueueBuilder;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -177,5 +177,14 @@ class ConsumerMessage extends Message
             '',
             $message->get('reply_to')
         );
+    }
+
+    /**
+     * @param string $data
+     * @return mixed
+     */
+    public function unserialize(string $data)
+    {
+        return json_decode($data, true);
     }
 }

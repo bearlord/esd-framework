@@ -28,7 +28,8 @@ class ProducerMessage extends Message
      * @var array
      */
     protected $properties = [
-        'content_type' => 'text/plain'
+        'content_type' => 'text/plain',
+        'delivery_mode' => self::DELIVERY_MODE_PERSISTENT
     ];
 
     /**
@@ -71,5 +72,10 @@ class ProducerMessage extends Message
     public function getProperties(): array
     {
         return $this->properties;
+    }
+
+    public function serialize(): string
+    {
+        return json_encode($this->payload, JSON_UNESCAPED_UNICODE);
     }
 }

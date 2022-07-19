@@ -6,7 +6,7 @@
 
 namespace ESD\Plugins\Amqp\Message;
 
-use ESD\Plugins\Amqp\ExchangeBuilder;
+use ESD\Plugins\Amqp\Builder\ExchangeBuilder;
 
 /**
  * Class Message
@@ -100,5 +100,15 @@ abstract class Message implements MessageInterface
     public function getExchangeBuilder(): ExchangeBuilder
     {
         return (new ExchangeBuilder())->setExchange($this->getExchange())->setType($this->getType());
+    }
+
+    public function serialize(): string
+    {
+        throw new MessageException('You have to overwrite serialize() method.');
+    }
+
+    public function unserialize(string $data)
+    {
+        throw new MessageException('You have to overwrite unserialize() method.');
     }
 }

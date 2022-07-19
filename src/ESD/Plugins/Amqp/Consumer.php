@@ -9,6 +9,7 @@ namespace ESD\Plugins\Amqp;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Coroutine\Concurrent;
+use ESD\Plugins\Amqp\Builder\Builder;
 use ESD\Plugins\Amqp\Message\ConsumerMessage;
 use ESD\Plugins\Amqp\Message\Message;
 use PhpAmqpLib\Channel\AMQPChannel;

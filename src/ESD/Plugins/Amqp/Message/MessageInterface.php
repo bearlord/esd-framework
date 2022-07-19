@@ -7,7 +7,7 @@
 
 namespace ESD\Plugins\Amqp\Message;
 
-use Hyperf\Amqp\Builder\ExchangeBuilder;
+use ESD\Plugins\Amqp\Builder\ExchangeBuilder;
 
 interface MessageInterface
 {
