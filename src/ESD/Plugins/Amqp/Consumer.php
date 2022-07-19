@@ -6,6 +6,7 @@
 
 namespace ESD\Plugins\Amqp;
 
+use ESD\Core\Exception;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Server;
 use ESD\Coroutine\Concurrent;
@@ -88,6 +89,13 @@ class Consumer extends Builder
         }
     }
 
+    /**
+     * @param ConsumerMessage $message
+     * @param AMQPChannel|null $channel
+     * @param bool $release
+     * @return void
+     * @throws \Exception
+     */
     public function declare(ConsumerMessage $message, ?AMQPChannel $channel = null, bool $release = false): void
     {
         if (!$message instanceof ConsumerMessage) {
@@ -104,7 +112,6 @@ class Consumer extends Builder
             parent::declare($message, $channel);
 
             $builder = $message->getQueueBuilder();
-
             $channel->queue_declare($builder->getQueue(), $builder->isPassive(), $builder->isDurable(), $builder->isExclusive(), $builder->isAutoDelete(), $builder->isNowait(), $builder->getArguments(), $builder->getTicket());
 
             $routineKeys = (array)$message->getRoutingKey();
@@ -122,10 +129,8 @@ class Consumer extends Builder
                 $global = $qos['global'] ?? null;
                 $channel->basic_qos($size, $count, $global);
             }
-        } finally {
-            if (isset($connection) && $release) {
-                $connection->release();
-            }
+        } catch (Exception $exception) {
+            Server::$instance->getLog()->error($exception);
         }
     }
 
@@ -167,7 +172,6 @@ class Consumer extends Builder
                 $result = $consumerMessage->consumeMessage($data, $message);
             } catch (\Throwable $exception) {
                 Server::$instance->getLog()->error($exception);
-
                 $result = Result::DROP;
             }
 
