@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Exception;
+use ESD\Plugins\Amqp\Builder\Builder;
 use ESD\Plugins\Amqp\Message\ProducerMessage;
 use ESD\Plugins\Amqp\Message\Type;
 use ESD\Plugins\AnnotationsScan\ScanClass;

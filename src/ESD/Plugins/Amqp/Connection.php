@@ -6,6 +6,8 @@
 
 namespace ESD\Plugins\Amqp;
 
+use ESD\Coroutine\Coroutine;
+use ESD\Plugins\Amqp\Connection\AMQPSwooleConnection;
 use Exception;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -94,20 +96,30 @@ class Connection
      */
     public function connect(): void
     {
+        $class = AMQPStreamConnection::class;
+        if (Coroutine::getCid() > 0) {
+            $class = AMQPSwooleConnection::class;
+        }
+
         $this->lastHeartbeatTime = microtime(true);
 
         /** @var AbstractConnection $connection */
-        $connection = AMQPStreamConnection::create_connection($this->config->getHosts(), [
-            'insist' => $this->config->isInsist(),
-            'login_method' => $this->config->getLoginMethod(),
-            'login_response' => $this->config->getLoginResponse(),
-            'locale' => $this->config->getLocale(),
-            'connection_timeout' => $this->config->getConnectionTimeout(),
-            'read_write_timeout' => $this->config->getReadWriteTimeout(),
-            'context' => $this->config->getContext(),
-            'keepalive' => $this->config->isKeepAlive(),
-            'heartbeat' => $this->config->getHeartBeat()
-        ]);
+        $connection = new $class(
+            $this->config->getHost() ?? 'localhost',
+            $this->config->getPort() ?? 5672,
+            $this->config->getUser() ?? 'guest',
+            $this->config->getPassword() ?? 'guest',
+            $this->config->getVhost() ?? '/',
+            $this->config->isInsist(),
+            $this->config->getLoginMethod(),
+            $this->config->getLoginResponse(),
+            $this->config->getLocale(),
+            $this->config->getConnectionTimeout(),
+            $this->config->getReadWriteTimeout(),
+            $this->config->getContext(),
+            $this->config->isKeepalive(),
+            $this->config->getHeartbeat()
+        );
 
         $this->connection = $connection;
     }

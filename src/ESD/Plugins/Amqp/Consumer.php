@@ -24,8 +24,7 @@ class Consumer extends Builder
 {
     use GetAmqp;
     use GetLogger;
-
-
+    
     /**
      * @param ConsumerMessage $consumerMessage
      * @throws \AMQPChannelException
@@ -43,7 +42,6 @@ class Consumer extends Builder
 
         /** @var Connection $connection */
         $connection = $this->amqp($poolName);
-
 
         try {
             $channel = $connection->getConfirmChannel();
@@ -150,6 +148,11 @@ class Consumer extends Builder
         }
     }
 
+    /**
+     * @param string $pool
+     * @return Concurrent|null
+     * @throws \Exception
+     */
     protected function getConcurrent(string $pool): ?Concurrent
     {
         $concurrent = (int)Server::$instance->getConfigContext()->get("amqp.{$pool}.concurrent.limit", 0);
@@ -160,6 +163,11 @@ class Consumer extends Builder
         return null;
     }
 
+    /**
+     * @param ConsumerMessage $consumerMessage
+     * @param AMQPMessage $message
+     * @return \Closure
+     */
     protected function getCallback(ConsumerMessage $consumerMessage, AMQPMessage $message)
     {
         return function () use ($consumerMessage, $message) {

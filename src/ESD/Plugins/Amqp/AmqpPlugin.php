@@ -60,7 +60,6 @@ class AmqpPlugin extends AbstractPlugin
 
         foreach ($configs as $key => $config) {
             $configObject = new Config($key);
-            $configObject->setHosts($config['hosts']);
             $this->configs->addConfig($configObject->buildFromConfig($config));
         }
     }

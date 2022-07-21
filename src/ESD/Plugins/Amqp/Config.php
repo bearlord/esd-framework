@@ -28,9 +28,29 @@ class Config extends BaseConfig
     protected $poolMaxNumber = 2;
 
     /**
-     * @var HostConfig[]
+     * @var string
      */
-    protected $hosts = [];
+    protected $host = 'localhost';
+
+    /**
+     * @var int
+     */
+    protected $port = 5672;
+
+    /**
+     * @var string
+     */
+    protected $user;
+
+    /**
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * @var string
+     */
+    protected $vhost = '/';
 
     /**
      * @var bool
@@ -70,7 +90,7 @@ class Config extends BaseConfig
     /**
      * @var bool
      */
-    protected $keepAlive = false;
+    protected $keepAlive = true;
 
     /**
      * @var int
@@ -117,6 +137,86 @@ class Config extends BaseConfig
     public function setPoolMaxNumber(int $poolMaxNumber)
     {
         $this->poolMaxNumber = $poolMaxNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param string $host
+     */
+    public function setHost(string $host): void
+    {
+        $this->host = $host;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param int $port
+     */
+    public function setPort(int $port): void
+    {
+        $this->port = $port;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUser(): string
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param string $user
+     */
+    public function setUser(string $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVhost(): string
+    {
+        return $this->vhost;
+    }
+
+    /**
+     * @param string $vhost
+     */
+    public function setVhost(string $vhost): void
+    {
+        $this->vhost = $vhost;
     }
 
     /**
@@ -263,39 +363,6 @@ class Config extends BaseConfig
         $this->heartBeat = $heartBeat;
     }
 
-    /**
-     * @return array[]
-     */
-    public function getHosts(): array
-    {
-        $hosts = [];
-        foreach ($this->hosts as $host) {
-            $hosts[] = $host->toConfigArray();
-        }
-        return $hosts;
-    }
-
-    /**
-     * @param array $hosts
-     * @throws \ReflectionException
-     */
-    public function setHosts(array $hosts): void
-    {
-        if (empty($hosts)) {
-            $this->hosts = [];
-            return;
-        }
-
-        foreach ($hosts as $key => $host) {
-            if (is_array($host)) {
-                $amqpConfig = new HostConfig();
-                $amqpConfig->buildFromConfig($host);
-                $this->hosts[$key] = $amqpConfig;
-            } else if($host instanceof HostConfig) {
-                $this->hosts[$key] = $host;
-            }
-        }
-    }
 
     /**
      * Build config
@@ -307,14 +374,10 @@ class Config extends BaseConfig
             throw new AmqpException(Yii::t('esd', 'Amqp requires the Bcmath PHP extension'));
         }
 
-        if(empty($this->hosts)){
+        if(empty($this->host)){
             throw new AmqpException(Yii::t('esd', '{name} must be set', [
                 'name' => 'Amqp host'
             ]));
-        }
-
-        foreach ($this->hosts as $host) {
-            $host->buildConfig();
         }
     }
 }
