@@ -83,6 +83,7 @@ class Consumer extends Builder
 
             $this->waitConcurrentHandled($concurrent);
         } catch (\Exception $exception) {
+            $connection->close();
             throw $exception;
         }
     }

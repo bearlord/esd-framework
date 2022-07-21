@@ -6,12 +6,15 @@
 
 namespace ESD\Plugins\Amqp;
 
+use ESD\Core\Server\Server;
 use ESD\Coroutine\Coroutine;
 use ESD\Plugins\Amqp\Connection\AMQPSwooleConnection;
+use ESD\Plugins\Amqp\Connection\KeepaliveIO;
 use Exception;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Exception\AMQPRuntimeException;
 
 /**
  * Class Connection
@@ -171,10 +174,42 @@ class Connection
      */
     public function reconnect(): bool
     {
-        if ($this->connection) {
-            $this->connection->close();
+        if ($this->connection && $this->connection->getIO() instanceof KeepaliveIO) {
+            $this->connection->getIO()->close();
         }
-        $this->connect();
+
+        $this->connection = $this->connect();
+        $this->channel = null;
+        $this->confirmChannel = null;
+        return true;
+
+//        if ($this->connection) {
+//            $this->connection->close();
+//        }
+//        $this->connect();
+//        return true;
+    }
+
+    public function close(): bool
+    {
+        try {
+            if ($connection = $this->connection) {
+                if ($connection->getIO() instanceof KeepaliveIO) {
+                    $connection->getIO()->close();
+                }
+
+                $connection->close();
+            }
+        } catch (AMQPRuntimeException $exception) {
+            Server::$instance->getLog()->warning((string) $exception);
+        } catch (\Throwable $exception) {
+            Server::$instance->getLog()->error((string) $exception);
+        } finally {
+            $this->connection = null;
+        }
+
+        $this->channel = null;
+        $this->confirmChannel = null;
         return true;
     }
 
