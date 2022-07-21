@@ -102,4 +102,9 @@ class DI
     {
         $this->container->set($name, $value);
     }
+
+    public function make($name, $value)
+    {
+        return $this->container->make($name, $value);
+    }
 }
