@@ -47,7 +47,6 @@ class AmqpPool
      */
     protected function connect($config)
     {
-//        return (new Connection($config))->getActiveConnection();
         return (new Connection($config));
     }
 

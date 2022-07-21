@@ -91,13 +91,14 @@ class SwooleIO extends AbstractIO
      */
     public function __construct(
         string $host,
-        int $port,
-        float $connectionTimeout,
-        float $readWriteTimeout,
-        $context = null,
-        bool $keepalive = false,
-        int $heartbeat = 0
-    ) {
+        int    $port,
+        float  $connectionTimeout,
+        float  $readWriteTimeout,
+               $context = null,
+        bool   $keepalive = false,
+        int    $heartbeat = 0
+    )
+    {
         if ($heartbeat !== 0 && ($readWriteTimeout < ($heartbeat * 2))) {
             throw new InvalidArgumentException('Argument readWriteTimeout must be at least 2x the heartbeat.');
         }
@@ -120,7 +121,7 @@ class SwooleIO extends AbstractIO
     public function connect()
     {
         $sock = new Client(SWOOLE_SOCK_TCP);
-        if (! $sock->connect($this->host, $this->port, $this->connectionTimeout)) {
+        if (!$sock->connect($this->host, $this->port, $this->connectionTimeout)) {
             throw new AMQPRuntimeException(
                 sprintf(
                     'Error Connecting to server(%s): %s ',
@@ -144,8 +145,8 @@ class SwooleIO extends AbstractIO
 
     /**
      * @param int $len
-     * @throws AMQPRuntimeException
      * @return mixed|string
+     * @throws AMQPRuntimeException
      */
     public function read($len)
     {
@@ -159,7 +160,7 @@ class SwooleIO extends AbstractIO
                 return $data;
             }
 
-            if (! $this->sock->connected) {
+            if (!$this->sock->connected) {
                 throw new AMQPRuntimeException('Broken pipe or closed connection');
             }
 
@@ -178,9 +179,9 @@ class SwooleIO extends AbstractIO
 
     /**
      * @param string $data
-     * @throws \PhpAmqpLib\Exception\AMQPTimeoutException
-     * @throws AMQPRuntimeException
      * @return mixed|void
+     * @throws AMQPRuntimeException
+     * @throws \PhpAmqpLib\Exception\AMQPTimeoutException
      */
     public function write($data)
     {

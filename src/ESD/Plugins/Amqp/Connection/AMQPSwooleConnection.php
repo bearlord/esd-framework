@@ -8,20 +8,21 @@ class AMQPSwooleConnection extends AbstractConnection
 {
     public function __construct(
         string $host,
-        int $port,
+        int    $port,
         string $user,
         string $password,
         string $vhost = '/',
-        bool $insist = false,
+        bool   $insist = false,
         string $loginMethod = 'AMQPLAIN',
-        $loginResponse = null,
+               $loginResponse = null,
         string $locale = 'en_US',
-        float $connectionTimeout = 3.0,
-        float $readWriteTimeout = 3.0,
-        $context = null,
-        bool $keepalive = false,
-        int $heartbeat = 0
-    ) {
+        float  $connectionTimeout = 3.0,
+        float  $readWriteTimeout = 3.0,
+               $context = null,
+        bool   $keepalive = false,
+        int    $heartbeat = 0
+    )
+    {
         if ($keepalive) {
             $io = new KeepaliveIO($host, $port, $connectionTimeout, $readWriteTimeout, $context, $keepalive, $heartbeat);
         } else {
@@ -38,7 +39,7 @@ class AMQPSwooleConnection extends AbstractConnection
             $locale,
             $io,
             $heartbeat,
-            (int) $connectionTimeout
+            (int)$connectionTimeout
         );
     }
 
