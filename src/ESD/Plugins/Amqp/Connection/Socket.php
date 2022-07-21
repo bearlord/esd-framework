@@ -165,8 +165,7 @@ class Socket
                     $this->heartbeat();
                 }
             } catch (\Throwable $throwable) {
-//                $this->close();
-
+                $this->close();
                 $message = sprintf('KeepaliveIO heartbeat failed, %s', (string)$throwable);
                 DIGet(LoggerInterface::class)->error($message);
             }
