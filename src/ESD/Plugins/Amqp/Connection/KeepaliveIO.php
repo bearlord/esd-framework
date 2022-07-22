@@ -68,13 +68,14 @@ class KeepaliveIO extends AbstractIO
      */
     public function __construct(
         string $host,
-        int $port,
-        float $connectionTimeout,
-        float $readWriteTimeout,
-        $context = null,
-        bool $keepalive = false,
-        int $heartbeat = 0
-    ) {
+        int    $port,
+        float  $connectionTimeout,
+        float  $readWriteTimeout,
+               $context = null,
+        bool   $keepalive = false,
+        int    $heartbeat = 0
+    )
+    {
         if ($heartbeat !== 0 && ($readWriteTimeout < ($heartbeat * 2))) {
             throw new InvalidArgumentException('Argument readWriteTimeout must be at least 2x the heartbeat.');
         }
@@ -112,8 +113,8 @@ class KeepaliveIO extends AbstractIO
 
     /**
      * @param int $len
-     * @throws AMQPRuntimeException
      * @return string
+     * @throws AMQPRuntimeException
      */
     public function read($len)
     {
@@ -126,7 +127,7 @@ class KeepaliveIO extends AbstractIO
                     return $data;
                 }
 
-                if (! $client->connected) {
+                if (!$client->connected) {
                     throw new AMQPRuntimeException('Broken pipe or closed connection');
                 }
 

@@ -176,7 +176,7 @@ class Consumer extends Builder
             /** @var AMQPChannel $channel */
             $channel = $message->delivery_info['channel'];
             $deliveryTag = $message->delivery_info['delivery_tag'];
-
+            
             try {
                 $result = $consumerMessage->consumeMessage($data, $message);
             } catch (\Throwable $exception) {
