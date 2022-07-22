@@ -7,6 +7,7 @@ use ESD\Core\DI\DI;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Plugins\Logger\GetLogger;
+use ESD\Coroutine\Coroutine;
 use ESD\Plugins\Amqp\Message\ConsumerMessage;
 use ESD\Plugins\AnnotationsScan\AnnotationsScanPlugin;
 use ESD\Plugins\AnnotationsScan\ScanClass;
@@ -107,9 +108,15 @@ class AmqpConsumerPlugin extends AbstractPlugin
                     $instance->setMaxConsumption($annotation->maxConsumption);
                 }
 
-                addTimerTick(1000, function () use ($instance){
+                do {
                     (new Consumer())->consume($instance);
-                });
+                    printf("cid: %d\n", Coroutine::getCid());
+                    Coroutine::sleep(0.1);
+                } while (true);
+
+//                addTimerTick(1000, function () use ($instance){
+//                    (new Consumer())->consume($instance);
+//                });
             }
 
         }

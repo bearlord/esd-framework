@@ -185,12 +185,8 @@ class SwooleIO extends AbstractIO
      */
     public function write($data)
     {
-        printf("\n===\n");
-        var_dump($data);
-        printf("\n===\n");
         $buffer = $this->sock->send($data);
-
-
+        
         if ($buffer === false) {
             throw new AMQPRuntimeException('Error sending data');
         }

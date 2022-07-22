@@ -2,6 +2,7 @@
 
 namespace ESD\Plugins\Amqp\Connection;
 
+use ESD\Core\Server\Server;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Utils\ApplicationContext;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
@@ -83,7 +84,11 @@ class Socket
         $client = $this->channel->pop($this->waitTimeout);
 
         if ($client === false) {
-            throw new AMQPRuntimeException('Socket of keepaliveIO is exhausted. Cannot establish new socket before wait_timeout.');
+            Server::$instance->getLog()->warning('Socket of keepaliveIO is exhausted. Cannot establish new socket before wait_timeout.');
+//            throw new AMQPRuntimeException('Socket of keepaliveIO is exhausted. Cannot establish new socket before wait_timeout.');
+
+            $this->channel->push($client);
+            return false;
         }
 
         try {

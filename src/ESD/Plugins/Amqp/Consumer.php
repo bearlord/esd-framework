@@ -40,7 +40,6 @@ class Consumer extends Builder
         $queue = $consumerMessage->getQueue();
         $maxConsumption = $consumerMessage->getMaxConsumption();
 
-        /** @var Connection $connection */
         $connection = $this->amqp($poolName);
 
         try {

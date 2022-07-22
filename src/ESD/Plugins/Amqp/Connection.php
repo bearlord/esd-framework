@@ -39,6 +39,11 @@ class Connection
     protected $lastHeartbeatTime = 0.0;
 
     /**
+     * @var string
+     */
+    protected $fingerPrint;
+
+    /**
      * @var null|\PhpAmqpLib\Channel\AMQPChannel
      */
     protected $channel;
@@ -81,6 +86,31 @@ class Connection
     }
 
     /**
+     * @return float
+     */
+    public function getLastHeartbeatTime(): float
+    {
+        return $this->lastHeartbeatTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFingerPrint(): string
+    {
+        return $this->fingerPrint;
+    }
+
+    /**
+     * @param string $fingerPrint
+     */
+    public function setFingerPrint(string $fingerPrint): void
+    {
+        $this->fingerPrint = $fingerPrint;
+    }
+
+
+    /**
      * AmqpConnection constructor.
      * @param Config $config
      * @throws Exception
@@ -89,15 +119,15 @@ class Connection
     {
         $config->buildConfig();
         $this->config = $config;
-        $this->connect();
+        $this->connection = $this->initConnection();
     }
 
     /**
-     * Connect
+     * initConnection
      *
      * @throws Exception
      */
-    public function connect(): void
+    public function initConnection(): AbstractConnection
     {
         $class = AMQPStreamConnection::class;
         if (Coroutine::getCid() > 0) {
@@ -105,6 +135,7 @@ class Connection
         }
 
         $this->lastHeartbeatTime = microtime(true);
+        $this->fingerPrint = md5($this->lastHeartbeatTime);
 
         /** @var AbstractConnection $connection */
         $connection = new $class(
@@ -124,7 +155,8 @@ class Connection
             $this->config->getHeartbeat()
         );
 
-        $this->connection = $connection;
+        $connection->set_close_on_destruct(true);
+        return $connection;
     }
 
     /**
@@ -149,7 +181,7 @@ class Connection
     public function getChannel(): AMQPChannel
     {
         if (!$this->channel || !$this->check()) {
-            $this->channel = $this->getConnection()->channel();
+            $this->channel = $this->getActiveConnection()->channel();
         }
         return $this->channel;
     }
@@ -160,7 +192,7 @@ class Connection
     public function getConfirmChannel(): AMQPChannel
     {
         if (!$this->confirmChannel || !$this->check()) {
-            $this->confirmChannel = $this->getConnection()->channel();
+            $this->confirmChannel = $this->getActiveConnection()->channel();
             $this->confirmChannel->confirm_select();
         }
         return $this->confirmChannel;
@@ -174,20 +206,12 @@ class Connection
      */
     public function reconnect(): bool
     {
-        if ($this->connection && $this->connection->getIO() instanceof KeepaliveIO) {
-            $this->connection->getIO()->close();
-        }
+        $this->close();
 
-        $this->connection = $this->connect();
-        $this->channel = null;
-        $this->confirmChannel = null;
+        $this->connection = $this->initConnection();
+
+        printf("fingerPrint: %s\n", $this->getFingerPrint());
         return true;
-
-//        if ($this->connection) {
-//            $this->connection->close();
-//        }
-//        $this->connect();
-//        return true;
     }
 
     public function close(): bool

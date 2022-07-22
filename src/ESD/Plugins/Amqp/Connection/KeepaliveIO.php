@@ -3,6 +3,7 @@
 namespace ESD\Plugins\Amqp\Connection;
 
 use ESD\Core\DI\DI;
+use ESD\Core\Server\Server;
 use InvalidArgumentException;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 use PhpAmqpLib\Wire\IO\AbstractIO;
@@ -155,7 +156,8 @@ class KeepaliveIO extends AbstractIO
             $buffer = $client->send($data);
 
             if ($buffer === false) {
-                throw new AMQPRuntimeException('Error sending data');
+                Server::$instance->getLog()->warning('Error sending data');
+//                throw new AMQPRuntimeException('Error sending data');
             }
         });
     }
