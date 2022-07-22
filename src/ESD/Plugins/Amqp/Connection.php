@@ -209,7 +209,7 @@ class Connection
         $this->close();
 
         $this->connection = $this->initConnection();
-        Server::$instance->getLog()->debug("fingerPrint: %s\n", $this->getFingerPrint());
+        Server::$instance->getLog()->debug(sprintf("fingerPrint: %s\n", $this->getFingerPrint()));
         return true;
     }
 
