@@ -3,8 +3,10 @@
 namespace ESD\Plugins\Amqp\Connection;
 
 use ESD\Core\DI\DI;
+use ESD\Core\Exception;
 use ESD\Core\Server\Server;
 use InvalidArgumentException;
+use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 use PhpAmqpLib\Wire\IO\AbstractIO;
 use Swoole\Coroutine\Client;
@@ -60,6 +62,9 @@ class KeepaliveIO extends AbstractIO
      * @var string
      */
     private $buffer = '';
+    
+    /** @var AbstractConnection */
+    protected $connContext;
 
     /**
      * SwooleIO constructor.
@@ -87,20 +92,41 @@ class KeepaliveIO extends AbstractIO
         $this->context = $context;
         $this->keepalive = $keepalive;
         $this->heartbeat = $heartbeat;
-        $this->initialHeartbeat = $heartbeat;
+        $this->initialHeartbeat = $heartbeat + 3;
     }
+
+    /**
+     * @return AbstractConnection
+     */
+    public function getConnContext(): AbstractConnection
+    {
+        return $this->connContext;
+    }
+
+    /**
+     * @param AbstractConnection $connContext
+     */
+    public function setConnContext(AbstractConnection $connContext): void
+    {
+        $this->connContext = $connContext;
+    }
+    
 
     /**
      * Sets up the stream connection.
      */
     public function connect()
     {
+        $this->sock = new Socket($this->host, $this->port, $this->connectionTimeout, $this->heartbeat);
+
+        /*
         $this->sock = DI::getInstance()->make(Socket::class, [
             'host' => $this->host,
             'port' => $this->port,
             'timeout' => $this->connectionTimeout,
             'heartbeat' => $this->heartbeat,
         ]);
+        */
     }
 
     /**
@@ -135,10 +161,14 @@ class KeepaliveIO extends AbstractIO
                 $read_buffer = $client->recv($this->readWriteTimeout ? $this->readWriteTimeout : -1);
                 if ($read_buffer === false) {
                     throw new AMQPRuntimeException('Error receiving data, errno=' . $client->errCode);
+//                    Server::$instance->getLog()->warning('Error receiving data, errno=' . $client->errCode);
+                    return false;
                 }
 
                 if ($read_buffer === '') {
                     throw new AMQPRuntimeException('Connection is closed.');
+//                    Server::$instance->getLog()->warning('Connection is closed.');
+                    return false;
                 }
 
                 $this->buffer .= $read_buffer;
@@ -156,8 +186,8 @@ class KeepaliveIO extends AbstractIO
             $buffer = $client->send($data);
 
             if ($buffer === false) {
-                Server::$instance->getLog()->warning('Error sending data');
-//                throw new AMQPRuntimeException('Error sending data');
+//                Server::$instance->getLog()->warning('Error sending data');
+                throw new AMQPRuntimeException('Error sending data');
             }
         });
     }
@@ -171,14 +201,20 @@ class KeepaliveIO extends AbstractIO
 
     public function close()
     {
-        if (isset($this->sock) && $this->sock instanceof Socket) {
-            $this->sock->close();
+        try {
+            if (isset($this->sock) && $this->sock instanceof Socket) {
+                $this->sock->close();
+            }
+        } catch (Exception $exception) {
+            printf("code: %d, message: 5%\n", $exception->getCode(), $exception->getMessage());
+            throw $exception;
         }
+
     }
 
     public function getSocket()
     {
-        throw new AMQPRuntimeException('Socket of KeepaliveIO is forbidden to be used by others.');
+        return $this->sock;
     }
 
     /**

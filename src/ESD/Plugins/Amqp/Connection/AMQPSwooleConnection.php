@@ -2,7 +2,9 @@
 
 namespace ESD\Plugins\Amqp\Connection;
 
+use ESD\Core\Server\Server;
 use PhpAmqpLib\Connection\AbstractConnection;
+use function DI\string;
 
 class AMQPSwooleConnection extends AbstractConnection
 {
@@ -25,6 +27,7 @@ class AMQPSwooleConnection extends AbstractConnection
     {
         if ($keepalive) {
             $io = new KeepaliveIO($host, $port, $connectionTimeout, $readWriteTimeout, $context, $keepalive, $heartbeat);
+            $io->setConnContext($this);
         } else {
             $io = new SwooleIO($host, $port, $connectionTimeout, $readWriteTimeout, $context, $keepalive, $heartbeat);
         }

@@ -155,7 +155,7 @@ class Connection
             $this->config->getHeartbeat()
         );
 
-        $connection->set_close_on_destruct(true);
+//        $connection->set_close_on_destruct(true);
         return $connection;
     }
 
@@ -181,7 +181,7 @@ class Connection
     public function getChannel(): AMQPChannel
     {
         if (!$this->channel || !$this->check()) {
-            $this->channel = $this->getActiveConnection()->channel();
+            $this->channel = $this->getConnection()->channel();
         }
         return $this->channel;
     }
@@ -192,7 +192,7 @@ class Connection
     public function getConfirmChannel(): AMQPChannel
     {
         if (!$this->confirmChannel || !$this->check()) {
-            $this->confirmChannel = $this->getActiveConnection()->channel();
+            $this->confirmChannel = $this->getConnection()->channel();
             $this->confirmChannel->confirm_select();
         }
         return $this->confirmChannel;
@@ -243,12 +243,10 @@ class Connection
      */
     public function check(): bool
     {
-        $result = isset($this->connection) && $this->connection instanceof AbstractConnection && $this->connection->isConnected() && !$this->isHeartbeatTimeout();
-        if ($result) {
-            // The connection is valid, reset the last heartbeat time.
-            $currentTime = microtime(true);
-            $this->lastHeartbeatTime = $currentTime;
-        }
+        $result = isset($this->connection)
+            && $this->connection instanceof AbstractConnection
+            && $this->connection->isConnected()
+            && !$this->isHeartbeatTimeout();
 
         return $result;
     }
@@ -264,7 +262,8 @@ class Connection
             return false;
         }
 
-        if (microtime(true) - $this->lastHeartbeatTime > $this->config->getHeartbeat()) {
+        $lastHeartbeatTime = $this->getConnection()->getIO()->getSocket()->getLastHeartbeatTime();
+        if (microtime(true) - $lastHeartbeatTime > $this->config->getHeartbeat()) {
             return true;
         }
 
