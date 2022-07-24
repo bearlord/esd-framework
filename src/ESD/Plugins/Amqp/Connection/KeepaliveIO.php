@@ -69,6 +69,7 @@ class KeepaliveIO extends AbstractIO
     /**
      * SwooleIO constructor.
      *
+     * @inheritDoc
      * @param null|mixed $context
      * @throws \InvalidArgumentException when readWriteTimeout argument does not 2x the heartbeat
      */
@@ -96,6 +97,7 @@ class KeepaliveIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @return AbstractConnection
      */
     public function getConnContext(): AbstractConnection
@@ -104,6 +106,7 @@ class KeepaliveIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @param AbstractConnection $connContext
      */
     public function setConnContext(AbstractConnection $connContext): void
@@ -114,23 +117,16 @@ class KeepaliveIO extends AbstractIO
 
     /**
      * Sets up the stream connection.
+     * @inheritDoc
      */
     public function connect()
     {
         $this->sock = new Socket($this->host, $this->port, $this->connectionTimeout, $this->heartbeat);
-
-        /*
-        $this->sock = DI::getInstance()->make(Socket::class, [
-            'host' => $this->host,
-            'port' => $this->port,
-            'timeout' => $this->connectionTimeout,
-            'heartbeat' => $this->heartbeat,
-        ]);
-        */
     }
 
     /**
      * Reconnects the socket.
+     * @inheritDoc
      */
     public function reconnect()
     {
@@ -139,6 +135,7 @@ class KeepaliveIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @param int $len
      * @return string
      * @throws AMQPRuntimeException
@@ -173,6 +170,7 @@ class KeepaliveIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @param string $data
      * @throws AMQPRuntimeException
      */
@@ -188,12 +186,17 @@ class KeepaliveIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * No effect in KeeyaliveIO.
      */
     public function check_heartbeat()
     {
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function close()
     {
         try {
@@ -207,12 +210,17 @@ class KeepaliveIO extends AbstractIO
 
     }
 
+    /**
+     * @inheritDoc
+     * @return Socket|resource
+     */
     public function getSocket()
     {
         return $this->sock;
     }
 
     /**
+     * @inheritDoc
      * @param int $sec
      * @param int $usec
      * @return int
@@ -223,6 +231,7 @@ class KeepaliveIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @return $this
      */
     public function disableHeartbeat()
@@ -233,6 +242,7 @@ class KeepaliveIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @return $this
      */
     public function reenableHeartbeat()
@@ -244,12 +254,19 @@ class KeepaliveIO extends AbstractIO
 
     /**
      * Sends a heartbeat message.
+     * @inheritDoc
      */
     protected function write_heartbeat()
     {
         $this->sock->heartbeat();
     }
 
+    /**
+     * @inheritDoc
+     * @param $sec
+     * @param $usec
+     * @return int
+     */
     protected function do_select($sec, $usec)
     {
         return 1;

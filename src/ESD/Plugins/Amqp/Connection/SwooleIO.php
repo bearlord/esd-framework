@@ -86,6 +86,7 @@ class SwooleIO extends AbstractIO
     /**
      * SwooleIO constructor.
      *
+     * @inheritDoc
      * @param null|mixed $context
      * @throws \InvalidArgumentException when readWriteTimeout argument does not 2x the heartbeat
      */
@@ -114,7 +115,7 @@ class SwooleIO extends AbstractIO
 
     /**
      * Sets up the stream connection.
-     *
+     * @inheritDoc
      * @throws AMQPRuntimeException
      * @throws \Exception
      */
@@ -136,6 +137,7 @@ class SwooleIO extends AbstractIO
 
     /**
      * Reconnects the socket.
+     * @inheritDoc
      */
     public function reconnect()
     {
@@ -144,6 +146,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @param int $len
      * @return mixed|string
      * @throws AMQPRuntimeException
@@ -178,6 +181,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @param string $data
      * @return mixed|void
      * @throws AMQPRuntimeException
@@ -196,6 +200,7 @@ class SwooleIO extends AbstractIO
 
     /**
      * Heartbeat logic: check connection health here.
+     * @inheritDoc
      */
     public function check_heartbeat()
     {
@@ -217,6 +222,10 @@ class SwooleIO extends AbstractIO
         }
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function close()
     {
         if (isset($this->sock) && $this->sock instanceof Client) {
@@ -228,6 +237,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @return null|Client|resource
      */
     public function get_socket()
@@ -236,6 +246,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @return resource
      */
     public function getSocket()
@@ -244,6 +255,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @param int $sec
      * @param int $usec
      * @return int|mixed
@@ -256,6 +268,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @return $this
      */
     public function disableHeartbeat()
@@ -266,6 +279,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * @return $this
      */
     public function reenableHeartbeat()
@@ -276,6 +290,7 @@ class SwooleIO extends AbstractIO
     }
 
     /**
+     * @inheritDoc
      * Sends a heartbeat message.
      */
     protected function write_heartbeat()
@@ -288,6 +303,12 @@ class SwooleIO extends AbstractIO
         $this->write($pkt->getvalue());
     }
 
+    /**
+     * @inheritDoc
+     * @param $sec
+     * @param $usec
+     * @return int
+     */
     protected function do_select($sec, $usec)
     {
         return 1;
