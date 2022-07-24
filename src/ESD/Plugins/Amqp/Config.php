@@ -90,7 +90,7 @@ class Config extends BaseConfig
     /**
      * @var bool
      */
-    protected $keepAlive = true;
+    protected $keepAlive = false;
 
     /**
      * @var int

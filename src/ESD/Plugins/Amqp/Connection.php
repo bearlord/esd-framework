@@ -155,7 +155,7 @@ class Connection
             $this->config->getHeartbeat()
         );
 
-//        $connection->set_close_on_destruct(true);
+        $connection->set_close_on_destruct(true);
         return $connection;
     }
 
