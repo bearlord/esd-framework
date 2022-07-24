@@ -108,16 +108,16 @@ class AmqpConsumerPlugin extends AbstractPlugin
                     $instance->setMaxConsumption($annotation->maxConsumption);
                 }
 
-//                do {
-//                    (new Consumer())->consume($instance);
-//                    printf("cid: %d\n", Coroutine::getCid());
-////                        Coroutine::sleep(0.1);
-//                } while (true);
-
-
-                addTimerTick(1000, function () use ($instance){
+                do {
                     (new Consumer())->consume($instance);
-                });
+                    printf("cid: %d\n", Coroutine::getCid());
+                        Coroutine::sleep(0.1);
+                } while (true);
+
+
+//                addTimerTick(1000, function () use ($instance){
+//                    (new Consumer())->consume($instance);
+//                });
             }
 
         }

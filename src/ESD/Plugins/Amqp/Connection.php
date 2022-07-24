@@ -262,6 +262,8 @@ class Connection
             return false;
         }
 
+        return true;
+
         $lastHeartbeatTime = $this->getConnection()->getIO()->getSocket()->getLastHeartbeatTime();
         if (microtime(true) - $lastHeartbeatTime > $this->config->getHeartbeat()) {
             return true;

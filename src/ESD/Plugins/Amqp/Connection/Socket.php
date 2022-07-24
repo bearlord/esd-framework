@@ -75,7 +75,7 @@ class Socket
         $this->timeout = $timeout;
         $this->heartbeat = $heartbeat;
 
-        $this->channel = new Channel(1);
+//        $this->channel = new Channel(1);
         $this->connect();
     }
 
@@ -106,8 +106,8 @@ class Socket
             $this->connect();
         }
 
-//        $client = $this->client;
-        $client = $this->channel->pop($this->waitTimeout);
+        $client = $this->client;
+//        $client = $this->channel->pop($this->waitTimeout);
 
         if ($client === false) {
             throw new AMQPRuntimeException('Socket of keepaliveIO is exhausted. Cannot establish new socket before wait_timeout.');
@@ -118,7 +118,7 @@ class Socket
         } catch (Exception $exception) {
             Server::$instance->getLog()->error((string) $exception);
         } finally {
-            $this->channel->push($client);
+//            $this->channel->push($client);
         }
 
         return $result;
@@ -142,7 +142,7 @@ class Socket
         }
 
         $this->client = $sock;
-        $this->channel->push($sock);
+//        $this->channel->push($sock);
 
         $this->connected = true;
 
