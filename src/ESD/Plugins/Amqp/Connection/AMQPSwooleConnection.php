@@ -8,6 +8,23 @@ use function DI\string;
 
 class AMQPSwooleConnection extends AbstractConnection
 {
+    /**
+     * @param string $host
+     * @param int $port
+     * @param string $user
+     * @param string $password
+     * @param string $vhost
+     * @param bool $insist
+     * @param string $loginMethod
+     * @param $loginResponse
+     * @param string $locale
+     * @param float $connectionTimeout
+     * @param float $readWriteTimeout
+     * @param $context
+     * @param bool $keepalive
+     * @param int $heartbeat
+     * @throws \Exception
+     */
     public function __construct(
         string $host,
         int    $port,
@@ -46,6 +63,10 @@ class AMQPSwooleConnection extends AbstractConnection
         );
     }
 
+    /**
+     * @inheritDoc
+     * @return \PhpAmqpLib\Wire\IO\AbstractIO
+     */
     public function getIO()
     {
         return $this->io;

@@ -161,14 +161,10 @@ class KeepaliveIO extends AbstractIO
                 $read_buffer = $client->recv($this->readWriteTimeout ? $this->readWriteTimeout : -1);
                 if ($read_buffer === false) {
                     throw new AMQPRuntimeException('Error receiving data, errno=' . $client->errCode);
-//                    Server::$instance->getLog()->warning('Error receiving data, errno=' . $client->errCode);
-                    return false;
                 }
 
                 if ($read_buffer === '') {
                     throw new AMQPRuntimeException('Connection is closed.');
-//                    Server::$instance->getLog()->warning('Connection is closed.');
-                    return false;
                 }
 
                 $this->buffer .= $read_buffer;
@@ -186,7 +182,6 @@ class KeepaliveIO extends AbstractIO
             $buffer = $client->send($data);
 
             if ($buffer === false) {
-//                Server::$instance->getLog()->warning('Error sending data');
                 throw new AMQPRuntimeException('Error sending data');
             }
         });
@@ -207,7 +202,7 @@ class KeepaliveIO extends AbstractIO
             }
         } catch (Exception $exception) {
             printf("code: %d, message: 5%\n", $exception->getCode(), $exception->getMessage());
-            throw $exception;
+//            throw $exception;
         }
 
     }

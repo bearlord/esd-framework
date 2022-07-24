@@ -18,6 +18,7 @@ class Producer extends Builder
     use GetAmqp;
 
     /**
+     * @inheritDoc
      * @param ProducerMessage $producerMessage
      * @param bool $confirm
      * @param int $timeout
@@ -32,6 +33,7 @@ class Producer extends Builder
     }
 
     /**
+     * @inheritDoc
      * @param ProducerMessage $producerMessage
      * @param bool $confirm
      * @param int $timeout
@@ -69,6 +71,7 @@ class Producer extends Builder
     }
 
     /**
+     * @inheritDoc
      * @param ProducerMessage $producerMessage
      * @throws \Exception
      */

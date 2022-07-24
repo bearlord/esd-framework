@@ -75,11 +75,11 @@ class Socket
         $this->timeout = $timeout;
         $this->heartbeat = $heartbeat;
 
-//        $this->channel = new Channel(1);
         $this->connect();
     }
 
     /**
+     * @inheritDoc
      * @return float
      */
     public function getLastHeartbeatTime(): float
@@ -88,6 +88,7 @@ class Socket
     }
 
     /**
+     * @inheritDoc
      * @param float $lastHeartbeatTime
      */
     public function setLastHeartbeatTime(float $lastHeartbeatTime): void
@@ -97,6 +98,7 @@ class Socket
     
 
     /**
+     * @inheritDoc
      * @param \Closure $closure
      * @return mixed
      */
@@ -107,8 +109,6 @@ class Socket
         }
 
         $client = $this->client;
-//        $client = $this->channel->pop($this->waitTimeout);
-
         if ($client === false) {
             throw new AMQPRuntimeException('Socket of keepaliveIO is exhausted. Cannot establish new socket before wait_timeout.');
         }
@@ -117,8 +117,6 @@ class Socket
             $result = $closure($client);
         } catch (Exception $exception) {
             Server::$instance->getLog()->error((string) $exception);
-        } finally {
-//            $this->channel->push($client);
         }
 
         return $result;
@@ -142,14 +140,13 @@ class Socket
         }
 
         $this->client = $sock;
-//        $this->channel->push($sock);
-
         $this->connected = true;
 
         $this->addHeartbeat();
     }
 
     /**
+     * @inheritDoc
      * @return bool
      */
     public function isConnected(): bool
@@ -157,6 +154,10 @@ class Socket
         return $this->connected;
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function close()
     {
         $this->connected = false;
@@ -165,6 +166,7 @@ class Socket
 
     /**
      * Sends a heartbeat message.
+     * @inheritDoc
      */
     public function heartbeat()
     {
@@ -186,6 +188,7 @@ class Socket
     }
 
     /**
+     * @inheritDoc
      * @return void
      */
     protected function addHeartbeat()
@@ -206,6 +209,10 @@ class Socket
         });
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     protected function clear()
     {
         if ($this->timerId) {
@@ -214,6 +221,9 @@ class Socket
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __destruct()
     {
         $this->clear();
