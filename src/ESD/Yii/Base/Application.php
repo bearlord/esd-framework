@@ -312,19 +312,29 @@ class Application extends ServiceLocator
      */
     public function getDbOnce($name)
     {
+        $contextKey = sprintf("Pdo:%s", $name);
+        $db = getContextValue($contextKey);
+        if (!empty($db)) {
+            return $db;
+        }
+
         $_configKey = sprintf("yii.db.%s", $name);
-        $config = Server::$instance->getConfigContext()->get($_configKey);
-        $db = new Connection();
-        $db->poolName = $name;
-        $db->dsn = $config['dsn'];
-        $db->username = $config['username'];
-        $db->password = $config['password'];
-        $db->charset = $config['charset'] ?? 'utf8';
-        $db->tablePrefix = $config['tablePrefix'];
-        $db->enableSchemaCache = $config['enableSchemaCache'];
-        $db->schemaCacheDuration = $config['schemaCacheDuration'];
-        $db->schemaCache = $config['schemaCache'];
+        $_config = Server::$instance->getConfigContext()->get($_configKey);
+        $db = Yii::createObject([
+            'class' => Connection::class,
+            'poolName' => $name,
+            'dsn' => $_config['dsn'],
+            'username' => $_config['username'],
+            'password' => $_config['password'],
+            'charset' => $_config['charset'] ?? 'utf8',
+            'tablePrefix' => $_config['tablePrefix'],
+            'enableSchemaCache' => $_config['enableSchemaCache'],
+            'schemaCacheDuration' => $_config['schemaCacheDuration'],
+            'schemaCache' => $_config['schemaCache'],
+        ]);
         $db->open();
+        setContextValue($contextKey, $db);
+
         return $db;
     }
 

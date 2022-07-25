@@ -46,17 +46,20 @@ trait GetAmqp
      */
     public function amqpOnce(string $name = 'default')
     {
-        $configs = Server::$instance->getConfigContext()->get('amqp');
-        foreach ($configs as $key => $config) {
-            $configObject = new Config($key);
-            $configObject->setHosts($config['hosts']);
-            try {
-                $connection = new Connection($configObject);
-                return $connection->getActiveConnection();
-            } catch (AmqpException $exception) {
-                throw $exception;
-            }
-
+        $contextKey = sprintf("Amqp:%s", $name);
+        $db = getContextValue($contextKey);
+        if (!empty($db)) {
+            return $db;
         }
+
+        $_configKey = sprintf("amqp.%s", $name);
+        $_config = Server::$instance->getConfigContext()->get($_configKey);
+        $configObject = new Config($name);
+        $configObject->setValues($_config);
+
+        $db = new Connection($configObject);
+        setContextValue($contextKey, $db);
+        
+        return $db;
     }
 }

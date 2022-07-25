@@ -90,7 +90,7 @@ class Config extends BaseConfig
     /**
      * @var bool
      */
-    protected $keepAlive = false;
+    protected $keepAlive = true;
 
     /**
      * @var int
@@ -363,6 +363,18 @@ class Config extends BaseConfig
         $this->heartBeat = $heartBeat;
     }
 
+    /**
+     * @param array $values
+     * @return void
+     */
+    public function setValues(array $values): void
+    {
+        foreach ($values as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 
     /**
      * Build config

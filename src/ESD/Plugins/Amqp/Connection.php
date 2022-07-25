@@ -24,12 +24,12 @@ class Connection
 {
 
     /**
-     * @var AmqpConfig
+     * @var Config
      */
     protected $config;
 
     /**
-     * @var AMQPStreamConnection
+     * @var AbstractConnection
      */
     protected $connection = null;
 

@@ -55,7 +55,7 @@ class AmqpPool
      */
     public function db()
     {
-        $contextKey = "Amqp:{$this->getConfig()->getName()}";
+        $contextKey = sprintf("Amqp:%s", $this->getConfig()->getName());
         $db = getContextValue($contextKey);
 
         if ($db == null) {

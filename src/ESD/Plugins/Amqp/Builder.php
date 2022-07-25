@@ -11,7 +11,11 @@ use function Swlib\Http\str;
 class Builder
 {
     /**
-     * @throws AMQPProtocolChannelException when the channel operation is failed
+     * @param Message $message
+     * @param AMQPChannel|null $channel
+     * @param bool $release
+     * @return void
+     * @throws \Exception
      */
     public function declare(Message $message, ?AMQPChannel $channel = null, bool $release = false): void
     {
