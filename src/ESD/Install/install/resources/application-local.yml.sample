@@ -12,9 +12,12 @@ redis:
     database: 1
 
 amqp:
-  defalt:
-    hosts:
-      - {host: 127.0.0.1, port: 5672, user: guest, password: guest, vhost: /}
+  default:
+    host: 127.0.0.1
+    port: 5672
+    user: guest
+    password: guest
+    keepalive: true
 
 session:
   timeout: 3600
@@ -26,15 +29,6 @@ session:
   path: '/'
   #  httpOnly: true
   secure: false
-
-amqp:
-  default:
-    hosts:
-      - host: 127.0.0.1
-        port: 5672
-        user: guest
-        password: guest
-
 
 yii:
   components:
