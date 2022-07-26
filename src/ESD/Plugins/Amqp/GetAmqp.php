@@ -16,6 +16,7 @@ use PhpAmqpLib\Connection\AbstractConnection;
 trait GetAmqp
 {
     /**
+     * @inheritDoc
      * @param string $name
      * @return mixed|Connection
      * @throws \Exception
@@ -40,6 +41,7 @@ trait GetAmqp
     }
 
     /**
+     * @inheritDoc
      * @param string $name
      * @return AbstractConnection
      * @throws \Exception

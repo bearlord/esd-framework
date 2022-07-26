@@ -28,6 +28,7 @@ class Consumer extends Builder
     use GetLogger;
     
     /**
+     * @inheritDoc
      * @param ConsumerMessage $consumerMessage
      * @throws \AMQPChannelException
      * @throws \AMQPConnectionException
@@ -90,6 +91,7 @@ class Consumer extends Builder
     }
 
     /**
+     * @inheritDoc
      * @param ConsumerMessage $message
      * @param AMQPChannel|null $channel
      * @param bool $release
@@ -151,6 +153,7 @@ class Consumer extends Builder
     }
 
     /**
+     * @inheritDoc
      * @param string $pool
      * @return Concurrent|null
      * @throws \Exception
@@ -166,6 +169,7 @@ class Consumer extends Builder
     }
 
     /**
+     * @inheritDoc
      * @param ConsumerMessage $consumerMessage
      * @param AMQPMessage $message
      * @return \Closure

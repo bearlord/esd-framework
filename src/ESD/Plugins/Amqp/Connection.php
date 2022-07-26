@@ -273,10 +273,9 @@ class Connection
 
         return false;
     }
-
+    
     /**
-     * __call
-     *
+     * @inheritDoc
      * @param $name
      * @param $arguments
      * @return mixed

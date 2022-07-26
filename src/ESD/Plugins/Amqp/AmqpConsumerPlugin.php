@@ -24,7 +24,7 @@ use ESD\Server\Coroutine\Server;
 
 class AmqpConsumerPlugin extends AbstractPlugin
 {
-    const PROCESS_NAME = "amqp";
+    const PROCESS_NAME = "amqp-consumer";
     const PROCESS_GROUP_NAME = "HelperGroup";
 
     use GetLogger;
@@ -74,7 +74,6 @@ class AmqpConsumerPlugin extends AbstractPlugin
     public function beforeServerStart(Context $context)
     {
         Server::$instance->addProcess(self::PROCESS_NAME, AmqpProcess::class, self::PROCESS_GROUP_NAME);
-
     }
 
     /**
