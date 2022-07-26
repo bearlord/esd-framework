@@ -44,7 +44,7 @@ use Psr\Log\LoggerInterface;
 abstract class Server
 {
     /**
-     * @var float Versioin
+     * @var float Version
      */
     public static $version = "1.7.8";
 
