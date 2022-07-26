@@ -8,6 +8,7 @@ namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
+use ESD\Core\Pool\Pool;
 use ESD\Coroutine\Coroutine;
 use PhpAmqpLib\Connection\AbstractConnection;
 
@@ -15,16 +16,8 @@ use PhpAmqpLib\Connection\AbstractConnection;
  * Class PdoPool
  * @package ESD\Yii\Plugin\Pdo
  */
-class AmqpPool
+class AmqpPool extends Pool
 {
-    /**
-     * @var Channel
-     */
-    protected $pool;
-
-    /** @var Config */
-    protected $config;
-
     /**
      * AmqpPool constructor.
      * @param Config $config
@@ -41,6 +34,7 @@ class AmqpPool
     }
     
     /**
+     * @inheritDoc
      * @param $config
      * @return Connection
      * @throws \Exception
@@ -51,6 +45,7 @@ class AmqpPool
     }
 
     /**
+     * @inheritDoc
      * @return AbstractConnection
      */
     public function db()
@@ -68,29 +63,5 @@ class AmqpPool
             setContextValue($contextKey, $db);
         }
         return $db;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param Config $config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return Channel|mixed
-     */
-    public function getPool()
-    {
-        return $this->pool;
     }
 }

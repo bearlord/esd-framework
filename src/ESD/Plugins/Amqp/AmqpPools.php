@@ -6,33 +6,13 @@
 
 namespace ESD\Plugins\Amqp;
 
+use ESD\Core\Pool\Pools;
+
 /**
  * Class AmqpPools
  * @package ESD\Plugins\Amqp
  */
-class AmqpPools
+class AmqpPools extends Pools
 {
-    /**
-     * @var array
-     */
-    protected $poolList = [];
-
-    /**
-     * Get pool
-     *
-     * @param string $name
-     * @return AmqpPool
-     */
-    public function getPool($name = "default")
-    {
-        return $this->poolList[$name] ?? null;
-    }
-
-    /**
-     * @param AmqpPool $pool
-     */
-    public function addPool(AmqpPool $pool)
-    {
-        $this->poolList[$pool->getConfig()->getName()] = $pool;
-    }
+    
 }
