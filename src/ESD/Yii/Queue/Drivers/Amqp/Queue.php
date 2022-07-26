@@ -5,224 +5,34 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace ESD\Yii\Queue\Drivers\Amqp;
+namespace ESD\Yii\Queue\Drivers\Redis;
 
-use AMQPConnection;
-use AMQPChannel;
-use AMQPExchange;
-use AMQPQueue;
-use AMQPEnvelope;
-use ESD\Plugins\Amqp\GetAmqp;
-use ESD\Plugins\Amqp\Handle;
-use ESD\Yii\Base\Event;
+use ESD\Plugins\Redis\GetRedis;
+use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\NotSupportedException;
+use ESD\Yii\Di\Instance;
 use ESD\Yii\Queue\Cli\Queue as CliQueue;
-
+use ESD\Yii\Redis\Connection;
+use ESD\Yii\Yii;
 
 /**
- * Amqp Queue.
+ * Redis Queue.
  *
- * @author Maksym Kotliar <kotlyar.maksim@gmail.com>
- * @since 2.0.2
+ * @author Roman Zhuravlev <zhuravljov@gmail.com>
  */
 class Queue extends CliQueue
 {
-    use GetAmqp;
-
-    const ATTEMPT = 'yii-attempt';
-    const TTR = 'yii-ttr';
-    const DELAY = 'yii-delay';
-    const PRIORITY = 'yii-priority';
-
-    const AMQP_X_DELAY = 'x-delay';
-    const AMQP_X_DELAYED_MESSAGE = 'x-delayed-message';
-    const AMQP_X_DELAYED_TYPE = 'x-delayed-type';
-
-    public $name = 'default';
+    use GetRedis;
 
     /**
-     * The connection to the borker could be configured as an array of options
-     * or as a DSN string like amqp:, amqps:, amqps://user:pass@localhost:1000/vhost.
-     *
+     * @var Connection|array|string
+     */
+    public $redis = 'redis';
+
+    /**
      * @var string
      */
-    public $dsn;
-
-    /**
-     * The message queue broker's host.
-     *
-     * @var string|null
-     */
-    public $host;
-
-    /**
-     * The message queue broker's port.
-     *
-     * @var string|null
-     */
-    public $port;
-
-    /**
-     * This is RabbitMQ user which is used to login on the broker.
-     *
-     * @var string|null
-     */
-    public $user;
-
-    /**
-     * This is RabbitMQ password which is used to login on the broker.
-     *
-     * @var string|null
-     */
-    public $password;
-
-    /**
-     * Virtual hosts provide logical grouping and separation of resources.
-     *
-     * @var string|null
-     */
-    public $vhost;
-
-    /**
-     * The time PHP socket waits for an information while reading. In seconds.
-     *
-     * @var float|null
-     */
-    public $readTimeout;
-
-    /**
-     * The time PHP socket waits for an information while witting. In seconds.
-     *
-     * @var float|null
-     */
-    public $writeTimeout;
-
-    /**
-     * The time RabbitMQ keeps the connection on idle. In seconds.
-     *
-     * @var float|null
-     */
-    public $connectionTimeout;
-
-    /**
-     * The periods of time PHP pings the broker in order to prolong the connection timeout. In seconds.
-     *
-     * @var float|null
-     */
-    public $heartbeat;
-
-    /**
-     * PHP uses one shared connection if set true.
-     *
-     * @var bool|null
-     */
-    public $persisted;
-
-    /**
-     * The connection will be established as later as possible if set true.
-     *
-     * @var bool|null
-     */
-    public $lazy;
-
-    /**
-     * If false prefetch_count option applied separately to each new consumer on the channel
-     * If true prefetch_count option shared across all consumers on the channel.
-     *
-     * @var bool|null
-     */
-    public $qosGlobal;
-
-    /**
-     * Defines number of message pre-fetched in advance on a channel basis.
-     *
-     * @var int|null
-     */
-    public $qosPrefetchSize;
-
-    /**
-     * Defines number of message pre-fetched in advance per consumer.
-     *
-     * @var int|null
-     */
-    public $qosPrefetchCount;
-
-    /**
-     * Defines whether secure connection should be used or not.
-     *
-     * @var bool|null
-     */
-    public $sslOn;
-
-    /**
-     * Require verification of SSL certificate used.
-     *
-     * @var bool|null
-     */
-    public $sslVerify;
-
-    /**
-     * Location of Certificate Authority file on local filesystem which should be used with the verify_peer context option to authenticate the identity of the remote peer.
-     *
-     * @var string|null
-     */
-    public $sslCacert;
-
-    /**
-     * Path to local certificate file on filesystem.
-     *
-     * @var string|null
-     */
-    public $sslCert;
-
-    /**
-     * Path to local private key file on filesystem in case of separate files for certificate (local_cert) and private key.
-     *
-     * @var string|null
-     */
-    public $sslKey;
-
-    /**
-     * The queue used to consume messages from.
-     *
-     * @var string
-     */
-    public $queueName = 'yii-queue';
-
-    /**
-     * The exchange used to publish messages to.
-     *
-     * @var string
-     */
-    public $exchangeName = 'yii-exchange';
-
-    /**
-     * The routing key
-     *
-     * @var string
-     */
-    public $routingKey = 'yii-routing-key';
-
-    /**
-     * This property should be an integer indicating the maximum priority the queue should support. Default is 10.
-     *
-     * @var int
-     */
-    public $maxPriority = 10;
-    
-    /**
-     * @var Handle;
-     */
-    protected $handle;
-
-    /**
-     * The property tells whether the setupBroker method was called or not.
-     * Having it we can do broker setup only once per process.
-     *
-     * @var bool
-     */
-    protected $setupBrokerDone = false;
-
+    public $channel = 'queue';
 
     /**
      * @inheritdoc
@@ -230,14 +40,16 @@ class Queue extends CliQueue
     public function init()
     {
         parent::init();
-        $this->handle = $this->amqp();
+        $this->redis = Yii::createObject(Connection::className());
     }
 
     /**
-     * Listens amqp-queue and runs new jobs.
-     * 
-     * @param int $timeout
-     * @return int|null
+     * Listens redis-queue and runs new jobs.
+     * It can be used as daemon process.
+     *
+     * @param int $timeout number of seconds to wait a job.
+     * @throws Exception when params are invalid.
+     * @return null|int exit code.
      */
     public function listen($timeout = 3)
     {
@@ -247,9 +59,10 @@ class Queue extends CliQueue
         if ($timeout < 1) {
             throw new Exception('Timeout must be greater than zero.');
         }
-
+        
         return $this->run(true, $timeout);
     }
+
 
     /**
      * Listens queue and runs each job.
@@ -262,59 +75,19 @@ class Queue extends CliQueue
      */
     public function run($repeat, $timeout = 0)
     {
-        $this->setupBroker();
-        
         return $this->runWorker(function (callable $canContinue) use ($repeat, $timeout) {
             while ($canContinue()) {
-                $callback = function (AMQPEnvelope $message, AMQPQueue $q) use (&$max_consume) {
-                    if ($message->isRedelivery()) {
-                        $q->ack($message->getDeliveryTag());
+                $payload = $this->reserve($timeout);
+                if ($payload !== null) {
+                    list($id, $message, $ttr, $attempt) = $payload;
+                    if ($this->handleMessage($id, $message, $ttr, $attempt)) {
+                        $this->delete($id);
                     }
-
-                    $ttr = $attempt = null;
-                    if ($this->handleMessage($message->getMessageId(), $message->getBody(), $ttr, $attempt)) {
-                        $q->ack($message->getDeliveryTag());
-                    } else {
-                        $q->ack($message->getDeliveryTag());
-                        $this->redeliver($message);
-                    }
-                };
-
-                $this->handle->getQueue()->consume($callback);
-                return true;
+                } elseif (!$repeat) {
+                    break;
+                }
             }
         });
-    }
-
-    /**
-     * @return Handle
-     */
-    public function getHandle()
-    {
-        return $this->handle;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function pushMessage($payload, $ttr, $delay, $priority)
-    {
-        $this->setupBroker();
-
-        $messageId = uniqid('', true);
-
-        $attributes = [
-            'message_id' => $messageId,
-            'timestamp' => time()
-        ];
-        if ($delay) {
-            $attributes['headers'][self::AMQP_X_DELAY] = $delay * 1000;
-        }
-        if ($priority) {
-            $attributes['headers'][self::PRIORITY] = $priority;
-        }
-        $this->handle->getExchange()->publish($payload, $this->routingKey, AMQP_DURABLE, $attributes);
-        return $messageId;
     }
 
     /**
@@ -322,39 +95,132 @@ class Queue extends CliQueue
      */
     public function status($id)
     {
-        throw new NotSupportedException('Status is not supported in the driver.');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function redeliver(AmqpMessage $message)
-    {
-        return true;
-    }
-
-    /**
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     */
-    protected function setupBroker()
-    {
-        if ($this->setupBrokerDone) {
-            return;
+        if (!is_numeric($id) || $id <= 0) {
+            throw new InvalidArgumentException("Unknown message ID: $id.");
         }
 
-        $this->handle->getExchange()->setName($this->exchangeName);
-        $this->handle->getExchange()->setType(self::AMQP_X_DELAYED_MESSAGE);
-        $this->handle->getExchange()->setArgument(self::AMQP_X_DELAYED_TYPE, AMQP_EX_TYPE_DIRECT);
-        $this->handle->getExchange()->declareExchange();
+        if ($this->redis->hexists("$this->channel.attempts", $id)) {
+            return self::STATUS_RESERVED;
+        }
 
-        $this->handle->getQueue()->setName($this->queueName);
-        $this->handle->getQueue()->setFlags(AMQP_DURABLE);
-        $this->handle->getQueue()->setArgument('x-max-priority', $this->maxPriority);
-        $this->handle->getQueue()->declareQueue();
+        if ($this->redis->hexists("$this->channel.messages", $id)) {
+            return self::STATUS_WAITING;
+        }
 
-        $this->handle->getQueue()->bind($this->exchangeName, $this->routingKey);
-        $this->setupBrokerDone = true;
+        return self::STATUS_DONE;
+    }
+
+    /**
+     * Clears the queue.
+     *
+     * @since 2.0.1
+     */
+    public function clear()
+    {
+        while (!$this->redis->set("$this->channel.moving_lock", true, 'NX')) {
+            \Swoole\Coroutine::sleep(0.01);
+        }
+        $this->redis->executeCommand('DEL', $this->redis->keys("$this->channel.*"));
+    }
+
+    /**
+     * Removes a job by ID.
+     *
+     * @param int $id of a job
+     * @return bool
+     * @since 2.0.1
+     */
+    public function remove($id)
+    {
+        while (!$this->redis->set("$this->channel.moving_lock", true, ['NX', 'EX' => 1])) {
+            \Swoole\Coroutine::sleep(0.01);
+        }
+        if ($this->redis->hdel("$this->channel.messages", $id)) {
+            $this->redis->zrem("$this->channel.delayed", $id);
+            $this->redis->zrem("$this->channel.reserved", $id);
+            $this->redis->lrem("$this->channel.waiting", 0, $id);
+            $this->redis->hdel("$this->channel.attempts", $id);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int $timeout timeout
+     * @return array|null payload
+     */
+    public function reserve($timeout)
+    {
+        // Moves delayed and reserved jobs into waiting list with lock for one second
+        if ($this->redis->set("$this->channel.moving_lock", true, ['NX', 'EX' => 1])) {
+            $this->moveExpired("$this->channel.delayed");
+            $this->moveExpired("$this->channel.reserved");
+        }
+
+        // Find a new waiting message
+        $id = null;
+        if (!$timeout) {
+            $id = $this->redis->rpop("$this->channel.waiting");
+        } elseif ($result = $this->redis->brpop("$this->channel.waiting", $timeout)) {
+            $id = $result[1];
+        }
+        if (!$id) {
+            return null;
+        }
+
+        $payload = $this->redis->hget("$this->channel.messages", $id);
+        list($ttr, $message) = explode(';', $payload, 2);
+        $this->redis->zadd("$this->channel.reserved", time() + $ttr, $id);
+        $attempt = $this->redis->hincrby("$this->channel.attempts", $id, 1);
+
+        return [$id, $message, $ttr, $attempt];
+    }
+
+    /**
+     * @param string $from
+     */
+    protected function moveExpired($from)
+    {
+        $now = time();
+        if ($expired = $this->redis->zrevrangebyscore($from, $now, '-inf')) {
+            $this->redis->zremrangebyscore($from, '-inf', $now);
+            foreach ($expired as $id) {
+                $this->redis->rpush("$this->channel.waiting", $id);
+            }
+        }
+    }
+
+    /**
+     * Deletes message by ID.
+     *
+     * @param int $id of a message
+     */
+    protected function delete($id)
+    {
+        $this->redis->zrem("$this->channel.reserved", $id);
+        $this->redis->hdel("$this->channel.attempts", $id);
+        $this->redis->hdel("$this->channel.messages", $id);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function pushMessage($message, $ttr, $delay, $priority)
+    {
+        if ($priority !== null) {
+            throw new NotSupportedException('Job priority is not supported in the driver.');
+        }
+
+        $id = $this->redis->incr("$this->channel.message_id");
+        $this->redis->hset("$this->channel.messages", $id, "$ttr;$message");
+        if (!$delay) {
+            $this->redis->lpush("$this->channel.waiting", $id);
+        } else {
+            $this->redis->zadd("$this->channel.delayed", time() + $delay, $id);
+        }
+
+        return $id;
     }
 }
