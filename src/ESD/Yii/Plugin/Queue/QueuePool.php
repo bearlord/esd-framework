@@ -5,11 +5,10 @@ namespace ESD\Yii\Plugin\Queue;
 
 
 use ESD\Core\Channel\Channel;
-use ESD\Core\Pool\Pool;
 use ESD\Yii\Queue\Cli\Queue;
 use ESD\Yii\Yii;
 
-class QueuePool extends Pool
+class QueuePool
 {
     /**
      * @var string
@@ -58,6 +57,23 @@ class QueuePool extends Pool
     {
         $this->name = $name;
     }
+
+    /**
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param Config $config
+     */
+    public function setConfig(array $config): void
+    {
+        $this->config = $config;
+    }
+
 
     /**
      * @return int|mixed
