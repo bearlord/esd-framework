@@ -6,34 +6,13 @@
 
 namespace ESD\Yii\Plugin\Queue;
 
+use ESD\Core\Pool\Pools;
+
 /**
  * Class QueuePools
  * @package ESD\Yii\Plugin\Queue
  */
-class QueuePools
+class QueuePools extends Pools
 {
-    /**
-     * @var array
-     */
-    protected $poolList = [];
 
-    /**
-     * Get pool
-     *
-     * @param $name
-     * @return
-     */
-    public function getPool($name = "default")
-    {
-        return $this->poolList[$name] ?? null;
-    }
-
-    /**
-     * @param string $name
-     * @param QueuePool $pool
-     */
-    public function addPool(string $name, QueuePool $pool)
-    {
-        $this->poolList[$name] = $pool;
-    }
 }
