@@ -22,7 +22,7 @@ class ActorMessage
      * From
      * @var string
      */
-    protected $form;
+    protected $from;
 
     /**
      * Data
@@ -34,12 +34,12 @@ class ActorMessage
      * ActorMessage constructor.
      * @param $data
      * @param null $msgId
-     * @param null $form
+     * @param null $from
      */
-    public function __construct($data, $msgId = null, $form = null)
+    public function __construct($data, $msgId = null, $from = null)
     {
         $this->msgId = $msgId;
-        $this->form = $form;
+        $this->from = $from;
         $this->data = $data;
     }
 
@@ -62,17 +62,17 @@ class ActorMessage
     /**
      * @return string
      */
-    public function getForm(): string
+    public function getFrom(): string
     {
-        return $this->form;
+        return $this->from;
     }
 
     /**
-     * @param string $form
+     * @param string $from
      */
-    public function setForm(string $form): void
+    public function setFrom(string $from): void
     {
-        $this->form = $form;
+        $this->from = $from;
     }
 
     /**

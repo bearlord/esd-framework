@@ -46,7 +46,7 @@ abstract class Actor
      * @throws \DI\DependencyException
      * @throws ActorException
      */
-    final public function __construct(string $name)
+    final public function __construct(string $name = '')
     {
         $this->name = $name;
         Server::$instance->getContainer()->injectOn($this);
@@ -115,7 +115,7 @@ abstract class Actor
      * @return static
      * @throws ActorException
      */
-    public static function create(string $actorName, $data = null, $waitCreate = true, $timeOut = 5)
+    public static function create(string $actionClass, string $actorName, $data = null, $waitCreate = true, $timeOut = 5)
     {
         $processes = Server::$instance->getProcessManager()->getProcessGroup(ActorConfig::GROUP_NAME);
 
@@ -125,7 +125,7 @@ abstract class Actor
         Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorCreateEvent(
             ActorCreateEvent::ActorCreateEvent,
             [
-                $actorName, $actorName, $data
+                $actionClass, $actorName, $data
             ]), $processes->getProcesses()[$index]);
 
         if ($waitCreate) {
