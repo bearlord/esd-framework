@@ -9,7 +9,7 @@
 namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Exception;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Amqp\Message\Message;
 use PhpAmqpLib\Channel\AMQPChannel;
 use function Swlib\Http\str;

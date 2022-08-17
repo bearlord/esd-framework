@@ -10,7 +10,7 @@ use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Amqp\AmqpPool;
 use ESD\Plugins\Amqp\AmqpPools;
 use ESD\Yii\Yii;

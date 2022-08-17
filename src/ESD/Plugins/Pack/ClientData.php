@@ -9,7 +9,7 @@ namespace ESD\Plugins\Pack;
 use ESD\Core\Server\Beans\ClientInfo;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class ClientData

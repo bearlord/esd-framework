@@ -8,7 +8,7 @@ namespace ESD\Plugins\Console\Command;
 
 use ESD\Core\Context\Context;
 use ESD\Plugins\Console\ConsolePlugin;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

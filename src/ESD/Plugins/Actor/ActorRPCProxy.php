@@ -6,7 +6,7 @@
 
 namespace ESD\Plugins\Actor;
 
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\ProcessRPC\ProcessRPCCallMessage;
 use ESD\Plugins\ProcessRPC\RPCProxy;
 use ESD\Yii\Yii;

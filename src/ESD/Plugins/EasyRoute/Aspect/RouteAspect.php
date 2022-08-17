@@ -9,7 +9,7 @@ namespace ESD\Plugins\EasyRoute\Aspect;
 
 use ESD\Core\Exception;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\EasyRoute\Controller\IController;
 use ESD\Plugins\EasyRoute\EasyRouteConfig;

@@ -7,7 +7,7 @@
 namespace ESD\Plugins\EasyRoute;
 
 use ESD\Core\Plugins\Config\BaseConfig;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class RouteConfig

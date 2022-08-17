@@ -9,7 +9,7 @@ namespace ESD\Plugins\Actor;
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\ProcessRPC\ProcessRPCPlugin;
 
 /**

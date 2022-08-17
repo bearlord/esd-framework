@@ -8,7 +8,7 @@ namespace ESD\Plugins\AutoReload;
 
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 class AutoReloadPlugin extends AbstractPlugin
 {

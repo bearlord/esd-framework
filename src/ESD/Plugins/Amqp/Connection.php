@@ -8,7 +8,7 @@
 
 namespace ESD\Plugins\Amqp;
 
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Coroutine\Coroutine;
 use ESD\Plugins\Amqp\Connection\AMQPSwooleConnection;
 use ESD\Plugins\Amqp\Connection\KeepaliveIO;

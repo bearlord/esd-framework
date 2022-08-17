@@ -12,7 +12,7 @@ use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Process\Process;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Actuator\Aspect\ActuatorAspect;
 use ESD\Plugins\Actuator\Aspect\CountAspect;
 use ESD\Plugins\Aop\AopConfig;

@@ -9,7 +9,7 @@ namespace ESD\Plugins\ProcessRPC;
 use ESD\Core\Message\Message;
 use ESD\Core\Message\MessageProcessor;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class RpcMessageProcessor

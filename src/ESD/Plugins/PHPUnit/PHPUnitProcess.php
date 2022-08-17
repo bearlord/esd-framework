@@ -8,7 +8,7 @@ namespace ESD\Plugins\PHPUnit;
 
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use PHPUnit\TextUI\Command;
 
 /**

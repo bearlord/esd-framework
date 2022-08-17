@@ -8,7 +8,7 @@ namespace ESD\Plugins\Aop;
 
 use ESD\Core\Exception;
 use ESD\Core\Order\OrderOwnerTrait;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use Go\Aop\Aspect;
 use Go\Aop\Features;
 use Go\Core\AspectContainer;

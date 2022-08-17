@@ -17,7 +17,7 @@ use ESD\Core\Exception;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\AnnotationsScan\Annotation\Component;
 use ESD\Plugins\Aop\AopPlugin;
 use ESD\Yii\Helpers\StringHelper;

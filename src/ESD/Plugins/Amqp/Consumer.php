@@ -10,7 +10,7 @@ namespace ESD\Plugins\Amqp;
 
 use ESD\Core\Exception;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Coroutine\Concurrent;
 use ESD\Plugins\Amqp\Builder\Builder;
 use ESD\Plugins\Amqp\Message\ConsumerMessage;

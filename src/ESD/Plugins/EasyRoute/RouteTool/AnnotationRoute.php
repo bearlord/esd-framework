@@ -8,7 +8,7 @@ namespace ESD\Plugins\EasyRoute\RouteTool;
 
 use ESD\Core\ParamException;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\EasyRoute\Annotation\ModelAttribute;
 use ESD\Plugins\EasyRoute\Annotation\PathVariable;
 use ESD\Plugins\EasyRoute\Annotation\RequestBody;

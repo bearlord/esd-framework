@@ -8,7 +8,7 @@ namespace ESD\Plugins\Blade;
 
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class BladePlugin

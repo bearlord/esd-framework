@@ -13,7 +13,7 @@ use ESD\Core\Order\OrderOwnerTrait;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 use ESD\Aop\Aop;
 use ESD\Aop\AopAspectKernel;

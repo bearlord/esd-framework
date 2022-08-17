@@ -8,7 +8,7 @@ namespace ESD\Plugins\Uid;
 
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class UidBean

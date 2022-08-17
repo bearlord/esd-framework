@@ -4,7 +4,7 @@ namespace ESD\Plugins\Console\Command;
 
 use ESD\Core\Context\Context;
 use ESD\Core\Server\Config\PortConfig;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Console\ConsolePlugin;
 use ESD\Yii\Helpers\Inflector;
 use Symfony\Component\Console\Command\Command;

@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Whoops\Aspect;
 
 use ESD\Core\Server\Beans\Response;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Whoops\WhoopsConfig;
 use Go\Aop\Intercept\MethodInvocation;

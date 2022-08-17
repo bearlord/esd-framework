@@ -26,7 +26,7 @@ use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Tools\UnPackTool;
 use ESD\Core\Server\Config\PortConfig;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\MQTT\MqttPluginConfig;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\GetBoostSend;

@@ -11,7 +11,7 @@ use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Process\Process;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\AnnotationsScan\AnnotationsScanPlugin;
 use ESD\Plugins\AnnotationsScan\ScanClass;
 use ESD\Plugins\AnnotationsScan\ScanReflectionMethod;

@@ -7,7 +7,7 @@
 namespace ESD\Plugins\PHPUnit;
 
 use ESD\Core\Context\Context;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Console\ConsolePlugin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

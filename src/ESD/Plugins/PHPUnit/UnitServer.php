@@ -6,7 +6,7 @@
 
 namespace ESD\Plugins\PHPUnit;
 
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class UnitServer

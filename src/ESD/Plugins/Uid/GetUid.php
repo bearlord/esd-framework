@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Uid;
 
 use ESD\Core\Memory\CrossProcess\Table;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Trait GetUid

@@ -9,7 +9,7 @@ namespace ESD\Plugins\Actor;
 use DI\Annotation\Inject;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Plugins\Event\EventDispatcher;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 /**

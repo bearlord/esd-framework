@@ -8,7 +8,7 @@
 
 namespace ESD\Plugins\Amqp\Connection;
 
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use PhpAmqpLib\Connection\AbstractConnection;
 use function DI\string;
 

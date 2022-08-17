@@ -6,7 +6,7 @@
 
 namespace ESD\Plugins\Pack;
 
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Pack\Aspect\PackAspect;
 
 /**

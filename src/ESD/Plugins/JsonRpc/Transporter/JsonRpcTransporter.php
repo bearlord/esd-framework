@@ -7,7 +7,7 @@
 namespace ESD\Plugins\JsonRpc\Transporter;
 
 use ESD\Core\Context\Context;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\LoadBalance\Algorithm\Random;
 use ESD\LoadBalance\Algorithm\RoundRobin;
 use ESD\LoadBalance\Algorithm\WeightedRandom;

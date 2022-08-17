@@ -9,7 +9,7 @@ namespace ESD\Plugins\Validate\Annotation;
 use DI\DependencyException;
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\CachedReader;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Validate\ValidationException;
 use Inhere\Validate\Validation;
 use ReflectionClass;

@@ -10,7 +10,7 @@ namespace ESD\Plugins\Amqp\Connection;
 
 use ESD\Core\DI\DI;
 use ESD\Core\Exception;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use InvalidArgumentException;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Exception\AMQPRuntimeException;

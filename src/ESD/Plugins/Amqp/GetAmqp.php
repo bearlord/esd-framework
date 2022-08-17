@@ -5,7 +5,7 @@
  */
 
 namespace ESD\Plugins\Amqp;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 use PhpAmqpLib\Connection\AbstractConnection;
 

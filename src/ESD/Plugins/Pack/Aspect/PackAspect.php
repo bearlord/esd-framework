@@ -8,7 +8,7 @@ namespace ESD\Plugins\Pack\Aspect;
 
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Beans\Request;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\PackConfig;

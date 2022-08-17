@@ -8,7 +8,7 @@ namespace ESD\Plugins\AutoReload;
 
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Process\Process;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 /**

@@ -10,7 +10,7 @@ use ESD\Core\Context\Context;
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Aop\AopConfig;
 use ESD\Plugins\Topic\Aspect\TopicAspect;
 use ESD\Plugins\Uid\UidConfig;

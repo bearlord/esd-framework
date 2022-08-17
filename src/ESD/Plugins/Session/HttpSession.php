@@ -9,7 +9,7 @@ namespace ESD\Plugins\Session;
 use ESD\Core\Server\Beans\Http\Cookie;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 class HttpSession
 {

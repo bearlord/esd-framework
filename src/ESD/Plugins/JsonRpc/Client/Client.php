@@ -6,7 +6,7 @@
 
 namespace ESD\Plugins\JsonRpc\Client;
 
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\JsonRpc\Packer\JsonEofPacker;
 use ESD\Plugins\JsonRpc\Packer\JsonLengthPacker;
 use ESD\Plugins\JsonRpc\Packer\JsonPacker;

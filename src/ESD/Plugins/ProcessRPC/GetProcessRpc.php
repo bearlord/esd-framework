@@ -7,7 +7,7 @@
 namespace ESD\Plugins\ProcessRPC;
 
 use ESD\Core\Server\Process\Process;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Trait GetProcessRpc

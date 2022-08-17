@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Uid\Aspect;
 
 use ESD\Core\Plugins\Logger\GetLogger;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Uid\UidBean;
 use Go\Aop\Intercept\MethodInvocation;

@@ -10,7 +10,7 @@ namespace ESD\Plugins\Pack\PackTool;
 
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Config\PortConfig;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
