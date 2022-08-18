@@ -134,7 +134,7 @@ abstract class Actor
                 $result = $call->wait($timeOut);
                 if ($result == null) {
                     throw new ActorException(Yii::t('esd', 'Actor {actor} created timeout', [
-                        '{actor}' => $actorName
+                        'actor' => $actorName
                     ]));
                 }
             }
