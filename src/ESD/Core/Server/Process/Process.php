@@ -281,10 +281,6 @@ abstract class Process
             $this->setIsReady(true);
             $this->init();
 
-            /*
-            $this->log->info(Yii::t('esd', 'Process ready'));
-            */
-
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
                 Process::signal(SIGTERM, [$this, '_onProcessStop']);
@@ -292,15 +288,15 @@ abstract class Process
                 \Swoole\Coroutine::create(function () {
                     while (true) {
                         $recv = $this->socket->recv();
-                        if (empty($recv)) break;
-
-                        //Get process id
-                        $unpackData = unpack("N", $recv);
-                        $processId = $unpackData[1];
-                        $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
-                        \Swoole\Coroutine::create(function () use ($recv, $fromProcess) {
-                            $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
-                        });
+                        if (!empty($recv)) {
+                            //Get process id
+                            $unpackData = unpack("N", $recv);
+                            $processId = $unpackData[1];
+                            $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
+                            \Swoole\Coroutine::create(function () use ($recv, $fromProcess) {
+                                $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
+                            });
+                        }
                     }
                 });
             }
