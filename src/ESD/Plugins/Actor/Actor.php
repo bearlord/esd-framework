@@ -117,6 +117,10 @@ abstract class Actor
      */
     public static function create(string $actionClass, string $actorName, $data = null, $waitCreate = true, $timeOut = 5)
     {
+        if (ActorManager::getInstance()->hasActor($actorName)) {
+            return new ActorRPCProxy($actorName, false, $timeOut);
+        }
+
         $processes = Server::$instance->getProcessManager()->getProcessGroup(ActorConfig::GROUP_NAME);
 
         $nowProcess = ActorManager::getInstance()->getAtomic()->add();
@@ -129,15 +133,14 @@ abstract class Actor
             ]), $processes->getProcesses()[$index]);
 
         if ($waitCreate) {
-            if (!ActorManager::getInstance()->hasActor($actorName)) {
-                $call = Server::$instance->getEventDispatcher()->listen(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actorName, null, true);
-                $result = $call->wait($timeOut);
-                if ($result == null) {
-                    throw new ActorException(Yii::t('esd', 'Actor {actor} created timeout', [
-                        'actor' => $actorName
-                    ]));
-                }
+            $call = Server::$instance->getEventDispatcher()->listen(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actorName, null, true);
+            $result = $call->wait($timeOut);
+            if ($result == null) {
+                throw new ActorException(Yii::t('esd', 'Actor {actor} created timeout', [
+                    'actor' => $actorName
+                ]));
             }
+            
         }
         return new ActorRPCProxy($actorName, false, $timeOut);
     }
