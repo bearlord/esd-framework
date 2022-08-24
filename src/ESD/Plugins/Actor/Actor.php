@@ -46,16 +46,18 @@ abstract class Actor
      * @throws \DI\DependencyException
      * @throws ActorException
      */
-    final public function __construct(string $name = '')
+    final public function __construct(string $name = '', bool $isCreated = false)
     {
         $this->name = $name;
         Server::$instance->getContainer()->injectOn($this);
-        ActorManager::getInstance()->addActor($this);
+        if ($isCreated) {
+            ActorManager::getInstance()->addActor($this);
+        }
 
         $this->channel = DIGet(Channel::class, [$this->actorConfig->getActorMailboxCapacity()]);
 
         //Loop process the information in the mailbox
-        goWithContext(function () {
+        goWithContext(function () use ($name) {
             while (true) {
                 $message = $this->channel->pop();
                 $this->handleMessage($message);
@@ -129,7 +131,7 @@ abstract class Actor
         Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorCreateEvent(
             ActorCreateEvent::ActorCreateEvent,
             [
-                $actionClass, $actorName, $data
+                $actionClass, $actorName, $data, true
             ]), $processes->getProcesses()[$index]);
 
         if ($waitCreate) {
@@ -140,7 +142,7 @@ abstract class Actor
                     'actor' => $actorName
                 ]));
             }
-            
+
         }
         return new ActorRPCProxy($actorName, false, $timeOut);
     }

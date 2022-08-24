@@ -44,4 +44,24 @@ class ActorRPCProxy extends RPCProxy
         $message = new ProcessRPCCallMessage($this->className, "sendMessage", [$message], true);
         Server::$instance->getProcessManager()->getCurrentProcess()->sendMessage($message, $this->process);
     }
+
+    /**
+     * Send message to other actor
+     * @param ActorMessage $message
+     * @param string $actorName
+     * @return void
+     * @throws ActorException
+     */
+    public function sendMessageToActor(ActorMessage $message, string $actorName)
+    {
+        $actorInfo = ActorManager::getInstance()->getActorInfo($actorName);
+        if ($actorInfo == null) {
+            throw new ActorException(Yii::t('esd', 'Actor {actor} not exist', [
+                'actor' => $actorName
+            ]));
+        }
+
+        $message = new ProcessRPCCallMessage($actorInfo->getClassName(), "sendMessage", [$message], true);
+        Server::$instance->getProcessManager()->getCurrentProcess()->sendMessage($message, $actorInfo->getProcess());
+    }
 }
