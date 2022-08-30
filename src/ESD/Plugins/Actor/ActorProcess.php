@@ -38,12 +38,13 @@ class ActorProcess extends Process
             $class = $event->getData()[0];
             $name = $event->getData()[1];
             $data = $event->getData()[2] ?? null;
-            $actor = new $class($name);
+            $isCreated = $event->getData()[3] ?? false;
+            $actor = new $class($name, $isCreated);
             if ($actor instanceof Actor) {
                 $actor->initData($data);
             } else {
                 throw new ActorException(Yii::t('esd', '{class} is not a actor', [
-                    '{class}' => $class
+                    'class' => $class
                 ]));
             }
             $this->eventDispatcher->dispatchProcessEvent(new ActorCreateEvent(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actor->getName(), null),
