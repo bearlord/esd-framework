@@ -2,26 +2,140 @@
 
 namespace ESD\Plugins\Actor\Cache;
 
+use ESD\Plugins\Actor\ActorCacheProcess;
+
 class ActorCacheHash implements \ArrayAccess
 {
+    /**
+     * @var ActorCacheProcess process
+     */
+    protected $process;
+
+    /**
+     * @var string delimiter
+     */
+    protected $delimiter = ".";
+
+    /**
+     * @var array container
+     */
+    protected $container = [];
+
+    /**
+     * @param ActorCacheProcess $process
+     * @param string|null $delimiter
+     */
+    public function __construct(ActorCacheProcess $process, ?string $delimiter = ".")
+    {
+        $this->process = $process;
+        $this->delimiter = $delimiter;
+    }
+
+    /**
+     * @return array get container
+     */
+    public function &getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @inheritDoc
+     * @param $offset
+     * @return bool
+     */
     public function offsetExists($offset)
     {
-        // TODO: Implement offsetExists() method.
+        $path = explode($this->delimiter, $offset);
+        $deep = &$this->container;
+
+        $count = count($path);
+        for ($i = 0; $i < $count; $i++) {
+            $point = $path[$i];
+            if (array_key_exists($point, $deep)) {
+                $deep = &$deep[$point];
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    /**
+     * @inheritDoc
+     * @param $offset
+     * @return array|mixed|null
+     */
     public function offsetGet($offset)
     {
-        // TODO: Implement offsetGet() method.
+        $path = explode($this->delimiter, $offset);
+        $deep = &$this->container;
+
+        $count = count($path);
+        for ($i = 0; $i < $count; $i++) {
+            $point = $path[$i];
+            if (array_key_exists($point, $deep)) {
+                $deep = &$deep[$point];
+            } else {
+                return null;
+            }
+        }
+
+        return $deep;
     }
 
+    /**
+     * @inheritDoc
+     * @param $offset
+     * @param $value
+     * @return void
+     */
     public function offsetSet($offset, $value)
     {
-        // TODO: Implement offsetSet() method.
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $path = explode($this->delimiter, $offset);
+            $deep = &$this->container;
+
+            $count = count($path) - 1;
+            for ($i = 0; $i < $count; $i++) {
+                $point = $path[$i];
+                if (array_key_exists($point, $deep)) {
+                    $deep = &$deep[$point];
+                } else {
+                    $deep[$point] = [];
+                    $deep = &$deep[$point];
+                }
+            }
+            $deep[$path[$count]] = $value;
+        }
+
+        $this->process->writeLog("offsetSet", [$offset, $value, $this->delimiter]);
     }
 
+    /**
+     * @inheritDoc
+     * @param $offset
+     * @return void
+     */
     public function offsetUnset($offset)
     {
-        // TODO: Implement offsetUnset() method.
-    }
+        $path = explode($this->delimiter, $offset);
+        $deep = &$this->container;
 
+        $count = count($path) - 1;
+        for ($i = 0; $i < $count; $i++) {
+            $point = $path[$i];
+            if (array_key_exists($point, $deep)) {
+                $deep = &$deep[$point];
+            } else {
+                return;
+            }
+        }
+        unset($deep[$path[$count]]);
+
+        $this->process->writeLog("offsetUnset", [$offset, $this->delimiter]);
+    }
 }
