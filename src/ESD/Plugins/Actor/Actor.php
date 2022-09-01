@@ -188,4 +188,22 @@ abstract class Actor
     {
 
     }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function saveContext()
+    {
+        $class = get_class($this);
+        $name = $this->getName();
+        $data = $this->getData();
+
+        //Dispatch ActorSaveEvent to actor-cache process, do not need reply
+        Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorSaveEvent(
+            ActorSaveEvent::ActorSaveEvent,
+            [
+                $class, $name, $data,
+            ]), Server::$instance->getProcessManager()->getProcessFromName(ActorCacheProcess::PROCESS_NAME));
+    }
 }
