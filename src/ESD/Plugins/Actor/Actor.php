@@ -40,6 +40,9 @@ abstract class Actor
      */
     protected $name;
 
+    /**
+     * @var array data
+     */
     protected $data;
     
     /**
@@ -149,7 +152,6 @@ abstract class Actor
         $nowProcess = ActorManager::getInstance()->getAtomic()->add();
         $index = $nowProcess % count($processes->getProcesses());
 
-        Server::$instance->getLog()->critical("actor-1-" . $actorName . "-index-". $index);
         Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorCreateEvent(
             ActorCreateEvent::ActorCreateEvent,
             [

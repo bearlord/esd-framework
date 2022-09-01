@@ -35,7 +35,6 @@ class ActorProcess extends Process
     {
         $call = $this->eventDispatcher->listen(ActorCreateEvent::ActorCreateEvent);
         $call->call(function (ActorCreateEvent $event) {
-            Server::$instance->getLog()->critical("actor-process-1-" . $event->getData()[1]);
             $class = $event->getData()[0];
             $name = $event->getData()[1];
             $data = $event->getData()[2] ?? null;
@@ -48,12 +47,10 @@ class ActorProcess extends Process
                     'class' => $class
                 ]));
             }
-            Server::$instance->getLog()->critical("actor-process-2-" . $actor->getName());
             $this->eventDispatcher->dispatchProcessEvent(new ActorCreateEvent(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actor->getName(), null),
                 Server::$instance->getProcessManager()->getProcessFromId($event->getProcessId())
             );
 
-            Server::$instance->getLog()->critical("actor-process-3-" . $actor->getName());
             //Dispatch ActorSaveEvent to actor-cache process, do not need reply
             Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorSaveEvent(
                 ActorSaveEvent::ActorSaveEvent,
