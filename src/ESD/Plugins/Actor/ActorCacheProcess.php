@@ -152,14 +152,10 @@ class ActorCacheProcess extends Process
         $this->setSaveDir(Server::$instance->getServerConfig()->getRootDir() . "bin/actor/");
         $this->setSaveFile("cache.db");
         $this->setSaveLogFile("cache.dblog");
-
-        Server::$instance->getLog()->critical("Cache Process init..." . $this->saveDir);
     }
 
     public function onProcessStart()
     {
-        Server::$instance->getLog()->critical("Cache Process onProcessStart...");
-
         $call = $this->eventDispatcher->listen(ActorSaveEvent::ActorSaveEvent);
         $call->call(function (ActorSaveEvent $event) {
             $class = $event->getData()[0];
@@ -177,12 +173,10 @@ class ActorCacheProcess extends Process
     public function onProcessStop()
     {
         $this->autoSave();
-        Server::$instance->getLog()->critical("Cache Process onProcessStop...");
     }
 
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
-        Server::$instance->getLog()->critical("Cache Process onPipeMessage...");
     }
 
     protected function saveToCacheHash($acotName, $data)
