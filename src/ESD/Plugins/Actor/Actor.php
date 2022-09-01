@@ -40,6 +40,8 @@ abstract class Actor
      */
     protected $name;
 
+    protected $data;
+    
     /**
      * Actor constructor.
      * @param string $name
@@ -66,11 +68,30 @@ abstract class Actor
     }
 
     /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
+    }
+
+    /**
      * Init data
      * @param $data
      * @return mixed
      */
-    abstract public function initData($data);
+    public function initData($data)
+    {
+        $this->data = $data;
+    }
 
     /**
      * Process the received message
@@ -128,6 +149,7 @@ abstract class Actor
         $nowProcess = ActorManager::getInstance()->getAtomic()->add();
         $index = $nowProcess % count($processes->getProcesses());
 
+        Server::$instance->getLog()->critical("actor-1-" . $actorName . "-index-". $index);
         Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorCreateEvent(
             ActorCreateEvent::ActorCreateEvent,
             [
@@ -142,8 +164,8 @@ abstract class Actor
                     'actor' => $actorName
                 ]));
             }
-
         }
+
         return new ActorRPCProxy($actorName, false, $timeOut);
     }
 

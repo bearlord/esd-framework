@@ -1,6 +1,6 @@
 <?php
 
-namespace ESD\Plugins\Actor\Cache;
+namespace ESD\Plugins\Actor;
 
 use ESD\Plugins\Actor\ActorCacheProcess;
 

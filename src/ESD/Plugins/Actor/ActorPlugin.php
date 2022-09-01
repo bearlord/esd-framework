@@ -9,6 +9,7 @@ namespace ESD\Plugins\Actor;
 use ESD\Core\Context\Context;
 use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
+use ESD\Plugins\Actor\ActorCacheProcess;
 use ESD\Server\Coroutine\Server;
 use ESD\Plugins\ProcessRPC\ProcessRPCPlugin;
 
@@ -77,6 +78,9 @@ class ActorPlugin extends AbstractPlugin
         for ($i = 0; $i < $this->actorConfig->getActorWorkerCount(); $i++) {
             Server::$instance->addProcess("actor-$i", ActorProcess::class, ActorConfig::GROUP_NAME);
         }
+
+        Server::$instance->addProcess(ActorCacheProcess::PROCESS_NAME, ActorCacheProcess::class, ActorCacheProcess::GROUP_NAME);
+
         $this->actorManager = ActorManager::getInstance();
         return;
     }
