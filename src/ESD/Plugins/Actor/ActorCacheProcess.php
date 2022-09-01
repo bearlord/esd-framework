@@ -15,9 +15,9 @@ class ActorCacheProcess extends Process
 
     const GROUP_NAME = "ActorCache";
 
-    const DB_LOG_HEADER = 'catdblog';
+    const DB_LOG_HEADER = 'cachedblog##';
 
-    const DB_HEADER = 'catdb';
+    const DB_HEADER = 'cachedb##';
 
     const SAVE_NAME = "@Actor";
 
@@ -150,8 +150,8 @@ class ActorCacheProcess extends Process
         $this->cahceHash = new ActorCacheHash($this);
 
         $this->setSaveDir(Server::$instance->getServerConfig()->getRootDir() . "bin/actor/");
-        $this->setSaveFile("cache.catdb");
-        $this->setSaveLogFile("cache.catdblog");
+        $this->setSaveFile("cache.db");
+        $this->setSaveLogFile("cache.dblog");
 
         Server::$instance->getLog()->critical("Cache Process init..." . $this->saveDir);
     }
