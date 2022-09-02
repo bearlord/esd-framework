@@ -35,12 +35,16 @@ class ActorPlugin extends AbstractPlugin
      * @param ActorConfig|null $actorConfig
      * @throws \ReflectionException
      */
-    public function __construct(?ActorConfig $actorConfig = null)
+    public function __construct()
     {
         parent::__construct();
-        if ($actorConfig == null) {
-            $actorConfig = new ActorConfig();
-        }
+
+        $config = Server::$instance->getConfigContext()->get('actor');
+        $actorConfig = new ActorConfig();
+        $actorConfig->setActorMaxCount($config['actorMaxCount']);
+        $actorConfig->setActorMailboxCapacity($config['actorMaxClassCount']);
+        $actorConfig->setActorWorkerCount($config['actorWorkerCount']);
+        $actorConfig->setActorMaxClassCount($config['actorMailboxCapacity']);
         $this->actorConfig = $actorConfig;
         $this->atAfter(ProcessRPCPlugin::class);
     }
@@ -82,6 +86,7 @@ class ActorPlugin extends AbstractPlugin
         Server::$instance->addProcess(ActorCacheProcess::PROCESS_NAME, ActorCacheProcess::class, ActorCacheProcess::GROUP_NAME);
 
         $this->actorManager = ActorManager::getInstance();
+
         return;
     }
 
