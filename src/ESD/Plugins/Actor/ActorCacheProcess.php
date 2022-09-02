@@ -22,19 +22,29 @@ class ActorCacheProcess extends Process
     const SAVE_NAME = "@Actor";
 
     /**
+     * @var float|int auto save time
+     */
+    protected $autoSaveTime = 5 * 1000;
+
+    /**
+     * @var ActorCacheHash cache hash
+     */
+    protected $cacheHash;
+
+    /**
+     * @var string delimiter
+     */
+    protected $delimiter = ".";
+
+    /**
      * @var Lock interprocess lock
      */
     protected $lock;
 
     /**
-     * @var ActorCacheHash cache hash
+     * @var string read buffer
      */
-    protected $cahceHash;
-
-    /**
-     * @var float|int auto save time
-     */
-    protected $autoSaveTime = 5 * 1000;
+    protected $readBuffer;
 
     /**
      * @var string save dir
@@ -51,10 +61,6 @@ class ActorCacheProcess extends Process
      */
     protected $saveLogFile = "";
 
-    /**
-     * @var string delimiter
-     */
-    protected $delimiter = ".";
 
     /**
      * @return string
@@ -88,7 +94,7 @@ class ActorCacheProcess extends Process
      */
     public function setSaveFile(string $saveFile): void
     {
-        $this->saveFile = $this->getSaveDir() .$saveFile;
+        $this->saveFile = $this->getSaveDir() . $saveFile;
     }
 
     /**
@@ -147,7 +153,7 @@ class ActorCacheProcess extends Process
     {
         $this->lock = new Lock(SWOOLE_MUTEX);
 
-        $this->cahceHash = new ActorCacheHash($this);
+        $this->cacheHash = new ActorCacheHash($this);
 
         $this->setSaveDir(Server::$instance->getServerConfig()->getRootDir() . "bin/actor/");
         $this->setSaveFile("cache.db");
@@ -170,32 +176,53 @@ class ActorCacheProcess extends Process
 
     }
 
+    /**
+     * @inheritDoc
+     * @return mixed|void
+     */
     public function onProcessStop()
     {
         $this->autoSave();
     }
 
+    /**
+     * @inheritDoc
+     * @param Message $message
+     * @param Process $fromProcess
+     * @return mixed|void
+     */
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
     }
 
-    protected function saveToCacheHash($acotName, $data)
+    /**
+     * Save to chache hash
+     * @param string $acotName
+     * @param array $data
+     * @return void
+     */
+    protected function saveToCacheHash(string $acotName, array $data)
     {
         $name = self::SAVE_NAME . $this->delimiter . $acotName;
-        $this->cahceHash[$name] = $data;
+        $this->cacheHash[$name] = $data;
     }
 
+    /**
+     * Auto save
+     * @return void
+     * @throws \Exception
+     */
     protected function autoSave()
     {
         Server::$instance->getLog()->critical("Cache Process autoSave...");
 
-        goWithContext(function (){
+        goWithContext(function () {
             $saveTempFile = $this->saveDir . "catCache.catdb." . time();
             if (!file_exists($saveTempFile)) {
                 file_put_contents($saveTempFile, self::DB_HEADER);
             }
-            if (!empty($this->cahceHash->getContainer())) {
-                foreach ($this->cahceHash->getContainer() as $key => $value) {
+            if (!empty($this->cacheHash->getContainer())) {
+                foreach ($this->cacheHash->getContainer() as $key => $value) {
                     $one = [];
                     $one[$key] = $value;
                     $buffer = serialize($one);
@@ -212,12 +239,18 @@ class ActorCacheProcess extends Process
         });
     }
 
+    /**
+     * Recovery
+     * @return void
+     * @throws \Exception
+     */
     protected function recovery()
     {
         Server::$instance->getLog()->critical("Cache Process recovery...");
     }
 
     /**
+     * Write log
      * @param string $method
      * @param array $params
      * @return void
@@ -235,9 +268,126 @@ class ActorCacheProcess extends Process
         $totalLength = 4 + strlen($buffer);
         $data = pack('N', $totalLength) . $buffer;
 
-        goWithContext(function () use ($data){
+        goWithContext(function () use ($data) {
             file_put_contents($this->getSaveLogFile(), $data, FILE_APPEND);
         });
+    }
+
+    /**
+     * Read file
+     * @param $filepath
+     * @param $callback
+     * @param $size
+     * @param $offset
+     * @return void
+     */
+    protected function readFile($filepath, $callback, $size = 8192, $offset = 0)
+    {
+        Swoole\Coroutine::create(function () use ($filepath, $callback, $size, $offset) {
+            $fp = fopen($filepath, "r");
+            while (!feof($fp)) {
+                $data = fread($fp, $size);
+                $callback($filepath, $data);
+            }
+            $callback($filepath, '');
+            fclose($fp);
+        });
+    }
+    
+    protected function call($callback, $parameter)
+    {
+        if (is_callable($function)) {
+            return $function(...$parameter);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     * @param string $content
+     * @param string $header
+     * @param string $name
+     * @return false|string
+     * @throws \Exception
+     */
+    protected function checkFileHeader(string $content, string $header, string $name)
+    {
+        $len = strlen($header);
+        $flag = substr($content, 0, $len);
+        if ($flag != $header) {
+            throw new \Exception("$name file is corrupted");
+        }
+        return substr($content, $len);
+    }
+
+    /**
+     * @inheritDoc
+     * @param $callback
+     * @return void
+     */
+    protected function unpck($callback)
+    {
+        while (strlen($this->readBuffer) > 0) {
+            if (strlen($this->readBuffer) < 4) {
+                break;
+            }
+            $headLen = unpack("N", $this->readBuffer)[1];
+            if (strlen($this->readBuffer) >= $headLen) {
+                $data = substr($this->readBuffer, 4, $headLen - 4);
+                $this->readBuffer = substr($this->readBuffer, $headLen);
+                $one = unserialize($data);
+                $callback($one);
+            } else {
+                break;
+            }
+        }
+    }
+
+    /**
+     * @inheritDoc
+     * @return void
+     */
+    protected function readFromDb()
+    {
+        $this->lock->lock();
+        if (is_file($this->saveFile)) {
+            goWithContext(function () {
+                $this->readBuffer = file_get_contents($this->saveFile);
+                if (empty($this->readBuffer)) {
+                    return false;
+                }
+                $this->unpck(function ($one) {
+                    foreach ($one as $key => $value) {
+                        $this->cacheHash->getContainer()[$key] = $value;
+                    }
+                });
+            });
+        } else {
+            $this->readFromDbLog();
+        }
+    }
+
+    protected function readFromDbLog()
+    {
+        if (is_file($this->saveLogFile)) {
+            $count = 0;
+            swoole_async_read($this->saveLogFile, function ($filename, $content) use (&$count) {
+                $count++;
+                if ($count == 1) {
+                    $content = $this->checkFileHeader($content, self::DB_LOG_HEADER, self::DB_LOG_HEADER);
+                }
+                if (empty($content) && !$this->ready) {
+                    $this->autoSave();
+                    $this->lock->unlock();
+                    $this->isReady = true;
+                    return false;
+                }
+                $this->read_buffer .= $content;
+                $this->unpck(function ($one) {
+                    $this->call([$this->cacheHash, $one[0]], $one[1]);
+                });
+                return true;
+            });
+        }
     }
 
 }
