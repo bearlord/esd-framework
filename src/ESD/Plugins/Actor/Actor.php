@@ -11,6 +11,7 @@ use ESD\Core\Channel\Channel;
 use ESD\Core\Plugins\Event\EventDispatcher;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
+use Swoole\Timer;
 
 /**
  * Class Actor
@@ -44,6 +45,11 @@ abstract class Actor
      * @var array data
      */
     protected $data;
+
+    /**
+     * @var array timer ids
+     */
+    protected $timerIds = [];
     
     /**
      * Actor constructor.
@@ -187,6 +193,47 @@ abstract class Actor
     public function startTransaction(callable $call)
     {
 
+    }
+
+    /**
+     * tick timer
+     * @param int $msec
+     * @param callable $callback
+     * @param ...$params
+     * @return false|int
+     */
+    public function tick(int $msec, callable $callback, ... $params)
+    {
+        $id = Timer::tick($msec, $callback, ...$params);
+        $this->timerIds[$id] = $id;
+
+        return $id;
+    }
+
+    /**
+     * after timer
+     * @param int $msec
+     * @param callable $callback
+     * @param ...$params
+     * @return false|int
+     */
+    public function after(int $msec, callable $callback, ... $params)
+    {
+        $id = Timer::after($msec, $callback, ...$params);
+        $this->timerIds[$id] = $id;
+
+        return $id;
+    }
+
+    /**
+     * clear timer
+     * @param int $id
+     * @return void
+     */
+    public function clearTimer(int $id)
+    {
+        Timer::clear($id);
+        unset($this->timerIds[$id]);
     }
 
     /**
