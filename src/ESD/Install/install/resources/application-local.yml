@@ -1,3 +1,9 @@
+actor:
+  actorMaxCount:  10000
+  actorMaxClassCount: 100
+  actorWorkerCount: 1
+  actorMailboxCapacity: 100
+
 reload:
   enable: true
 blade:
