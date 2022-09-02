@@ -170,6 +170,8 @@ class ActorCacheProcess extends Process
             $this->saveToCacheHash($name, [$name, $class, $data]);
         });
 
+        $this->readFromDb();
+
         Timer::tick($this->autoSaveTime, function () {
             $this->autoSave();
         });
@@ -366,6 +368,11 @@ class ActorCacheProcess extends Process
         }
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     * @throws \Exception
+     */
     protected function readFromDbLog()
     {
         if (is_file($this->saveLogFile)) {
