@@ -79,7 +79,6 @@ class ActorCacheProcess extends Process
     {
         $this->cacheHash = new ActorCacheHash($this);
 
-        Server::$instance->getLog()->error(Server::$instance->getConfigContext()->get('actor.autoSaveTime'));
         $this->setAutoSaveTime(Server::$instance->getConfigContext()->get('actor.autoSaveTime'));
     }
 

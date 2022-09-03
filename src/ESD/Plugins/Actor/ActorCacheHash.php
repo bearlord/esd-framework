@@ -111,8 +111,6 @@ class ActorCacheHash implements \ArrayAccess
             }
             $deep[$path[$count]] = $value;
         }
-
-        $this->process->writeLog("offsetSet", [$offset, $value, $this->delimiter]);
     }
 
     /**
@@ -135,7 +133,5 @@ class ActorCacheHash implements \ArrayAccess
             }
         }
         unset($deep[$path[$count]]);
-
-        $this->process->writeLog("offsetUnset", [$offset, $this->delimiter]);
     }
 }
