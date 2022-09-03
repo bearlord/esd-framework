@@ -3,6 +3,7 @@ actor:
   actorMaxClassCount: 100
   actorWorkerCount: 1
   actorMailboxCapacity: 100
+  autoSaveTime: 5000
 
 reload:
   enable: true
