@@ -20,11 +20,9 @@ class ActorCacheProcess extends Process
 
     const GROUP_NAME = "ActorCache";
 
-    const DB_LOG_HEADER = 'cachedblog##';
-
-    const DB_HEADER = 'cachedb##';
-
     const SAVE_NAME = "@Actor";
+
+    const HASH_KEY = "actor-cache";
 
     /**
      * @var float|int auto save time
@@ -40,83 +38,6 @@ class ActorCacheProcess extends Process
      * @var string delimiter
      */
     protected $delimiter = ".";
-
-    /**
-     * @var Lock interprocess lock
-     */
-    protected $lock;
-
-    /**
-     * @var string read buffer
-     */
-    protected $readBuffer;
-
-    /**
-     * @var string save dir
-     */
-    protected $saveDir = "";
-
-    /**
-     * @var string save file
-     */
-    protected $saveFile = "";
-
-    /**
-     * @var string save log file
-     */
-    protected $saveLogFile = "";
-
-
-    /**
-     * @return string
-     */
-    public function getSaveDir(): string
-    {
-        return $this->saveDir;
-    }
-
-    /**
-     * @param string $saveDir
-     */
-    public function setSaveDir(string $saveDir): void
-    {
-        $this->saveDir = $saveDir;
-        if (!file_exists($this->saveDir)) {
-            mkdir($this->saveDir);
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getSaveFile(): string
-    {
-        return $this->saveFile;
-    }
-
-    /**
-     * @param string $saveFile
-     */
-    public function setSaveFile(string $saveFile): void
-    {
-        $this->saveFile = $this->getSaveDir() . $saveFile;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSaveLogFile(): string
-    {
-        return $this->saveLogFile;
-    }
-
-    /**
-     * @param string $saveLogFile
-     */
-    public function setSaveLogFile(string $saveLogFile): void
-    {
-        $this->saveLogFile = $this->getSaveDir() . $saveLogFile;
-    }
 
     /**
      * @return string
@@ -156,15 +77,16 @@ class ActorCacheProcess extends Process
      */
     public function init()
     {
-        $this->lock = new Lock(SWOOLE_MUTEX);
-
         $this->cacheHash = new ActorCacheHash($this);
 
-        $this->setSaveDir(Server::$instance->getServerConfig()->getRootDir() . "bin/actor/");
-        $this->setSaveFile("cache.db");
-        $this->setSaveLogFile("cache.dblog");
+        $this->setAutoSaveTime(Server::$instance->getConfigContext()->get('actor.autoSaveTime'));
     }
 
+    /**
+     * @inheritDoc
+     * @return mixed|void
+     * @throws \Exception
+     */
     public function onProcessStart()
     {
         $call = $this->eventDispatcher->listen(ActorSaveEvent::ActorSaveEvent);
@@ -180,7 +102,6 @@ class ActorCacheProcess extends Process
         Timer::tick($this->autoSaveTime, function () {
             $this->autoSave();
         });
-
     }
 
     /**
@@ -221,17 +142,14 @@ class ActorCacheProcess extends Process
      */
     protected function autoSave()
     {
-        Server::$instance->getLog()->critical("Cache Process autoSave...");
-
         goWithContext(function () {
-            $temp = [];
+            $saveData = [];
             if (!empty($this->cacheHash->getContainer())) {
                 foreach ($this->cacheHash->getContainer()[self::SAVE_NAME] as $key => $value) {
-                    $temp[$key] = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                    $saveData[$key] = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                 }
-                $this->redis()->hMSet("actor-cache", $temp);
+                $this->redis()->hMSet(self::HASH_KEY, $saveData);
             }
-
         });
     }
 
@@ -242,8 +160,7 @@ class ActorCacheProcess extends Process
      */
     protected function recovery()
     {
-        Server::$instance->getLog()->critical("Cache Process recovery...");
-        $acotrs = $this->redis()->hGetAll("actor-cache");
+        $acotrs = $this->redis()->hGetAll(self::HASH_KEY);
         if (!empty($acotrs)) {
             foreach ($acotrs as $key => $value) {
                 $valueArray = json_decode($value, true);
@@ -251,52 +168,6 @@ class ActorCacheProcess extends Process
                 Coroutine::sleep(0.001);
             }
         }
-
-    }
-
-    /**
-     * Write log
-     * @param string $method
-     * @param array $params
-     * @return void
-     */
-    public function writeLog(string $method, array $params)
-    {
-        if (!$this->isReady()) {
-            $this->lock->lock();
-            $this->lock->unlock();
-        }
-
-        $one[0] = $method;
-        $one[1] = $params;
-        $buffer = serialize($one);
-        $totalLength = 4 + strlen($buffer);
-        $data = pack('N', $totalLength) . $buffer;
-
-        goWithContext(function () use ($data) {
-            file_put_contents($this->getSaveLogFile(), $data, FILE_APPEND);
-        });
-    }
-
-    /**
-     * Read file
-     * @param string $filepath
-     * @param $callback
-     * @param int int $size
-     * @param int $offset
-     * @return void
-     */
-    protected function readFile($filepath, $callback, $size = 8192, $offset = 0)
-    {
-        \Swoole\Coroutine::create(function () use ($filepath, $callback, $size, $offset) {
-            $fp = fopen($filepath, "r");
-            while (!feof($fp)) {
-                $data = fread($fp, $size);
-                $callback($filepath, $data);
-            }
-            $callback($filepath, '');
-            fclose($fp);
-        });
     }
 
     /**

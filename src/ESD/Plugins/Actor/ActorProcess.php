@@ -56,7 +56,7 @@ class ActorProcess extends Process
                 ActorSaveEvent::ActorSaveEvent,
                 [
                     $class, $name, $data,
-                ]), Server::$instance->getProcessManager()->getProcessFromName('actor-cache'));
+                ]), Server::$instance->getProcessManager()->getProcessFromName(ActorCacheProcess::PROCESS_NAME));
         });
     }
 
