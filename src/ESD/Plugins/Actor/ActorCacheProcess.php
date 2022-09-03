@@ -2,8 +2,11 @@
 
 namespace ESD\Plugins\Actor;
 
+use ESD\Core\Exception;
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
+use ESD\Coroutine\Coroutine;
+use ESD\Plugins\Redis\GetRedis;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 use Swoole\Lock;
@@ -11,6 +14,8 @@ use Swoole\Timer;
 
 class ActorCacheProcess extends Process
 {
+    use GetRedis;
+
     const PROCESS_NAME = "actor-cache";
 
     const GROUP_NAME = "ActorCache";
@@ -167,10 +172,10 @@ class ActorCacheProcess extends Process
             $class = $event->getData()[0];
             $name = $event->getData()[1];
             $data = $event->getData()[2] ?? null;
-            $this->saveToCacheHash($name, [$name, $class, $data]);
+            $this->saveToCacheHash($name, [$class, $name, $data]);
         });
 
-        $this->readFromDb();
+        $this->recovery();
 
         Timer::tick($this->autoSaveTime, function () {
             $this->autoSave();
@@ -219,25 +224,14 @@ class ActorCacheProcess extends Process
         Server::$instance->getLog()->critical("Cache Process autoSave...");
 
         goWithContext(function () {
-            $saveTempFile = $this->saveDir . "catCache.catdb." . time();
-            if (!file_exists($saveTempFile)) {
-                file_put_contents($saveTempFile, self::DB_HEADER);
-            }
+            $temp = [];
             if (!empty($this->cacheHash->getContainer())) {
-                foreach ($this->cacheHash->getContainer() as $key => $value) {
-                    $one = [];
-                    $one[$key] = $value;
-                    $buffer = serialize($one);
-                    $length = 4 + strlen($buffer);
-                    $data = pack('N', $length) . $buffer;
-                    file_put_contents($saveTempFile, $data, FILE_APPEND);
+                foreach ($this->cacheHash->getContainer()[self::SAVE_NAME] as $key => $value) {
+                    $temp[$key] = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                 }
+                $this->redis()->hMSet("actor-cache", $temp);
             }
 
-            rename($saveTempFile, $this->saveFile);
-            if (file_exists($this->saveLogFile)) {
-                file_put_contents($this->saveLogFile, self::DB_LOG_HEADER);
-            }
         });
     }
 
@@ -249,6 +243,15 @@ class ActorCacheProcess extends Process
     protected function recovery()
     {
         Server::$instance->getLog()->critical("Cache Process recovery...");
+        $acotrs = $this->redis()->hGetAll("actor-cache");
+        if (!empty($acotrs)) {
+            foreach ($acotrs as $key => $value) {
+                $valueArray = json_decode($value, true);
+                Actor::create($valueArray[0], $valueArray[1], $valueArray[2], false, 30);
+                Coroutine::sleep(0.001);
+            }
+        }
+
     }
 
     /**
@@ -277,15 +280,15 @@ class ActorCacheProcess extends Process
 
     /**
      * Read file
-     * @param $filepath
+     * @param string $filepath
      * @param $callback
-     * @param $size
-     * @param $offset
+     * @param int int $size
+     * @param int $offset
      * @return void
      */
     protected function readFile($filepath, $callback, $size = 8192, $offset = 0)
     {
-        Swoole\Coroutine::create(function () use ($filepath, $callback, $size, $offset) {
+        \Swoole\Coroutine::create(function () use ($filepath, $callback, $size, $offset) {
             $fp = fopen($filepath, "r");
             while (!feof($fp)) {
                 $data = fread($fp, $size);
@@ -295,105 +298,17 @@ class ActorCacheProcess extends Process
             fclose($fp);
         });
     }
-    
-    protected function call($callback, $parameter)
-    {
-        if (is_callable($function)) {
-            return $function(...$parameter);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     * @param string $content
-     * @param string $header
-     * @param string $name
-     * @return false|string
-     * @throws \Exception
-     */
-    protected function checkFileHeader(string $content, string $header, string $name)
-    {
-        $len = strlen($header);
-        $flag = substr($content, 0, $len);
-        if ($flag != $header) {
-            throw new \Exception("$name file is corrupted");
-        }
-        return substr($content, $len);
-    }
 
     /**
      * @inheritDoc
      * @param $callback
+     * @param $parameter
      * @return void
      */
-    protected function unpck($callback)
+    protected function call($callback, $parameter)
     {
-        while (strlen($this->readBuffer) > 0) {
-            if (strlen($this->readBuffer) < 4) {
-                break;
-            }
-            $headLen = unpack("N", $this->readBuffer)[1];
-            if (strlen($this->readBuffer) >= $headLen) {
-                $data = substr($this->readBuffer, 4, $headLen - 4);
-                $this->readBuffer = substr($this->readBuffer, $headLen);
-                $one = unserialize($data);
-                $callback($one);
-            } else {
-                break;
-            }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    protected function readFromDb()
-    {
-        $this->lock->lock();
-        if (is_file($this->saveFile)) {
-            goWithContext(function () {
-                $this->readBuffer = file_get_contents($this->saveFile);
-                if (empty($this->readBuffer)) {
-                    return false;
-                }
-                $this->unpck(function ($one) {
-                    foreach ($one as $key => $value) {
-                        $this->cacheHash->getContainer()[$key] = $value;
-                    }
-                });
-            });
-        } else {
-            $this->readFromDbLog();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     * @return void
-     * @throws \Exception
-     */
-    protected function readFromDbLog()
-    {
-        if (is_file($this->saveLogFile)) {
-            $count = 0;
-            swoole_async_read($this->saveLogFile, function ($filename, $content) use (&$count) {
-                $count++;
-                if ($count == 1) {
-                    $content = $this->checkFileHeader($content, self::DB_LOG_HEADER, self::DB_LOG_HEADER);
-                }
-                if (empty($content) && !$this->ready) {
-                    $this->autoSave();
-                    $this->lock->unlock();
-                    $this->isReady = true;
-                    return false;
-                }
-                $this->read_buffer .= $content;
-                $this->unpck(function ($one) {
-                    $this->call([$this->cacheHash, $one[0]], $one[1]);
-                });
-                return true;
-            });
+        if (is_callable($function)) {
+            return $function(...$parameter);
         }
     }
 

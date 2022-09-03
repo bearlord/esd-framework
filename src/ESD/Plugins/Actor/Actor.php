@@ -149,7 +149,7 @@ abstract class Actor
      */
     public static function create(string $actionClass, string $actorName, $data = null, $waitCreate = true, $timeOut = 5)
     {
-        if (ActorManager::getInstance()->hasActor($actorName)) {
+        if ($waitCreate && ActorManager::getInstance()->hasActor($actorName)) {
             return new ActorRPCProxy($actorName, false, $timeOut);
         }
 
@@ -172,9 +172,9 @@ abstract class Actor
                     'actor' => $actorName
                 ]));
             }
-        }
 
-        return new ActorRPCProxy($actorName, false, $timeOut);
+            return new ActorRPCProxy($actorName, false, $timeOut);
+        }
     }
 
     /**
