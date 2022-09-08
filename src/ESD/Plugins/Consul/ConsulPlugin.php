@@ -110,14 +110,14 @@ class ConsulPlugin extends AbstractPlugin
         $call->call(function (ConsulLeaderChangeEvent $event) {
             $leaderStatus = $event->isLeader() ? "true" : "false";
             $this->debug(sprintf("Receive Leader changed event: %s", $leaderStatus));
-            Leader::$isLeader = $event->isLeader();
+            ConsulLeader::$isLeader = $event->isLeader();
         });
 
         //Each process listens to Service changes
         $call = Server::$instance->getEventDispatcher()->listen(ConsulServiceChangeEvent::ConsulServiceChangeEvent);
         $call->call(function (ConsulServiceChangeEvent $event) {
             $this->debug(sprintf("Receive Service changed event: %s", $event->getConsulServiceListInfo()->getServiceName());
-            Services::modifyServices($event);
+            ConsulServices::modifyServices($event);
         });
 
         //Helper process
