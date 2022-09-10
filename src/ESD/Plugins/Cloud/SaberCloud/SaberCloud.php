@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\SaberCloud;
 
-
 use DI\Annotation\Inject;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Psr\Cloud\Services;
@@ -16,6 +15,7 @@ use Swlib\Saber;
 class SaberCloud
 {
     use GetLogger;
+
     /**
      * @var Services
      */
@@ -37,6 +37,10 @@ class SaberCloud
      */
     protected $options;
 
+    /**
+     * @inheritDoc
+     * @throws \Exception
+     */
     public function __construct()
     {
         try {
@@ -46,11 +50,22 @@ class SaberCloud
         }
     }
 
+    /**
+     * @inheritDoc
+     * @param string $service
+     * @param $options
+     * @return void
+     */
     public function setSaberOptions(string $service, $options = [])
     {
         $this->options[$service] = $options;
     }
 
+    /**
+     * @inheritDoc
+     * @param string $baseUri
+     * @return Saber|null
+     */
     public function getSaberFromBaseUrl(string $baseUri): ?Saber
     {
         $saber = $this->sabers[$baseUri] ?? null;
@@ -72,6 +87,7 @@ class SaberCloud
     }
 
     /**
+     * @inheritDoc
      * @param string $service
      * @return Saber
      * @throws CloudException
@@ -104,6 +120,7 @@ class SaberCloud
     }
 
     /**
+     * @inheritDoc
      * @param $service
      * @return string
      * @throws CloudException
@@ -111,7 +128,9 @@ class SaberCloud
     private function getBaseUrl($service)
     {
         $serviceInfo = $this->services->getService($service);
-        if ($serviceInfo == null) throw new CloudException("Do not find service $service");
+        if ($serviceInfo == null) {
+            throw new CloudException("Do not find service $service");
+        }
         return $serviceInfo->getServiceAgreement() . "://" . $serviceInfo->getServiceAddress() . ":" . $serviceInfo->getServicePort();
     }
 }

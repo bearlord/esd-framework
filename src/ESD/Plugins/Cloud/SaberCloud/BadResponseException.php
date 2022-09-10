@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\SaberCloud;
 
-
 use ESD\Core\Exception;
 
 class BadResponseException extends Exception

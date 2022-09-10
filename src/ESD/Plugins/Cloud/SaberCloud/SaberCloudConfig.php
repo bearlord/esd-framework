@@ -6,20 +6,24 @@
 
 namespace ESD\Plugins\SaberCloud;
 
-
 use ESD\Core\Plugins\Config\BaseConfig;
 
 class SaberCloudConfig extends BaseConfig
 {
     const key = "saber_cloud";
+
     protected $retryTime = 3;
 
+    /**
+     * @inheritDoc
+     */
     public function __construct()
     {
         parent::__construct(self::key);
     }
 
     /**
+     * @inheritDoc
      * @return int
      */
     public function getRetryTime(): int
@@ -28,6 +32,7 @@ class SaberCloudConfig extends BaseConfig
     }
 
     /**
+     * @inheritDoc
      * @param int $retryTime
      */
     public function setRetryTime(int $retryTime): void

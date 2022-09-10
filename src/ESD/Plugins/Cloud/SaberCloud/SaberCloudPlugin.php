@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\SaberCloud;
 
-
 use ESD\Core\Context\Context;
 use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\PlugIn\PluginInterfaceManager;
@@ -19,6 +18,7 @@ use ESD\Server\Co\Server;
 class SaberCloudPlugin extends AbstractPlugin
 {
     use GetLogger;
+
     /**
      * @var SaberCloudConfig|null
      */
@@ -40,6 +40,7 @@ class SaberCloudPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
      * @return mixed|void
      * @throws \DI\DependencyException
@@ -54,6 +55,7 @@ class SaberCloudPlugin extends AbstractPlugin
     }
 
     /**
+     * @inheritDoc
      * @return string
      */
     public function getName(): string
@@ -62,7 +64,7 @@ class SaberCloudPlugin extends AbstractPlugin
     }
 
     /**
-     * 初始化
+     * @inheritDoc
      * @param Context $context
      * @throws \ESD\Core\Plugins\Config\ConfigException
      */
@@ -73,7 +75,7 @@ class SaberCloudPlugin extends AbstractPlugin
     }
 
     /**
-     * 在进程启动前
+     * @inheritDoc
      * @param Context $context
      * @return mixed
      * @throws SaberCloudException

@@ -39,10 +39,12 @@ class SaberClientProxy
      * @var SaberCloud
      */
     private $saberCloud;
+
     /**
      * @var ScanClass
      */
     private $scanClass;
+
     /**
      * @var \ReflectionClass
      */
@@ -62,10 +64,12 @@ class SaberClientProxy
      * @var array
      */
     private $cache = [];
+
     /**
      * @var RequestMapping
      */
     private $requestMapping;
+
     /**
      * @var Response
      */
@@ -103,6 +107,7 @@ class SaberClientProxy
     }
 
     /**
+     * @inheritDoc
      * @param $name
      * @param $arguments
      * @return mixed|string
@@ -117,7 +122,7 @@ class SaberClientProxy
     {
         $this->response = null;
         $serviceName = $this->saberClient->value ?? $this->saberClient->host;
-        //存在断路器，并且断路了，就执行降级
+        //There is a circuit breaker, and if the circuit is broken, the downgrade is performed
         if ($this->circuitBreaker != null) {
             try {
                 $available = $this->circuitBreaker->isAvailable($serviceName);
@@ -141,7 +146,7 @@ class SaberClientProxy
         }
         $reflectionMethod = $this->reflectionMethods[$name];
         $parameters = $reflectionMethod->getParameters();
-        //重新获取入参格式
+        //Re-acquire the input parameter format
         $nameArguments = [];
         foreach ($parameters as $parameter) {
             $nameArguments[$parameter->getName()] = $arguments[$parameter->getPosition()] ?? $parameter->getDefaultValue();
@@ -153,7 +158,7 @@ class SaberClientProxy
             throw new SaberCloudException("method $name missing RequestMapping annotation");
         }
 
-        //配置所有参数
+        //Configure all parameters
         $stdParameters = [];
         $options = [];
         foreach ($this->scanClass->getMethodAndInterfaceAnnotations($reflectionMethod) as $annotation) {
@@ -193,7 +198,7 @@ class SaberClientProxy
                 $options['content_type'] = ContentType::XML;
             }
         }
-        //解析URL
+        //Parse URL
         $stdUrl = $this->getCache("stdUrl", function () use ($requestMapping) {
             return $this->std->parse($requestMapping->value);
         });
@@ -217,13 +222,15 @@ class SaberClientProxy
                 $routeUrls[] = $routeUrl;
             }
         }
-        if (empty($routeUrls)) throw new SaberCloudException("can not build route url");
+        if (empty($routeUrls)) {
+            throw new SaberCloudException("can not build route url");
+        }
         $options['uri'] = "/" . trim(trim($this->requestMapping->value, "/") . "/" . trim(array_pop($routeUrls), "/"), "/");
         $options['method'] = strtoupper($requestMapping->method[0]);
-        //请求
+
         $this->response = $saber->request($options);
         if ($this->response->getStatusCode() >= 400 && $this->response->getStatusCode() < 500 && !$this->saberClient->decode404) {
-            //断路器failure
+            //circuit breaker failure
             if ($this->circuitBreaker != null) {
                 try {
                     $this->circuitBreaker->failure($serviceName);
@@ -231,14 +238,15 @@ class SaberClientProxy
                     $this->warn("CircuitBreaker is enable ,but has error on running : {$e->getMessage()}");
                 }
             }
-            //存在降级执行降级函数
+            //There is a downgrade to execute the downgrade function
             if (class_exists($this->saberClient->fallback)) {
                 return call_user_func_array([DIGet($this->saberClient->fallback), $name], $arguments);
             }
             throw new RouteException($this->response->getStatusCode());
         }
+
         if ($this->response->getStatusCode() >= 500 || $this->response->getStatusCode() < 0) {
-            //断路器failure
+            //circuit breaker failure
             if ($this->circuitBreaker != null) {
                 try {
                     $this->circuitBreaker->failure($serviceName);
@@ -246,13 +254,14 @@ class SaberClientProxy
                     $this->warn("CircuitBreaker is enable ,but has error on running : {$e->getMessage()}");
                 }
             }
-            //存在降级执行降级函数
+            //There is a downgrade to execute the downgrade function
             if (class_exists($this->saberClient->fallback)) {
                 return call_user_func_array([DIGet($this->saberClient->fallback), $name], $arguments);
             }
             throw new BadResponseException();
         }
-        //断路器success
+
+        //circuit breaker success
         if ($this->circuitBreaker != null) {
             try {
                 $this->circuitBreaker->success($serviceName);
@@ -260,6 +269,7 @@ class SaberClientProxy
                 $this->warn("CircuitBreaker is enable ,but has error on running : {$e->getMessage()}");
             }
         }
+
         /** @var ResponseBody $responseBody */
         $responseBody = $this->scanClass->getMethodAndInterfaceAnnotation($reflectionMethod, ResponseBody::class);
         if ($responseBody != null) {
@@ -270,7 +280,7 @@ class SaberClientProxy
     }
 
     /**
-     * 获取缓存值
+     * Get cache
      * @param $name
      * @param callable $fuc
      * @return mixed|null

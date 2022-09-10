@@ -6,7 +6,6 @@
 
 namespace ESD\Plugins\SaberCloud;
 
-
 use Swlib\Saber;
 
 trait GetSaberCloud
