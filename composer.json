@@ -12,6 +12,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "ackintosh/ganesha": "^1.0|^2.0|^3.0",
         "cebe/markdown": "^1.2.1",
         "doctrine/annotations": "^1.6",
         "ext-json": "*",
