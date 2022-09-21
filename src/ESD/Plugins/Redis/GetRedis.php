@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Redis;
 
 use ESD\Core\Exception;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 /**
@@ -23,6 +24,10 @@ trait GetRedis
     public function redis($name = "default")
     {
         $db = getContextValue("Redis:$name");
+        
+        //Default database number
+        $defaultDbNum = Server::$instance->getConfigContext()->get("redis.{$name}.database");
+
         if ($db == null) {
             /** @var RedisPools $redisPools */
             $redisPools = getDeepContextValueByClassName(RedisPools::class);
@@ -35,9 +40,14 @@ trait GetRedis
                     'name' => $name
                 ]));
             }
-            return $pool->db();
-        } else {
-            return $db;
+            $db = $pool->db();
         }
+
+        //Be sure to select default database
+        if ($db->getDbNum() != $defaultDbNum) {
+            $db->select($defaultDbNum);
+        }
+
+        return $db;
     }
 }
