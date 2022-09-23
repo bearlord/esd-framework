@@ -6,14 +6,13 @@
 
 namespace ESD\Rpc\Client;
 
+use ESD\Yii\Base\Component;
+
 /**
  * Class Client
  * @package ESD\Rpc\Client
  */
-class Client
+abstract class Client
 {
-    public function send()
-    {
-
-    }
+    abstract public function send($data);
 }

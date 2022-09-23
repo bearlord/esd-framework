@@ -9,6 +9,7 @@ namespace ESD\Rpc\Client;
 use ESD\Core\Exception;
 use ESD\Core\Server\Server;
 use ESD\Plugins\JsonRpc\Protocol;
+use ESD\Rpc\RpcException;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Yii;
@@ -51,6 +52,23 @@ abstract class AbstractServiceClient extends Component
     public $client;
 
     /**
+     * @return string
+     */
+    public function getServiceName(): string
+    {
+        return $this->serviceName;
+    }
+
+    /**
+     * @param string $serviceName
+     */
+    public function setServiceName(string $serviceName): void
+    {
+        $this->serviceName = $serviceName;
+    }
+
+
+    /**
      * @param string $protocol
      */
     public function setProtocol(string $protocol): void
@@ -72,21 +90,66 @@ abstract class AbstractServiceClient extends Component
     }
 
     /**
-     * @throws \Exception
+     * @return array
      */
-    public function getConfig()
+    public function getNodes(): array
     {
-        $config = Server::$instance->getConfigContext()->get('yii.consumers');
-        if (empty($config)) {
-            throw new RpcException("Consumers config not found");
-        }
-
-        $indexConfig = ArrayHelper::index($config, 'name');
-        if (empty($indexConfig[$this->serviceName])) {
-            throw new RpcException(sprintf("Consumers.%s config not found"), $this->serviceName);
-        }
-
-        return $indexConfig[$this->serviceName];
+        return $this->nodes;
     }
 
+    /**
+     * @param array $nodes
+     */
+    public function setNodes(array $nodes): void
+    {
+        $this->nodes = $nodes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param string $host
+     */
+    public function setHost(string $host): void
+    {
+        $this->host = $host;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPort(): string
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param string $port
+     */
+    public function setPort(string $port): void
+    {
+        $this->port = $port;
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param Client $client
+     */
+    public function setClient(Client $client): void
+    {
+        $this->client = $client;
+    }
 }

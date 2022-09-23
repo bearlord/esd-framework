@@ -26,7 +26,7 @@ use ESD\Yii\Yii;
  * Class Client
  * @package ESD\Plugins\JsonRpc\Client
  */
-class Client extends Component
+class Client extends \ESD\Rpc\Client\Client
 {
     /**
      * @var string

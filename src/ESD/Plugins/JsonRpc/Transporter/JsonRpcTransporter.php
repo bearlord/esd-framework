@@ -78,7 +78,7 @@ class JsonRpcTransporter extends Component implements TransporterInterface
     public function __construct(array $config)
     {
         $this->config = $config;
-        $this->serviceName = $config['name'];
+        $this->serviceName = $config['serviceName'];
         $this->nodes = $config['nodes'];
 
         if (!empty($config['connectTimeout'])) {
@@ -209,7 +209,6 @@ class JsonRpcTransporter extends Component implements TransporterInterface
 
         $contextClient = retry(2, function () {
             $node = $this->getNode();
-
             $swooleClient = new SwooleClient(SWOOLE_SOCK_TCP);
             $swooleClient->set($this->config['settings'] ?? []);
             $result = $swooleClient->connect($node->host, $node->port, $this->connectTimeout);
