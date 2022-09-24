@@ -10,6 +10,7 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Core\Server\Beans\Request;
 use ESD\Plugins\Actuator\ActuatorController;
 use ESD\Plugins\Aop\OrderAspect;
+use ESD\Plugins\EasyRoute\Aspect\RouteAspect;
 use FastRoute\Dispatcher;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
@@ -37,7 +38,7 @@ class ActuatorAspect extends OrderAspect
     {
         $this->actuatorController = $actuatorController;
         $this->dispatcher = $dispatcher;
-        $this->atBefore("ESD\Plugins\EasyRoute\Aspect\RouteAspect");
+        $this->atBefore(RouteAspect::class);
     }
 
     /**
