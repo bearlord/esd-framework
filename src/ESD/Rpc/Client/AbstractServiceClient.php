@@ -8,12 +8,12 @@ namespace ESD\Rpc\Client;
 
 use ESD\Core\Exception;
 use ESD\Core\Server\Server;
+use ESD\LoadBalance\Node;
 use ESD\Plugins\JsonRpc\Protocol;
 use ESD\Rpc\RpcException;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Yii;
-use IdGeneratorInterface;
 
 /**
  * Class AbstractServiceClient
@@ -35,6 +35,11 @@ abstract class AbstractServiceClient extends Component
      * @var array
      */
     public $nodes = [];
+
+    /**
+     * @var Node
+     */
+    public $node;
 
     /**
      * @var string

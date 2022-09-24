@@ -7,6 +7,7 @@
 namespace ESD\Plugins\JsonRpc\Transporter;
 
 use ESD\Core\Context\Context;
+use ESD\LoadBalance\LoadBalancerManager;
 use ESD\Server\Coroutine\Server;
 use ESD\LoadBalance\Algorithm\Random;
 use ESD\LoadBalance\Algorithm\RoundRobin;
@@ -15,6 +16,8 @@ use ESD\LoadBalance\Algorithm\WeightedRoundRobin;
 use ESD\LoadBalance\LoadBalancerInterface;
 use ESD\LoadBalance\Node;
 use ESD\Yii\Base\Component;
+use ESD\Yii\Base\InvalidArgumentException;
+use ESD\Yii\Yii;
 use Swoole\Coroutine\Client as SwooleClient;
 use RuntimeException;
 
@@ -90,6 +93,9 @@ class JsonRpcTransporter extends Component implements TransporterInterface
         if (!empty($config['loadBalancer'])) {
             $this->loadBalancerAlgorithm = $config['loadBalancer'];
         }
+        if (!empty($config['node'])) {
+            $this->setNode($config['node']);
+        }
     }
 
     /**
@@ -146,6 +152,37 @@ class JsonRpcTransporter extends Component implements TransporterInterface
     }
 
     /**
+     * Create nodes the first time.
+     *
+     * @return array [array, callable]
+     */
+    protected function createNodes(): array
+    {
+        $consumer = $this->config;
+
+        // Not exists the registry config, then looking for the 'nodes' property.
+        if (isset($consumer['nodes'])) {
+            $nodes = [];
+            foreach ($consumer['nodes'] ?? [] as $item) {
+                if (isset($item['host'], $item['port'])) {
+                    if (!is_int($item['port'])) {
+                        throw new InvalidArgumentException(sprintf(
+                            'Invalid node config [%s], the port option has to a integer.',
+                            implode(':', $item)));
+                    }
+                    $schema = $item['schema'] ?? null;
+                    $path = $item['path'] ?? null;
+                    $weigth = $item['weight'] ?? 0;
+                    $nodes[] = new Node($schema, $item['host'], $item['port'], $path, $weigth);
+                }
+            }
+            return $nodes;
+        }
+
+        throw new InvalidArgumentException('Config of registry or nodes missing.');
+    }
+
+    /**
      * @param string $data
      * @return mixed
      * @throws RuntimeException
@@ -174,6 +211,20 @@ class JsonRpcTransporter extends Component implements TransporterInterface
         $client = $this->getClient();
 
         return $this->receiveAndCheck($client, $this->receiveTimeout);
+    }
+
+    /**
+     * @param array $nodes
+     * @return \ESD\LoadBalance\LoadBalancerInterface
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     */
+    public function createLoadBalancer(array $nodes)
+    {
+        /** @var LoadBalancerManager $loadBalanceManager */
+        $loadBalanceManager = Yii::createObject(LoadBalancerManager::class);
+        $loadBalance = $loadBalanceManager->getInstance($this->serviceName, $this->loadBalancerAlgorithm)->setNodes($nodes);
+
+        return $loadBalance;
     }
 
     /**
