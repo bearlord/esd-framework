@@ -13,20 +13,22 @@ namespace ESD\Plugins\Actor;
 class ActorMessage
 {
     /**
-     * Message id
-     * @var int
+     * @var int Message id
      */
     protected $msgId;
 
     /**
-     * From
-     * @var string
+     * @var string From
      */
     protected $from;
 
     /**
-     * Data
-     * @var mixed
+     * @var string To
+     */
+    protected $to;
+
+    /**
+     * @var mixed Data
      */
     protected $data;
 
@@ -36,10 +38,27 @@ class ActorMessage
      * @param null $msgId
      * @param null $from
      */
-    public function __construct($data, $msgId = null, $from = null)
+    public function __construct($data, $msgId = null, $from = null, $to = null)
     {
+        $this->data = $data;
         $this->msgId = $msgId;
         $this->from = $from;
+        $this->to = $to;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data): void
+    {
         $this->data = $data;
     }
 
@@ -76,18 +95,19 @@ class ActorMessage
     }
 
     /**
-     * @return mixed
+     * @return mixed|string|null
      */
-    public function getData()
+    public function getTo()
     {
-        return $this->data;
+        return $this->to;
     }
 
     /**
-     * @param mixed $data
+     * @param string $to
      */
-    public function setData($data): void
+    public function setTo($to): void
     {
-        $this->data = $data;
+        $this->to = $to;
     }
+
 }
