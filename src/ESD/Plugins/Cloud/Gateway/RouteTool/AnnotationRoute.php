@@ -31,7 +31,7 @@ use FastRoute\Dispatcher;
 
 /**
  * Class AnnotationRoute
- * @package ESD\Plugins\EasyRoute\RouteTool
+ * @package ESD\Plugins\Cloud\Gateway\RouteTool
  */
 class AnnotationRoute implements IRoute
 {
