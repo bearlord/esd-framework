@@ -114,6 +114,7 @@ class GatewayPlugin extends AbstractPlugin
         $this->routeConfig->merge();
         $aopConfig = DIget(AopConfig::class);
         $this->routeAspect = new RouteAspect($this->gatewayConfigs, $this->routeConfig);
+
         $aopConfig->addAspect($this->routeAspect);
     }
 

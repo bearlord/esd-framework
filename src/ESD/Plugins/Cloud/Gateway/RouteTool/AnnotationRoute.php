@@ -44,6 +44,64 @@ class AnnotationRoute implements IRoute
 
     /**
      * @inheritDoc
+     * @return string
+     */
+    public function getControllerName()
+    {
+        if ($this->clientData == null) {
+            return null;
+        }
+        return $this->clientData->getControllerName();
+    }
+
+    /**
+     * @inheritDoc
+     * @return string
+     */
+    public function getMethodName()
+    {
+        if ($this->clientData == null) {
+            return null;
+        }
+        return $this->clientData->getMethodName();
+    }
+
+    /**
+     * @inheritDoc
+     * @return string|null
+     */
+    public function getPath()
+    {
+        if ($this->clientData == null) {
+            return null;
+        }
+        return $this->clientData->getPath();
+    }
+
+    /**
+     * @inheritDoc
+     * @return array|null
+     */
+    public function getParams()
+    {
+        if ($this->clientData == null) {
+            return null;
+        }
+        return $this->clientData->getParams();
+    }
+
+    /**
+     * Get client data
+     *
+     * @return ClientData
+     */
+    public function getClientData(): ?ClientData
+    {
+        return $this->clientData;
+    }
+
+    /**
+     * @inheritDoc
      * @param ClientData $clientData
      * @param GatewayConfig $gatewayConfig
      * @return bool
@@ -67,45 +125,11 @@ class AnnotationRoute implements IRoute
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
-                $message = Yii::t('esd', '{path} Not Found', [
-                    'path' => $this->clientData->getPath()
-                ]);
-
-                $debug = Server::$instance->getConfigContext()->get("esd.server.debug");
-                if ($debug) {
-                    throw new RouteException($message);
-                    break;
-                }
-
-                $contentType = '';
-                $_contentType = $this->clientData->getRequest()->getHeader('content-type');
-                if (!empty($_contentType)) {
-                    $contentType = strtolower($_contentType[0]);
-                }
-                if (strpos($contentType, 'application/json') !== false) {
-                    $this->clientData->getResponse()->withHeader("Content-Type", $contentType);
-                    $exceptionJson = Json::encode([
-                        'code' => 400,
-                        'data' => [],
-                        'message' => $message
-                    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_FORCE_OBJECT);
-                    $this->clientData->getResponse()->withContent($exceptionJson)->end();
-                }
+                $this->dispatcherNotFound();
                 break;
 
             case Dispatcher::METHOD_NOT_ALLOWED:
-                if ($this->clientData->getRequest()->getMethod() == "OPTIONS") {
-                    $methods = [];
-                    foreach ($routeInfo[1] as $value) {
-                        list($port, $method) = explode(":", $value);
-                        $methods[] = $method;
-                    }
-                    $this->clientData->getResponse()->withHeader("Access-Control-Allow-Methods", implode(",", $methods));
-                    $this->clientData->getResponse()->end();
-                    return false;
-                } else {
-                    throw new MethodNotAllowedException("Method not allowed");
-                }
+                $this->dispatcherMethodNotAllowed();
                 break;
 
             case Dispatcher::FOUND:
@@ -116,8 +140,6 @@ class AnnotationRoute implements IRoute
                 $params = [];
                 $methodReflection = $handler[1]->getReflectionMethod();
                 foreach (GatewayPlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection) as $annotation) {
-
-
                     if ($annotation instanceof ResponseBody) {
                         if (!empty($clientData->getResponse())) {
                             $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
@@ -212,65 +234,55 @@ class AnnotationRoute implements IRoute
     }
 
     /**
-     * @inheritDoc
-     * @return string
+     * Dispatcher not found
+     * @return void
+     * @throws RouteException
      */
-    public function getControllerName()
+    protected function dispatcherNotFound()
     {
-        if ($this->clientData == null) {
-            return null;
+        $message = Yii::t('esd', '{path} Not Found', [
+            'path' => $this->clientData->getPath()
+        ]);
+
+        $debug = Server::$instance->getConfigContext()->get("esd.server.debug");
+        if ($debug) {
+            throw new RouteException($message);
         }
-        return $this->clientData->getControllerName();
+
+        $contentType = '';
+        $_contentType = $this->clientData->getRequest()->getHeader('content-type');
+        if (!empty($_contentType)) {
+            $contentType = strtolower($_contentType[0]);
+        }
+        if (strpos($contentType, 'application/json') !== false) {
+            $this->clientData->getResponse()->withHeader("Content-Type", $contentType);
+            $exceptionJson = Json::encode([
+                'code' => 400,
+                'data' => [],
+                'message' => $message
+            ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_FORCE_OBJECT);
+            $this->clientData->getResponse()->withContent($exceptionJson)->end();
+        }
     }
 
     /**
-     * @inheritDoc
-     * @return string
+     * Dispatcher Method not allowed
+     * @return false
      */
-    public function getMethodName()
+    protected function dispatcherMethodNotAllowed()
     {
-        if ($this->clientData == null) {
-            return null;
+        if ($this->clientData->getRequest()->getMethod() == "OPTIONS") {
+            $methods = [];
+            foreach ($routeInfo[1] as $value) {
+                list($port, $method) = explode(":", $value);
+                $methods[] = $method;
+            }
+            $this->clientData->getResponse()->withHeader("Access-Control-Allow-Methods", implode(",", $methods));
+            $this->clientData->getResponse()->end();
+            return false;
+        } else {
+            throw new MethodNotAllowedException("Method not allowed");
         }
-        return $this->clientData->getMethodName();
     }
 
-    /**
-     * @inheritDoc
-     * @return string|null
-     */
-    public function getPath()
-    {
-        if ($this->clientData == null) {
-            return null;
-        }
-        return $this->clientData->getPath();
-    }
-
-    /**
-     * @inheritDoc
-     * @return array|null
-     */
-    public function getParams()
-    {
-        if ($this->clientData == null) {
-            return null;
-        }
-        return $this->clientData->getParams();
-    }
-
-    /**
-     * Get client data
-     *
-     * @return ClientData
-     */
-    public function getClientData(): ?ClientData
-    {
-        return $this->clientData;
-    }
-
-    protected function isInstanceof($object, $class)
-    {
-        return ($object instanceof $class);
-    }
 }
