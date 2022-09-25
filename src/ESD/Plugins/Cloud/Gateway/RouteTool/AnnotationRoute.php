@@ -115,6 +115,8 @@ class AnnotationRoute implements IRoute
                 $params = [];
                 $methodReflection = $handler[1]->getReflectionMethod();
                 foreach (EasyRoutePlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection) as $annotation) {
+
+
                     if ($annotation instanceof ResponseBody) {
                         if (!empty($clientData->getResponse())) {
                             $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
@@ -264,5 +266,10 @@ class AnnotationRoute implements IRoute
     public function getClientData(): ?ClientData
     {
         return $this->clientData;
+    }
+
+    protected function isInstanceof($object, $class)
+    {
+        return ($object instanceof $class);
     }
 }
