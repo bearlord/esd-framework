@@ -9,6 +9,7 @@ namespace ESD\Plugins\Cloud\Gateway\RouteTool;
 use ESD\Core\ParamException;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Cloud\Gateway\GatewayConfig;
+use ESD\Plugins\Cloud\Gateway\GatewayPlugin;
 use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Cloud\Gateway\Annotation\ModelAttribute;
 use ESD\Plugins\Cloud\Gateway\Annotation\PathVariable;
@@ -60,7 +61,7 @@ class AnnotationRoute implements IRoute
         //Request method
         $requestMethod = strtoupper($this->clientData->getRequestMethod());
         //Route info
-        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $port, $requestMethod), $this->clientData->getPath());
+        $routeInfo = GatewayPlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $port, $requestMethod), $this->clientData->getPath());
 
         $request = $this->clientData->getRequest();
 
@@ -114,7 +115,7 @@ class AnnotationRoute implements IRoute
                 $this->clientData->setMethodName($handler[1]->name);
                 $params = [];
                 $methodReflection = $handler[1]->getReflectionMethod();
-                foreach (EasyRoutePlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection) as $annotation) {
+                foreach (GatewayPlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection) as $annotation) {
 
 
                     if ($annotation instanceof ResponseBody) {

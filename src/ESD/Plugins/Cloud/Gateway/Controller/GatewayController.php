@@ -9,17 +9,36 @@ namespace ESD\Plugins\Cloud\Gateway\Controller;
 use ESD\Plugins\EasyRoute\Controller\EasyController;
 
 
-class GatewayController extends EasyController
+class GatewayController extends EasyController implements IController
 {
-
-    protected function defaultMethod(?string $methodName)
+    public function __construct()
     {
-        var_dump("aaa");
+    }
+
+    public function handle(?string $controllerName, ?string $methodName, ?array $params)
+    {
+
+    }
+
+    public function initialization(?string $controllerName, ?string $methodName)
+    {
+
     }
 
     public function onExceptionHandle(\Throwable $exception)
     {
-        var_dump("aaa");
+
     }
+
+    public function refresh($anchor = '')
+    {
+
+    }
+
+    protected function defaultMethod(?string $methodName)
+    {
+        // TODO: Implement defaultMethod() method.
+    }
+
 
 }
