@@ -25,6 +25,8 @@ use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
 use Go\Lang\Annotation\After;
 use Go\Lang\Annotation\Before;
+use Swlib\Saber;
+use Swoole\Coroutine\Channel;
 
 /**
  * Class RouteAspect
@@ -71,9 +73,9 @@ class RouteAspect extends OrderAspect
 
         /** @var GatewayConfig $gatewayConfig */
         foreach ($this->gatewayConfigs as $gatewayConfig) {
-            if (!isset($this->routeTools[$gatewayConfig->getRouteTool()])) {
-                $className = $gatewayConfig->getRouteTool();
-                $this->routeTools[$gatewayConfig->getRouteTool()] = DIget($className);
+            $className = $gatewayConfig->getRouteTool();
+            if (!isset($this->routeTools[$className])) {
+                $this->routeTools[$className] = DIget($className);
             }
         }
 
@@ -105,12 +107,20 @@ class RouteAspect extends OrderAspect
 
         /** @var ClientData $clientData */
         $clientData = getContextValueByClassName(ClientData::class);
+
         if ($clientData == null) {
             return;
         }
         if ($this->filterManager->filter(AbstractFilter::FILTER_PRE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
             return;
         }
+
+        if ($upsteam = $this->upsteam($clientData)) {
+            $clientData->getResponse()->withHeaders($upsteam[0]);
+            $clientData->getResponse()->append($upsteam[1]);
+            return;
+        }
+
         $routeTool = $this->routeTools[$gatewayConfig->getRouteTool()];
 
         try {
@@ -437,5 +447,92 @@ class RouteAspect extends OrderAspect
             }
         }
         return;
+    }
+
+    /**
+     * @param ClientData $clientData
+     * @return void
+     */
+    protected function upsteam($clientData)
+    {
+        $staticNodeRoutes = [
+            [
+                'node' => [
+                    'scheme' => 'http',
+                    'host' => 'localhost',
+                    'port' => 8080
+                ],
+                'routes' => [
+                    [
+                        'method' => 'get',
+                        'uri_prefix' => '/customer'
+                    ],
+                    [
+                        'method' => 'get',
+                        'uri_prefix' => '/hello'
+                    ],
+                ]
+            ]
+        ];
+
+        $serverParams = $clientData->getRequest()->getServerParams();
+
+        $uri = $clientData->getRequest()->getUri()->getPath();
+        $query = $clientData->getRequest()->getUri()->getQuery();
+        $method = $clientData->getRequest()->getMethod();
+
+        $findNode = $this->findNode($uri, $method, $staticNodeRoutes);
+        if (!$findNode) {
+            return false;
+        }
+
+        $nodeUrl = sprintf("%s://%s:%s/%s",
+            $findNode['node']['scheme'],
+            $findNode['node']['host'],
+            $findNode['node']['port'],
+            ltrim($uri, "/"));
+        if ($query) {
+            $nodeUrl .= "?". $query;
+        }
+
+        $channel = new Channel(1);
+        goWithContext(function () use ($channel, $nodeUrl) {
+            $saber = Saber::create();
+            $handle = $saber->get($nodeUrl);
+            $responeHeader = $handle->getHeaders();
+            $responeData = $handle->getBody()->getContents();
+
+            $channel->push([$responeHeader, $responeData]);
+        });
+        $response = $channel->pop();
+        return $response;
+    }
+
+    protected function findNode($uri, $method, $nodes)
+    {
+        $findNode = null;
+        foreach ($nodes as $key => $node) {
+            $findRoute = $this->findRouteInNode($uri, $method, $node);
+            if ($findRoute) {
+                $findNode['node'] = $node['node'];
+                $findNode['route'] = $findRoute;
+                break;
+            }
+        }
+        return $findNode;
+    }
+
+    protected function findRouteInNode($uri, $method, $node)
+    {
+        $findRoute = null;
+        foreach ($node['routes'] as $route) {
+            if (strtolower($route['method']) == strtolower($method)) {
+                if (preg_match("@".$route['uri_prefix']."@", $uri)) {
+                    $findRoute = $route;
+                    break;
+                }
+            }
+        }
+        return $findRoute;
     }
 }
