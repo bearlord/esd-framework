@@ -455,84 +455,98 @@ class RouteAspect extends OrderAspect
      */
     protected function upsteam($clientData)
     {
-        $staticNodeRoutes = [
-            [
-                'node' => [
-                    'scheme' => 'http',
-                    'host' => 'localhost',
-                    'port' => 8080
-                ],
-                'routes' => [
-                    [
-                        'method' => 'get',
-                        'uri_prefix' => '/customer'
-                    ],
-                    [
-                        'method' => 'get',
-                        'uri_prefix' => '/hello'
-                    ],
-                ]
-            ]
-        ];
-
         $serverParams = $clientData->getRequest()->getServerParams();
 
         $uri = $clientData->getRequest()->getUri()->getPath();
         $query = $clientData->getRequest()->getUri()->getQuery();
         $method = $clientData->getRequest()->getMethod();
 
-        $findNode = $this->findNode($uri, $method, $staticNodeRoutes);
+        $findNode = $this->findNode($uri);
         if (!$findNode) {
             return false;
         }
 
-        $nodeUrl = sprintf("%s://%s:%s/%s",
-            $findNode['node']['scheme'],
-            $findNode['node']['host'],
-            $findNode['node']['port'],
-            ltrim($uri, "/"));
+        $nodeUrl = sprintf("%s/%s",
+            rtrim($findNode['uri'], "/"),
+            ltrim($uri, "/")
+        );
         if ($query) {
-            $nodeUrl .= "?". $query;
+            $nodeUrl .= "?" . $query;
         }
 
         $channel = new Channel(1);
         goWithContext(function () use ($channel, $nodeUrl) {
-            $saber = Saber::create();
-            $handle = $saber->get($nodeUrl);
-            $responeHeader = $handle->getHeaders();
-            $responeData = $handle->getBody()->getContents();
+            try {
+                $saber = Saber::create();
+                $handle = $saber->get($nodeUrl);
+                $responeHeader = $handle->getHeaders();
+                $responeData = $handle->getBody()->getContents();
 
-            $channel->push([$responeHeader, $responeData]);
+                if (isset($responeHeader['content-encoding'])) {
+                    unset($responeHeader['content-encoding']);
+                }
+                $channel->push([$responeHeader, $responeData]);
+            } catch (\Exception $exception) {
+                //do nothing
+            }
         });
         $response = $channel->pop();
         return $response;
     }
 
-    protected function findNode($uri, $method, $nodes)
+    /**
+     * @return array[]
+     */
+    protected function getRoutes()
     {
-        $findNode = null;
-        foreach ($nodes as $key => $node) {
-            $findRoute = $this->findRouteInNode($uri, $method, $node);
-            if ($findRoute) {
-                $findNode['node'] = $node['node'];
-                $findNode['route'] = $findRoute;
+        $routes = Server::$instance->getConfigContext()->get('cloud.gateway.routes');
+        return $routes;
+    }
+
+    /**
+     * @param string $uri
+     * @param array $nodes
+     * @return array|mixed'
+     */
+    protected function findNode(string $uri)
+    {
+        $routes = $this->getRoutes();
+        if (empty($routes)) {
+            throw new Exception("Please config gateway routes");
+            return false;
+        }
+
+        $findRoute = [];
+        foreach ($routes as $key => $route) {
+            $find = $this->findUriInRoute($uri, $route);
+            if ($find) {
+                $findRoute = $route;
                 break;
             }
         }
-        return $findNode;
+        return $findRoute;
     }
 
-    protected function findRouteInNode($uri, $method, $node)
+    /**
+     * @param string $uri
+     * @param array $node
+     * @return bool
+     */
+    protected function findUriInRoute(string $uri, array $node)
     {
-        $findRoute = null;
-        foreach ($node['routes'] as $route) {
-            if (strtolower($route['method']) == strtolower($method)) {
-                if (preg_match("@".$route['uri_prefix']."@", $uri)) {
-                    $findRoute = $route;
+        $findRoute = false;
+
+        if (!empty($node['predicates']['path'])) {
+            foreach ($node['predicates']['path'] as $path) {
+                //todo
+                $_path = rtrim(rtrim($path, "*"), "/");
+                if (preg_match("@" . $_path . "@", $uri)) {
+                    $findRoute = true;
                     break;
                 }
             }
         }
+
         return $findRoute;
     }
 }
