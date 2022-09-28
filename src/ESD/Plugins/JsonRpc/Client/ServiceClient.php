@@ -144,7 +144,7 @@ class ServiceClient extends AbstractServiceClient
             $id = $this->getIdGeneratorObject()->generate();
         }
 
-        $response = $this->client->send($this->generateData($method, $params, $id));
+        $response = $this->getClient()->send($this->generateData($method, $params, $id));
         if (!is_array($response)) {
             throw new RequestException('Invalid response.');
         }
