@@ -6,6 +6,7 @@
 
 namespace ESD\Plugins\JsonRpc\Client;
 
+use ESD\Core\DI\DI;
 use ESD\LoadBalance\LoadBalancerManager;
 use ESD\Plugins\JsonRpc\DataFormatter;
 use ESD\Plugins\JsonRpc\Protocol;
@@ -23,6 +24,8 @@ use RuntimeException;
  */
 class ServiceClient extends AbstractServiceClient
 {
+    protected $config;
+
     /**
      * @var string The service name of the target service.
      */
@@ -50,8 +53,26 @@ class ServiceClient extends AbstractServiceClient
 
     public function __construct($config = [])
     {
+        $this->setConfig($config);
         parent::__construct($config);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param array|mixed $config
+     */
+    public function setConfig($config): void
+    {
+        $this->config = $config;
+    }
+
 
     /**
      * @return Client
@@ -83,7 +104,7 @@ class ServiceClient extends AbstractServiceClient
         if (empty($this->idGenerator)) {
             $config = $this->getConfig();
 
-            $this->idGenerator = !empty($config['idGenerator']) ? $config['idGenerator'] : 'ESD\Rpc\IdGenerator\UniqidIdGenerator';
+            $this->idGenerator = !empty($config['idGenerator']) ? $config['idGenerator'] : \ESD\Rpc\IdGenerator\UniqidIdGenerator::class;
         }
 
         return $this->idGenerator;
