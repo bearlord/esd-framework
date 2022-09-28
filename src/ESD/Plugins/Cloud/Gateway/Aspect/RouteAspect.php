@@ -13,6 +13,7 @@ use ESD\Plugins\Cloud\Gateway\Controller\IController;
 use ESD\Plugins\Cloud\Gateway\Filter\AbstractFilter;
 use ESD\Plugins\Cloud\Gateway\Filter\FilterManager;
 use ESD\Plugins\Cloud\Gateway\GatewayConfig;
+use ESD\Plugins\Cloud\Gateway\GatewayPlugin;
 use ESD\Plugins\Cloud\Gateway\RouteConfig;
 use ESD\Plugins\Cloud\Gateway\RouteException;
 use ESD\Server\Coroutine\Server;
@@ -195,7 +196,7 @@ class RouteAspect extends OrderAspect
         //Defined path
         $onConnectPath = '/onConnect';
         //Route info
-        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onConnectPath);
+        $routeInfo = GatewayPlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onConnectPath);
 
         if ($routeInfo[0] !== Dispatcher::FOUND) {
             return false;
@@ -277,7 +278,7 @@ class RouteAspect extends OrderAspect
         //Defined path
         $onClosePath = '/onClose';
         //Route info
-        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+        $routeInfo = GatewayPlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
 
         if ($routeInfo[0] !== Dispatcher::FOUND) {
             return false;
@@ -314,7 +315,7 @@ class RouteAspect extends OrderAspect
         //Defined path
         $onConnectPath = '/onWsOpen';
         //Route info
-        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onConnectPath);
+        $routeInfo = GatewayPlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onConnectPath);
 
         if ($routeInfo[0] !== Dispatcher::FOUND) {
             return false;
@@ -394,7 +395,7 @@ class RouteAspect extends OrderAspect
         //Define path
         $onClosePath = '/onWsClose';
         //Route info
-        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+        $routeInfo = GatewayPlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
 
         if ($routeInfo[0] !== Dispatcher::FOUND) {
             return false;
