@@ -121,7 +121,8 @@ abstract class Actor
     }
 
     /**
-     * Destory
+     * Destroy
+     * @throws \Exception
      */
     public function destroy()
     {
