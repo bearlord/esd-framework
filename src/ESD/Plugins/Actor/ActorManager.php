@@ -153,6 +153,10 @@ class ActorManager
         $className = get_class($actor);
         DISet($className . ":" . $actor->getName(), null);
         $this->actorTable->del($actor->getName());
+
+        $this->debug(Yii::t('esd', 'Actor {actor} removed', [
+            'actor' => $actor->getName()
+        ]));
     }
 
     /**

@@ -10,6 +10,8 @@ return [
     'Actor {actor} not exist' => 'Actor {actor} 不存在',
     'Actor {actor} created timeout' => '创建 Actor {actor} 超时',
     'Actor {actor} created' => '创建 Actor {actor}',
+    'Actor {actor} removed' => '删除 Actor {actor}',
+    "Actor {actor}'s all timer cleared" => '清除 Actor {actor} 所有的定时器',
     'Application start' => '程序启动',
     'Application shutdown' => '程序关闭',
     'Before process start' => '进程启动前',

@@ -9,6 +9,7 @@ namespace ESD\Plugins\Actor;
 use DI\Annotation\Inject;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Plugins\Event\EventDispatcher;
+use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 use Swoole\Timer;
@@ -19,6 +20,8 @@ use Swoole\Timer;
  */
 abstract class Actor
 {
+    use GetLogger;
+
     /**
      * @var Channel
      */
@@ -122,6 +125,7 @@ abstract class Actor
      */
     public function destroy()
     {
+        $this->clearAllTimer();
         ActorManager::getInstance()->removeActor($this);
     }
 
@@ -196,7 +200,7 @@ abstract class Actor
     }
 
     /**
-     * tick timer
+     * Tick timer
      * @param int $msec
      * @param callable $callback
      * @param ...$params
@@ -211,7 +215,7 @@ abstract class Actor
     }
 
     /**
-     * after timer
+     * After timer
      * @param int $msec
      * @param callable $callback
      * @param ...$params
@@ -226,7 +230,7 @@ abstract class Actor
     }
 
     /**
-     * clear timer
+     * Clear timer
      * @param int $id
      * @return void
      */
@@ -234,6 +238,22 @@ abstract class Actor
     {
         Timer::clear($id);
         unset($this->timerIds[$id]);
+    }
+
+    /**
+     * Clear all timer
+     * @return void
+     */
+    public function clearAllTimer()
+    {
+        if (!empty($this->timerIds)) {
+            foreach ($this->timerIds as $timerId) {
+                $this->clearTimer($timerId);
+            }
+            $this->debug(Yii::t("esd", "Actor {actor}'s all timer cleared", [
+                "actor" => $this->getName()
+            ]));
+        }
     }
 
     /**
