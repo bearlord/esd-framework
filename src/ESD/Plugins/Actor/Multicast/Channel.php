@@ -151,7 +151,7 @@ class Channel
      */
     public function unsubscribe(string $channel, string $actor)
     {
-        if (!empty($actor)) {
+        if (empty($actor)) {
             return false;
         }
 
