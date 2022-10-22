@@ -24,7 +24,7 @@ class Helper
      */
     static public function checkChannelFilter($filter)
     {
-        $max = DIGet(TopicConfig::class)->getTopicMaxLength();
+        $max = DIGet(MulticastConfig::class)->getChannelMaxLength();
         $length = strlen($filter);
         if ($length == 0 || $length >= $max) {
             throw new Exception("Topic filter must be at 1~$max long");

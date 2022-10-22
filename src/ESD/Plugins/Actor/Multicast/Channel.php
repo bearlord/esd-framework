@@ -10,6 +10,7 @@ use ESD\Plugins\Actor\ActorMessage;
 
 class Channel
 {
+    use GetLogger;
 
     protected $subscribeArr = [];
 
@@ -131,7 +132,7 @@ class Channel
 
         $this->addSubscribeFormTable($channel, $actor);
 
-        $this->topicTable->set($channel . $actor, [
+        $this->channelTable->set($channel . $actor, [
             "channel" => $channel,
             "actor" => $actor
         ]);
@@ -230,6 +231,37 @@ class Channel
         }
 
         return $result;
+    }
+
+    /**
+     * @param $arr
+     * @param $temp
+     * @param $result
+     * @param $complete
+     * @param $isSys
+     */
+    protected function helpReplacePlus($arr, &$temp, &$result, $complete, $isSys)
+    {
+        $count = count($arr);
+
+        $m = 0;
+        if ($isSys) {
+            $m = 1;
+        }
+
+        for ($i = $m; $i < $count; $i++) {
+            $new = $arr;
+            if ($new[$i] == '+') {
+                continue;
+            }
+            $new[$i] = '+';
+            $temp[] = $new;
+            $value = implode('/', $new);
+            $result->add($value . "/#");
+            if ($complete) {
+                $result->add($value);
+            }
+        }
     }
 
 }

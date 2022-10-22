@@ -81,7 +81,7 @@ class ActorMessage
     /**
      * @return string
      */
-    public function getFrom(): string
+    public function getFrom(): ?string
     {
         return $this->from;
     }

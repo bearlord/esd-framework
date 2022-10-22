@@ -31,7 +31,7 @@ class MulticastConfig extends BaseConfig
     /**
      * @var string
      */
-    protected $processName = "helper";
+    protected $processName = "multicast";
 
     public function __construct()
     {
