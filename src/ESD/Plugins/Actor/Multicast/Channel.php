@@ -112,8 +112,9 @@ class Channel
         if (!empty($actorInstance)) {
             $actorMessage = new ActorMessage([
                 'channel' => $channel,
+                'type' => 'multicast',
                 'message' => $message
-            ], date("YmdHis").  mt_rand(10000, 99999));
+            ], date("YmdHis").  mt_rand(10000, 99999), null, $actor);
             $actorInstance->sendMessage($actorMessage);
         }
     }
