@@ -243,8 +243,9 @@ class ClientData
     {
         $this->clientInfo = new ClientInfo(
             [
-                "server_port" => $clientInfo['port'],
+                "server_port" => $clientInfo['server_port'],
                 "remote_ip" => $clientInfo['address'],
+                "remote_port" => $clientInfo['port'],
             ]
         );
     }
