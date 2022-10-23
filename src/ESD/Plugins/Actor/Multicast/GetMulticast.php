@@ -3,8 +3,6 @@
 namespace ESD\Plugins\Actor\Multicast;
 
 use ESD\Plugins\ProcessRPC\GetProcessRpc;
-use ESD\Plugins\Topic\Topic;
-use ESD\Plugins\Topic\TopicConfig;
 
 trait GetMulticast
 {
@@ -16,34 +14,39 @@ trait GetMulticast
     protected $multicastConfig;
 
     /**
+     * Has channel
      * @param string $channel
      * @param string $actor
      * @return bool
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function hasTopic(string $channel, string $actor)
+    public function hasChannel(string $channel, string $actor)
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
             return false;
         }
-        
-        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Topic::class);
-        return $rpcProxy->hasTopic($channel, $actor);
+
+        /** @var Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class);
+        return $rpcProxy->hasChannel($channel, $actor);
     }
 
     /**
+     * Delete channel
+     *
      * @param $channel
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function delTopic($channel)
+    public function deleteChannel($channel)
     {
-        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Topic::class, true);
-        $rpcProxy->delTopic($channel);
+        /** @var Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);
+        $rpcProxy->deleteChannel($channel);
     }
 
     /**
-     * @return TopicConfig|mixed
+     * @return MulticastConfig|mixed
      * @throws \Exception
      */
     protected function getMulticastConfig()
@@ -56,7 +59,7 @@ trait GetMulticast
     }
 
     /**
-     * Add subscription
+     * Subscribe
      *
      * @param string $channel
      * @param string $actor
@@ -65,7 +68,7 @@ trait GetMulticast
     public function subscribe($channel, $actor)
     {
         if (empty($actor)) {
-            $this->warn("Uid is empty");
+            $this->warn("Actor is empty");
             return;
         }
 
@@ -101,7 +104,7 @@ trait GetMulticast
     public function unsubscribeAll(string $actor)
     {
         if (empty($actor)) {
-            $this->warn("Uid is empty");
+            $this->warn("Actor is empty");
             return;
         }
 
@@ -115,13 +118,13 @@ trait GetMulticast
      *
      * @param string $channel
      * @param $message
-     * @param array $excludeUidList
+     * @param array $excludeActorList
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publish(string $channel, $message, $excludeUidList = [])
+    public function publish(string $channel, $message, $excludeActorList = [])
     {
         /** @var Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);
-        $rpcProxy->publish($channel, $message, $excludeUidList);
+        $rpcProxy->publish($channel, $message, $excludeActorList);
     }
 }

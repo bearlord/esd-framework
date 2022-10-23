@@ -9,12 +9,6 @@ use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Plugins\Actor\ActorConfig;
 use ESD\Plugins\Actor\ActorPlugin;
 use ESD\Plugins\Aop\AopConfig;
-use ESD\Plugins\Topic\Aspect\TopicAspect;
-use ESD\Plugins\Topic\Topic;
-use ESD\Plugins\Topic\TopicConfig;
-use ESD\Plugins\Topic\TopicProcess;
-use ESD\Plugins\Uid\UidConfig;
-use ESD\Plugins\Uid\UidPlugin;
 use ESD\Server\Coroutine\Server;
 
 class MulticastPlugin extends AbstractPlugin

@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 class Helper
 {
     /**
-     * Channel Topic Filter
+     * Channel Filter
      *
      * @param string $filter
      * @throws BadUTF8
@@ -27,7 +27,7 @@ class Helper
         $max = DIGet(MulticastConfig::class)->getChannelMaxLength();
         $length = strlen($filter);
         if ($length == 0 || $length >= $max) {
-            throw new Exception("Topic filter must be at 1~$max long");
+            throw new Exception("Channel filter must be at 1~$max long");
         }
         self::ValidateUTF8($filter);
 

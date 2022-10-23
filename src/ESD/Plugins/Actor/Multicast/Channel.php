@@ -7,6 +7,7 @@ use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Actor\Actor;
 use ESD\Plugins\Actor\ActorMessage;
+use ESD\Yii\Yii;
 
 class Channel
 {
@@ -25,13 +26,13 @@ class Channel
     protected $channelTable;
 
     /**
-     * Topic constructor.
-     * @param Table $topicTable
+     * Channel constructor.
+     * @param Table $channelTable
      */
-    public function __construct(Table $topicTable)
+    public function __construct(Table $channelTable)
     {
         //Read the table first, because the process may restart
-        $this->channelTable = $topicTable;
+        $this->channelTable = $channelTable;
 
         foreach ($this->channelTable as $value) {
             $this->addSubscribeFormTable($value['channel'], $value['actor']);
@@ -39,20 +40,20 @@ class Channel
     }
 
     /**
-     * @param $topic
-     * @param $actor
+     * @param string $channel
+     * @param string $actor
      */
-    private function addSubscribeFormTable(string $topic, string $actor)
+    private function addSubscribeFormTable(string $channel, string $actor)
     {
         if (empty($actor)) {
             return;
         }
 
-        if (!isset($this->subscribeArr[$topic])) {
-            $this->subscribeArr[$topic] = new Set();
+        if (!isset($this->subscribeArr[$channel])) {
+            $this->subscribeArr[$channel] = new Set();
         }
 
-        $this->subscribeArr[$topic]->add($actor);
+        $this->subscribeArr[$channel]->add($actor);
     }
 
     /**
@@ -70,6 +71,30 @@ class Channel
         }
 
         return $set->contains($actor);
+    }
+
+    /**
+     * Delete channel
+     *
+     * @param string $channel
+     * @return void
+     */
+    public function deleteChannel(string $channel)
+    {
+        if (!empty($channel)) {
+            unset($this->subscribeArr[$channel]);
+        }
+
+        $actorArr = !empty($this->subscribeArr[$channel]) ? $this->subscribeArr[$channel] : [];
+        if (!empty($actorArr)) {
+            foreach ($actorArr as $actor) {
+                $this->channelTable->del($channel . $actor);
+            }
+        }
+
+        $this->debug(Yii::t('esd', "Channel {channel} deleted", [
+            'channel' => $channel
+        ]));
     }
 
     /**
@@ -138,7 +163,10 @@ class Channel
             "actor" => $actor
         ]);
 
-        $this->debug("{$actor} subscribe $channel");
+        $this->debug(Yii::t('esd', "Actor {actor} subscribe channel {channel}", [
+            'actor' => $actor,
+            'channel' => $channel
+        ]));
 
         return true;
     }
@@ -165,7 +193,10 @@ class Channel
 
         $this->channelTable->del($channel . $actor);
 
-        $this->debug("{$actor} unsubscribe $channel");
+        $this->debug(Yii::t('esd', "Actor {actor} unsubscribe channel {channel}", [
+            'actor' => $actor,
+            'channel' => $channel
+        ]));
 
         return true;
     }
@@ -189,6 +220,7 @@ class Channel
 
         return true;
     }
+
 
     /**
      * Build a subscription tree, allowing only 5 layers
