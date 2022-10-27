@@ -78,8 +78,9 @@ class Controller extends Component implements ViewContextInterface
     /**
      * Controller constructor.
      */
-    public function __construct()
+    public function __construct($config = [])
     {
+        parent::__construct($config);
     }
 
     /**

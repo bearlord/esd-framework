@@ -58,14 +58,6 @@ abstract class EasyController extends Controller implements IController
     protected $log;
 
     /**
-     * EasyController constructor.
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * @inheritDoc
      * @param string|null $controllerName
      * @param string|null $methodName
