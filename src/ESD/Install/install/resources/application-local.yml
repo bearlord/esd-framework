@@ -36,10 +36,10 @@ yii:
         - class: 'ESD\Yii\Log\FileTarget'
           levels:
             - error
-              - warning
-              - info
-              - trace
-              - profile
+            - warning
+            - info
+            - trace
+            - profile
 
     cache:
       class: 'ESD\Yii\Redis\Cache'
