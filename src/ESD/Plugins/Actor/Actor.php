@@ -173,9 +173,12 @@ abstract class Actor
             $call = Server::$instance->getEventDispatcher()->listen(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actorName, null, true);
             $result = $call->wait($timeOut);
             if ($result == null) {
+                /*
                 throw new ActorException(Yii::t('esd', 'Actor {actor} created timeout', [
                     'actor' => $actorName
                 ]));
+                */
+                return false;
             }
 
             return new ActorRPCProxy($actorName, false, $timeOut);
