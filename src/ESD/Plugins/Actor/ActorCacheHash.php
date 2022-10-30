@@ -124,6 +124,7 @@ class ActorCacheHash implements \ArrayAccess
         $deep = &$this->container;
 
         $count = count($path) - 1;
+
         for ($i = 0; $i < $count; $i++) {
             $point = $path[$i];
             if (array_key_exists($point, $deep)) {

@@ -79,7 +79,10 @@ class ActorCacheProcess extends Process
     {
         $this->cacheHash = new ActorCacheHash($this);
 
-        $this->setAutoSaveTime(Server::$instance->getConfigContext()->get('actor.autoSaveTime'));
+        $autoSaveTime = Server::$instance->getConfigContext()->get('actor.autoSaveTime');
+        if ($autoSaveTime > 0) {
+            $this->setAutoSaveTime($autoSaveTime);
+        }
     }
 
     /**
@@ -89,16 +92,26 @@ class ActorCacheProcess extends Process
      */
     public function onProcessStart()
     {
-        $call = $this->eventDispatcher->listen(ActorSaveEvent::ActorSaveEvent);
-        $call->call(function (ActorSaveEvent $event) {
+        //Save call
+        $saveCall = $this->eventDispatcher->listen(ActorSaveEvent::ActorSaveEvent);
+        $saveCall->call(function (ActorSaveEvent $event) {
             $class = $event->getData()[0];
             $name = $event->getData()[1];
             $data = $event->getData()[2] ?? null;
             $this->saveToCacheHash($name, [$class, $name, $data]);
         });
 
+        //Delte call
+        $deleteCall = $this->eventDispatcher->listen(ActorDeleteEvent::ActorDeleteEvent);
+        $deleteCall->call(function (ActorDeleteEvent $event) {
+            $name = $event->getData()[0];
+            $this->deleteFromCacheHash($name);
+        });
+
+        //Recovery
         $this->recovery();
 
+        //Auto save to redis
         Timer::tick($this->autoSaveTime, function () {
             $this->autoSave();
         });
@@ -125,14 +138,27 @@ class ActorCacheProcess extends Process
 
     /**
      * Save to chache hash
-     * @param string $acotName
+     * @param string $actorName
      * @param array $data
      * @return void
      */
-    protected function saveToCacheHash(string $acotName, array $data)
+    protected function saveToCacheHash(string $actorName, array $data)
     {
-        $name = self::SAVE_NAME . $this->delimiter . $acotName;
+        $name = self::SAVE_NAME . $this->delimiter . $actorName;
         $this->cacheHash[$name] = $data;
+    }
+
+    /**
+     * Delete from cache hash
+     * @param string $actorName
+     * @return void
+     */
+    protected function deleteFromCacheHash(string $actorName)
+    {
+        $name = self::SAVE_NAME . $this->delimiter . $actorName;
+        if (!empty($this->cacheHash[$name])) {
+            unset($this->cacheHash[$name]);
+        }
     }
 
     /**
@@ -145,9 +171,11 @@ class ActorCacheProcess extends Process
         goWithContext(function () {
             $saveData = [];
             if (!empty($this->cacheHash->getContainer())) {
-                foreach ($this->cacheHash->getContainer()[self::SAVE_NAME] as $key => $value) {
+                foreach ($this->cacheHash[self::SAVE_NAME] as $key => $value) {
                     $saveData[$key] = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                 }
+
+                $this->redis()->del(self::HASH_KEY);
                 $this->redis()->hMSet(self::HASH_KEY, $saveData);
             }
         });
