@@ -99,8 +99,7 @@ class AutostartPlugin extends AbstractPlugin
             if (!empty($taskList)) {
                 ksort($taskList);
                 foreach ($taskList as $key => $value) {
-                    $_class = $value['class'];
-                    call_user_func([new $_class, $value['method']]);
+                    call_user_func([new $value['class'], $value['method']]);
                 }
             }
         }
