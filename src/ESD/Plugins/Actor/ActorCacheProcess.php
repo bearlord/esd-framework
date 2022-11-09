@@ -101,7 +101,7 @@ class ActorCacheProcess extends Process
             $this->saveToCacheHash($name, [$class, $name, $data]);
         });
 
-        //Delte call
+        //Delete call
         $deleteCall = $this->eventDispatcher->listen(ActorDeleteEvent::ActorDeleteEvent);
         $deleteCall->call(function (ActorDeleteEvent $event) {
             $name = $event->getData()[0];
