@@ -347,7 +347,9 @@ class RouteAspect extends OrderAspect
             if ($this->filterManager->filter(AbstractFilter::FILTER_ROUTE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
                 return;
             }
-            $this->autoBoostSend($clientData->getFd(), $clientData->getResponseRaw());
+            if ($easyRouteConfig->getAutoSendReturnValue()) {
+                $this->autoBoostSend($clientData->getFd(), $clientData->getResponseRaw());
+            }
         } catch (\Throwable $e) {
             try {
                 //The errors here will be handed over to the IndexController
