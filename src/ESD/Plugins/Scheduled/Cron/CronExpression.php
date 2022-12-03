@@ -84,6 +84,7 @@ class CronExpression
         if (isset($mappings[$expression])) {
             $expression = $mappings[$expression];
         }
+        $expression = stripslashes($expression);
 
         return new static($expression, $fieldFactory ?: new FieldFactory());
     }
