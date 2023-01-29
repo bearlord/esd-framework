@@ -115,9 +115,7 @@ class QueuePlugin extends AbstractPlugin
 
             //Custom process
             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_QUEUE_PREFIX . $index) {
-                addTimerTick($config['minIntervalTime'], function () use ($queue) {
-                    $queue->listen();
-                });
+                $queue->listen();
             }
             $index++;
         }
