@@ -86,6 +86,7 @@ class Queue extends CliQueue
                 } elseif (!$repeat) {
                     break;
                 }
+                \Swoole\Coroutine::sleep(0.01);
             }
         });
     }
