@@ -40,7 +40,7 @@ class Queue extends CliQueue
     public function init()
     {
         parent::init();
-        $this->redis = Yii::createObject(Connection::className());
+        $this->redis = Yii::createObject(Connection::class);
     }
 
     /**
@@ -48,16 +48,16 @@ class Queue extends CliQueue
      * It can be used as daemon process.
      *
      * @param int $timeout number of seconds to wait a job.
-     * @throws Exception when params are invalid.
+     * @throws InvalidArgumentException when params are invalid.
      * @return null|int exit code.
      */
     public function listen($timeout = 3)
     {
         if (!is_numeric($timeout)) {
-            throw new Exception('Timeout must be numeric.');
+            throw new InvalidArgumentException('Timeout must be numeric.');
         }
         if ($timeout < 1) {
-            throw new Exception('Timeout must be greater than zero.');
+            throw new InvalidArgumentException('Timeout must be greater than zero.');
         }
         
         return $this->run(true, $timeout);
@@ -86,7 +86,7 @@ class Queue extends CliQueue
                 } elseif (!$repeat) {
                     break;
                 }
-                \Swoole\Coroutine::sleep(0.01);
+                \Swoole\Coroutine::sleep(0.001);
             }
         });
     }
