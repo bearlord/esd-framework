@@ -309,7 +309,7 @@ class RouteAspect extends OrderAspect
 
         try {
             $instance = new $routeInfo[1][0]->name();
-            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId]);
+            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId, $request]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
