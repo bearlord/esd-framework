@@ -65,5 +65,13 @@ class SwooleRequest extends Request
                 $this->server[self::SERVER_REQUEST_URI],
                 $queryString)
         );
+        var_dump($this->headers);
+
+        var_dump(sprintf("%s://%s%s%s",
+            $this->getScheme(),
+            $this->headers['host'][0],
+            $this->server[self::SERVER_REQUEST_URI],
+            $queryString));
+        var_dump($this->uri);
     }
 }

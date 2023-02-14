@@ -100,7 +100,15 @@ abstract class Request extends AbstractRequest
                     $scheme = "http";
                 }
                 $this->_scheme = $scheme;
+            } elseif ($portConfig->isOpenWebsocketProtocol()) {
+                if ($portConfig->isEnableSsl()) {
+                    $scheme = "wss";
+                } else {
+                    $scheme = "ws";
+                }
+                $this->_scheme = $scheme;
             }
+
         }
         return $this->_scheme;
     }
