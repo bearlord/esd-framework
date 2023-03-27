@@ -11,7 +11,8 @@ use ESD\Plugins\MQTT\Config\ClientConfig;
 use ESD\Plugins\MQTT\Exception\ConnectException;
 use ESD\Plugins\MQTT\Exception\ProtocolException;
 use ESD\Plugins\MQTT\Hex\ReasonCode;
-use Swoole\Coroutine;
+use ESD\Plugins\MQTT\Protocol\ProtocolV3;
+use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 
 /**
  * Class Client
@@ -19,7 +20,7 @@ use Swoole\Coroutine;
  */
 class Client
 {
-    /** @var Coroutine\Client|\Swoole\Client */
+    /** @var \Swoole\Coroutine\Client|\Swoole\Client */
     private $client;
 
     private $messageId = 0;
@@ -56,7 +57,7 @@ class Client
         $this->clientType = $clientType;
 
         if ($this->isCoroutineClientType()) {
-            $this->client = new Coroutine\Client($config->getSockType());
+            $this->client = new \Swoole\Coroutine\Client($config->getSockType());
         } else {
             $this->client = new \Swoole\Client($config->getSockType());
         }
@@ -248,9 +249,9 @@ class Client
     public function send(array $data, bool $response = true)
     {
         if ($this->getConfig()->isMQTT5()) {
-            $package = Protocol\V5::pack($data);
+            $package = ProtocolV5::pack($data);
         } else {
-            $package = Protocol\V3::pack($data);
+            $package = ProtocolV3::pack($data);
         }
 
         $this->client->send($package);
@@ -263,7 +264,8 @@ class Client
     }
 
     /**
-     * @return bool
+     * @return array|bool
+     * @throws \Throwable
      */
     public function recv()
     {
@@ -275,10 +277,10 @@ class Client
             $this->handleException();
         } elseif (is_string($response) && strlen($response) > 0) {
             if ($this->getConfig()->isMQTT5()) {
-                return Protocol\V5::unpack($response);
+                return ProtocolV5::unpack($response);
             }
 
-            return Protocol\V3::unpack($response);
+            return ProtocolV3::unpack($response);
         }
 
         return true;
@@ -340,7 +342,7 @@ class Client
     public function sleep(int $ms): void
     {
         if ($this->isCoroutineClientType()) {
-            Coroutine::sleep($ms / 1000);
+            \Swoole\Coroutine::sleep($ms / 1000);
         } else {
             usleep($ms * 1000);
         }
@@ -388,7 +390,7 @@ class Client
     }
 
     /**
-     * @return \Swoole\Client|Coroutine\Client
+     * @return \Swoole\Client|\Swoole\Coroutine\Client
      */
     public function getClient()
     {
