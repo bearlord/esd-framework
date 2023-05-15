@@ -106,7 +106,7 @@ class Channel
      * @return void
      * @throws \ESD\Plugins\Actor\ActorException
      */
-    public function publish(string $channel, string $message, $excludeActorList = [])
+    public function publish(string $channel, string $message, array $excludeActorList = [], ?string $from)
     {
         $tree = $this->buildTrees($channel);
 
@@ -114,7 +114,7 @@ class Channel
             if (isset($this->subscribeArr[$item])) {
                 foreach ($this->subscribeArr[$item] as $actor) {
                     if (!in_array($actor, $excludeActorList)) {
-                        $this->publishToActor($channel, $actor, $message);
+                        $this->publishToActor($channel, $actor, $message, $from);
                     }
                 }
             }
@@ -125,21 +125,21 @@ class Channel
      * Publish to actor
      *
      * @param string $channel
-     * @param string $actor
+     * @param string $toActor
      * @param $message
      * @return void
      * @throws \ESD\Plugins\Actor\ActorException
      */
-    protected function publishToActor(string $channel, string $actor, $message)
+    protected function publishToActor(string $channel, string $toActor, $message, ?string $fromActor = '')
     {
-        $actorInstance = Actor::getProxy($actor);
+        $actorInstance = Actor::getProxy($toActor);
 
         if (!empty($actorInstance)) {
             $actorMessage = new ActorMessage([
                 'channel' => $channel,
                 'type' => 'multicast',
                 'message' => $message
-            ], date("YmdHis").  mt_rand(10000, 99999), null, $actor);
+            ], date("YmdHis").  mt_rand(10000, 99999), $fromActor, $toActor);
             $actorInstance->sendMessage($actorMessage);
         }
     }

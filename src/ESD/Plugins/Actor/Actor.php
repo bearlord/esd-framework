@@ -10,6 +10,9 @@ use DI\Annotation\Inject;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Plugins\Event\EventDispatcher;
 use ESD\Core\Plugins\Logger\GetLogger;
+use ESD\Plugins\Actor\Multicast\MulticastConfig;
+use ESD\Plugins\Actor\Multicast\Channel as MulticastChannel;
+use ESD\Plugins\ProcessRPC\GetProcessRpc;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 use Swoole\Timer;
@@ -21,6 +24,13 @@ use Swoole\Timer;
 abstract class Actor
 {
     use GetLogger;
+
+    use GetProcessRpc;
+
+    /**
+     * @var MulticastConfig
+     */
+    protected $multicastConfig;
 
     /**
      * @var Channel
@@ -276,5 +286,85 @@ abstract class Actor
             [
                 $class, $name, $data,
             ]), Server::$instance->getProcessManager()->getProcessFromName(ActorCacheProcess::PROCESS_NAME));
+    }
+
+
+    /**
+     * @return MulticastConfig|mixed
+     * @throws \Exception
+     */
+    protected function getMulticastConfig()
+    {
+        if ($this->multicastConfig == null) {
+            $this->multicastConfig = DIGet(MulticastConfig::class);
+        }
+
+        return $this->multicastConfig;
+    }
+
+
+    /**
+     * Subscribe
+     *
+     * @param string $channel
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     */
+    public function subscribe($channel)
+    {
+        $actor = $this->getName();
+
+        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+        $rpcProxy->subscribe($channel, $actor);
+    }
+
+    /**
+     * Unsubscribe
+     *
+     * @param $channel
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     */
+    public function unsubscribe($channel)
+    {
+        $actor = $this->getName();
+
+        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+        $rpcProxy->unsubscribe($channel, $actor);
+    }
+
+    /**
+     * Unsubscribe all
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     */
+    public function unsubscribeAll()
+    {
+        $actor = $this->getName();
+
+        /** @var Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+        $rpcProxy->unsubscribeAll($actor);
+    }
+
+    /**
+     * Publish subscription
+     *
+     * @param string $channel
+     * @param $message
+     * @param array $excludeActorList
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     */
+    public function publish(string $channel, $message, $excludeActorList = [])
+    {
+        $from = $this->getName();
+
+        if (empty($excludeActorList)) {
+            $excludeActorList = [$from];
+        }
+
+
+        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+        $rpcProxy->publish($channel, $message, $excludeActorList, $from);
     }
 }
