@@ -350,11 +350,11 @@ abstract class Actor
      * Publish subscription
      *
      * @param string $channel
-     * @param $message
+     * @param string $message
      * @param array $excludeActorList
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publish(string $channel, $message, $excludeActorList = [])
+    public function publish(string $channel, string $message, ?array $excludeActorList = [])
     {
         $from = $this->getName();
 
@@ -362,6 +362,42 @@ abstract class Actor
             $excludeActorList = [$from];
         }
 
+        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+        $rpcProxy->publish($channel, $message, $excludeActorList, $from);
+    }
+
+    /**
+     * @param string $channel
+     * @param string$message
+     * @param array $excludeActorList
+     * @return void
+     * @throws ActorException
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     */
+    public function publishTo(string $channel, string $message)
+    {
+        $from = $this->getName();
+
+        $excludeActorList = [$from];
+
+        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+        $rpcProxy->publish($channel, $message, $excludeActorList, $from);
+    }
+
+    /**
+     * @param string $channel
+     * @param string $message
+     * @return void
+     * @throws ActorException
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     */
+    public function publishIn(string $channel, string $message)
+    {
+        $from = $this->getName();
+
+        $excludeActorList = [];
 
         /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
