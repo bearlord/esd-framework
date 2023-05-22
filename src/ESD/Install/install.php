@@ -50,7 +50,7 @@ function copy_dir($src, $dst, $force = false)
         }
     }
     closedir($dir);
-    printf("%S directory created\n", $dst);
+    printf("%s directory created\n", $dst);
     return true;
 }
 
