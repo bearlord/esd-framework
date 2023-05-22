@@ -19,7 +19,7 @@
         "ext-swoole": ">=4.5.0",
         "ezyang/htmlpurifier": "^4.10.0",
         "filp/whoops": "^2.3",
-        "illuminate/view": "^5.8",
+        "illuminate/view": ">=5.8",
         "jeremeamia/superclosure": "*",
         "monolog/monolog": "^1.24",
         "ocramius/proxy-manager": "^2.1",
