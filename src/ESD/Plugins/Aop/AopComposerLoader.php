@@ -16,7 +16,7 @@ use ESD\Goaop\Instrument\Transformer\StreamMetaData;
  * Class AopComposerLoader
  * @package rabbit\aop
  */
-class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
+class AopComposerLoader extends \ESD\Goaop\Instrument\ClassLoading\AopComposerLoader
 {
     /** @var bool */
     private static bool $wasInitialized = false;
