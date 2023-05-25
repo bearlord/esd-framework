@@ -10,8 +10,8 @@
 
 namespace ESD\Goaop\Go\Instrument\Transformer;
 
-use PhpParser\Node\Name\FullyQualified;
-use PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
+use ESD\Nikic\PhpParser\NodeTraverser;
 
 /**
  * Transformer that replaces `self` constants in the source code, e.g. new self()

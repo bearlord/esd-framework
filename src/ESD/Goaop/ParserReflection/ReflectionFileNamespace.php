@@ -8,19 +8,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection;
+namespace ESD\Goaop\Go\ParserReflection;
 
 use ESD\Goaop\Go\ParserReflection\Instrument\PathResolver;
 use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node;
-use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Name;
-use PhpParser\Node\Stmt\ClassLike;
-use PhpParser\Node\Stmt\Const_;
-use PhpParser\Node\Stmt\Expression;
-use PhpParser\Node\Stmt\Function_;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Use_;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\Node\Expr\FuncCall;
+use ESD\Nikic\PhpParser\Node\Name;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
+use ESD\Nikic\PhpParser\Node\Stmt\Const_;
+use ESD\Nikic\PhpParser\Node\Stmt\Expression;
+use ESD\Nikic\PhpParser\Node\Stmt\Function_;
+use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
+use ESD\Nikic\PhpParser\Node\Stmt\Use_;
 
 /**
  * AST-based reflection for the concrete namespace in the file

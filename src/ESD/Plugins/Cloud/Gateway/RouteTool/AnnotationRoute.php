@@ -27,7 +27,7 @@ use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Validate\Annotation\ValidatedFilter;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
-use FastRoute\Dispatcher;
+use ESD\Nikic\FastRoute\Dispatcher;
 
 /**
  * Class AnnotationRoute

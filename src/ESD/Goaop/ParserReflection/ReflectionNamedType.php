@@ -10,7 +10,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection;
+namespace ESD\Goaop\Go\ParserReflection;
 
 use ReflectionNamedType as BaseReflectionNamedType;
 

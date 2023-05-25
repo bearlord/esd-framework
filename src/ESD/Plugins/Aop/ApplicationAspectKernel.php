@@ -9,11 +9,11 @@ namespace ESD\Plugins\Aop;
 use ESD\Core\Exception;
 use ESD\Core\Order\OrderOwnerTrait;
 use ESD\Server\Coroutine\Server;
-use Go\Aop\Aspect;
-use Go\Aop\Features;
-use Go\Core\AspectContainer;
-use Go\Core\AspectKernel;
-use Go\Instrument\ClassLoading\SourceTransformingLoader;
+use ESD\Goaop\Go\Aop\Aspect;
+use ESD\Goaop\Go\Aop\Features;
+use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Go\Core\AspectKernel;
+use ESD\Goaop\Go\Instrument\ClassLoading\SourceTransformingLoader;
 
 /**
  * Class ApplicationAspectKernel
@@ -22,6 +22,7 @@ use Go\Instrument\ClassLoading\SourceTransformingLoader;
 class ApplicationAspectKernel extends AspectKernel
 {
     use OrderOwnerTrait;
+
     /**
      * @var AopConfig
      */
@@ -80,7 +81,7 @@ class ApplicationAspectKernel extends AspectKernel
     /**
      * @param AspectContainer $container
      */
-    protected function addKernelResourcesToContainer(AspectContainer $container)
+    protected function addKernelResourcesToContainer(AspectContainer $container): void
     {
         $cid = \Swoole\Coroutine::getuid();
         $trace = $cid === -1 ? debug_backtrace(

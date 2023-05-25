@@ -11,9 +11,9 @@ use ESD\Core\Server\Beans\Request;
 use ESD\Plugins\Actuator\ActuatorController;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\EasyRoute\Aspect\RouteAspect;
-use FastRoute\Dispatcher;
-use Go\Aop\Intercept\MethodInvocation;
-use Go\Lang\Annotation\Around;
+use ESD\Nikic\FastRoute\Dispatcher;
+use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Go\Lang\Annotation\Around;
 
 class ActuatorAspect extends OrderAspect
 {

@@ -21,11 +21,11 @@ use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Pack\Aspect\PackAspect;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\GetBoostSend;
-use FastRoute\Dispatcher;
-use Go\Aop\Intercept\MethodInvocation;
-use Go\Lang\Annotation\Around;
-use Go\Lang\Annotation\After;
-use Go\Lang\Annotation\Before;
+use ESD\Nikic\FastRoute\Dispatcher;
+use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Go\Lang\Annotation\Around;
+use ESD\Goaop\Go\Lang\Annotation\After;
+use ESD\Goaop\Go\Lang\Annotation\Before;
 use Swlib\Saber;
 use Swoole\Coroutine\Channel;
 

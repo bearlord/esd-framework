@@ -7,7 +7,7 @@
 namespace ESD\Plugins\Aop;
 
 use ESD\Core\Order\Order;
-use Go\Aop\Aspect;
+use ESD\Goaop\Go\Aop\Aspect;
 
 /**
  * Class OrderAspect

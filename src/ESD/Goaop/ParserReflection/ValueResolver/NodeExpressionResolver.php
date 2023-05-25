@@ -8,16 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection\ValueResolver;
+namespace ESD\Goaop\Go\ParserReflection\ValueResolver;
 
 use ESD\Goaop\Go\ParserReflection\ReflectionClass;
 use ESD\Goaop\Go\ParserReflection\ReflectionException;
 use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
-use PhpParser\Node;
-use PhpParser\Node\Expr;
-use PhpParser\Node\Scalar;
-use PhpParser\Node\Scalar\MagicConst;
-use PhpParser\Node\Stmt\Expression;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\Node\Expr;
+use ESD\Nikic\PhpParser\Node\Scalar;
+use ESD\Nikic\PhpParser\Node\Scalar\MagicConst;
+use ESD\Nikic\PhpParser\Node\Stmt\Expression;
 
 /**
  * Tries to resolve expression into value

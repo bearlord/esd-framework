@@ -6,8 +6,8 @@
 
 namespace ESD\Plugins\Aop;
 
-use Go\Core\AspectContainer;
-use Go\Core\AspectKernel;
+use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Go\Core\AspectKernel;
 
 /**
  * Class FileCacheAspectKernel

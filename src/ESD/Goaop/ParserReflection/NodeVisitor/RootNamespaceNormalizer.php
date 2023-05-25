@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection\NodeVisitor;
+namespace ESD\Goaop\Go\ParserReflection\NodeVisitor;
 
-use PhpParser\Node\Name\FullyQualified;
-use PhpParser\Node\Stmt\Declare_;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
+use ESD\Nikic\PhpParser\Node\Stmt\Declare_;
+use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to normalize the root namespace for the files without the namespace (root namespace)

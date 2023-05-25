@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection;
+namespace ESD\Goaop\Go\ParserReflection;
 
 use ESD\Goaop\Go\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\Go\ParserReflection\Traits\ReflectionFunctionLikeTrait;
-use PhpParser\Node\Stmt\Function_;
+use ESD\Nikic\PhpParser\Node\Stmt\Function_;
 use ReflectionFunction as BaseReflectionFunction;
 
 /**

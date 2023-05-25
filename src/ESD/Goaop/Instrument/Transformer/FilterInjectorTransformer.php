@@ -13,8 +13,8 @@ namespace ESD\Goaop\Go\Instrument\Transformer;
 use ESD\Goaop\Go\Core\AspectKernel;
 use ESD\Goaop\Go\Instrument\PathResolver;
 use ESD\Goaop\Go\Instrument\ClassLoading\CachePathManager;
-use PhpParser\Node\Expr\Include_;
-use PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\Node\Expr\Include_;
+use ESD\Nikic\PhpParser\NodeTraverser;
 
 /**
  * Transformer that injects source filter for "require" and "include" operations

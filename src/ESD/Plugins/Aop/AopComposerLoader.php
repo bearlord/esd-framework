@@ -5,12 +5,12 @@ namespace ESD\Plugins\Aop;
 
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Go\Core\AspectContainer;
-use Go\Instrument\PathResolver;
-use Go\Instrument\Transformer\FilterInjectorTransformer;
-use Go\Instrument\FileSystem\Enumerator;
-use Go\Instrument\ClassLoading\SourceTransformingLoader;
-use Go\Instrument\Transformer\StreamMetaData;
+use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Go\Instrument\PathResolver;
+use ESD\Goaop\Go\Instrument\Transformer\FilterInjectorTransformer;
+use ESD\Goaop\Go\Instrument\FileSystem\Enumerator;
+use ESD\Goaop\Go\Instrument\ClassLoading\SourceTransformingLoader;
+use ESD\Goaop\Go\Instrument\Transformer\StreamMetaData;
 
 /**
  * Class AopComposerLoader
@@ -19,7 +19,7 @@ use Go\Instrument\Transformer\StreamMetaData;
 class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
 {
     /** @var bool */
-    private static $wasInitialized = false;
+    private static bool $wasInitialized = false;
 
     /**
      * AopComposerLoader constructor.
@@ -62,7 +62,7 @@ class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
      * @param AspectContainer $container
      * @return bool
      */
-    public static function init(array $options, AspectContainer $container)
+    public static function init(array $options, AspectContainer $container): bool
     {
         $loaders = spl_autoload_functions();
 
@@ -91,7 +91,7 @@ class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
         return self::$wasInitialized;
     }
 
-    public static function wasInitialized()
+    public static function wasInitialized(): bool
     {
         return self::$wasInitialized;
     }
@@ -99,7 +99,7 @@ class AopComposerLoader extends \Go\Instrument\ClassLoading\AopComposerLoader
     /**
      * @param string $class
      */
-    public function loadClass($class)
+    public function loadClass($class): void
     {
         //File operations must close the global RuntimeCoroutine
         enableRuntimeCoroutine(false);

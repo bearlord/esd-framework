@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection;
+namespace ESD\Goaop\Go\ParserReflection;
 
 use ESD\Goaop\Go\ParserReflection\Traits\InitializationTrait;
 use ESD\Goaop\Go\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node\Stmt\ClassLike;
-use PhpParser\Node\Stmt\Property;
-use PhpParser\Node\Stmt\PropertyProperty;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
+use ESD\Nikic\PhpParser\Node\Stmt\Property;
+use ESD\Nikic\PhpParser\Node\Stmt\PropertyProperty;
 use ReflectionProperty as BaseReflectionProperty;
 
 /**

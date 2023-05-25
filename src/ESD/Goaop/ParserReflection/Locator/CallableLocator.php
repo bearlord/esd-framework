@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection\Locator;
+namespace ESD\Goaop\Go\ParserReflection\Locator;
 
 use ESD\Goaop\Go\ParserReflection\LocatorInterface;
 

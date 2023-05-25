@@ -23,11 +23,11 @@ use ESD\Plugins\Pack\PackPlugin;
 use ESD\Plugins\Validate\ValidatePlugin;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
-use FastRoute\Dispatcher;
-use FastRoute\RouteCollector;
+use ESD\Nikic\FastRoute\Dispatcher;
+use ESD\Nikic\FastRoute\RouteCollector;
 use ReflectionClass;
 use ReflectionMethod;
-use function FastRoute\simpleDispatcher;
+use function ESD\Nikic\FastRoute\simpleDispatcher;
 
 class GatewayPlugin extends AbstractPlugin
 {

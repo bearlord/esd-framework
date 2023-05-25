@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection\Instrument;
+namespace ESD\Goaop\Go\ParserReflection\Instrument;
 
 /**
  * Special class for resolving path for different file systems, wrappers, etc

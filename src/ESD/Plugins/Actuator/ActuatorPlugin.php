@@ -19,8 +19,8 @@ use ESD\Plugins\Aop\AopConfig;
 use ESD\Plugins\Aop\AopPlugin;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Yii\Yii;
-use FastRoute\RouteCollector;
-use function FastRoute\simpleDispatcher;
+use ESD\Nikic\FastRoute\RouteCollector;
+use function ESD\Nikic\FastRoute\simpleDispatcher;
 
 /**
  * Class ActuatorPlugin

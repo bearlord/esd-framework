@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection\NodeVisitor;
+namespace ESD\Goaop\Go\ParserReflection\NodeVisitor;
 
 use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to collect static variables in the method/function body and resove them

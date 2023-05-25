@@ -10,8 +10,8 @@ use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Security\AccessDeniedException;
 use ESD\Plugins\Security\Annotation\PostAuthorize;
 use ESD\Plugins\Security\Annotation\PreAuthorize;
-use Go\Aop\Intercept\MethodInvocation;
-use Go\Lang\Annotation\Around;
+use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Go\Lang\Annotation\Around;
 
 /**
  * Class SecurityAspect

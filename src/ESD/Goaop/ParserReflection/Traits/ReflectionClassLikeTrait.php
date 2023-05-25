@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection\Traits;
+namespace ESD\Goaop\Go\ParserReflection\Traits;
 
 use ESD\Goaop\Go\ParserReflection\ReflectionClass;
 use ESD\Goaop\Go\ParserReflection\ReflectionClassConstant;
@@ -16,13 +16,13 @@ use ESD\Goaop\Go\ParserReflection\ReflectionException;
 use ESD\Goaop\Go\ParserReflection\ReflectionMethod;
 use ESD\Goaop\Go\ParserReflection\ReflectionProperty;
 use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node\Name\FullyQualified;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassConst;
-use PhpParser\Node\Stmt\ClassLike;
-use PhpParser\Node\Stmt\Interface_;
-use PhpParser\Node\Stmt\Trait_;
-use PhpParser\Node\Stmt\TraitUseAdaptation;
+use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
+use ESD\Nikic\PhpParser\Node\Stmt\Class_;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
+use ESD\Nikic\PhpParser\Node\Stmt\Interface_;
+use ESD\Nikic\PhpParser\Node\Stmt\Trait_;
+use ESD\Nikic\PhpParser\Node\Stmt\TraitUseAdaptation;
 
 /**
  * General class-like reflection

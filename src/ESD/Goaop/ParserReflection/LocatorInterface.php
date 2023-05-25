@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection;
+namespace ESD\Goaop\Go\ParserReflection;
 
 /**
  * Locator is responsible to return a file name for given item, typically class

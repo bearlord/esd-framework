@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection;
+namespace ESD\Goaop\Go\ParserReflection;
 
 
 use ESD\Goaop\Go\ParserReflection\Instrument\PathResolver;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\Namespace_;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
 
 /**
  * AST-based reflector for the source file

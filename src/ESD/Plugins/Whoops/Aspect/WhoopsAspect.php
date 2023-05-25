@@ -10,8 +10,8 @@ use ESD\Core\Server\Beans\Response;
 use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Whoops\WhoopsConfig;
-use Go\Aop\Intercept\MethodInvocation;
-use Go\Lang\Annotation\Around;
+use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Go\Lang\Annotation\Around;
 use Whoops\Run;
 
 /**

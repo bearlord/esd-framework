@@ -9,13 +9,13 @@
  */
 declare(strict_types=1);
 
-namespace Go\ParserReflection;
+namespace ESD\Goaop\Go\ParserReflection;
 
 use ESD\Goaop\Go\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node\Const_;
-use PhpParser\Node\Stmt\ClassConst;
-use PhpParser\Node\Stmt\ClassLike;
+use ESD\Nikic\PhpParser\Node\Const_;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
 use \ReflectionClassConstant as BaseReflectionClassConstant;
 
 class ReflectionClassConstant extends BaseReflectionClassConstant

@@ -13,7 +13,7 @@ namespace ESD\Goaop\Go\Instrument\Transformer;
 use ESD\Goaop\Go\Instrument\PathResolver;
 use ESD\Goaop\Go\ParserReflection\ReflectionEngine;
 use InvalidArgumentException;
-use PhpParser\Node;
+use ESD\Nikic\PhpParser\Node;
 
 /**
  * Stream metadata object

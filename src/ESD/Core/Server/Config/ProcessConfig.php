@@ -28,7 +28,7 @@ class ProcessConfig extends BaseConfig
      * @param string $groupName
      * @throws ConfigException
      */
-    public function __construct($className = null, $name = null, $groupName = Process::DEFAULT_GROUP)
+    public function __construct($className = '', $name = '', $groupName = 'DefaultGroup')
     {
         parent::__construct(self::key, true, "name");
         if ($groupName == Process::WORKER_GROUP) {

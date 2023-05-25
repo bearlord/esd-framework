@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Go\ParserReflection\NodeVisitor;
+namespace ESD\Goaop\Go\ParserReflection\NodeVisitor;
 
-use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to check if the method body

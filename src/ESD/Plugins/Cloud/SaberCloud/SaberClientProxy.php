@@ -23,7 +23,7 @@ use ESD\Plugins\EasyRoute\Annotation\ResponseBody;
 use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\Cloud\SaberCloud\Annotation\SaberClient;
 use ESD\Psr\Cloud\CircuitBreaker;
-use FastRoute\RouteParser\Std;
+use ESD\Nikic\FastRoute\RouteParser\Std;
 use Swlib\Http\ContentType;
 use Swlib\Saber\Response;
 
