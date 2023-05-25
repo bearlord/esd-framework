@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Pointcut;
+namespace ESD\Goaop\Aop\Pointcut;
 
-use ESD\Goaop\Go\Aop\Pointcut;
-use ESD\Goaop\Go\Aop\Support\AndPointFilter;
+use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Aop\Support\AndPointFilter;
 
 /**
  * Signature method pointcut checks method signature (modifiers and name) to match it

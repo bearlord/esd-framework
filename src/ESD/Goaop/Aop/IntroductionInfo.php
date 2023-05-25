@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop;
+namespace ESD\Goaop\Aop;
 
 /**
  * Interface supplying the information necessary to describe an introduction of trait.

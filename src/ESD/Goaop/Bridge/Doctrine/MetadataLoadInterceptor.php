@@ -7,13 +7,13 @@
  * This source file is subject to the license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace ESD\Goaop\Go\Bridge\Doctrine;
+namespace ESD\Goaop\Bridge\Doctrine;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Core\AspectContainer;
 
 /**
  * Class MetadataLoadInterceptor

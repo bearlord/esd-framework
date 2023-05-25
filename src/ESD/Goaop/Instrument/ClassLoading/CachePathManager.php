@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\ClassLoading;
-use ESD\Goaop\Go\Aop\Features;
-use ESD\Goaop\Go\Core\AspectKernel;
+namespace ESD\Goaop\Instrument\ClassLoading;
+use ESD\Goaop\Aop\Features;
+use ESD\Goaop\Core\AspectKernel;
 
 /**
  * Class that manages real-code to cached-code paths mapping.

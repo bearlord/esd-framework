@@ -5,12 +5,12 @@ namespace ESD\Plugins\Aop;
 
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Instrument\PathResolver;
-use ESD\Goaop\Go\Instrument\Transformer\FilterInjectorTransformer;
-use ESD\Goaop\Go\Instrument\FileSystem\Enumerator;
-use ESD\Goaop\Go\Instrument\ClassLoading\SourceTransformingLoader;
-use ESD\Goaop\Go\Instrument\Transformer\StreamMetaData;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Instrument\PathResolver;
+use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
+use ESD\Goaop\Instrument\FileSystem\Enumerator;
+use ESD\Goaop\Instrument\ClassLoading\SourceTransformingLoader;
+use ESD\Goaop\Instrument\Transformer\StreamMetaData;
 
 /**
  * Class AopComposerLoader

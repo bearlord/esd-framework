@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\FileSystem;
+namespace ESD\Goaop\Instrument\FileSystem;
 
 use ArrayIterator;
 use InvalidArgumentException;

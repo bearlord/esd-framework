@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\Pointcut;
-use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Core\AspectContainer;
 
 /**
  * Lazy pointcut advisor is used to create a delayed pointcut only when needed

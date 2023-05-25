@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Go\Aop\Intercept\ConstructorInvocation;
-use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Aop\Intercept\ConstructorInvocation;
+use ESD\Goaop\Core\AspectContainer;
 use ReflectionClass;
 use ReflectionMethod;
 

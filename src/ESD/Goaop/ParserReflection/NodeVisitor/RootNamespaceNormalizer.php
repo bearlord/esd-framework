@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\NodeVisitor;
+namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
 use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
 use ESD\Nikic\PhpParser\Node\Stmt\Declare_;

@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy;
+namespace ESD\Goaop\Proxy;
 
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Core\LazyAdvisorAccessor;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Core\LazyAdvisorAccessor;
 use ReflectionMethod;
 
 /**

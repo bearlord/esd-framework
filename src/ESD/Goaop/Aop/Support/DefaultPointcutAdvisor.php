@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\Framework\DynamicInvocationMatcherInterceptor;
-use ESD\Goaop\Go\Aop\Intercept\Interceptor;
-use ESD\Goaop\Go\Aop\Pointcut;
-use ESD\Goaop\Go\Aop\PointFilter;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\Framework\DynamicInvocationMatcherInterceptor;
+use ESD\Goaop\Aop\Intercept\Interceptor;
+use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Aop\PointFilter;
 
 /**
  * Convenient Pointcut-driven Advisor implementation.

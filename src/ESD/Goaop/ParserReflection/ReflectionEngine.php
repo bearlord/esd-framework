@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection;
+namespace ESD\Goaop\ParserReflection;
 
-use ESD\Goaop\Go\ParserReflection\Instrument\PathResolver;
-use ESD\Goaop\Go\ParserReflection\NodeVisitor\RootNamespaceNormalizer;
+use ESD\Goaop\ParserReflection\Instrument\PathResolver;
+use ESD\Goaop\ParserReflection\NodeVisitor\RootNamespaceNormalizer;
 use ESD\Nikic\PhpParser\Lexer;
 use ESD\Nikic\PhpParser\Node;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;

@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
-use ESD\Goaop\Go\Aop\Advisor;
-use ESD\Goaop\Go\Aop\Aspect;
-use ESD\Goaop\Go\Aop\Framework;
-use ESD\Goaop\Go\Aop\Pointcut;
-use ESD\Goaop\Go\Aop\Support\DefaultPointcutAdvisor;
-use ESD\Goaop\Go\Lang\Annotation;
+use ESD\Goaop\Aop\Advisor;
+use ESD\Goaop\Aop\Aspect;
+use ESD\Goaop\Aop\Framework;
+use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Aop\Support\DefaultPointcutAdvisor;
+use ESD\Goaop\Lang\Annotation;
 
 /**
  * General aspect loader add common support for general advices, declared as annotations

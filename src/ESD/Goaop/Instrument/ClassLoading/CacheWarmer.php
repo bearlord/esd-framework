@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\ClassLoading;
+namespace ESD\Goaop\Instrument\ClassLoading;
 
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Instrument\FileSystem\Enumerator;
-use ESD\Goaop\Go\Instrument\Transformer\FilterInjectorTransformer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Instrument\FileSystem\Enumerator;
+use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 

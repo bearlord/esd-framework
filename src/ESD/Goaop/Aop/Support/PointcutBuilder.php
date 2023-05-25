@@ -8,16 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
 use Closure;
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\Framework\AfterInterceptor;
-use ESD\Goaop\Go\Aop\Framework\AfterThrowingInterceptor;
-use ESD\Goaop\Go\Aop\Framework\AroundInterceptor;
-use ESD\Goaop\Go\Aop\Framework\BeforeInterceptor;
-use ESD\Goaop\Go\Aop\Framework\DeclareErrorInterceptor;
-use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\Framework\AfterInterceptor;
+use ESD\Goaop\Aop\Framework\AfterThrowingInterceptor;
+use ESD\Goaop\Aop\Framework\AroundInterceptor;
+use ESD\Goaop\Aop\Framework\BeforeInterceptor;
+use ESD\Goaop\Aop\Framework\DeclareErrorInterceptor;
+use ESD\Goaop\Core\AspectContainer;
 
 /**
  * Pointcut builder provides simple DSL for declaring pointcuts in plain PHP code

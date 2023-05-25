@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
-use ESD\Goaop\Go\Aop\Advisor;
-use ESD\Goaop\Go\Aop\Aspect;
-use ESD\Goaop\Go\Aop\Pointcut;
+use ESD\Goaop\Aop\Advisor;
+use ESD\Goaop\Aop\Aspect;
+use ESD\Goaop\Aop\Pointcut;
 
 /**
  * Extension interface that defines an API for aspect loaders

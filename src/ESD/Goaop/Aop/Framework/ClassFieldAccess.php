@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Go\Aop\AspectException;
-use ESD\Goaop\Go\Aop\Intercept\FieldAccess;
+use ESD\Goaop\Aop\AspectException;
+use ESD\Goaop\Aop\Intercept\FieldAccess;
 use ReflectionProperty;
 
 /**

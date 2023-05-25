@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\NodeVisitor;
+namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
-use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
+use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
 use ESD\Nikic\PhpParser\Node;
 use ESD\Nikic\PhpParser\NodeTraverser;
 use ESD\Nikic\PhpParser\NodeVisitorAbstract;

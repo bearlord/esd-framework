@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Pointcut;
+namespace ESD\Goaop\Aop\Pointcut;
 
-use ESD\Goaop\Go\Aop\PointFilter;
-use ESD\Goaop\Go\Aop\Support\TruePointFilter;
+use ESD\Goaop\Aop\PointFilter;
+use ESD\Goaop\Aop\Support\TruePointFilter;
 
 /**
  * Convenient trait for pointcuts.

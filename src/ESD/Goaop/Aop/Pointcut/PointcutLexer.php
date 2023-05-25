@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Pointcut;
+namespace ESD\Goaop\Aop\Pointcut;
 
 use Dissect\Lexer\SimpleLexer;
 

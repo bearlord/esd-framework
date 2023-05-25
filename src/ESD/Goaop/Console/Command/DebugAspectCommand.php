@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Console\Command;
+namespace ESD\Goaop\Console\Command;
 
-use ESD\Goaop\Go\Aop\Advisor;
-use ESD\Goaop\Go\Aop\Aspect;
-use ESD\Goaop\Go\Aop\Pointcut;
-use ESD\Goaop\Go\Core\AspectLoader;
+use ESD\Goaop\Aop\Advisor;
+use ESD\Goaop\Aop\Aspect;
+use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Core\AspectLoader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

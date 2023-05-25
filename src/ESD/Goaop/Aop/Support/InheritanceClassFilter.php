@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
 use ReflectionClass;
-use ESD\Goaop\Go\Aop\PointFilter;
+use ESD\Goaop\Aop\PointFilter;
 
 /**
  * Inheritance class matcher that match single class name or any subclass

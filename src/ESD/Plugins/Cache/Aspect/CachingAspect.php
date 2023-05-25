@@ -18,8 +18,8 @@ use ESD\Plugins\Cache\CacheConfig;
 use ESD\Plugins\Cache\CacheException;
 use ESD\Plugins\Cache\CacheStorage;
 use ESD\Plugins\Redis\GetRedis;
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Lang\Annotation\Around;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Lang\Annotation\Around;
 
 /**
  * Caching aspect

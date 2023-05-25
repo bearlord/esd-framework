@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\Transformer;
+namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Goaop\Go\Aop\Framework\ReflectionConstructorInvocation;
-use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Aop\Framework\ReflectionConstructorInvocation;
+use ESD\Goaop\Core\AspectContainer;
 use ESD\Nikic\PhpParser\Node;
 use ESD\Nikic\PhpParser\NodeTraverser;
 

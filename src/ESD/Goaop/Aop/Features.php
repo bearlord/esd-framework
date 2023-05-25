@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop;
+namespace ESD\Goaop\Aop;
 
 /**
  * Interface-enumeration of framework features to use in checking and configuration

@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\Transformer;
+namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Goaop\Go\Instrument\PathResolver;
-use ESD\Goaop\Go\ParserReflection\ReflectionEngine;
+use ESD\Goaop\Instrument\PathResolver;
+use ESD\Goaop\ParserReflection\ReflectionEngine;
 use InvalidArgumentException;
 use ESD\Nikic\PhpParser\Node;
 

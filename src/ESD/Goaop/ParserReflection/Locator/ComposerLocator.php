@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\Locator;
+namespace ESD\Goaop\ParserReflection\Locator;
 
 use Composer\Autoload\ClassLoader;
-use ESD\Goaop\Go\ParserReflection\Instrument\PathResolver;
-use ESD\Goaop\Go\ParserReflection\LocatorInterface;
-use ESD\Goaop\Go\ParserReflection\ReflectionException;
+use ESD\Goaop\ParserReflection\Instrument\PathResolver;
+use ESD\Goaop\ParserReflection\LocatorInterface;
+use ESD\Goaop\ParserReflection\ReflectionException;
 
 /**
  * Locator, that can find a file for the given class name by asking composer

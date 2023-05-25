@@ -9,10 +9,10 @@
  */
 declare(strict_types=1);
 
-namespace ESD\Goaop\Go\ParserReflection;
+namespace ESD\Goaop\ParserReflection;
 
-use ESD\Goaop\Go\ParserReflection\Traits\InternalPropertiesEmulationTrait;
-use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
+use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
+use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
 use ESD\Nikic\PhpParser\Node\Const_;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;

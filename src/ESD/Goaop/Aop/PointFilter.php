@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop;
+namespace ESD\Goaop\Aop;
 
 /**
  * Filter that restricts matching of a pointcut or introduction to a given set of reflection points.

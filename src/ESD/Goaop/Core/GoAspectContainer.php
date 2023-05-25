@@ -8,16 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache as DoctrineCache;
 use ReflectionClass;
-use ESD\Goaop\Go\Aop;
-use ESD\Goaop\Go\Aop\Pointcut\PointcutLexer;
-use ESD\Goaop\Go\Aop\Pointcut\PointcutGrammar;
-use ESD\Goaop\Go\Aop\Pointcut\PointcutParser;
-use ESD\Goaop\Go\Instrument\ClassLoading\CachePathManager;
+use ESD\Goaop\Aop;
+use ESD\Goaop\Aop\Pointcut\PointcutLexer;
+use ESD\Goaop\Aop\Pointcut\PointcutGrammar;
+use ESD\Goaop\Aop\Pointcut\PointcutParser;
+use ESD\Goaop\Instrument\ClassLoading\CachePathManager;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**

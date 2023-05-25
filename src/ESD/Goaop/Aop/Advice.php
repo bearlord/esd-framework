@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop;
+namespace ESD\Goaop\Aop;
 
 /**
  * Tag interface for Advice. Implementations can be any type of advice, such as Interceptors.

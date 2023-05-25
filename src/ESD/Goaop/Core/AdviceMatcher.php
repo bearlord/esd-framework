@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
-use ESD\Goaop\Go\Aop;
-use ESD\Goaop\Go\Aop\Support\NamespacedReflectionFunction;
-use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
+use ESD\Goaop\Aop;
+use ESD\Goaop\Aop\Support\NamespacedReflectionFunction;
+use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;

@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Go\Aop\Intercept\Invocation;
+use ESD\Goaop\Aop\Intercept\Invocation;
 
 /**
  * Abstract class for all invocations joinpoints

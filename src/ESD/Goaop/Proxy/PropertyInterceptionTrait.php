@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy;
+namespace ESD\Goaop\Proxy;
 
-use ESD\Goaop\Go\Aop\Framework\ClassFieldAccess;
+use ESD\Goaop\Aop\Framework\ClassFieldAccess;
 
 /**
  * Trait that holds all general logic for working with intercepted properties

@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\AdviceAfter;
-use ESD\Goaop\Go\Aop\AdviceBefore;
-use ESD\Goaop\Go\Aop\AdviceAround;
-use ESD\Goaop\Go\Aop\Intercept\Interceptor;
-use ESD\Goaop\Go\Aop\Intercept\Joinpoint;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\AdviceAfter;
+use ESD\Goaop\Aop\AdviceBefore;
+use ESD\Goaop\Aop\AdviceAround;
+use ESD\Goaop\Aop\Intercept\Interceptor;
+use ESD\Goaop\Aop\Intercept\Joinpoint;
 
 /**
  *  Abstract joinpoint for framework

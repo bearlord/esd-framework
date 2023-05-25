@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\ValueResolver;
+namespace ESD\Goaop\ParserReflection\ValueResolver;
 
-use ESD\Goaop\Go\ParserReflection\ReflectionClass;
-use ESD\Goaop\Go\ParserReflection\ReflectionException;
-use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
+use ESD\Goaop\ParserReflection\ReflectionClass;
+use ESD\Goaop\ParserReflection\ReflectionException;
+use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
 use ESD\Nikic\PhpParser\Node;
 use ESD\Nikic\PhpParser\Node\Expr;
 use ESD\Nikic\PhpParser\Node\Scalar;

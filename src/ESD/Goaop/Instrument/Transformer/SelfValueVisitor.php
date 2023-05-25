@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\Transformer;
+namespace ESD\Goaop\Instrument\Transformer;
 
 use ESD\Nikic\PhpParser\Node;
 use ESD\Nikic\PhpParser\Node\Name;

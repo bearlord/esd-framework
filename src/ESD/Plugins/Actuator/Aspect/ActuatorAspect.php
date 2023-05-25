@@ -12,8 +12,8 @@ use ESD\Plugins\Actuator\ActuatorController;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\EasyRoute\Aspect\RouteAspect;
 use ESD\Nikic\FastRoute\Dispatcher;
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Lang\Annotation\Around;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Lang\Annotation\Around;
 
 class ActuatorAspect extends OrderAspect
 {

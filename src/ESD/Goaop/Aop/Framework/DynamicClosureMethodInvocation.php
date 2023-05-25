@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
 /**
  * Dynamic closure method invocation is responsible to call dynamic methods via closure

@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
-use ESD\Goaop\Go\Aop;
+use ESD\Goaop\Aop;
 
 /**
  * Aspect container interface

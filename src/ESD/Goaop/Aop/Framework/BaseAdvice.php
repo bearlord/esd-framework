@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
 use Closure;
 use ReflectionFunction;
 use ReflectionMethod;
-use ESD\Goaop\Go\Core\AspectKernel;
+use ESD\Goaop\Core\AspectKernel;
 
 /**
  * Base class for all framework advices implementations

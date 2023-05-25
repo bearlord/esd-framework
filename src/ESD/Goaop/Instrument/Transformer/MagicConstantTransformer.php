@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\Transformer;
+namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Goaop\Go\Core\AspectKernel;
+use ESD\Goaop\Core\AspectKernel;
 use ESD\Nikic\PhpParser\Node\Expr\MethodCall;
 use ESD\Nikic\PhpParser\Node\Scalar\MagicConst;
 use ESD\Nikic\PhpParser\Node\Scalar\MagicConst\Dir;

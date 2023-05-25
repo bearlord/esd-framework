@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\Traits;
+namespace ESD\Goaop\ParserReflection\Traits;
 
-use ESD\Goaop\Go\ParserReflection\ReflectionClass;
-use ESD\Goaop\Go\ParserReflection\ReflectionClassConstant;
-use ESD\Goaop\Go\ParserReflection\ReflectionException;
-use ESD\Goaop\Go\ParserReflection\ReflectionMethod;
-use ESD\Goaop\Go\ParserReflection\ReflectionProperty;
-use ESD\Goaop\Go\ParserReflection\ValueResolver\NodeExpressionResolver;
+use ESD\Goaop\ParserReflection\ReflectionClass;
+use ESD\Goaop\ParserReflection\ReflectionClassConstant;
+use ESD\Goaop\ParserReflection\ReflectionException;
+use ESD\Goaop\ParserReflection\ReflectionMethod;
+use ESD\Goaop\ParserReflection\ReflectionProperty;
+use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
 use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
 use ESD\Nikic\PhpParser\Node\Stmt\Class_;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;

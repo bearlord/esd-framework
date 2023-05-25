@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
-use ESD\Goaop\Go\Aop\PointFilter;
+use ESD\Goaop\Aop\PointFilter;
 
 /**
  * Logical "or" filter.

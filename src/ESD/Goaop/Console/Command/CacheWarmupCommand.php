@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Console\Command;
+namespace ESD\Goaop\Console\Command;
 
-use ESD\Goaop\Go\Instrument\ClassLoading\CacheWarmer;
+use ESD\Goaop\Instrument\ClassLoading\CacheWarmer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

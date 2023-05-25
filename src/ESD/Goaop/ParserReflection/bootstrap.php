@@ -8,8 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
-use ESD\Goaop\Go\ParserReflection\Locator\ComposerLocator;
-use ESD\Goaop\Go\ParserReflection\ReflectionEngine;
+use ESD\Goaop\ParserReflection\Locator\ComposerLocator;
+use ESD\Goaop\ParserReflection\ReflectionEngine;
 
 /**
  * This file is used for automatic configuration of

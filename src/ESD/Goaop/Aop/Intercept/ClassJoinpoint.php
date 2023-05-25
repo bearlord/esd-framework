@@ -10,7 +10,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Intercept;
+namespace ESD\Goaop\Aop\Intercept;
 
 /**
  * This interface represents a class joinpoint that can have $this variable and defined scope

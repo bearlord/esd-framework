@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\Traits;
+namespace ESD\Goaop\ParserReflection\Traits;
 
 /**
  * Class for emulating internal properties behaviour

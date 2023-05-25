@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\PointcutAdvisor;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\PointcutAdvisor;
 
 /**
  * Abstract generic PointcutAdvisor that allows for any Advice to be configured.

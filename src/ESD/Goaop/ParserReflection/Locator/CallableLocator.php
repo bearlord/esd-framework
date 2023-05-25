@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\Locator;
+namespace ESD\Goaop\ParserReflection\Locator;
 
-use ESD\Goaop\Go\ParserReflection\LocatorInterface;
+use ESD\Goaop\ParserReflection\LocatorInterface;
 
 /**
  * Locator, that can find a file for the given class name by asking composer

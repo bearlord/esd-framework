@@ -13,8 +13,8 @@ use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\PackConfig;
 use ESD\Plugins\Pack\PackTool\IPack;
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Lang\Annotation\Around;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Lang\Annotation\Around;
 
 /**
  * Class PackAspect

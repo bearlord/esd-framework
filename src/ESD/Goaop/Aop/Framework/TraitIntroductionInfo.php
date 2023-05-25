@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Go\Aop\IntroductionInfo;
+use ESD\Goaop\Aop\IntroductionInfo;
 
 /**
  * Advice for introduction that holds list of traits and interfaces for the concrete class

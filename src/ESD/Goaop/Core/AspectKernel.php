@@ -8,19 +8,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
-use ESD\Goaop\Go\Aop\Features;
-use ESD\Goaop\Go\Instrument\ClassLoading\AopComposerLoader;
-use ESD\Goaop\Go\Instrument\ClassLoading\SourceTransformingLoader;
-use ESD\Goaop\Go\Instrument\PathResolver;
-use ESD\Goaop\Go\Instrument\Transformer\ConstructorExecutionTransformer;
-use ESD\Goaop\Go\Instrument\Transformer\SelfValueTransformer;
-use ESD\Goaop\Go\Instrument\Transformer\SourceTransformer;
-use ESD\Goaop\Go\Instrument\Transformer\WeavingTransformer;
-use ESD\Goaop\Go\Instrument\Transformer\CachingTransformer;
-use ESD\Goaop\Go\Instrument\Transformer\FilterInjectorTransformer;
-use ESD\Goaop\Go\Instrument\Transformer\MagicConstantTransformer;
+use ESD\Goaop\Aop\Features;
+use ESD\Goaop\Instrument\ClassLoading\AopComposerLoader;
+use ESD\Goaop\Instrument\ClassLoading\SourceTransformingLoader;
+use ESD\Goaop\Instrument\PathResolver;
+use ESD\Goaop\Instrument\Transformer\ConstructorExecutionTransformer;
+use ESD\Goaop\Instrument\Transformer\SelfValueTransformer;
+use ESD\Goaop\Instrument\Transformer\SourceTransformer;
+use ESD\Goaop\Instrument\Transformer\WeavingTransformer;
+use ESD\Goaop\Instrument\Transformer\CachingTransformer;
+use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
+use ESD\Goaop\Instrument\Transformer\MagicConstantTransformer;
 
 /**
  * Abstract aspect kernel is used to prepare an application to work with aspects.

@@ -8,23 +8,23 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\Transformer;
+namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Goaop\Go\Aop\Advisor;
-use ESD\Goaop\Go\Aop\Aspect;
-use ESD\Goaop\Go\Aop\Framework\AbstractJoinpoint;
-use ESD\Goaop\Go\Core\AdviceMatcher;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Core\AspectLoader;
-use ESD\Goaop\Go\Instrument\ClassLoading\CachePathManager;
-use ESD\Goaop\Go\ParserReflection\ReflectionClass;
-use ESD\Goaop\Go\ParserReflection\ReflectionFile;
-use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
-use ESD\Goaop\Go\ParserReflection\ReflectionMethod;
-use ESD\Goaop\Go\Proxy\ClassProxy;
-use ESD\Goaop\Go\Proxy\FunctionProxy;
-use ESD\Goaop\Go\Proxy\TraitProxy;
+use ESD\Goaop\Aop\Advisor;
+use ESD\Goaop\Aop\Aspect;
+use ESD\Goaop\Aop\Framework\AbstractJoinpoint;
+use ESD\Goaop\Core\AdviceMatcher;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Core\AspectLoader;
+use ESD\Goaop\Instrument\ClassLoading\CachePathManager;
+use ESD\Goaop\ParserReflection\ReflectionClass;
+use ESD\Goaop\ParserReflection\ReflectionFile;
+use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
+use ESD\Goaop\ParserReflection\ReflectionMethod;
+use ESD\Goaop\Proxy\ClassProxy;
+use ESD\Goaop\Proxy\FunctionProxy;
+use ESD\Goaop\Proxy\TraitProxy;
 
 /**
  * Main transformer that performs weaving of aspects into the source code

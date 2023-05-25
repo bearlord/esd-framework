@@ -18,8 +18,8 @@ use ESD\Plugins\EasyRoute\EasyRouteConfig;
 use ESD\Plugins\EasyRoute\RouteConfig;
 use ESD\Plugins\EasyRoute\RouteTool\IRoute;
 use ESD\Server\Coroutine\Server;
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Lang\Annotation\Around;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Lang\Annotation\Around;
 
 
 class CountAspect extends OrderAspect

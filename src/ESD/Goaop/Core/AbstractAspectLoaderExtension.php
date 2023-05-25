@@ -8,17 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
 use Dissect\Lexer\Exception\RecognitionException;
 use Dissect\Lexer\Lexer;
 use Dissect\Lexer\TokenStream\TokenStream;
 use Dissect\Parser\Exception\UnexpectedTokenException;
 use Dissect\Parser\Parser;
-use ESD\Goaop\Go\Aop\Aspect;
-use ESD\Goaop\Go\Aop\Pointcut;
-use ESD\Goaop\Go\Aop\PointFilter;
-use ESD\Goaop\Go\Lang\Annotation;
+use ESD\Goaop\Aop\Aspect;
+use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Aop\PointFilter;
+use ESD\Goaop\Lang\Annotation;
 use ReflectionMethod;
 use ReflectionProperty;
 

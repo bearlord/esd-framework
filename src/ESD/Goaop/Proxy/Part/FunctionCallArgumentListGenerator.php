@@ -10,7 +10,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy\Part;
+namespace ESD\Goaop\Proxy\Part;
 
 use Laminas\Code\Generator\AbstractGenerator;
 use ReflectionFunctionAbstract;

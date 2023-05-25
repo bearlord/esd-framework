@@ -8,15 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy;
+namespace ESD\Goaop\Proxy;
 
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\Framework\ReflectionFunctionInvocation;
-use ESD\Goaop\Go\Aop\Intercept\FunctionInvocation;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Core\LazyAdvisorAccessor;
-use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\Framework\ReflectionFunctionInvocation;
+use ESD\Goaop\Aop\Intercept\FunctionInvocation;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Core\LazyAdvisorAccessor;
+use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
 use ReflectionFunction;
 
 /**

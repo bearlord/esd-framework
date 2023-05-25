@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Go\Aop\AdviceBefore;
-use ESD\Goaop\Go\Aop\Intercept\Joinpoint;
+use ESD\Goaop\Aop\AdviceBefore;
+use ESD\Goaop\Aop\Intercept\Joinpoint;
 
 /**
  * "Before" interceptor

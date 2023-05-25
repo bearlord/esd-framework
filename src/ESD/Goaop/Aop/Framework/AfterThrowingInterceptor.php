@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
 use Exception;
-use ESD\Goaop\Go\Aop\AdviceAfter;
-use ESD\Goaop\Go\Aop\Intercept\Joinpoint;
+use ESD\Goaop\Aop\AdviceAfter;
+use ESD\Goaop\Aop\Intercept\Joinpoint;
 
 /**
  * "After Throwing" interceptor

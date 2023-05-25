@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
-use ESD\Goaop\Go\Aop\PointFilter;
-use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
+use ESD\Goaop\Aop\PointFilter;
+use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
 
 /**
  * Simple namespace matcher that match only specific namespace name

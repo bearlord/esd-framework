@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy;
+namespace ESD\Goaop\Proxy;
 
 use Reflection;
 use ReflectionFunctionAbstract;

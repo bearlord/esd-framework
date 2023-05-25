@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\ClassLoading;
+namespace ESD\Goaop\Instrument\ClassLoading;
 
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Instrument\FileSystem\Enumerator;
-use ESD\Goaop\Go\Instrument\PathResolver;
-use ESD\Goaop\Go\Instrument\Transformer\FilterInjectorTransformer;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Instrument\FileSystem\Enumerator;
+use ESD\Goaop\Instrument\PathResolver;
+use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 

@@ -8,24 +8,24 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy;
+namespace ESD\Goaop\Proxy;
 
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\Framework\ClassFieldAccess;
-use ESD\Goaop\Go\Aop\Framework\DynamicClosureMethodInvocation;
-use ESD\Goaop\Go\Aop\Framework\ReflectionConstructorInvocation;
-use ESD\Goaop\Go\Aop\Framework\StaticClosureMethodInvocation;
-use ESD\Goaop\Go\Aop\Framework\StaticInitializationJoinpoint;
-use ESD\Goaop\Go\Aop\Intercept\Joinpoint;
-use ESD\Goaop\Go\Aop\IntroductionInfo;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Core\LazyAdvisorAccessor;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\Framework\ClassFieldAccess;
+use ESD\Goaop\Aop\Framework\DynamicClosureMethodInvocation;
+use ESD\Goaop\Aop\Framework\ReflectionConstructorInvocation;
+use ESD\Goaop\Aop\Framework\StaticClosureMethodInvocation;
+use ESD\Goaop\Aop\Framework\StaticInitializationJoinpoint;
+use ESD\Goaop\Aop\Intercept\Joinpoint;
+use ESD\Goaop\Aop\IntroductionInfo;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Core\LazyAdvisorAccessor;
 use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
-use ESD\Goaop\Go\Aop\Proxy;
+use ESD\Goaop\Aop\Proxy;
 
 /**
  * Class proxy builder that is used to generate a child class from the list of joinpoints

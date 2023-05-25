@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Console\Command;
+namespace ESD\Goaop\Console\Command;
 
-use ESD\Goaop\Go\Core\AspectKernel;
+use ESD\Goaop\Core\AspectKernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

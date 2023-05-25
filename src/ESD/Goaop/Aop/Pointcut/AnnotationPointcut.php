@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Pointcut;
+namespace ESD\Goaop\Aop\Pointcut;
 
 use Doctrine\Common\Annotations\Reader;
-use ESD\Goaop\Go\Aop\Pointcut;
+use ESD\Goaop\Aop\Pointcut;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;

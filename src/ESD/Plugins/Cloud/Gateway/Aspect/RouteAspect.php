@@ -22,10 +22,10 @@ use ESD\Plugins\Pack\Aspect\PackAspect;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\GetBoostSend;
 use ESD\Nikic\FastRoute\Dispatcher;
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Lang\Annotation\Around;
-use ESD\Goaop\Go\Lang\Annotation\After;
-use ESD\Goaop\Go\Lang\Annotation\Before;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Lang\Annotation\Around;
+use ESD\Goaop\Lang\Annotation\After;
+use ESD\Goaop\Lang\Annotation\Before;
 use Swlib\Saber;
 use Swoole\Coroutine\Channel;
 

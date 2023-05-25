@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection;
+namespace ESD\Goaop\ParserReflection;
 
 use ReflectionNamedType;
 use ReflectionType as BaseReflectionType;

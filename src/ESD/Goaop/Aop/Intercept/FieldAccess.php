@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Intercept;
+namespace ESD\Goaop\Aop\Intercept;
 
 use ReflectionProperty;
 

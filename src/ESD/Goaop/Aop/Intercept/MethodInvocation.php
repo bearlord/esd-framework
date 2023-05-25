@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Intercept;
+namespace ESD\Goaop\Aop\Intercept;
 
-use ESD\Goaop\Go\Aop\Support\AnnotatedReflectionMethod;
+use ESD\Goaop\Aop\Support\AnnotatedReflectionMethod;
 use ReflectionMethod;
 
 /**

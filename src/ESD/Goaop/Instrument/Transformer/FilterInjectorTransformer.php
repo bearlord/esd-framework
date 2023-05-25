@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\Transformer;
+namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Instrument\PathResolver;
-use ESD\Goaop\Go\Instrument\ClassLoading\CachePathManager;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Instrument\PathResolver;
+use ESD\Goaop\Instrument\ClassLoading\CachePathManager;
 use ESD\Nikic\PhpParser\Node\Expr\Include_;
 use ESD\Nikic\PhpParser\NodeTraverser;
 

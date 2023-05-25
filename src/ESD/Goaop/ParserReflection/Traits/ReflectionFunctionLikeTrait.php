@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\ParserReflection\Traits;
+namespace ESD\Goaop\ParserReflection\Traits;
 
 
-use ESD\Goaop\Go\ParserReflection\NodeVisitor\GeneratorDetector;
-use ESD\Goaop\Go\ParserReflection\NodeVisitor\StaticVariablesCollector;
-use ESD\Goaop\Go\ParserReflection\ReflectionParameter;
-use ESD\Goaop\Go\ParserReflection\ReflectionType;
+use ESD\Goaop\ParserReflection\NodeVisitor\GeneratorDetector;
+use ESD\Goaop\ParserReflection\NodeVisitor\StaticVariablesCollector;
+use ESD\Goaop\ParserReflection\ReflectionParameter;
+use ESD\Goaop\ParserReflection\ReflectionType;
 use ESD\Nikic\PhpParser\Node\Expr\Closure;
 use ESD\Nikic\PhpParser\Node\FunctionLike;
 use ESD\Nikic\PhpParser\Node\Identifier;

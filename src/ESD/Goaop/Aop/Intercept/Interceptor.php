@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Intercept;
+namespace ESD\Goaop\Aop\Intercept;
 
-use ESD\Goaop\Go\Aop\Advice;
+use ESD\Goaop\Aop\Advice;
 
 /**
  * This interface represents a generic interceptor.

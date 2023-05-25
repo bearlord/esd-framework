@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop;
+namespace ESD\Goaop\Aop;
 
 /**
  * Base interface holding AOP advice (action to take at a joinpoint)

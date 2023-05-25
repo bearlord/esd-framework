@@ -10,8 +10,8 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Server\Coroutine\Server;
 use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Uid\UidBean;
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Lang\Annotation\After;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Lang\Annotation\After;
 
 /**
  * Class UidAspect

@@ -10,12 +10,12 @@ declare(strict_types = 1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy;
+namespace ESD\Goaop\Proxy;
 
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Proxy\Part\FunctionCallArgumentListGenerator;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Proxy\Part\FunctionCallArgumentListGenerator;
 use ReflectionClass;
 use ReflectionMethod;
 use Laminas\Code\Generator\DocBlockGenerator;

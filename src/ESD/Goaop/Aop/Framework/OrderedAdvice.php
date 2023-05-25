@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Go\Aop\Advice;
+use ESD\Goaop\Aop\Advice;
 
 /**
  * Ordered advice can have a custom order to implement sorting

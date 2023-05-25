@@ -10,7 +10,7 @@ declare(strict_types = 1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
 /**
  * Provides access to annotations from reflection class/property/method.

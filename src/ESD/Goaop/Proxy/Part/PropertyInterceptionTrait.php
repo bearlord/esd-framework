@@ -10,9 +10,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy\Part;
+namespace ESD\Goaop\Proxy\Part;
 
-use ESD\Goaop\Go\Aop\Framework\ClassFieldAccess;
+use ESD\Goaop\Aop\Framework\ClassFieldAccess;
 
 use function array_key_exists;
 use function get_parent_class;

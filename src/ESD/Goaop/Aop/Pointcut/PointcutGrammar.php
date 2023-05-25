@@ -8,19 +8,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Pointcut;
+namespace ESD\Goaop\Aop\Pointcut;
 
 use Dissect\Lexer\Token;
 use Dissect\Parser\Grammar;
 use Doctrine\Common\Annotations\Reader;
-use ESD\Goaop\Go\Aop\PointFilter;
-use ESD\Goaop\Go\Aop\Support\AndPointFilter;
-use ESD\Goaop\Go\Aop\Support\InheritanceClassFilter;
-use ESD\Goaop\Go\Aop\Support\ModifierMatcherFilter;
-use ESD\Goaop\Go\Aop\Support\ReturnTypeFilter;
-use ESD\Goaop\Go\Aop\Support\SimpleNamespaceFilter;
-use ESD\Goaop\Go\Aop\Support\TruePointFilter;
-use ESD\Goaop\Go\Core\AspectContainer;
+use ESD\Goaop\Aop\PointFilter;
+use ESD\Goaop\Aop\Support\AndPointFilter;
+use ESD\Goaop\Aop\Support\InheritanceClassFilter;
+use ESD\Goaop\Aop\Support\ModifierMatcherFilter;
+use ESD\Goaop\Aop\Support\ReturnTypeFilter;
+use ESD\Goaop\Aop\Support\SimpleNamespaceFilter;
+use ESD\Goaop\Aop\Support\TruePointFilter;
+use ESD\Goaop\Core\AspectContainer;
 
 /**
  * Pointcut grammar defines general structure of pointcuts and rules of parsing

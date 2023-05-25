@@ -10,11 +10,11 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Framework;
+namespace ESD\Goaop\Aop\Framework;
 
 use Closure;
-use ESD\Goaop\Go\Aop\Intercept\Interceptor;
-use ESD\Goaop\Go\Core\AspectKernel;
+use ESD\Goaop\Aop\Intercept\Interceptor;
+use ESD\Goaop\Core\AspectKernel;
 use ReflectionFunction;
 use ReflectionMethod;
 use Serializable;

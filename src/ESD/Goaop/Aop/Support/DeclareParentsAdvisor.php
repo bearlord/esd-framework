@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Support;
+namespace ESD\Goaop\Aop\Support;
 
-use ESD\Goaop\Go\Aop\IntroductionAdvisor;
-use ESD\Goaop\Go\Aop\IntroductionInfo;
-use ESD\Goaop\Go\Aop\PointFilter;
+use ESD\Goaop\Aop\IntroductionAdvisor;
+use ESD\Goaop\Aop\IntroductionInfo;
+use ESD\Goaop\Aop\PointFilter;
 
 /**
  * Introduction advisor delegating to the given object.

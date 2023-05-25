@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument;
+namespace ESD\Goaop\Instrument;
 
 /**
  * Special class for resolving path for different file systems, wrappers, etc

@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Console\Command;
+namespace ESD\Goaop\Console\Command;
 
-use ESD\Goaop\Go\Aop\Advisor;
-use ESD\Goaop\Go\Core\AdviceMatcher;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectLoader;
-use ESD\Goaop\Go\Instrument\FileSystem\Enumerator;
-use ESD\Goaop\Go\ParserReflection\ReflectionFile;
+use ESD\Goaop\Aop\Advisor;
+use ESD\Goaop\Core\AdviceMatcher;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectLoader;
+use ESD\Goaop\Instrument\FileSystem\Enumerator;
+use ESD\Goaop\ParserReflection\ReflectionFile;
 use ReflectionClass;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

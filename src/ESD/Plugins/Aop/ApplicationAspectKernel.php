@@ -9,11 +9,11 @@ namespace ESD\Plugins\Aop;
 use ESD\Core\Exception;
 use ESD\Core\Order\OrderOwnerTrait;
 use ESD\Server\Coroutine\Server;
-use ESD\Goaop\Go\Aop\Aspect;
-use ESD\Goaop\Go\Aop\Features;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\Instrument\ClassLoading\SourceTransformingLoader;
+use ESD\Goaop\Aop\Aspect;
+use ESD\Goaop\Aop\Features;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Instrument\ClassLoading\SourceTransformingLoader;
 
 /**
  * Class ApplicationAspectKernel

@@ -10,14 +10,14 @@ declare(strict_types = 1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Proxy;
+namespace ESD\Goaop\Proxy;
 
-use ESD\Goaop\Go\Aop\Framework\ReflectionFunctionInvocation;
-use ESD\Goaop\Go\Core\AspectContainer;
-use ESD\Goaop\Go\Core\AspectKernel;
-use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
-use ESD\Goaop\Go\Proxy\Part\FunctionCallArgumentListGenerator;
-use ESD\Goaop\Go\Proxy\Part\InterceptedFunctionGenerator;
+use ESD\Goaop\Aop\Framework\ReflectionFunctionInvocation;
+use ESD\Goaop\Core\AspectContainer;
+use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
+use ESD\Goaop\Proxy\Part\FunctionCallArgumentListGenerator;
+use ESD\Goaop\Proxy\Part\InterceptedFunctionGenerator;
 use Laminas\Code\Generator\FileGenerator;
 use Laminas\Code\Generator\ValueGenerator;
 use ReflectionException;

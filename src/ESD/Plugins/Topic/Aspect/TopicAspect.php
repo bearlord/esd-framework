@@ -11,8 +11,8 @@ use ESD\Plugins\Aop\OrderAspect;
 use ESD\Plugins\Topic\GetTopic;
 use ESD\Plugins\Uid\Aspect\UidAspect;
 use ESD\Plugins\Uid\GetUid;
-use ESD\Goaop\Go\Aop\Intercept\MethodInvocation;
-use ESD\Goaop\Go\Lang\Annotation\Before;
+use ESD\Goaop\Aop\Intercept\MethodInvocation;
+use ESD\Goaop\Lang\Annotation\Before;
 
 /**
  * Class TopicAspect

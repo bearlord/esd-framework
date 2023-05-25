@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Aop\Pointcut;
+namespace ESD\Goaop\Aop\Pointcut;
 
-use ESD\Goaop\Go\Aop\Pointcut;
+use ESD\Goaop\Aop\Pointcut;
 
 /**
  * Canonical Pointcut instance that always matches.

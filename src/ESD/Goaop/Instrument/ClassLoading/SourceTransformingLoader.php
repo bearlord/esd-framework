@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Instrument\ClassLoading;
+namespace ESD\Goaop\Instrument\ClassLoading;
 
 use php_user_filter as PhpStreamFilter;
-use ESD\Goaop\Go\Instrument\Transformer\StreamMetaData;
-use ESD\Goaop\Go\Instrument\Transformer\SourceTransformer;
+use ESD\Goaop\Instrument\Transformer\StreamMetaData;
+use ESD\Goaop\Instrument\Transformer\SourceTransformer;
 
 /**
  * Php class loader filter for processing php code

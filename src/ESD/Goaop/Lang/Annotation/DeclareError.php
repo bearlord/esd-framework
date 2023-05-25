@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Lang\Annotation;
+namespace ESD\Goaop\Lang\Annotation;
 
 /**
  * Declare error annotation

@@ -10,11 +10,11 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace ESD\Goaop\Go\Core;
+namespace ESD\Goaop\Core;
 
-use ESD\Goaop\Go\Aop\Advice;
-use ESD\Goaop\Go\Aop\Advisor;
-use ESD\Goaop\Go\ParserReflection\ReflectionFileNamespace;
+use ESD\Goaop\Aop\Advice;
+use ESD\Goaop\Aop\Advisor;
+use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
 use ReflectionClass;
 
 /**
