@@ -46,7 +46,8 @@
             "ESD\\": "src/ESD"
         },
         "files": [
-            "src/ESD/Core/Common.php"
+            "src/ESD/Core/Common.php",
+            "src/ESD/Nikic/FastRoute/functions.php"
         ]
     }
 }
