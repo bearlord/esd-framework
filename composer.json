@@ -47,7 +47,7 @@
         },
         "files": [
             "src/ESD/Core/Common.php",
-            "src/ESD/Nikic/FastRoute/bootstrap.php",
+            "src/ESD/Nikic/FastRoute/bootstrap.php"
         ]
     }
 }
