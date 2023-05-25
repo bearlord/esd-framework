@@ -15,7 +15,7 @@ use ESD\Nikic\PhpParser\Node\Stmt;
  *  * the skeleton file grammar/parser.template
  *  * the preprocessing script grammar/rebuildParsers.php
  */
-class Php5 extends \PhpParser\ParserAbstract
+class Php5 extends \ESD\Nikic\PhpParser\ParserAbstract
 {
     protected $tokenToSymbolMapSize = 394;
     protected $actionTableSize = 1079;
