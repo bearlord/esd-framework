@@ -2,6 +2,6 @@
 
 namespace ESD\Nikic\PhpParser\Comment;
 
-class Doc extends \PhpParser\Comment
+class Doc extends \ESD\Nikic\PhpParser\Comment
 {
 }

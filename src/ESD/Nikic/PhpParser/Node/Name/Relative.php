@@ -2,7 +2,7 @@
 
 namespace ESD\Nikic\PhpParser\Node\Name;
 
-class Relative extends \PhpParser\Node\Name
+class Relative extends \ESD\Nikic\PhpParser\Node\Name
 {
     /**
      * Checks whether the name is unqualified. (E.g. Name)
