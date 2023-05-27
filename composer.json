@@ -46,9 +46,7 @@
         },
         "files": [
             "src/ESD/Core/Common.php",
-            "src/ESD/Goaop/ParserReflection/bootstrap.php",
-            "src/ESD/Nikic/PhpParser/bootstrap.php",
-            "src/ESD/Nikic/FastRoute/bootstrap.php"
+            "src/ESD/Goaop/ParserReflection/bootstrap.php"
         ]
     }
 }
