@@ -119,7 +119,6 @@ class AopComposerLoader extends \ESD\Goaop\Instrument\ClassLoading\AopComposerLo
                 }
 
             }
-            printf("file: %s\n", $file);
             include $file;
         }
     }
