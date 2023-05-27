@@ -73,7 +73,7 @@ class ReflectionEngine
             'endFilePos'
         ]]);
 
-        self::$parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7, self::$lexer);
+        self::$parser = (new ParserFactory)->create(ParserFactory::ONLY_PHP7, self::$lexer);
 
         self::$traverser = $traverser = new NodeTraverser();
         $traverser->addVisitor(new NameResolver());
@@ -247,6 +247,9 @@ class ReflectionEngine
         if (!isset($fileContent)) {
             $fileContent = file_get_contents($fileName);
         }
+
+
+
         $treeNode = self::$parser->parse($fileContent);
         $treeNode = self::$traverser->traverse($treeNode);
 
