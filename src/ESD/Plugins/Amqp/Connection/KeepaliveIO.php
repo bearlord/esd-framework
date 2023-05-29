@@ -231,7 +231,7 @@ class KeepaliveIO extends AbstractIO
      * @param int $usec
      * @return int
      */
-    public function select($sec, $usec)
+    public function select(?int $sec, int $usec = 0)
     {
         return 1;
     }
