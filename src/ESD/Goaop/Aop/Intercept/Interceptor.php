@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -48,12 +50,11 @@ use ESD\Goaop\Aop\Advice;
 interface Interceptor extends Advice
 {
     /**
-     * Implement this method to perform extra actions before and after the invocation of joinpoint.
+     * Performs extra actions before and after the invocation of joinpoint.
      *
-     * @param Joinpoint $joinpoint Current joinpoint
+     * @return mixed The result of the call. Uses covariance in children.
+     *
      * @api
-     *
-     * @return mixed the result of the call
      */
     public function invoke(Joinpoint $joinpoint);
 }

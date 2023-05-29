@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,56 +14,22 @@ namespace ESD\Goaop\Aop\Support;
 
 use ESD\Goaop\Aop\IntroductionAdvisor;
 use ESD\Goaop\Aop\IntroductionInfo;
-use ESD\Goaop\Aop\PointFilter;
+use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Aop\Pointcut\PointcutClassFilterTrait;
 
 /**
  * Introduction advisor delegating to the given object.
  */
-class DeclareParentsAdvisor implements IntroductionAdvisor
+class DeclareParentsAdvisor extends AbstractGenericAdvisor implements IntroductionAdvisor
 {
+    use PointcutClassFilterTrait;
 
     /**
-     * Information about introduced interface/trait
-     *
-     * @var IntroductionInfo
+     * Creates an advisor for declaring mixins via trait and interface.
      */
-    private $advice;
-
-    /**
-     * Type pattern the introduction is restricted to
-     *
-     * @var PointFilter
-     */
-    private $classFilter;
-
-    /**
-     * Create a DefaultIntroductionAdvisor for the given advice.
-     */
-    public function __construct(PointFilter $classFilter, IntroductionInfo $info)
+    public function __construct(Pointcut $pointcut, IntroductionInfo $info)
     {
-        $this->classFilter = $classFilter;
-        $this->advice      = $info;
-    }
-
-    /**
-     * Returns an advice to apply
-     *
-     * @return IntroductionInfo
-     */
-    public function getAdvice()
-    {
-        return $this->advice;
-    }
-
-    /**
-     * Return the filter determining which target classes this introduction should apply to.
-     *
-     * This represents the class part of a pointcut. Note that method matching doesn't make sense to introductions.
-     *
-     * @return PointFilter The class filter
-     */
-    public function getClassFilter()
-    {
-        return $this->classFilter;
+        $this->classFilter = $pointcut->getClassFilter();
+        parent::__construct($info);
     }
 }

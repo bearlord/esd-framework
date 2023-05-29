@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -11,6 +13,7 @@
 namespace ESD\Goaop\Console\Command;
 
 use ESD\Goaop\Core\AspectKernel;
+use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,15 +28,13 @@ class BaseAspectCommand extends Command
 {
     /**
      * Stores an instance of aspect kernel
-     *
-     * @var null|AspectKernel
      */
-    protected $aspectKernel;
+    protected ?AspectKernel $aspectKernel = null;
 
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument('loader', InputArgument::REQUIRED, 'Path to the aspect loader file');
     }
@@ -43,17 +44,14 @@ class BaseAspectCommand extends Command
      *
      * Aspect kernel is loaded by executing loader and fetching singleton instance.
      * If your application environment initializes aspect kernel differently, you may
-     * modify this metod to get aspect kernel suitable to your needs.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * modify this method to get aspect kernel suitable to your needs.
      */
-    protected function loadAspectKernel(InputInterface $input, OutputInterface $output)
+    protected function loadAspectKernel(InputInterface $input, OutputInterface $output): void
     {
         $loader = $input->getArgument('loader');
         $path   = stream_resolve_include_path($loader);
         if (!is_readable($path)) {
-            throw new \InvalidArgumentException("Invalid loader path: {$loader}");
+            throw new InvalidArgumentException("Invalid loader path: {$loader}");
         }
 
         ob_start();
@@ -62,7 +60,7 @@ class BaseAspectCommand extends Command
 
         if (!class_exists(AspectKernel::class, false)) {
             $message = "Kernel was not initialized yet, please configure it in the {$path}";
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         $this->aspectKernel = AspectKernel::getInstance();

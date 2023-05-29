@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,8 +14,12 @@ namespace ESD\Goaop\Instrument\Transformer;
 
 use ESD\Goaop\Aop\Framework\ReflectionConstructorInvocation;
 use ESD\Goaop\Core\AspectContainer;
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\NodeTraverser;
+use PhpParser\Node;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name;
+use PhpParser\NodeTraverser;
+use ReflectionException;
+use ReflectionProperty;
 
 /**
  * Transforms the source code to add an ability to intercept new instances creation
@@ -21,25 +27,21 @@ use ESD\Nikic\PhpParser\NodeTraverser;
  * @see https://github.com/php/php-src/blob/master/Zend/zend_language_parser.y
  *
  */
-class ConstructorExecutionTransformer implements SourceTransformer
+final class ConstructorExecutionTransformer implements SourceTransformer
 {
     /**
      * List of constructor invocations per class
-     *
-     * @var array|ReflectionConstructorInvocation[]
      */
-    private static $constructorInvocationsCache = [];
+    private static array $constructorInvocationsCache = [];
 
     /**
      * Singletone
-     *
-     * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         static $instance;
-        if (!$instance) {
-            $instance = new static;
+        if ($instance === null) {
+            $instance = new self();
         }
 
         return $instance;
@@ -48,13 +50,11 @@ class ConstructorExecutionTransformer implements SourceTransformer
     /**
      * Rewrites all "new" expressions with our implementation
      *
-     * @param StreamMetaData $metadata Metadata for source
-     *
      * @return string See RESULT_XXX constants in the interface
      */
-    public function transform(StreamMetaData $metadata)
+    public function transform(StreamMetaData $metadata): string
     {
-        $newExpressionFinder = new NodeFinderVisitor([Node\Expr\New_::class]);
+        $newExpressionFinder = new NodeFinderVisitor([New_::class]);
 
         // TODO: move this logic into walkSyntaxTree(Visitor $nodeVistor) method
         $traverser = new NodeTraverser();
@@ -71,13 +71,13 @@ class ConstructorExecutionTransformer implements SourceTransformer
         foreach ($newExpressions as $newExpressionNode) {
             $startPosition = $newExpressionNode->getAttribute('startTokenPos');
 
-            $metadata->tokenStream[$startPosition][1] = '\\' . __CLASS__ . '::getInstance()->{';
-            if ($metadata->tokenStream[$startPosition+1][0] === T_WHITESPACE) {
-                unset($metadata->tokenStream[$startPosition+1]);
+            $metadata->tokenStream[$startPosition][1] = '\\' . self::class . '::getInstance()->{';
+            if ($metadata->tokenStream[$startPosition + 1][0] === T_WHITESPACE) {
+                unset($metadata->tokenStream[$startPosition + 1]);
             }
-            $isExplicitClass  = $newExpressionNode->class instanceof Node\Name;
-            $endClassNamePos  = $newExpressionNode->class->getAttribute('endTokenPos');
-            $expressionSuffix = $isExplicitClass ? '::class}' : '}';
+            $isExplicitClass                            = $newExpressionNode->class instanceof Name;
+            $endClassNamePos                            = $newExpressionNode->class->getAttribute('endTokenPos');
+            $expressionSuffix                           = $isExplicitClass ? '::class}' : '}';
             $metadata->tokenStream[$endClassNamePos][1] .= $expressionSuffix;
         }
 
@@ -88,10 +88,8 @@ class ConstructorExecutionTransformer implements SourceTransformer
      * Magic interceptor for instance creation
      *
      * @param string $className Name of the class to construct
-     *
-     * @return object Instance of required object
      */
-    public function __get($className)
+    public function __get(string $className): object
     {
         return static::construct($className);
     }
@@ -100,41 +98,34 @@ class ConstructorExecutionTransformer implements SourceTransformer
      * Magic interceptor for instance creation
      *
      * @param string $className Name of the class to construct
-     * @param array $args Arguments for the constructor
-     *
-     * @return object Instance of required object
+     * @param array  $args      Arguments for the constructor
      */
-    public function __call($className, array $args)
+    public function __call(string $className, array $args): object
     {
         return static::construct($className, $args);
     }
 
     /**
      * Default implementation for accessing joinpoint or creating a new one on-fly
-     *
-     * @param string $fullClassName Name of the class to create
-     * @param array $arguments Arguments for constructor
-     *
-     * @return object
      */
-    protected static function construct($fullClassName, array $arguments = [])
+    protected static function construct(string $fullClassName, array $arguments = []): object
     {
         $fullClassName = ltrim($fullClassName, '\\');
         if (!isset(self::$constructorInvocationsCache[$fullClassName])) {
-            $invocation = null;
+            $invocation  = null;
             $dynamicInit = AspectContainer::INIT_PREFIX . ':root';
             try {
-                $joinPointsRef = new \ReflectionProperty($fullClassName, '__joinPoints');
+                $joinPointsRef = new ReflectionProperty($fullClassName, '__joinPoints');
                 $joinPointsRef->setAccessible(true);
                 $joinPoints = $joinPointsRef->getValue();
                 if (isset($joinPoints[$dynamicInit])) {
                     $invocation = $joinPoints[$dynamicInit];
                 }
-            } catch (\ReflectionException $e) {
+            } catch (ReflectionException $e) {
                 $invocation = null;
             }
             if (!$invocation) {
-                $invocation = new ReflectionConstructorInvocation($fullClassName, 'root', []);
+                $invocation = new ReflectionConstructorInvocation([], $fullClassName);
             }
             self::$constructorInvocationsCache[$fullClassName] = $invocation;
         }

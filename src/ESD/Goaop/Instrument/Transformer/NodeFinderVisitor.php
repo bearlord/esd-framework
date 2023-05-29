@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -10,8 +12,8 @@
 
 namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\NodeVisitorAbstract;
+use PhpParser\Node;
+use PhpParser\NodeVisitorAbstract;
 
 /**
  * Node finder visitor for compatibility with PHP-Parser < 4.0
@@ -23,17 +25,19 @@ class NodeFinderVisitor extends NodeVisitorAbstract
      *
      * @var string[]
      */
-    protected $searchNodes;
+    protected array $searchNodes;
 
     /**
      * List of found nodes
      *
      * @var Node[] Found nodes
      */
-    protected $foundNodes;
+    protected ?array $foundNodes = null;
 
     /**
-     * @param array $searchNodes List of node names to search in AST
+     * Visitor constructor
+     *
+     * @param string[] $searchNodes List of node names to search in AST
      */
     public function __construct(array $searchNodes)
     {
@@ -47,7 +51,7 @@ class NodeFinderVisitor extends NodeVisitorAbstract
      *
      * @return Node[] Found nodes
      */
-    public function getFoundNodes()
+    public function getFoundNodes(): array
     {
         return $this->foundNodes;
     }
@@ -63,7 +67,7 @@ class NodeFinderVisitor extends NodeVisitorAbstract
      *
      * @return null|Node[] Array of nodes
      */
-    public function beforeTraverse(array $nodes)
+    public function beforeTraverse(array $nodes): ?array
     {
         $this->foundNodes = [];
 

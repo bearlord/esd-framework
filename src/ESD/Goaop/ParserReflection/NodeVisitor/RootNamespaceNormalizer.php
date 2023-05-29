@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -10,10 +12,9 @@
 
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
-use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
-use ESD\Nikic\PhpParser\Node\Stmt\Declare_;
-use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
-use ESD\Nikic\PhpParser\NodeVisitorAbstract;
+use PhpParser\Node\Stmt\Declare_;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to normalize the root namespace for the files without the namespace (root namespace)

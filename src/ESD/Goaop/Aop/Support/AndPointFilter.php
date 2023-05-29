@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -17,25 +19,20 @@ use ESD\Goaop\Aop\PointFilter;
  */
 class AndPointFilter implements PointFilter
 {
-
     /**
      * Kind of filter
-     *
-     * @var int
      */
-    private $kind = -1;
+    private int $kind = -1;
 
     /**
-     * List of filters to combine
+     * List of PointFilters to combine with "AND"
      *
-     * @var PointFilter[]
+     * @var array<PointFilter>
      */
-    private $filters;
+    private array $filters;
 
     /**
      * And constructor
-     *
-     * @param PointFilter[] $filters List of filters to combine
      */
     public function __construct(PointFilter ...$filters)
     {
@@ -52,10 +49,8 @@ class AndPointFilter implements PointFilter
      * @param null|mixed $context Related context, can be class or namespace
      * @param null|string|object $instance Invocation instance or string for static calls
      * @param null|array $arguments Dynamic arguments for method
-     *
-     * @return bool
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null)
+    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
     {
         foreach ($this->filters as $filter) {
             if (!$filter->matches($point, $context)) {
@@ -68,10 +63,8 @@ class AndPointFilter implements PointFilter
 
     /**
      * Returns the kind of point filter
-     *
-     * @return integer
      */
-    public function getKind()
+    public function getKind(): int
     {
         return $this->kind;
     }

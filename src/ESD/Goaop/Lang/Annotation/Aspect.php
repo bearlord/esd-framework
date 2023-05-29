@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -18,5 +20,4 @@ namespace ESD\Goaop\Lang\Annotation;
  */
 class Aspect extends BaseAnnotation
 {
-
 }

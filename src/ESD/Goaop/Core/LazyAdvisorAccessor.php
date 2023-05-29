@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,6 +14,7 @@ namespace ESD\Goaop\Core;
 
 use ESD\Goaop\Aop\Advice;
 use ESD\Goaop\Aop\Advisor;
+use InvalidArgumentException;
 
 /**
  * Provides an interface for loading of advisors from the container
@@ -19,22 +22,17 @@ use ESD\Goaop\Aop\Advisor;
 class LazyAdvisorAccessor
 {
     /**
-     * @var AspectContainer|Container
+     * Instance of aspect container
      */
-    protected $container;
+    protected AspectContainer $container;
 
     /**
      * Aspect loader instance
-     *
-     * @var AspectLoader
      */
-    protected $loader;
+    protected AspectLoader $loader;
 
     /**
      * Accessor constructor
-     *
-     * @param AspectContainer $container
-     * @param AspectLoader $loader
      */
     public function __construct(AspectContainer $container, AspectLoader $loader)
     {
@@ -43,14 +41,11 @@ class LazyAdvisorAccessor
     }
 
     /**
-     * Magic accessor
+     * Magic advice accessor
      *
-     * @param string $name Key name
-     *
-     * @throws \InvalidArgumentException if referenced value is not an advisor
-     * @return Advice
+     * @throws InvalidArgumentException if referenced value is not an advisor
      */
-    public function __get($name)
+    public function __get(string $name): Advice
     {
         if ($this->container->has($name)) {
             $advisor = $this->container->get($name);
@@ -64,7 +59,7 @@ class LazyAdvisorAccessor
         }
 
         if (!$advisor instanceof Advisor) {
-            throw new \InvalidArgumentException("Reference {$name} is not an advisor");
+            throw new InvalidArgumentException("Reference {$name} is not an advisor");
         }
         $this->$name = $advisor->getAdvice();
 

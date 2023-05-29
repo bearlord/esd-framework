@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -10,8 +12,8 @@
 
 namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
-use ESD\Nikic\PhpParser\NodeTraverser;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\NodeTraverser;
 
 /**
  * Transformer that replaces `self` constants in the source code, e.g. new self()
@@ -21,10 +23,9 @@ class SelfValueTransformer extends BaseSourceTransformer
     /**
      * This method may transform the supplied source and return a new replacement for it
      *
-     * @param StreamMetaData $metadata Metadata for source
      * @return string See RESULT_XXX constants in the interface
      */
-    public function transform(StreamMetaData $metadata)
+    public function transform(StreamMetaData $metadata): string
     {
         $selfValueVisitor = new SelfValueVisitor();
         $traverser        = new NodeTraverser();
@@ -40,10 +41,9 @@ class SelfValueTransformer extends BaseSourceTransformer
     /**
      * Adjusts tokens in the source code
      *
-     * @param StreamMetaData $metadata
      * @param FullyQualified[] $replacedNodes Replaced nodes in the source code
      */
-    private function adjustSelfTokens(StreamMetaData $metadata, array $replacedNodes)
+    private function adjustSelfTokens(StreamMetaData $metadata, array $replacedNodes): void
     {
         foreach ($replacedNodes as $replacedNode)
         {

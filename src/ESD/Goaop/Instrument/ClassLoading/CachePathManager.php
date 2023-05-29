@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -9,8 +11,12 @@
  */
 
 namespace ESD\Goaop\Instrument\ClassLoading;
+
 use ESD\Goaop\Aop\Features;
 use ESD\Goaop\Core\AspectKernel;
+use InvalidArgumentException;
+
+use function function_exists;
 
 /**
  * Class that manages real-code to cached-code paths mapping.
@@ -21,48 +27,33 @@ class CachePathManager
     /**
      * Name of the file with cache paths
      */
-    const CACHE_FILE_NAME = '/_transformation.cache';
+    private const CACHE_FILE_NAME = '/_transformation.cache';
+
+    protected array $options = [];
 
     /**
-     * @var array
+     * Aspect kernel instance
      */
-    protected $options = [];
+    protected AspectKernel $kernel;
 
-    /**
-     * @var \Go\Core\AspectKernel
-     */
-    protected $kernel;
-
-    /**
-     * @var string|null
-     */
-    protected $cacheDir;
+    protected ?string $cacheDir = null;
 
     /**
      * File mode
-     *
-     * @var integer
      */
-    protected $fileMode;
+    protected int $fileMode;
 
-    /**
-     * @var string|null
-     */
-    protected $appDir;
+    protected ?string $appDir = null;
 
     /**
      * Cached metadata for transformation state for the concrete file
-     *
-     * @var array
      */
-    protected $cacheState = [];
+    protected array $cacheState = [];
 
     /**
      * New metadata items, that was not present in $cacheState
-     *
-     * @var array
      */
-    protected $newCacheState = [];
+    protected array $newCacheState = [];
 
     public function __construct(AspectKernel $kernel)
     {
@@ -76,14 +67,15 @@ class CachePathManager
             if (!is_dir($this->cacheDir)) {
                 $cacheRootDir = dirname($this->cacheDir);
                 if (!is_writable($cacheRootDir) || !is_dir($cacheRootDir)) {
-                    throw new \InvalidArgumentException(
+                    throw new InvalidArgumentException(
                         "Can not create a directory {$this->cacheDir} for the cache.
-                        Parent directory {$cacheRootDir} is not writable or not exist.");
+                        Parent directory {$cacheRootDir} is not writable or not exist."
+                    );
                 }
                 mkdir($this->cacheDir, $this->fileMode, true);
             }
             if (!$this->kernel->hasFeature(Features::PREBUILT_CACHE) && !is_writable($this->cacheDir)) {
-                throw new \InvalidArgumentException("Cache directory {$this->cacheDir} is not writable");
+                throw new InvalidArgumentException("Cache directory {$this->cacheDir} is not writable");
             }
 
             if (file_exists($this->cacheDir . self::CACHE_FILE_NAME)) {
@@ -93,30 +85,27 @@ class CachePathManager
     }
 
     /**
-     * Returns current cache directory for aspects, can be bull
-     *
-     * @return null|string
+     * Returns current cache directory for aspects, can be null
      */
-    public function getCacheDir()
+    public function getCacheDir(): ?string
     {
         return $this->cacheDir;
     }
 
     /**
      * Configures a new cache directory for aspects
-     *
-     * @param string $cacheDir New cache directory
      */
-    public function setCacheDir($cacheDir)
+    public function setCacheDir(string $cacheDir): void
     {
         $this->cacheDir = $cacheDir;
     }
 
     /**
-     * @param string $resource
+     * Returns cache path for requested file name
+     *
      * @return bool|string
      */
-    public function getCachePathForResource($resource)
+    public function getCachePathForResource(string $resource)
     {
         if (!$this->cacheDir) {
             return false;
@@ -132,7 +121,7 @@ class CachePathManager
      *
      * @return array|null Information or null if no record in the cache
      */
-    public function queryCacheState($resource = null)
+    public function queryCacheState(string $resource = null): ?array
     {
         if ($resource === null) {
             return $this->cacheState;
@@ -154,10 +143,9 @@ class CachePathManager
      *
      * This data will be persisted during object destruction
      *
-     * @param string $resource Name of the file
      * @param array $metadata Miscellaneous information about resource
      */
-    public function setCacheState($resource, array $metadata)
+    public function setCacheState(string $resource, array $metadata): void
     {
         $this->newCacheState[$resource] = $metadata;
     }
@@ -174,20 +162,21 @@ class CachePathManager
 
     /**
      * Flushes the cache state into the file
-     *
-     * @var bool $force Should be flushed regardless of its state.
      */
-    public function flushCacheState($force = false)
+    public function flushCacheState(bool $force = false): void
     {
         if ((!empty($this->newCacheState) && is_writable($this->cacheDir)) || $force) {
-            $fullCacheMap = $this->newCacheState + $this->cacheState;
-            $cachePath    = substr(var_export($this->cacheDir, true), 1, -1);
-            $rootPath     = substr(var_export($this->appDir, true), 1, -1);
-            $cacheData    = '<?php return ' . var_export($fullCacheMap, true) . ';';
-            $cacheData    = strtr($cacheData, [
-                '\'' . $cachePath => 'AOP_CACHE_DIR . \'',
-                '\'' . $rootPath  => 'AOP_ROOT_DIR . \''
-            ]);
+            $fullCacheMap      = $this->newCacheState + $this->cacheState;
+            $cachePath         = substr(var_export($this->cacheDir, true), 1, -1);
+            $rootPath          = substr(var_export($this->appDir, true), 1, -1);
+            $cacheData         = '<?php return ' . var_export($fullCacheMap, true) . ';';
+            $cacheData         = strtr(
+                $cacheData,
+                [
+                    '\'' . $cachePath => 'AOP_CACHE_DIR . \'',
+                    '\'' . $rootPath  => 'AOP_ROOT_DIR . \''
+                ]
+            );
             $fullCacheFileName = $this->cacheDir . self::CACHE_FILE_NAME;
             file_put_contents($fullCacheFileName, $cacheData, LOCK_EX);
             // For cache files we don't want executable bits by default
@@ -204,10 +193,10 @@ class CachePathManager
     /**
      * Clear the cache state.
      */
-    public function clearCacheState()
+    public function clearCacheState(): void
     {
-        $this->cacheState       = [];
-        $this->newCacheState    = [];
+        $this->cacheState    = [];
+        $this->newCacheState = [];
 
         $this->flushCacheState(true);
     }

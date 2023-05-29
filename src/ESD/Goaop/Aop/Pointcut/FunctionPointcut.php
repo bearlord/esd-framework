@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -10,68 +12,57 @@
 
 namespace ESD\Goaop\Aop\Pointcut;
 
-use ReflectionFunction;
 use ESD\Goaop\Aop\Pointcut;
 use ESD\Goaop\Aop\PointFilter;
+use ReflectionFunction;
 
 /**
- * Signature method pointcut checks method signature (modifiers and name) to match it
+ * Function pointcut checks function signature (namespace and name) to match it
  */
 class FunctionPointcut implements Pointcut
 {
-    /**
-     * @var PointFilter
-     */
-    protected $nsFilter;
+    protected ?PointFilter $nsFilter = null;
 
     /**
      * Function name to match, can contain wildcards *,?
-     *
-     * @var string
      */
-    protected $functionName = '';
+    protected string $functionName = '';
 
     /**
      * Regular expression for matching
-     *
-     * @var string
      */
-    protected $regexp;
+    protected string $regexp;
 
     /**
      * Additional return type filter (if present)
-     *
-     * @var PointFilter|null
      */
-    protected $returnTypeFilter;
+    protected ?PointFilter $returnTypeFilter = null;
 
     /**
      * Function matcher constructor
-     *
-     * @param string $functionName Name of the function to match or glob pattern
-     * @param PointFilter|null $returnTypeFilter Additional return type filter
      */
-    public function __construct($functionName, PointFilter $returnTypeFilter = null)
+    public function __construct(string $functionName, PointFilter $returnTypeFilter = null)
     {
         $this->functionName     = $functionName;
         $this->returnTypeFilter = $returnTypeFilter;
-        $this->regexp           = strtr(preg_quote($this->functionName, '/'), [
-            '\\*' => '.*?',
-            '\\?' => '.'
-        ]);
+        $this->regexp           = strtr(
+            preg_quote($this->functionName, '/'),
+            [
+                '\\*' => '.*?',
+                '\\?' => '.'
+            ]
+        );
     }
 
     /**
      * Performs matching of point of code
      *
-     * @param mixed $function Specific part of code, can be any Reflection class
-     * @param mixed $context Related context, can be class or namespace
-     * @param null|string|object $instance Invocation instance or string for static calls
-     * @param null|array $arguments Dynamic arguments for method
-     *
-     * @return bool
+     * @param mixed              $function  Specific part of code, can be any Reflection class
+     * @param mixed              $context   Related context, can be class or namespace
+     * @param null|string|object $instance  Invocation instance or string for static calls
+     * @param null|array         $arguments Dynamic arguments for method
      */
-    public function matches($function, $context = null, $instance = null, array $arguments = null)
+    public function matches($function, $context = null, $instance = null, array $arguments = null): bool
     {
         if (!$function instanceof ReflectionFunction) {
             return false;
@@ -81,30 +72,29 @@ class FunctionPointcut implements Pointcut
             return false;
         }
 
-        return ($function->name === $this->functionName) || (bool) preg_match("/^{$this->regexp}$/", $function->name);
+        return ($function->name === $this->functionName) || (bool)preg_match("/^{$this->regexp}$/", $function->name);
     }
 
     /**
      * Returns the kind of point filter
-     *
-     * @return integer
      */
-    public function getKind()
+    public function getKind(): int
     {
         return self::KIND_FUNCTION;
     }
 
     /**
      * Return the class filter for this pointcut.
-     *
-     * @return PointFilter
      */
-    public function getClassFilter()
+    public function getClassFilter(): PointFilter
     {
         return $this->nsFilter;
     }
 
-    public function setNamespaceFilter($nsFilter)
+    /**
+     * Configures the namespace filter, used as pre-filter for functions
+     */
+    public function setNamespaceFilter(PointFilter $nsFilter): void
     {
         $this->nsFilter = $nsFilter;
     }

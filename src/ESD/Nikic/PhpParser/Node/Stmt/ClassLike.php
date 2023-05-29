@@ -4,15 +4,17 @@ namespace ESD\Nikic\PhpParser\Node\Stmt;
 
 use ESD\Nikic\PhpParser\Node;
 
-/**
- * @property Node\Name $namespacedName Namespaced name (if using NameResolver)
- */
 abstract class ClassLike extends Node\Stmt
 {
     /** @var Node\Identifier|null Name */
     public $name;
     /** @var Node\Stmt[] Statements */
     public $stmts;
+    /** @var Node\AttributeGroup[] PHP attribute groups */
+    public $attrGroups;
+
+    /** @var Node\Name|null Namespaced name (if using NameResolver) */
+    public $namespacedName;
 
     /**
      * @return TraitUse[]

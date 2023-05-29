@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -10,9 +12,9 @@
 
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\NodeTraverser;
-use ESD\Nikic\PhpParser\NodeVisitorAbstract;
+use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to check if the method body
@@ -38,12 +40,7 @@ class GeneratorDetector extends NodeVisitorAbstract
         return null;
     }
 
-    /**
-     * Returns the
-     *
-     * @return bool
-     */
-    public function isGenerator()
+    public function isGenerator(): bool
     {
         return $this->isGenerator;
     }

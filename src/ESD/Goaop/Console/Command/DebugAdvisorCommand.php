@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,11 +14,14 @@ namespace ESD\Goaop\Console\Command;
 
 use ESD\Goaop\Aop\Advisor;
 use ESD\Goaop\Core\AdviceMatcher;
+use ESD\Goaop\Core\AdviceMatcherInterface;
 use ESD\Goaop\Core\AspectContainer;
 use ESD\Goaop\Core\AspectLoader;
 use ESD\Goaop\Instrument\FileSystem\Enumerator;
 use ESD\Goaop\ParserReflection\ReflectionFile;
 use ReflectionClass;
+use ReflectionException;
+use ReflectionProperty;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,27 +34,28 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class DebugAdvisorCommand extends BaseAspectCommand
 {
-
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
             ->setName('debug:advisor')
             ->addOption('advisor', null, InputOption::VALUE_OPTIONAL, 'Identifier of advisor')
             ->setDescription('Provides an interface for checking and debugging advisors')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Allows to query an information about matching joinpoints for specified advisor.
 EOT
-            );
+            )
+        ;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->loadAspectKernel($input, $output);
 
@@ -62,9 +68,11 @@ EOT
         } else {
             $this->showAdvisorInformation($io, $advisorId);
         }
+
+        return 0;
     }
 
-    private function showAdvisorsList(SymfonyStyle $io)
+    private function showAdvisorsList(SymfonyStyle $io): void
     {
         $io->writeln('List of registered advisors in the container');
 
@@ -73,31 +81,33 @@ EOT
 
         $tableRows = [];
         foreach ($advisors as $id => $advisor) {
-            list(,$id) = explode('.', $id, 2);
+            [, $id] = explode('.', $id, 2);
             $advice     = $advisor->getAdvice();
             $expression = '';
             try {
-                $pointcutExpression = new \ReflectionProperty($advice, 'pointcutExpression');
-                $pointcutExpression->setAccessible('true');
+                $pointcutExpression = new ReflectionProperty($advice, 'pointcutExpression');
+                $pointcutExpression->setAccessible(true);
                 $expression = $pointcutExpression->getValue($advice);
-            } catch (\ReflectionException $e) {
+            } catch (ReflectionException $e) {
                 // nothing here, just ignore
             }
             $tableRows[] = [$id, $expression];
         }
         $io->table(['Id', 'Expression'], $tableRows);
 
-        $io->writeln([
-            'If you want to query an information about concrete advisor, then just query it',
-            'by adding <info>--advisor="Advisor\\Name"</info> to the command'
-        ]);
+        $io->writeln(
+            [
+                'If you want to query an information about concrete advisor, then just query it',
+                'by adding <info>--advisor="Advisor\\Name"</info> to the command'
+            ]
+        );
     }
 
-    private function showAdvisorInformation(SymfonyStyle $io, $advisorId)
+    private function showAdvisorInformation(SymfonyStyle $io, string $advisorId): void
     {
         $aspectContainer = $this->aspectKernel->getContainer();
 
-        /** @var AdviceMatcher $adviceMatcher */
+        /** @var AdviceMatcherInterface $adviceMatcher */
         $adviceMatcher = $aspectContainer->get('aspect.advice_matcher');
         $this->loadAdvisorsList($aspectContainer);
 
@@ -112,11 +122,11 @@ EOT
         $iterator->rewind();
 
         foreach ($iterator as $file) {
-            $reflectionFile       = new ReflectionFile((string) $file);
+            $reflectionFile       = new ReflectionFile((string)$file);
             $reflectionNamespaces = $reflectionFile->getFileNamespaces();
             foreach ($reflectionNamespaces as $reflectionNamespace) {
                 foreach ($reflectionNamespace->getClasses() as $reflectionClass) {
-                    $advices = $adviceMatcher->getAdvicesForClass($reflectionClass, [$advisor]);
+                    $advices = $adviceMatcher->getAdvicesForClass($reflectionClass, [$advisorId => $advisor]);
                     if (!empty($advices)) {
                         $this->writeInfoAboutAdvices($io, $reflectionClass, $advices);
                     }
@@ -125,7 +135,7 @@ EOT
         }
     }
 
-    private function writeInfoAboutAdvices(SymfonyStyle $io, ReflectionClass $reflectionClass, array $advices)
+    private function writeInfoAboutAdvices(SymfonyStyle $io, ReflectionClass $reflectionClass, array $advices): void
     {
         $className = $reflectionClass->getName();
         foreach ($advices as $type => $typedAdvices) {
@@ -136,17 +146,15 @@ EOT
     }
 
     /**
-     * Collects list of advisors from the container
-     *
-     * @param AspectContainer $aspectContainer Container instance
+     * Collects list of advisors from the given aspect container
      *
      * @return Advisor[] List of advisors in the container
      */
-    private function loadAdvisorsList(AspectContainer $aspectContainer)
+    private function loadAdvisorsList(AspectContainer $aspectContainer): array
     {
         /** @var AspectLoader $aspectLoader */
-        $aspectLoader   = $aspectContainer->get('aspect.cached.loader');
-        $aspects        = $aspectLoader->getUnloadedAspects();
+        $aspectLoader = $aspectContainer->get('aspect.cached.loader');
+        $aspects      = $aspectLoader->getUnloadedAspects();
         foreach ($aspects as $aspect) {
             $aspectLoader->loadAndRegister($aspect);
         }

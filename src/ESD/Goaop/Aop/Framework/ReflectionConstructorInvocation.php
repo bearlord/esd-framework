@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -22,33 +24,25 @@ class ReflectionConstructorInvocation extends AbstractInvocation implements Cons
 {
     /**
      * Reflection class
-     *
-     * @var ReflectionClass
      */
-    protected $class;
+    protected ReflectionClass $class;
 
     /**
-     * Instance of created class, can be used for Around or After types of advices
-     *
-     * @var object|null
+     * Instance of created class, can be used for Around or After types of advices.
      */
-    protected $instance;
+    protected ?object $instance = null;
 
     /**
-     * Instance of reflection constructor for class
-     *
-     * @var null|ReflectionMethod
+     * Instance of reflection constructor for class (if present)
      */
-    private $constructor;
+    private ?ReflectionMethod $constructor;
 
     /**
      * Constructor for constructor invocation :)
      *
-     * @param string $className Class name
-     * @param $advices array List of advices for this invocation
-     * @param string $type
+     * @param array $advices List of advices for this invocation
      */
-    public function __construct($className, $type, array $advices)
+    public function __construct(array $advices, string $className)
     {
         $originalClass = $className;
         if (strpos($originalClass, AspectContainer::AOP_PROXIED_SUFFIX) !== false) {
@@ -59,7 +53,7 @@ class ReflectionConstructorInvocation extends AbstractInvocation implements Cons
         $this->constructor = $constructor = $this->class->getConstructor();
 
         // Give an access to call protected/private constructors
-        if ($constructor && !$constructor->isPublic()) {
+        if ($constructor !== null && !$constructor->isPublic()) {
             $constructor->setAccessible(true);
         }
 
@@ -72,9 +66,9 @@ class ReflectionConstructorInvocation extends AbstractInvocation implements Cons
      * Typically this method is called inside previous closure, as instance of Joinpoint is passed to callback
      * Do not call this method directly, only inside callback closures.
      *
-     * @return mixed
+     * @return object Covariant, always new object.
      */
-    final public function proceed()
+    final public function proceed(): object
     {
         if (isset($this->advices[$this->current])) {
             $currentInterceptor = $this->advices[$this->current];
@@ -93,43 +87,27 @@ class ReflectionConstructorInvocation extends AbstractInvocation implements Cons
     }
 
     /**
-     * Gets the constructor being called.
-     *
-     * @return ReflectionMethod|null the constructor being called or null if it is absent.
+     * Gets the constructor being called or null if it is absent.
      */
-    public function getConstructor()
+    public function getConstructor(): ?ReflectionMethod
     {
         return $this->constructor;
     }
 
     /**
-     * Returns the object that holds the current joinpoint's static
-     * part.
+     * Returns the object for which current joinpoint is invoked
      *
-     * @return object|null the object (can be null if the accessible object is
-     * static).
+     * @return object|null Instance of object or null if object hasn't been created yet (Before)
      */
-    public function getThis()
+    public function getThis(): ?object
     {
         return $this->instance;
     }
 
     /**
-     * Returns the static part of this joinpoint.
-     *
-     * @return null|ReflectionMethod
-     */
-    public function getStaticPart()
-    {
-        return $this->getConstructor();
-    }
-
-    /**
      * Invokes current constructor invocation with all interceptors
-     *
-     * @return mixed
      */
-    final public function __invoke(array $arguments = [])
+    final public function __invoke(array $arguments = []): object
     {
         $this->current   = 0;
         $this->arguments = $arguments;
@@ -138,15 +116,33 @@ class ReflectionConstructorInvocation extends AbstractInvocation implements Cons
     }
 
     /**
-     * Returns a friendly description of current joinpoint
+     * Checks if the current joinpoint is dynamic or static
      *
-     * @return string
+     * Dynamic joinpoint contains a reference to an object that can be received via getThis() method call
+     *
+     * @see ClassJoinpoint::getThis()
      */
-    final public function __toString()
+    public function isDynamic(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Returns the static scope name (class name) of this joinpoint.
+     */
+    public function getScope(): string
+    {
+        return $this->class->getName();
+    }
+
+    /**
+     * Returns a friendly description of current joinpoint
+     */
+    final public function __toString(): string
     {
         return sprintf(
             'initialization(%s)',
-            $this->class->name
+            $this->getScope()
         );
     }
 }

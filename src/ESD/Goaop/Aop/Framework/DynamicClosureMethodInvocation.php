@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -10,6 +12,10 @@
 
 namespace ESD\Goaop\Aop\Framework;
 
+use Closure;
+
+use function get_class;
+
 /**
  * Dynamic closure method invocation is responsible to call dynamic methods via closure
  */
@@ -17,22 +23,21 @@ final class DynamicClosureMethodInvocation extends AbstractMethodInvocation
 {
     /**
      * Closure to use
-     *
-     * @var \Closure
      */
-    protected $closureToCall;
+    protected ?Closure $closureToCall = null;
 
     /**
      * Previous instance of invocation
-     *
-     * @var null|object|string
      */
-    protected $previousInstance;
+    protected ?object $previousInstance;
+
+    /**
+     * For dynamic calls we store given argument as 'instance' property
+     */
+    protected static string $propertyName = 'instance';
 
     /**
      * Invokes original method and return result from it
-     *
-     * @return mixed
      */
     public function proceed()
     {
@@ -54,8 +59,38 @@ final class DynamicClosureMethodInvocation extends AbstractMethodInvocation
             $this->previousInstance = $this->instance;
         }
 
-        $closureToCall = $this->closureToCall;
+        return ($this->closureToCall)(...$this->arguments);
+    }
 
-        return $closureToCall(...$this->arguments);
+    /**
+     * Returns the object for which current joinpoint is invoked
+     *
+     * @return object Covariance, always instance of object
+     */
+    final public function getThis(): object
+    {
+        return $this->instance;
+    }
+
+    /**
+     * Checks if the current joinpoint is dynamic or static
+     *
+     * Dynamic joinpoint contains a reference to an object that can be received via getThis() method call
+     *
+     * @see ClassJoinpoint::getThis()
+     */
+    final public function isDynamic(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Returns the static scope name (class name) of this joinpoint.
+     */
+    final public function getScope(): string
+    {
+        // Due to optimization $this->scope won't be filled for each invocation
+        // However, $this->instance always contains an object, so we can take it's name as a scope name
+        return get_class($this->instance);
     }
 }

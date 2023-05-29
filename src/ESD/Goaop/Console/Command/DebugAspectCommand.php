@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -14,6 +16,7 @@ use ESD\Goaop\Aop\Advisor;
 use ESD\Goaop\Aop\Aspect;
 use ESD\Goaop\Aop\Pointcut;
 use ESD\Goaop\Core\AspectLoader;
+use ReflectionObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,32 +24,31 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Console command for querying an information about aspects
- *
- * @codeCoverageIgnore
  */
 class DebugAspectCommand extends BaseAspectCommand
 {
-
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
             ->setName('debug:aspect')
             ->addOption('aspect', null, InputOption::VALUE_OPTIONAL, 'Optional aspect name to filter')
             ->setDescription('Provides an interface for querying the information about aspects')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Allows to query an information about enabled aspects.
 EOT
-            );
+            )
+        ;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->loadAspectKernel($input, $output);
 
@@ -65,15 +67,16 @@ EOT
             $aspects[] = $aspect;
         }
         $this->showRegisteredAspectsInfo($io, $aspects);
+
+        return 0;
     }
 
     /**
      * Shows an information about registered aspects
      *
-     * @param SymfonyStyle $io Input-output style
-     * @param array|Aspect[] $aspects List of aspects
+     * @param Aspect[] $aspects List of aspects
      */
-    private function showRegisteredAspectsInfo(SymfonyStyle $io, array $aspects)
+    private function showRegisteredAspectsInfo(SymfonyStyle $io, array $aspects): void
     {
         foreach ($aspects as $aspect) {
             $this->showAspectInfo($io, $aspect);
@@ -82,13 +85,10 @@ EOT
 
     /**
      * Displays an information about single aspect
-     *
-     * @param SymfonyStyle $io Input-output style
-     * @param Aspect $aspect Instance of aspect
      */
-    private function showAspectInfo(SymfonyStyle $io, Aspect $aspect)
+    private function showAspectInfo(SymfonyStyle $io, Aspect $aspect): void
     {
-        $refAspect  = new \ReflectionObject($aspect);
+        $refAspect  = new ReflectionObject($aspect);
         $aspectName = $refAspect->getName();
         $io->section($aspectName);
         $io->writeln('Defined in: <info>' . $refAspect->getFileName() . '</info>');
@@ -101,14 +101,12 @@ EOT
 
     /**
      * Shows an information about aspect pointcuts and advisors
-     *
-     * @param SymfonyStyle $io Input-output style
-     * @param Aspect $aspect Instance of aspect to query information
      */
-    private function showAspectPointcutsAndAdvisors(SymfonyStyle $io, Aspect $aspect)
+    private function showAspectPointcutsAndAdvisors(SymfonyStyle $io, Aspect $aspect): void
     {
+        $container = $this->aspectKernel->getContainer();
+
         /** @var AspectLoader $aspectLoader */
-        $container    = $this->aspectKernel->getContainer();
         $aspectLoader = $container->get('aspect.loader');
         $io->writeln('<comment>Pointcuts and advices</comment>');
 
@@ -129,12 +127,8 @@ EOT
 
     /**
      * Gets the reformatted comment text.
-     *
-     * @param string $comment
-     *
-     * @return string
      */
-    private function getPrettyText($comment)
+    private function getPrettyText(string $comment): string
     {
         $text = preg_replace('|^\s*/?\*+/?|m', '', $comment);
 

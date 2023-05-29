@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -10,8 +12,12 @@
 
 namespace ESD\Goaop\Console\Command;
 
+use FilesystemIterator;
 use ESD\Goaop\Instrument\ClassLoading\CachePathManager;
 use ESD\Goaop\Instrument\ClassLoading\CacheWarmer;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,23 +33,25 @@ class DebugWeavingCommand extends BaseAspectCommand
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
             ->setName('debug:weaving')
             ->setDescription('Checks consistency in weaving process')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Allows to check consistency of weaving process, detects circular references and mutual dependencies between
 subjects of weaving and aspects.
 EOT
-            );
+            )
+        ;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->loadAspectKernel($input, $output);
 
@@ -80,31 +88,37 @@ EOT
 
         if ($errors > 0) {
             $io->error(sprintf('Weaving is unstable, there are %s reported error(s).', $errors));
+
             return $errors;
         }
 
         $io->success('Weaving is stable, there are no errors reported.');
+
+        return 0;
     }
 
     /**
-     * Get Go! AOP generated proxy classes (paths and their contents) from cache.
-     *
-     * @param CachePathManager $cachePathManager
-     *
-     * @return array
+     * Gets Go! AOP generated proxy classes (paths and their contents) from the cache.
      */
-    private function getProxies(CachePathManager $cachePathManager)
+    private function getProxies(CachePathManager $cachePathManager): array
     {
         $path     = $cachePathManager->getCacheDir() . '/_proxies';
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS), \RecursiveIteratorIterator::CHILD_FIRST);
-        $proxies  = [];
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                $path,
+                FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS
+            ),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        $proxies = [];
 
         /**
-         * @var \SplFileInfo $value
+         * @var SplFileInfo $splFileInfo
          */
-        foreach ($iterator as $value) {
-            if ($value->isFile()) {
-                $proxies[$value->getPathname()] = file_get_contents($value->getPathname());
+        foreach ($iterator as $splFileInfo) {
+            if ($splFileInfo->isFile()) {
+                $proxies[$splFileInfo->getPathname()] = file_get_contents($splFileInfo->getPathname());
             }
         }
 

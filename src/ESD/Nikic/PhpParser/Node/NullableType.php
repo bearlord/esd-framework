@@ -2,9 +2,7 @@
 
 namespace ESD\Nikic\PhpParser\Node;
 
-use ESD\Nikic\PhpParser\NodeAbstract;
-
-class NullableType extends NodeAbstract
+class NullableType extends ComplexType
 {
     /** @var Identifier|Name Type */
     public $type;

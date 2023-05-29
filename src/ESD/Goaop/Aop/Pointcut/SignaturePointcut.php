@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -22,77 +24,64 @@ class SignaturePointcut implements Pointcut
 
     /**
      * Element name to match, can contain wildcards **,*,?,|
-     *
-     * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Regular expression for pattern matching
-     *
-     * @var string
      */
-    protected $regexp;
+    protected string $regexp;
 
     /**
      * Modifier filter for element
-     *
-     * @var PointFilter
      */
-    protected $modifierFilter;
+    protected PointFilter $modifierFilter;
 
     /**
-     * Filter kind
-     *
-     * @var int
+     * Filter kind, e.g. self::KIND_CLASS
      */
-    protected $filterKind = 0;
+    protected int $filterKind = 0;
 
     /**
      * Signature matcher constructor
-     *
-     * @param integer $filterKind Kind of filter, e.g. KIND_CLASS
-     * @param string $name Name of the entity to match or glob pattern
-     * @param PointFilter $modifierFilter Method modifier filter
      */
-    public function __construct($filterKind, $name, PointFilter $modifierFilter)
+    public function __construct(int $filterKind, string $name, PointFilter $modifierFilter)
     {
-        $this->filterKind = $filterKind;
-        $this->name       = $name;
-        $this->regexp     = strtr(preg_quote($this->name, '/'), [
-            '\\*'    => '[^\\\\]+?',
-            '\\*\\*' => '.+?',
-            '\\?'    => '.',
-            '\\|'    => '|'
-        ]);
+        $this->filterKind     = $filterKind;
+        $this->name           = $name;
+        $this->regexp         = strtr(
+            preg_quote($this->name, '/'),
+            [
+                '\\*'    => '[^\\\\]+?',
+                '\\*\\*' => '.+?',
+                '\\?'    => '.',
+                '\\|'    => '|'
+            ]
+        );
         $this->modifierFilter = $modifierFilter;
     }
 
     /**
      * Performs matching of point of code
      *
-     * @param mixed $point Specific part of code, can be any Reflection class
-     * @param null|mixed $context Related context, can be class or namespace
-     * @param null|string|object $instance Invocation instance or string for static calls
-     * @param null|array $arguments Dynamic arguments for method
-     *
-     * @return bool
+     * @param mixed              $point     Specific part of code, can be any Reflection class
+     * @param null|mixed         $context   Related context, can be class or namespace
+     * @param null|string|object $instance  Invocation instance or string for static calls
+     * @param null|array         $arguments Dynamic arguments for method
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null)
+    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
     {
         if (!$this->modifierFilter->matches($point, $context)) {
             return false;
         }
 
-        return ($point->name === $this->name) || (bool) preg_match("/^(?:{$this->regexp})$/", $point->name);
+        return ($point->name === $this->name) || (bool)preg_match("/^(?:{$this->regexp})$/", $point->name);
     }
 
     /**
      * Returns the kind of point filter
-     *
-     * @return integer
      */
-    public function getKind()
+    public function getKind(): int
     {
         return $this->filterKind;
     }

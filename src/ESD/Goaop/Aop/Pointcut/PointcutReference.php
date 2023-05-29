@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -18,101 +20,83 @@ use ESD\Goaop\Core\AspectKernel;
 /**
  * Reference to the pointcut holds an id of pointcut to fetch when needed
  */
-class PointcutReference implements Pointcut
+final class PointcutReference implements Pointcut
 {
-    /**
-     * @var Pointcut
-     */
-    protected $pointcut;
+    private ?Pointcut $pointcut = null;
 
     /**
      * Name of the pointcut to fetch from the container
-     *
-     * @var string
      */
-    private $pointcutName;
+    private string $pointcutId;
 
     /**
      * Instance of aspect container
-     *
-     * @var AspectContainer
      */
-    private $container;
+    private AspectContainer $container;
 
     /**
      * Pointcut reference constructor
-     *
-     * @param AspectContainer $container Instance of container
-     * @param string $pointcutName Referenced pointcut
      */
-    public function __construct(AspectContainer $container, $pointcutName)
+    public function __construct(AspectContainer $container, string $pointcutId)
     {
-        $this->container    = $container;
-        $this->pointcutName = $pointcutName;
+        $this->container  = $container;
+        $this->pointcutId = $pointcutId;
     }
 
     /**
      * Performs matching of point of code
      *
-     * @param mixed $point Specific part of code, can be any Reflection class
-     * @param null|mixed $context Related context, can be class or namespace
-     * @param null|string|object $instance Invocation instance or string for static calls
-     * @param null|array $arguments Dynamic arguments for method
-     *
-     * @return bool
+     * @param mixed              $point     Specific part of code, can be any Reflection class
+     * @param null|mixed         $context   Related context, can be class or namespace
+     * @param null|string|object $instance  Invocation instance or string for static calls
+     * @param null|array         $arguments Dynamic arguments for method
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null)
+    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
     {
         return $this->getPointcut()->matches($point, $context, $instance, $arguments);
     }
 
     /**
      * Returns the kind of point filter
-     *
-     * @return integer
      */
-    public function getKind()
+    public function getKind(): int
     {
         return $this->getPointcut()->getKind();
     }
 
     /**
      * Return the class filter for this pointcut.
-     *
-     * @return PointFilter
      */
-    public function getClassFilter()
+    public function getClassFilter(): PointFilter
     {
         return $this->getPointcut()->getClassFilter();
     }
 
     /**
-     * Returns a real pointcut from the container
-     *
-     * @return Pointcut
-     */
-    public function getPointcut()
-    {
-        if (!$this->pointcut) {
-            $this->pointcut = $this->container->getPointcut($this->pointcutName);
-        }
-
-        return $this->pointcut;
-    }
-
-    /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function __sleep()
     {
-        return ['pointcutName'];
+        return ['pointcutId'];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function __wakeup()
     {
         $this->container = AspectKernel::getInstance()->getContainer();
+    }
+
+    /**
+     * Returns a real pointcut from the container
+     */
+    private function getPointcut(): Pointcut
+    {
+        if (!$this->pointcut) {
+            $this->pointcut = $this->container->getPointcut($this->pointcutId);
+        }
+
+        return $this->pointcut;
     }
 }

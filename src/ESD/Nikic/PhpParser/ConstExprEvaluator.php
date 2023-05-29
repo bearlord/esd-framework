@@ -2,6 +2,7 @@
 
 namespace ESD\Nikic\PhpParser;
 
+use function array_merge;
 use ESD\Nikic\PhpParser\Node\Expr;
 use ESD\Nikic\PhpParser\Node\Scalar;
 
@@ -150,6 +151,8 @@ class ConstExprEvaluator
         foreach ($expr->items as $item) {
             if (null !== $item->key) {
                 $array[$this->evaluate($item->key)] = $this->evaluate($item->value);
+            } elseif ($item->unpack) {
+                $array = array_merge($array, $this->evaluate($item->value));
             } else {
                 $array[] = $this->evaluate($item->value);
             }

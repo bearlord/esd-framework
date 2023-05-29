@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,37 +14,34 @@ namespace ESD\Goaop\Aop\Pointcut;
 
 use ESD\Goaop\Aop\Pointcut;
 use ESD\Goaop\Aop\Support\AndPointFilter;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
 
 /**
- * Signature method pointcut checks method signature (modifiers and name) to match it
+ * Logical "AND" pointcut that combines two simple pointcuts
  */
 class AndPointcut implements Pointcut
 {
-
     use PointcutClassFilterTrait;
 
     /**
-     * @var Pointcut
+     * First pointcut
      */
-    protected $first;
+    protected Pointcut $first;
 
     /**
-     * @var Pointcut
+     * Second pointcut
      */
-    protected $second;
+    protected Pointcut $second;
 
     /**
      * Returns pointcut kind
-     *
-     * @var int
      */
-    protected $kind = 0;
+    protected int $kind;
 
     /**
-     * Signature method matcher constructor
-     *
-     * @param Pointcut $first First filter
-     * @param Pointcut $second Second filter
+     * "And" pointcut constructor
      */
     public function __construct(Pointcut $first, Pointcut $second)
     {
@@ -56,14 +55,12 @@ class AndPointcut implements Pointcut
     /**
      * Performs matching of point of code
      *
-     * @param mixed $point Specific part of code, can be any Reflection class
-     * @param null|mixed $context Related context, can be class or namespace
-     * @param null|string|object $instance Invocation instance or string for static calls
-     * @param null|array $arguments Dynamic arguments for method
-     *
-     * @return bool
+     * @param mixed              $point     Specific part of code, can be any Reflection class
+     * @param null|mixed         $context   Related context, can be class or namespace
+     * @param null|string|object $instance  Invocation instance or string for static calls
+     * @param null|array         $arguments Dynamic arguments for method
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null)
+    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
     {
         return $this->matchPart($this->first, $point, $context, $instance, $arguments)
             && $this->matchPart($this->second, $point, $context, $instance, $arguments);
@@ -71,10 +68,8 @@ class AndPointcut implements Pointcut
 
     /**
      * Returns the kind of point filter
-     *
-     * @return integer
      */
-    public function getKind()
+    public function getKind(): int
     {
         return $this->kind;
     }
@@ -82,16 +77,22 @@ class AndPointcut implements Pointcut
     /**
      * Checks if point filter matches the point
      *
-     * @param Pointcut $pointcut Pointcut part
-     * @param \ReflectionMethod|\ReflectionProperty $point
-     * @param mixed $context Related context, can be class or namespace
-     * @param object|string|null $instance [Optional] Instance for dynamic matching
-     * @param array $arguments [Optional] Extra arguments for dynamic matching
+     * @param Pointcut                                            $pointcut
+     * @param ReflectionMethod|ReflectionProperty|ReflectionClass $point
+     * @param mixed                                               $context   Related context, can be class or namespace
+     * @param object|string|null                                  $instance  [Optional] Instance for dynamic matching
+     * @param array|null                                          $arguments [Optional] Extra arguments for dynamic
+     *                                                                       matching
      *
      * @return bool
      */
-    protected function matchPart(Pointcut $pointcut, $point, $context = null, $instance = null, array $arguments = null)
-    {
+    protected function matchPart(
+        Pointcut $pointcut,
+        $point,
+        $context = null,
+        $instance = null,
+        array $arguments = null
+    ): bool {
         return $pointcut->matches($point, $context, $instance, $arguments)
             && $pointcut->getClassFilter()->matches($context);
     }

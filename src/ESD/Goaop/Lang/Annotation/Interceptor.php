@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -15,5 +17,4 @@ namespace ESD\Goaop\Lang\Annotation;
  */
 interface Interceptor
 {
-
 }

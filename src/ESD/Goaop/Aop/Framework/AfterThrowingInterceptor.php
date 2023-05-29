@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -10,34 +12,29 @@
 
 namespace ESD\Goaop\Aop\Framework;
 
-use Exception;
 use ESD\Goaop\Aop\AdviceAfter;
 use ESD\Goaop\Aop\Intercept\Joinpoint;
+use Throwable;
 
 /**
  * "After Throwing" interceptor
  *
  * @api
  */
-final class AfterThrowingInterceptor extends BaseInterceptor implements AdviceAfter
+final class AfterThrowingInterceptor extends AbstractInterceptor implements AdviceAfter
 {
     /**
-     * After throwing exception invoker
-     *
-     * @param Joinpoint $joinpoint the concrete joinpoint
-     *
-     * @return mixed the result of the call to {@link Joinpoint::proceed()}
-     * @throws Exception
+     * @inheritdoc
+     * @throws Throwable
      */
     public function invoke(Joinpoint $joinpoint)
     {
         try {
             return $joinpoint->proceed();
-        } catch (Exception $invocationException) {
-            $adviceMethod = $this->adviceMethod;
-            $adviceMethod($joinpoint, $invocationException);
+        } catch (Throwable $throwableInstance) {
+            ($this->adviceMethod)($joinpoint, $throwableInstance);
 
-            throw $invocationException;
+            throw $throwableInstance;
         }
     }
 }

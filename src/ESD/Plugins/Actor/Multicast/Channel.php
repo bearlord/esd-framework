@@ -106,7 +106,7 @@ class Channel
      * @return void
      * @throws \ESD\Plugins\Actor\ActorException
      */
-    public function publish(string $channel, string $message, array $excludeActorList = [], ?string $from)
+    public function publish(string $channel, string $message, array $excludeActorList = [], ?string $frome = '')
     {
         $tree = $this->buildTrees($channel);
 

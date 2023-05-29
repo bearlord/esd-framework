@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -7,6 +9,7 @@
  * This source file is subject to the license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace ESD\Goaop\Bridge\Doctrine;
 
 use Doctrine\Common\EventSubscriber;
@@ -14,6 +17,9 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use ESD\Goaop\Core\AspectContainer;
+use InvalidArgumentException;
+use ReflectionClass;
+use RuntimeException;
 
 /**
  * Class MetadataLoadInterceptor
@@ -25,7 +31,7 @@ final class MetadataLoadInterceptor implements EventSubscriber
     /**
      * {@inheritdoc}
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::loadClassMetadata
@@ -44,21 +50,16 @@ final class MetadataLoadInterceptor implements EventSubscriber
      *
      * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/inheritance-mapping.html#mapped-superclasses
      * @see https://github.com/Atlantic18/DoctrineExtensions
-     *
-     * @param LoadClassMetadataEventArgs $args
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $args)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $args): void
     {
-        /**
-         * @var ClassMetadata $metadata
-         */
         $metadata = $args->getClassMetadata();
 
         if (1 === preg_match(sprintf('/.+(%s)$/', AspectContainer::AOP_PROXIED_SUFFIX), $metadata->name)) {
-            $metadata->isMappedSuperclass           = true;
-            $metadata->isEmbeddedClass              = false;
-            $metadata->table                        = [];
-            $metadata->customRepositoryClassName    = null;
+            $metadata->isMappedSuperclass        = true;
+            $metadata->isEmbeddedClass           = false;
+            $metadata->table                     = [];
+            $metadata->customRepositoryClassName = null;
 
             $this->removeMappingsFromTraits($metadata);
         }
@@ -67,19 +68,14 @@ final class MetadataLoadInterceptor implements EventSubscriber
     /**
      * Remove fields in Go! AOP proxied class metadata that are inherited
      * from traits.
-     *
-     * @param ClassMetadata $metadata
      */
-    private function removeMappingsFromTraits(ClassMetadata $metadata)
+    private function removeMappingsFromTraits(ClassMetadata $metadata): void
     {
         $traits = $this->getTraits($metadata->name);
 
         foreach ($traits as $trait) {
-            $trait = new \ReflectionClass($trait);
+            $trait = new ReflectionClass($trait);
 
-            /**
-             * @var \ReflectionProperty $property
-             */
             foreach ($trait->getProperties() as $property) {
                 $name = $property->getName();
 
@@ -99,41 +95,33 @@ final class MetadataLoadInterceptor implements EventSubscriber
     /**
      * Get ALL traits used by one class.
      *
-     * This method is copied from https://github.com/RunOpenCode/traitor-bundle/blob/master/src/RunOpenCode/Bundle/Traitor/Utils/ClassUtils.php
+     * This method is copied from
+     * https://github.com/RunOpenCode/traitor-bundle/blob/master/src/RunOpenCode/Bundle/Traitor/Utils/ClassUtils.php
      *
-     * @param object|string $objectOrClass Instance of class or FQCN
-     * @param bool $autoload Weather to autoload class.
+     * @param class-string $className FQCN
+     * @param bool         $autoload  Weather to autoload class.
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
-     *
-     * @return array Used traits.
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
-    private function getTraits($objectOrClass, $autoload = true)
+    private function getTraits(string $className, bool $autoload = true): array
     {
-        if (is_object($objectOrClass)) {
-            $objectOrClass = get_class($objectOrClass);
-        }
-
-        if (!is_string($objectOrClass)) {
-            throw new \InvalidArgumentException(sprintf('Full qualified class name expected, got: "%s".', gettype($objectOrClass)));
-        }
-
-        if (!class_exists($objectOrClass)) {
-            throw new \RuntimeException(sprintf('Class "%s" does not exists or it can not be autoloaded.', $objectOrClass));
+        if (!class_exists($className)) {
+            throw new RuntimeException(sprintf('Class "%s" does not exists or it can not be autoloaded.', $className));
         }
 
         $traits = [];
         // Get traits of all parent classes
         do {
-            $traits = array_merge(class_uses($objectOrClass, $autoload), $traits);
-        } while ($objectOrClass = get_parent_class($objectOrClass));
+            $traits    = array_merge(class_uses($className, $autoload), $traits);
+            $className = get_parent_class($className);
+        } while ($className);
 
         $traitsToSearch = $traits;
 
         while (count($traitsToSearch) > 0) {
-            $newTraits = class_uses(array_pop($traitsToSearch), $autoload);
-            $traits = array_merge($newTraits, $traits);
+            $newTraits      = class_uses(array_pop($traitsToSearch), $autoload);
+            $traits         = array_merge($newTraits, $traits);
             $traitsToSearch = array_merge($newTraits, $traitsToSearch);
         }
 
@@ -141,8 +129,6 @@ final class MetadataLoadInterceptor implements EventSubscriber
             $traits = array_merge(class_uses($trait, $autoload), $traits);
         }
 
-        return array_unique(array_map(function ($fqcn) {
-            return ltrim($fqcn, '\\');
-        }, $traits));
+        return array_unique(array_map(fn($fqcn) => ltrim($fqcn, '\\'), $traits));
     }
 }

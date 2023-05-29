@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -11,12 +13,12 @@
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
 use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\NodeTraverser;
-use ESD\Nikic\PhpParser\NodeVisitorAbstract;
+use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
 
 /**
- * Visitor to collect static variables in the method/function body and resove them
+ * Visitor to collect static variables in the method/function body and resolve them
  */
 class StaticVariablesCollector extends NodeVisitorAbstract
 {
@@ -76,10 +78,8 @@ class StaticVariablesCollector extends NodeVisitorAbstract
 
     /**
      * Returns an associative map of static variables in the method/function body
-     *
-     * @return array
      */
-    public function getStaticVariables()
+    public function getStaticVariables(): array
     {
         return $this->staticVariables;
     }

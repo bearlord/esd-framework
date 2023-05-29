@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,6 +14,9 @@ namespace ESD\Goaop\Aop\Pointcut;
 
 use ESD\Goaop\Aop\Pointcut;
 use ESD\Goaop\Aop\PointFilter;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
 
 /**
  * Pointcut that matches all inherited items, this is useful to filter inherited memebers via !matchInherited()
@@ -23,20 +28,20 @@ class MatchInheritedPointcut implements Pointcut
     /**
      * Performs matching of point of code
      *
-     * @param mixed $point Specific part of code, can be any Reflection class
-     * @param null|mixed $context Related context, can be class or namespace
-     * @param null|string|object $instance Invocation instance or string for static calls
-     * @param null|array $arguments Dynamic arguments for method
-     *
-     * @return bool
+     * @param mixed              $point     Specific part of code, can be any Reflection class
+     * @param null|mixed         $context   Related context, can be class or namespace
+     * @param null|string|object $instance  Invocation instance or string for static calls
+     * @param null|array         $arguments Dynamic arguments for method
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null)
+    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
     {
-        if (!$context instanceof \ReflectionClass) {
+        if (!$context instanceof ReflectionClass) {
             return false;
         }
 
-        if (!($point instanceof \ReflectionMethod) && !($point instanceof \ReflectionProperty)) {
+        $isPointMethod   = $point instanceof ReflectionMethod;
+        $isPointProperty = $point instanceof ReflectionProperty;
+        if (!$isPointMethod && !$isPointProperty) {
             return false;
         }
 
@@ -47,10 +52,8 @@ class MatchInheritedPointcut implements Pointcut
 
     /**
      * Returns the kind of point filter
-     *
-     * @return integer
      */
-    public function getKind()
+    public function getKind(): int
     {
         return PointFilter::KIND_METHOD | PointFilter::KIND_PROPERTY;
     }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -13,15 +15,15 @@ namespace ESD\Goaop\ParserReflection\Traits;
 
 use ESD\Goaop\ParserReflection\NodeVisitor\GeneratorDetector;
 use ESD\Goaop\ParserReflection\NodeVisitor\StaticVariablesCollector;
+use ESD\Goaop\ParserReflection\ReflectionNamedType;
 use ESD\Goaop\ParserReflection\ReflectionParameter;
-use ESD\Goaop\ParserReflection\ReflectionType;
-use ESD\Nikic\PhpParser\Node\Expr\Closure;
-use ESD\Nikic\PhpParser\Node\FunctionLike;
-use ESD\Nikic\PhpParser\Node\Identifier;
-use ESD\Nikic\PhpParser\Node\NullableType;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
-use ESD\Nikic\PhpParser\Node\Stmt\Function_;
-use ESD\Nikic\PhpParser\NodeTraverser;
+use PhpParser\Node\Expr\Closure;
+use PhpParser\Node\FunctionLike;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\NullableType;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\NodeTraverser;
 
 /**
  * General trait for all function-like reflections
@@ -163,6 +165,7 @@ trait ReflectionFunctionLikeTrait
                     $parameterIndex,
                     $this
                 );
+
                 $parameters[] = $reflectionParameter;
             }
 
@@ -189,7 +192,7 @@ trait ReflectionFunctionLikeTrait
             $returnType = $returnType->type;
         }
         if ($returnType instanceof Identifier) {
-            $isBuiltin = true;
+            $isBuiltin  = true;
             $returnType = $returnType->toString();
         } elseif (is_object($returnType)) {
             $returnType = $returnType->toString();
@@ -199,7 +202,7 @@ trait ReflectionFunctionLikeTrait
             return null;
         }
 
-        return new ReflectionType($returnType, $isNullable, $isBuiltin);
+        return new ReflectionNamedType($returnType, $isNullable, $isBuiltin);
     }
 
     /**
@@ -224,21 +227,12 @@ trait ReflectionFunctionLikeTrait
      */
     public function getStaticVariables()
     {
-        // In nikic/PHP-Parser < 2.0.0 the default behavior is cloning
-        //     nodes when traversing them. Passing FALSE to the constructor
-        //     prevents this.
-        // In nikic/PHP-Parser >= 2.0.0 and < 3.0.0 the default behavior was
-        //     changed to not clone nodes, but the parameter was retained as
-        //     an option.
-        // In nikic/PHP-Parser >= 3.0.0 the option to clone nodes was removed
-        //     as a constructor parameter, so Scrutinizer will pick this up as
-        //     an issue. It is retained for legacy compatibility.
-        $nodeTraverser      = new NodeTraverser(false);
+        $nodeTraverser      = new NodeTraverser();
         $variablesCollector = new StaticVariablesCollector($this);
         $nodeTraverser->addVisitor($variablesCollector);
 
         /* @see https://github.com/nikic/PHP-Parser/issues/235 */
-        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: array());
+        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: []);
 
         return $variablesCollector->getStaticVariables();
     }
@@ -278,7 +272,7 @@ trait ReflectionFunctionLikeTrait
      */
     public function isDeprecated()
     {
-        // userland method/function/closure can not be deprecated
+        // user-land method/function/closure can not be deprecated
         return false;
     }
 
@@ -287,21 +281,12 @@ trait ReflectionFunctionLikeTrait
      */
     public function isGenerator()
     {
-        // In nikic/PHP-Parser < 2.0.0 the default behavior is cloning
-        //     nodes when traversing them. Passing FALSE to the constructor
-        //     prevents this.
-        // In nikic/PHP-Parser >= 2.0.0 and < 3.0.0 the default behavior was
-        //     changed to not clone nodes, but the parameter was retained as
-        //     an option.
-        // In nikic/PHP-Parser >= 3.0.0 the option to clone nodes was removed
-        //     as a constructor parameter, so Scrutinizer will pick this up as
-        //     an issue. It is retained for legacy compatibility.
-        $nodeTraverser = new NodeTraverser(false);
+        $nodeTraverser = new NodeTraverser();
         $nodeDetector  = new GeneratorDetector();
         $nodeTraverser->addVisitor($nodeDetector);
 
         /* @see https://github.com/nikic/PHP-Parser/issues/235 */
-        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: array());
+        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: []);
 
         return $nodeDetector->isGenerator();
     }
