@@ -226,7 +226,6 @@ class AnnotationsScanPlugin extends AbstractPlugin
             foreach ($files as $file) {
                 $class = $this->getClassFromFile($file);
                 if ($class != null) {
-                    var_dump($class);
                     if (interface_exists($class) || class_exists($class)) {
 
                         $reflectionClass = new ReflectionClass($class);
