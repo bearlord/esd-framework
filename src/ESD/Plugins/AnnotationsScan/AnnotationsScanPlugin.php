@@ -163,7 +163,11 @@ class AnnotationsScanPlugin extends AbstractPlugin
             //While we're grabbing the namespace name...
             if ($getting_namespace === true) {
                 //If the token is a string or the namespace separator...
-                if (is_array($token) && in_array($token[0], [T_STRING, T_NS_SEPARATOR])) {
+                //Added adaptation for PHP8
+                if (is_array($token) && (
+                    in_array($token[0], [T_STRING, T_NS_SEPARATOR])
+                    || strpos($token[1], '\\')
+                    )) {
                     //Append the token's value to the name of the namespace
                     $namespace .= $token[1];
                 } else if ($token === ';') {
@@ -222,7 +226,9 @@ class AnnotationsScanPlugin extends AbstractPlugin
             foreach ($files as $file) {
                 $class = $this->getClassFromFile($file);
                 if ($class != null) {
+                    var_dump($class);
                     if (interface_exists($class) || class_exists($class)) {
+
                         $reflectionClass = new ReflectionClass($class);
                         $has = $this->cacheReader->getClassAnnotation($reflectionClass, Component::class);
 
