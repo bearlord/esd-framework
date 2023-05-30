@@ -121,7 +121,7 @@ class GoController extends EasyController
      * @param int $http_code
      * @return mixed
      */
-    public function redirect($url, $http_code = 302)
+    public function redirect(string $url, int $http_code = 302)
     {
         return $this->response->redirect($url, $http_code);
     }
@@ -200,7 +200,7 @@ class GoController extends EasyController
      * @param $url
      * @return string
      */
-    private function msg($title = 'System Message', $info, $wait, $url)
+    private function msg(string $title = 'System Message', ?string $info = '', ?string $wait = '', ?string $url = '')
     {
         return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head>' .
             '<meta http-equiv="Refresh" content="' . $wait . '; url=' . $url . '"/><body><h1>' . $title . '</h1>' .
