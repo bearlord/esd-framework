@@ -169,7 +169,7 @@ class Table implements \Iterator, \Countable
      * @return mixed Can return any type.
      * @since 5.0.0
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->swooleTable->current();
     }
@@ -181,9 +181,9 @@ class Table implements \Iterator, \Countable
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function next()
+    public function next(): void
     {
-        return $this->swooleTable->next();
+        $this->swooleTable->next();
     }
 
     /**
@@ -193,7 +193,7 @@ class Table implements \Iterator, \Countable
      * @return mixed scalar on success, or null on failure.
      * @since 5.0.0
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->swooleTable->key();
     }
@@ -218,8 +218,8 @@ class Table implements \Iterator, \Countable
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function rewind()
+    public function rewind(): void
     {
-        return $this->swooleTable->rewind();
+        $this->swooleTable->rewind();
     }
 }
