@@ -998,7 +998,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
      * This method is required by the interface [[\IteratorAggregate]].
      * @return ArrayIterator an iterator for traversing the items in the list.
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         $attributes = $this->getAttributes();
         return new ArrayIterator($attributes);
@@ -1011,7 +1011,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
      * @param mixed $offset the offset to check on.
      * @return bool whether or not an offset exists.
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->$offset);
     }
@@ -1023,7 +1023,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
      * @param mixed $offset the offset to retrieve element.
      * @return mixed the element at the offset, null if no element is found at the offset
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->$offset;
     }
@@ -1035,7 +1035,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
      * @param int $offset the offset to set element
      * @param mixed $item the element value
      */
-    public function offsetSet($offset, $item)
+    public function offsetSet($offset, $item): void
     {
         $this->$offset = $item;
     }
@@ -1046,7 +1046,7 @@ class Model extends Component implements StaticInstanceInterface, IteratorAggreg
      * It is implicitly called when you use something like `unset($model[$offset])`.
      * @param mixed $offset the offset to unset element
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->$offset = null;
     }
