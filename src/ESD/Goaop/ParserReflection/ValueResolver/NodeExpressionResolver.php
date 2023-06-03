@@ -85,7 +85,7 @@ class NodeExpressionResolver
         return $this->constantName;
     }
 
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }

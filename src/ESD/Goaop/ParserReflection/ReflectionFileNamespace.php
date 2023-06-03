@@ -165,7 +165,7 @@ class ReflectionFileNamespace
      *
      * @return string|false The doc comment if it exists, otherwise "false"
      */
-    public function getDocComment()
+    public function getDocComment(): string|false
     {
         $docComment = false;
         $comments   = $this->namespaceNode->getAttribute('comments');
@@ -188,7 +188,7 @@ class ReflectionFileNamespace
     /**
      * Returns the name of file
      */
-    public function getFileName(): string
+    public function getFileName(): string|false
     {
         return $this->fileName;
     }
@@ -270,7 +270,7 @@ class ReflectionFileNamespace
     /**
      * Gets starting line number
      */
-    public function getStartLine(): int
+    public function getStartLine(): int|false
     {
         return $this->namespaceNode->getAttribute('startLine');
     }

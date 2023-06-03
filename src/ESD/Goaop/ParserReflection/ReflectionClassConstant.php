@@ -74,17 +74,18 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * Initializes a reflection for the class constant
      *
-     * @param string      $className         Name of the class
-     * @param string      $classConstantName Name of the class constant to reflect
-     * @param ?ClassConst $classConstNode    ClassConstant definition node
-     * @param Const_|null $constNode         Concrete const definition node
+     * @param string $className Name of the class
+     * @param string $classConstantName Name of the class constant to reflect
+     * @param ?ClassConst $classConstNode ClassConstant definition node
+     * @param Const_|null $constNode Concrete const definition node
      */
     public function __construct(
-        string $className,
-        string $classConstantName,
+        string     $className,
+        string     $classConstantName,
         ClassConst $classConstNode = null,
-        Const_ $constNode = null
-    ) {
+        Const_     $constNode = null
+    )
+    {
         $this->className = ltrim($className, '\\');
 
         if (!$classConstNode || !$constNode) {
@@ -111,7 +112,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass(): \ReflectionClass
     {
         return new ReflectionClass($this->className);
     }
@@ -119,7 +120,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getDocComment()
+    public function getDocComment(): string|false
     {
         $docBlock = $this->classConstantNode->getDocComment();
 
@@ -129,7 +130,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getModifiers()
+    public function getModifiers(): int
     {
         $modifiers = 0;
         if ($this->isPublic()) {
@@ -148,7 +149,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->constNode->name->toString();
     }
@@ -156,7 +157,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         $solver = new NodeExpressionResolver($this->getDeclaringClass());
         $solver->process($this->constNode->value);
@@ -166,7 +167,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isPrivate()
+    public function isPrivate(): bool
     {
         return $this->classConstantNode->isPrivate();
     }
@@ -174,7 +175,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isProtected()
+    public function isProtected(): bool
     {
         return $this->classConstantNode->isProtected();
     }
@@ -182,7 +183,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->classConstantNode->isPublic();
     }
@@ -196,10 +197,10 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
         static $typeMap = [
             'integer' => 'int',
             'boolean' => 'bool',
-            'double'  => 'float',
+            'double' => 'float',
         ];
         $value = $this->getValue();
-        $type  = gettype($value);
+        $type = gettype($value);
         if (PHP_VERSION_ID >= 70300 && isset($typeMap[$type])) {
             $type = $typeMap[$type];
         }
@@ -208,9 +209,9 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
         return sprintf(
             "Constant [ %s %s %s ] { %s }\n",
             implode(' ', Reflection::getModifierNames($this->getModifiers())),
-            strtolower((string) ReflectionType::convertToDisplayType($valueType)),
+            strtolower((string)ReflectionType::convertToDisplayType($valueType)),
             $this->getName(),
-            (string) $value
+            (string)$value
         );
     }
 }

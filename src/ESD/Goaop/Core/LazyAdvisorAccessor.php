@@ -15,7 +15,9 @@ namespace ESD\Goaop\Core;
 use ESD\Goaop\Aop\Advice;
 use ESD\Goaop\Aop\Advisor;
 use InvalidArgumentException;
+use \AllowDynamicProperties;
 
+#[AllowDynamicProperties]
 /**
  * Provides an interface for loading of advisors from the container
  */
