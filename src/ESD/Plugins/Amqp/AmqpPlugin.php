@@ -26,6 +26,11 @@ class AmqpPlugin extends AbstractPlugin
     use GetAmqp;
 
     /**
+     * @var Configs
+     */
+    protected $configs;
+
+    /**
      * @var AmqpConfig
      */
     protected $amqpConfig;
