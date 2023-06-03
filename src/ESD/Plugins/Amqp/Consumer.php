@@ -92,15 +92,15 @@ class Consumer extends Builder
 
     /**
      * @inheritDoc
-     * @param ConsumerMessage $message
+     * @param Message $message
      * @param AMQPChannel|null $channel
      * @param bool $release
      * @return void
      * @throws \Exception
      */
-    public function declare(ConsumerMessage $message, ?AMQPChannel $channel = null, bool $release = false): void
+    public function declare(Message $message, ?AMQPChannel $channel = null, bool $release = false): void
     {
-        if (!$message instanceof ConsumerMessage) {
+        if (!$message instanceof Message) {
             throw new MessageException('Message must instanceof ' . Message::class);
         }
 
