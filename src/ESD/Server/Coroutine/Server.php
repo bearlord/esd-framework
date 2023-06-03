@@ -47,7 +47,7 @@ abstract class Server extends \ESD\Core\Server\Server
         }
 
         if ($serverConfig->isDebug()) {
-            error_reporting(E_ALL &  ~E_WARNING);
+            error_reporting(E_ALL &  ~E_WARNING & ~E_DEPRECATED);
             ini_set("display_errors", "On");
         }
 
