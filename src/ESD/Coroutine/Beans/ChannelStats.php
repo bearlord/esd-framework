@@ -34,9 +34,9 @@ class ChannelStats
 
     /**
      * ChannelStats constructor.
-     * @param $data
+     * @param array $data
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->consumerNum = $data['consumer_num'];
         $this->producerNum = $data['producer_num'];

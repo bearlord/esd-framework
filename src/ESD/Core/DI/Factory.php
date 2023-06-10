@@ -16,5 +16,5 @@ interface Factory
      * @param $params
      * @return mixed
      */
-    public function create($params);
+    public function create(?array $params);
 }

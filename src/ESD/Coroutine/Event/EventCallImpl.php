@@ -114,7 +114,7 @@ class EventCallImpl extends ChannelImpl implements EventCall
      * @param int $timeout
      * @return mixed
      */
-    public function wait($timeout = 5)
+    public function wait(int $timeout = 5)
     {
         return $this->pop($timeout);
     }
