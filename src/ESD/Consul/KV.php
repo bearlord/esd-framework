@@ -29,13 +29,12 @@ class KV implements KVInterface
     }
 
     /**
-     * Get
-     * @param $key
+     * @param string $key
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function get($key, array $options = [], $timeout = 5)
+    public function get(string $key, array $options = [], int $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -46,13 +45,12 @@ class KV implements KVInterface
     }
 
     /**
-     * Put
-     * @param $key
+     * @param string $key
      * @param $value
      * @param array $options
      * @return ConsulResponse
      */
-    public function put($key, $value, array $options = [])
+    public function put(string $key, $value, array $options = [])
     {
         $params = array(
             'body' => (string)$value,
@@ -61,14 +59,13 @@ class KV implements KVInterface
 
         return $this->client->put('v1/kv/' . $key, $params);
     }
-
+    
     /**
-     * Delete
-     * @param $key
+     * @param string $key
      * @param array $options
      * @return ConsulResponse
      */
-    public function delete($key, array $options = [])
+    public function delete(string $key, array $options = [])
     {
         $params = array(
             'query' => OptionsResolver::resolve($options, ['dc', 'recurse']),

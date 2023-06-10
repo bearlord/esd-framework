@@ -56,10 +56,10 @@ final class ServiceFactory
 
     /**
      * Get service
-     * @param $service
+     * @param string $service
      * @return mixed
      */
-    public function get($service)
+    public function get(string $service)
     {
         if (!array_key_exists($service, self::$services)) {
             throw new \InvalidArgumentException(sprintf('The service "%s" is not available. Pick one among "%s".', $service, implode('", "', array_keys(self::$services))));

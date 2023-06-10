@@ -30,11 +30,11 @@ class Session implements SessionInterface
 
     /**
      * Session create
-     * @param null $body
+     * @param string|null $body
      * @param array $options
      * @return ConsulResponse
      */
-    public function create($body = null, array $options = [])
+    public function create(string $body = null, array $options = [])
     {
         $params = array(
             'body' => $body,
@@ -46,11 +46,11 @@ class Session implements SessionInterface
 
     /**
      * Session destroy
-     * @param $sessionId
+     * @param string $sessionId
      * @param array $options
      * @return ConsulResponse
      */
-    public function destroy($sessionId, array $options = [])
+    public function destroy(string $sessionId, array $options = [])
     {
         $params = array(
             'query' => OptionsResolver::resolve($options, ['dc']),
@@ -61,12 +61,12 @@ class Session implements SessionInterface
 
     /**
      * Session info
-     * @param $sessionId
+     * @param string $sessionId
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function info($sessionId, array $options = [], $timeout = 5)
+    public function info(string $sessionId, array $options = [], int $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -75,15 +75,15 @@ class Session implements SessionInterface
 
         return $this->client->get('/v1/session/info/' . $sessionId, $params);
     }
-
+    
     /**
      * Seesion node
-     * @param $node
+     * @param string $node
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function node($node, array $options = [], $timeout = 5)
+    public function node(string $node, array $options = [], int $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -99,7 +99,7 @@ class Session implements SessionInterface
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function all(array $options = [], $timeout = 5)
+    public function all(array $options = [], int $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -111,11 +111,11 @@ class Session implements SessionInterface
 
     /**
      * Session renew
-     * @param $sessionId
+     * @param string $sessionId
      * @param array $options
      * @return ConsulResponse
      */
-    public function renew($sessionId, array $options = [])
+    public function renew(string $sessionId, array $options = [])
     {
         $params = array(
             'query' => OptionsResolver::resolve($options, ['dc']),
