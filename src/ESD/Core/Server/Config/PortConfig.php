@@ -815,10 +815,12 @@ class PortConfig extends BaseConfig
             $build['package_length_type'] = $this->getPackageLengthType();
             ConfigException::AssertNull($this, "packageBodyOffset", $this->getPackageBodyOffset());
             $build['package_body_offset'] = $this->getPackageBodyOffset();
-            if ($this->getPackageMaxLength() != null && $this->getPackageMaxLength() > 0) {
-                $build['package_max_length'] = $this->getPackageMaxLength();
-            }
         }
+
+        if ($this->getPackageMaxLength() != null && $this->getPackageMaxLength() > 0) {
+            $build['package_max_length'] = $this->getPackageMaxLength();
+        }
+
         if ($count > 1) {
             throw new ConfigException("Only one protocol can be specified in PortConfig ");
         }
