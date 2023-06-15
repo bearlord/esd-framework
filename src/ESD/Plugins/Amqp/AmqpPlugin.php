@@ -29,11 +29,7 @@ class AmqpPlugin extends AbstractPlugin
      * @var Configs
      */
     protected $configs;
-
-    /**
-     * @var AmqpConfig
-     */
-    protected $amqpConfig;
+    
 
     /**
      * AmqpPlugin constructor.
