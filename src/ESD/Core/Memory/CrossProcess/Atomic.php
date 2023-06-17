@@ -79,7 +79,7 @@ class Atomic
      * @param int $set_value
      * @return mixed
      */
-    public function cmpset(int $cmp_value, int $set_value)
+    public function cmpset(int $cmp_value, int $set_value): mixed
     {
         return $this->swooleAtomic->cmpset($cmp_value, $set_value);
     }
@@ -113,7 +113,7 @@ class Atomic
      * @param int $n
      * @return mixed
      */
-    public function wakeup(int $n = 1)
+    public function wakeup(int $n = 1): mixed
     {
         return $this->swooleAtomic->wakeup($n);
     }

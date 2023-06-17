@@ -23,7 +23,7 @@ class AtomicLong
      *
      * @param int $initValue
      */
-    public function __construct($initValue = 0)
+    public function __construct(?int $initValue = 0)
     {
         $this->swooleAtomicLong = new \Swoole\Atomic\Long($initValue);
     }
@@ -34,7 +34,7 @@ class AtomicLong
      * @param int $addValue
      * @return int
      */
-    public function add(int $addValue = 1): int
+    public function add(?int $addValue = 1): int
     {
         return $this->swooleAtomicLong->add($addValue);
     }
@@ -45,7 +45,7 @@ class AtomicLong
      * @param int $subValue
      * @return int
      */
-    public function sub(int $subValue = 1): int
+    public function sub(?int $subValue = 1): int
     {
         return $this->swooleAtomicLong->sub($subValue);
     }
@@ -53,9 +53,9 @@ class AtomicLong
     /**
      * Get
      * 
-     * @return mixed
+     * @return int
      */
-    public function get()
+    public function get(): int
     {
         return $this->swooleAtomicLong->get();
     }
@@ -75,9 +75,9 @@ class AtomicLong
      *
      * @param int $cmp_value
      * @param int $set_value
-     * @return mixed  如果不等于返回false
+     * @return bool  如果不等于返回false
      */
-    public function cmpset(int $cmp_value, int $set_value)
+    public function cmpset(int $cmp_value, int $set_value): bool
     {
         return $this->swooleAtomicLong->cmpset($cmp_value, $set_value);
     }

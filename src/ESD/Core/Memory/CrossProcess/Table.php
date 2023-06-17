@@ -100,7 +100,7 @@ class Table implements \Iterator, \Countable
      * @param mixed $incrBy increment, default is 1. If the column is integer, $incrBy must be int, if the column is floating point, $incrBy must be float
      * @return int | float returns the final result value
      */
-    public function incr(string $key, string $column, $incrBy = 1)
+    public function incr(string $key, string $column, $incrBy = 1): float|int
     {
         return $this->swooleTable->incr($key, $column, $incrBy);
     }
@@ -113,7 +113,7 @@ class Table implements \Iterator, \Countable
      * @param mixed $incrBy increment, default is 1. If the column is integer, $incrBy must be int, if the column is floating point, $incrBy must be float
      * @return int | float returns the final result value
      */
-    public function decr(string $key, string $column, $incrBy = 1)
+    public function decr(string $key, string $column, $incrBy = 1): float|int
     {
         return $this->swooleTable->decr($key, $column, $incrBy);
     }
@@ -125,7 +125,7 @@ class Table implements \Iterator, \Countable
      * @param string|null $field returns only the value of the field when $field is specified, not the entire record
      * @return mixed If the final result value $key does not exist, it will return false, and the result array will be returned successfully
      */
-    public function get(string $key, string $field = null)
+    public function get(string $key, string $field = null): mixed
     {
         return $this->swooleTable->get($key, $field);
     }
