@@ -19,6 +19,9 @@ class Redis implements DBInterface
      */
     private $_redis;
 
+    /**
+     * @var string
+     */
     private $_lastQuery;
 
     /**
@@ -61,19 +64,19 @@ class Redis implements DBInterface
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return "redis";
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param callable|null $call
      * @return mixed
      */
-    public function execute($name, callable $call = null)
+    public function execute(string $name, callable $call = null): mixed
     {
         if ($call != null) {
             return $call();
@@ -81,9 +84,9 @@ class Redis implements DBInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getLastQuery()
+    public function getLastQuery(): string
     {
         return $this->_lastQuery;
     }

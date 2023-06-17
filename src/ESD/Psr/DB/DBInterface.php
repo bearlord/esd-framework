@@ -13,19 +13,19 @@ namespace ESD\Psr\DB;
 interface DBInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
-    public function getType();
+    public function getType(): string;
 
     /**
-     * @param $name
+     * @param string $name
      * @param callable|null $call
      * @return mixed
      */
-    public function execute($name, callable $call = null);
+    public function execute(string $name, callable $call = null): mixed;
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getLastQuery();
+    public function getLastQuery(): string;
 }
