@@ -11,5 +11,8 @@ namespace ESD\Rpc\IdGenerator;
  */
 interface IdGeneratorInterface
 {
-    public function generate();
+    /**
+     * @return string
+     */
+    public function generate(): string;
 }

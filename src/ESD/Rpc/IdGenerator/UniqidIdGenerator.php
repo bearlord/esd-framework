@@ -12,7 +12,10 @@ namespace ESD\Rpc\IdGenerator;
 class UniqidIdGenerator implements IdGeneratorInterface
 {
 
-    public function generate()
+    /**
+     * @return string
+     */
+    public function generate(): string
     {
         return uniqid();
     }
