@@ -257,6 +257,7 @@ class WhoopsHandler extends Handler
         $vars["tables"] = array_merge($extraTables, $vars["tables"]);
 
         $plainTextHandler = new PlainTextHandler();
+        $plainTextHandler->setRun($this->getRun());
         $plainTextHandler->setException($this->getException());
         $plainTextHandler->setInspector($this->getInspector());
         $vars["preface"] = "<!--\n\n\n" . $this->templateHelper->escape($plainTextHandler->generateResponse()) . "\n\n\n\n\n\n\n\n\n\n\n-->";
