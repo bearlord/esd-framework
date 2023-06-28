@@ -121,90 +121,21 @@ class GoController extends EasyController
      * @param int $http_code
      * @return mixed
      */
-    public function redirect(string $url, int $http_code = 302)
+    public function redirect($url, $http_code = 302)
     {
         return $this->response->redirect($url, $http_code);
     }
 
     /**
-     * @param $data
-     * @param null $url
-     * @param int $wait
-     * @param array $header
+     * @param string|null $title
+     * @param string|null $info
      * @return string
      */
-    public function successResponse($data, $url = null, $wait = 3, array $header = [])
+    private function msg(?string $title = 'System Message', ?string $info = null): string
     {
-
-        if (is_null($url) && $this->request->getServer(Request::HEADER_REFERER) != null) {
-            $url = $this->request->getServer(Request::HEADER_REFERER);
-        }
-
-        if (is_array($data)) {
-            if (empty($header)) {
-                $this->response->withHeader('Content-type', 'application/json');
-            } else {
-                $this->response->withHeaders($header);
-            }
-            return json_encode([
-                'data' => $data,
-                'code' => 0
-            ]);
-        } else {
-            if (!empty($header)) {
-                $this->response->withHeaders($header);
-            }
-            return $this->msg('System Message', $data, $wait, $url);
-        }
-    }
-
-
-    /**
-     * @param string $msg
-     * @param int $code
-     * @param null $url
-     * @param int $wait
-     * @param array $header
-     * @return false|string
-     */
-    public function errorResponse($msg = '', $code = 500, $url = null, $wait = 3, array $header = [])
-    {
-
-        if (is_null($url) && $this->request->getServer(Request::HEADER_REFERER) != null) {
-            $url = $this->request->getServer(Request::HEADER_REFERER);
-        }
-
-        if ($this->isAjax()) {
-            if (empty($header)) {
-                $this->response->withHeader('Content-type', 'application/json');
-            } else {
-                $this->response->withHeaders($header);
-            }
-            return json_encode([
-                'code' => $code,
-                'message' => $msg,
-                'data' => null
-            ]);
-        } else {
-            if (!empty($header)) {
-                $this->response->withHeaders($header);
-            }
-            return $this->msg('错误消息', $msg, $wait, $url);
-        }
-    }
-
-    /**
-     * @param string $title
-     * @param $info
-     * @param $wait
-     * @param $url
-     * @return string
-     */
-    private function msg(string $title = 'System Message', ?string $info = '', ?string $wait = '', ?string $url = '')
-    {
-        return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head>' .
-            '<meta http-equiv="Refresh" content="' . $wait . '; url=' . $url . '"/><body><h1>' . $title . '</h1>' .
-            '<h2>' . $info . '</h2></body></html>';
+        return '<!DOCTYPE html><html>' .
+            '<head><title>' . $title . '</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head>' .
+            '<body><h1>' . $title . '</h1><h2>' . $info . '</h2></body></html>';
     }
 
     /**
@@ -215,23 +146,37 @@ class GoController extends EasyController
     public function onExceptionHandle(\Throwable $exception)
     {
         if ($this->clientData->getResponse() != null) {
-            $this->response->withStatus(404);
-            $this->response->withHeader("Content-Type", "text/html;charset=UTF-8");
-            if ($exception instanceof RouteException) {
-                $msg = '404 Not found / ' . $exception->getMessage();
-                return $msg;
-            } else if ($exception instanceof AccessDeniedException) {
-                $this->response->withStatus(401);
-                $msg = '401 Access denied / ' . $exception->getMessage();
-                return $msg;
-            } else if ($exception instanceof ResponseException) {
-                $this->response->withStatus(200);
-                return $this->errorResponse($exception->getMessage(), $exception->getCode());
-            } else if ($exception instanceof AlertResponseException) {
-                $this->response->withStatus(500);
-                return $this->errorResponse($exception->getMessage(), $exception->getCode());
+            switch (true) {
+                case ($exception instanceof AccessDeniedException):
+                    $status = 401;
+                    break;
+
+                case ($exception instanceof AlertResponseException):
+                    $status = 500;
+                    break;
+
+                case ($exception instanceof RouteException):
+                case ($exception instanceof ResponseException):
+                default:
+                    $status = 200;
             }
+            $this->response->withStatus($status);
+
+            $contentType = $this->request->getContentType();
+            if (strpos($contentType, 'application/json') !== false) {
+                $content = json_encode([
+                    'code' => $exception->getCode(),
+                    'message' => $exception->getMessage(),
+                    'data' => new \stdClass()
+                ]);
+                $this->response->withHeader('Content-Type', $contentType);
+            } else {
+                $content = $this->msg('System Message', $exception->getMessage());
+            }
+
+            return $content;
         }
+
         return parent::onExceptionHandle($exception);
     }
 
