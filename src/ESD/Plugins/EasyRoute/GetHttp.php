@@ -37,7 +37,7 @@ trait GetHttp
      * @param null $default
      * @return array|mixed|string
      */
-    public function query($key = null, $default = null)
+    public function query(?string $key = null, ?string $default = null)
     {
         return $this->getRequest()->query($key, $default);
     }
@@ -47,7 +47,7 @@ trait GetHttp
      * @param null $default
      * @return array|mixed|string
      */
-    public function post($key = null, $default = null)
+    public function post(?string$key = null, ?string$default = null)
     {
         return $this->getRequest()->post($key, $default);
     }
@@ -57,7 +57,7 @@ trait GetHttp
      * @param null $default
      * @return array|mixed|string
      */
-    public function input($key = null, $default = null)
+    public function input(?string$key = null, ?string$default = null)
     {
         return $this->getRequest()->input($key, $default);
     }
@@ -93,29 +93,44 @@ trait GetHttp
     }
 
     /**
-     * @return mixed
+     * @return false|mixed
      * @throws RouteException
      */
     public function postRawJson()
     {
-        if (!$json = json_decode($this->getRequest()->getBody()->getContents(), true)) {
-            $this->warning('postRawJson errror, raw:' . $this->getRequest()->getBody()->getContents());
+        $raw = $this->getRequest()->getBody()->getContents();
+        if (empty($raw)) {
+            return false;
+        }
+
+        try {
+            $decoded = json_decode($raw, true);
+        } catch (\Exception $exception) {
+            $this->warning('postRawJson errror, raw:' . $raw);
             throw new RouteException('RawJson Format error');
         }
-        return $json;
+
+        return $decoded;
     }
 
     /**
-     * @return \SimpleXMLElement
+     * @return false|\SimpleXMLElement
      * @throws RouteException
      */
     public function postRawXml()
     {
         $raw = $this->getRequest()->getBody()->getContents();
-        if (!$xml = simplexml_load_string($raw, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS)) {
+        if (empty($raw)) {
+            return false;
+        }
+
+        try {
+            $xml = simplexml_load_string($raw, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
+        } catch (\Exception $exception) {
             $this->warning('RequestRawXml errror, raw:' . $this->getRequest()->getBody()->getContents());
             throw new RouteException('RawXml Format error');
         }
+
         return $xml;
     }
 
@@ -125,7 +140,13 @@ trait GetHttp
      * @return array|mixed
      * @throws ParamException
      */
-    private function paramsRequire($key, $method)
+    /**
+     * @param $key
+     * @param string $method
+     * @return array|mixed
+     * @throws ParamException
+     */
+    private function paramsRequire($key, string $method)
     {
         if (is_array($key)) {
             $result = [];
