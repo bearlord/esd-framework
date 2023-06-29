@@ -25,6 +25,7 @@ use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\JsonRpc\Annotation\ResponeJsonRpc;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Validate\Annotation\ValidatedFilter;
+use ESD\Utils\ArrayToXml;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
 use ESD\Nikic\FastRoute\Dispatcher;
@@ -77,18 +78,14 @@ class AnnotationRoute implements IRoute
                     break;
                 }
 
-                $contentType = '';
-                $_contentType = $this->clientData->getRequest()->getHeader('content-type');
-                if (!empty($_contentType)) {
-                    $contentType = strtolower($_contentType[0]);
-                }
+                $contentType = $this->clientData->getRequest()->getContentType();
                 if (strpos($contentType, 'application/json') !== false) {
                     $this->clientData->getResponse()->withHeader("Content-Type", $contentType);
                     $exceptionJson = Json::encode([
                         'code' => 400,
                         'data' => [],
                         'message' => $message
-                    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_FORCE_OBJECT);
+                    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
                     $this->clientData->getResponse()->withContent($exceptionJson)->end();
                 }
                 break;
@@ -119,65 +116,86 @@ class AnnotationRoute implements IRoute
                     if ($annotation instanceof ResponseBody) {
                         if (!empty($clientData->getResponse())) {
                             $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
-                        }
-                    }
-                    if ($annotation instanceof PathVariable) {
-                        $result = $vars[$annotation->value] ?? null;
-                        if ($annotation->required) {
-                            if ($result == null) {
-                                throw new RouteException("path {$annotation->value} not found");
+
+                            if (strpos($annotation->value, "application/xml") !== false) {
+                                $clientData->getResponse()->withHeader("Xml-Start-Element", $annotation->xmlStartElement);
                             }
                         }
-                        $params[$annotation->param ?? $annotation->value] = $result;
-                    } else if ($annotation instanceof RequestParam) {
-                        if ($request == null) {
-                            continue;
-                        }
-                        $result = $request->query($annotation->value);
-                        if ($annotation->required && $result == null) {
-                            throw new ParamException("require params $annotation->value");
-                        }
-                        $params[$annotation->param ?? $annotation->value] = $result;
-                    } else if ($annotation instanceof RequestFormData) {
-                        if ($request == null) {
-                            continue;
-                        }
-                        $result = $request->post($annotation->value);
-                        if ($annotation->required && $result == null) {
-                            throw new ParamException("require params $annotation->value");
-                        }
-                        $params[$annotation->param ?? $annotation->value] = $result;
-                    } else if ($annotation instanceof RequestRawJson || $annotation instanceof RequestBody) {
-                        if ($request == null) {
-                            continue;
-                        }
-                        if (!$json = json_decode($request->getBody()->getContents(), true)) {
-                            $this->warning('RequestRawJson errror, raw:' . $request->getBody()->getContents());
-                            throw new RouteException('RawJson Format error');
-                        }
-                        if (!empty($annotation->value)) {
-                            $params[$annotation->value] = $json;
-                        } else {
-                            $params = $json;
-                        }
-                    } else if ($annotation instanceof RequestRaw) {
-                        if ($request == null) {
-                            continue;
-                        }
-                        $raw = $request->getBody()->getContents();
-                        $params[$annotation->value] = $raw;
-                    } else if ($annotation instanceof RequestRawXml) {
-                        if ($request == null) {
-                            continue;
-                        }
-                        $raw = $request->getBody()->getContents();
-                        if (!$xml = simplexml_load_string($raw, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS)) {
-                            $this->warning('RequestRawXml errror, raw:' . $request->getBody()->getContents());
-                            throw new RouteException('RawXml Format error');
-                        }
-                        $params[$annotation->value] = json_decode(json_encode($xml), true);
-                    } else if ($annotation instanceof ResponeJsonRpc) {
-                        $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
+                    }
+
+                    switch (true) {
+                        case ($annotation instanceof PathVariable):
+                            $result = $vars[$annotation->value] ?? null;
+                            if ($annotation->required) {
+                                if ($result == null) {
+                                    throw new RouteException("path {$annotation->value} not found");
+                                }
+                            }
+                            $params[$annotation->param ?? $annotation->value] = $result;
+                            break;
+
+                        case ($annotation instanceof RequestParam):
+                            if ($request == null) {
+                                continue;
+                            }
+                            $result = $request->query($annotation->value);
+                            if ($annotation->required && $result == null) {
+                                throw new ParamException("require params $annotation->value");
+                            }
+                            $params[$annotation->param ?? $annotation->value] = $result;
+                            break;
+
+                        case ($annotation instanceof RequestFormData):
+                            if ($request == null) {
+                                continue;
+                            }
+                            $result = $request->post($annotation->value);
+                            if ($annotation->required && $result == null) {
+                                throw new ParamException("require params $annotation->value");
+                            }
+                            $params[$annotation->param ?? $annotation->value] = $result;
+                            break;
+
+                        case ($annotation instanceof RequestRawJson):
+                        case ($annotation instanceof RequestBody):
+                            if ($request == null) {
+                                continue;
+                            }
+                            if (!$json = json_decode($request->getBody()->getContents(), true)) {
+                                $this->warning('RequestRawJson errror, raw:' . $request->getBody()->getContents());
+                                throw new RouteException('RawJson Format error');
+                            }
+                            if (!empty($annotation->value)) {
+                                $params[$annotation->value] = $json;
+                            } else {
+                                $params = $json;
+                            }
+                            break;
+
+                        case ($annotation instanceof RequestRaw):
+                            if ($request == null) {
+                                continue;
+                            }
+                            $raw = $request->getBody()->getContents();
+                            $params[$annotation->value] = $raw;
+                            break;
+
+                        case ($annotation instanceof RequestRawXml):
+                            if ($request == null) {
+                                continue;
+                            }
+                            $raw = $request->getBody()->getContents();
+                            if (!$xml = simplexml_load_string($raw, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS)) {
+                                $this->warning('RequestRawXml errror, raw:' . $request->getBody()->getContents());
+                                throw new RouteException('RawXml Format error');
+                            }
+                            $params[$annotation->value] = json_decode(json_encode($xml), true);
+                            break;
+
+                        case ($annotation instanceof ResponeJsonRpc):
+                            $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
+                            break;
+
                     }
                 }
                 $realParams = [];

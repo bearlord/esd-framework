@@ -27,6 +27,7 @@ use ESD\Goaop\Aop\Intercept\MethodInvocation;
 use ESD\Goaop\Lang\Annotation\Around;
 use ESD\Goaop\Lang\Annotation\After;
 use ESD\Goaop\Lang\Annotation\Before;
+use ESD\Utils\ArrayToXml;
 
 /**
  * Class RouteAspect
@@ -113,15 +114,20 @@ class RouteAspect extends OrderAspect
         $routeTool = $this->routeTools[$easyRouteConfig->getRouteTool()];
 
         try {
-            if (!$routeTool->handleClientData($clientData, $easyRouteConfig)) return;
+            if (!$routeTool->handleClientData($clientData, $easyRouteConfig)) {
+                return;
+            }
+
             $controllerInstance = $this->getController($routeTool->getControllerName());
-            $clientData->setResponseRaw($controllerInstance->handle($routeTool->getControllerName(), $routeTool->getMethodName(), $routeTool->getParams()));
+            $handleResult = $controllerInstance->handle($routeTool->getControllerName(), $routeTool->getMethodName(), $routeTool->getParams());
+            $clientData->setResponseRaw($handleResult);
 
             if ($this->filterManager->filter(AbstractFilter::FILTER_ROUTE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
                 return;
             }
 
             $clientData->getResponse()->append($clientData->getResponseRaw());
+            
             $this->filterManager->filter(AbstractFilter::FILTER_PRO, $clientData);
         } catch (\Throwable $e) {
             //The errors here will be handed over to the IndexController
