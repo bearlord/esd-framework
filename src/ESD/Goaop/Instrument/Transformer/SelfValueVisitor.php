@@ -12,23 +12,23 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Instrument\Transformer;
 
-use PhpParser\Node;
-use PhpParser\Node\Expr\ClassConstFetch;
-use PhpParser\Node\Expr\Closure;
-use PhpParser\Node\Expr\Instanceof_;
-use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Expr\StaticCall;
-use PhpParser\Node\Identifier;
-use PhpParser\Node\Name;
-use PhpParser\Node\Name\FullyQualified;
-use PhpParser\Node\NullableType;
-use PhpParser\Node\Param;
-use PhpParser\Node\Stmt\Catch_;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Property;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\Node\Expr\ClassConstFetch;
+use ESD\Nikic\PhpParser\Node\Expr\Closure;
+use ESD\Nikic\PhpParser\Node\Expr\Instanceof_;
+use ESD\Nikic\PhpParser\Node\Expr\New_;
+use ESD\Nikic\PhpParser\Node\Expr\StaticCall;
+use ESD\Nikic\PhpParser\Node\Identifier;
+use ESD\Nikic\PhpParser\Node\Name;
+use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
+use ESD\Nikic\PhpParser\Node\NullableType;
+use ESD\Nikic\PhpParser\Node\Param;
+use ESD\Nikic\PhpParser\Node\Stmt\Catch_;
+use ESD\Nikic\PhpParser\Node\Stmt\Class_;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
+use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
+use ESD\Nikic\PhpParser\Node\Stmt\Property;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 use UnexpectedValueException;
 
 /**

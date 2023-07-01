@@ -14,8 +14,8 @@ namespace ESD\Goaop\Instrument\Transformer;
 use ESD\Goaop\Core\AspectKernel;
 use ESD\Goaop\Instrument\PathResolver;
 use ESD\Goaop\Instrument\ClassLoading\CachePathManager;
-use PhpParser\Node\Expr\Include_;
-use PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\Node\Expr\Include_;
+use ESD\Nikic\PhpParser\NodeTraverser;
 use RuntimeException;
 
 /**

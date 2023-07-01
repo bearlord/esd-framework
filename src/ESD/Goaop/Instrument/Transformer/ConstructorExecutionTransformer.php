@@ -14,10 +14,10 @@ namespace ESD\Goaop\Instrument\Transformer;
 
 use ESD\Goaop\Aop\Framework\ReflectionConstructorInvocation;
 use ESD\Goaop\Core\AspectContainer;
-use PhpParser\Node;
-use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Name;
-use PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\Node\Expr\New_;
+use ESD\Nikic\PhpParser\Node\Name;
+use ESD\Nikic\PhpParser\NodeTraverser;
 use ReflectionException;
 use ReflectionProperty;
 

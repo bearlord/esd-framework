@@ -13,9 +13,9 @@ namespace ESD\Goaop\ParserReflection;
 
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node\Const_;
-use PhpParser\Node\Stmt\ClassConst;
-use PhpParser\Node\Stmt\ClassLike;
+use ESD\Nikic\PhpParser\Node\Const_;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
 use Reflection;
 use ReflectionClassConstant as BaseReflectionClassConstant;
 

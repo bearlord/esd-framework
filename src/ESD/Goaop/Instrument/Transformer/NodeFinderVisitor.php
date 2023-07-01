@@ -12,8 +12,8 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Instrument\Transformer;
 
-use PhpParser\Node;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 
 /**
  * Node finder visitor for compatibility with PHP-Parser < 4.0

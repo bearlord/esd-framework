@@ -14,7 +14,7 @@ namespace ESD\Goaop\ParserReflection;
 use Closure;
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\Traits\ReflectionFunctionLikeTrait;
-use PhpParser\Node\Stmt\Function_;
+use ESD\Nikic\PhpParser\Node\Stmt\Function_;
 use ReflectionFunction as BaseReflectionFunction;
 
 /**

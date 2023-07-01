@@ -22,6 +22,7 @@ class ParserFactory
         if (null === $lexer) {
             $lexer = new Lexer\Emulative();
         }
+        var_dump(get_class($lexer));
         switch ($kind) {
             case self::PREFER_PHP7:
                 return new Parser\Multiple([

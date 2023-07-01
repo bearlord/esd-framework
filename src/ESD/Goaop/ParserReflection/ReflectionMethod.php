@@ -13,8 +13,8 @@ namespace ESD\Goaop\ParserReflection;
 
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\Traits\ReflectionFunctionLikeTrait;
-use PhpParser\Node\Stmt\ClassLike;
-use PhpParser\Node\Stmt\ClassMethod;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
 use Reflection;
 use ReflectionMethod as BaseReflectionMethod;
 

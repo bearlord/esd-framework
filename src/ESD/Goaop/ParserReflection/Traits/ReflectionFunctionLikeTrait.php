@@ -17,13 +17,13 @@ use ESD\Goaop\ParserReflection\NodeVisitor\GeneratorDetector;
 use ESD\Goaop\ParserReflection\NodeVisitor\StaticVariablesCollector;
 use ESD\Goaop\ParserReflection\ReflectionNamedType;
 use ESD\Goaop\ParserReflection\ReflectionParameter;
-use PhpParser\Node\Expr\Closure;
-use PhpParser\Node\FunctionLike;
-use PhpParser\Node\Identifier;
-use PhpParser\Node\NullableType;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Function_;
-use PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\Node\Expr\Closure;
+use ESD\Nikic\PhpParser\Node\FunctionLike;
+use ESD\Nikic\PhpParser\Node\Identifier;
+use ESD\Nikic\PhpParser\Node\NullableType;
+use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
+use ESD\Nikic\PhpParser\Node\Stmt\Function_;
+use ESD\Nikic\PhpParser\NodeTraverser;
 
 /**
  * General trait for all function-like reflections

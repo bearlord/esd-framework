@@ -13,10 +13,10 @@ namespace ESD\Goaop\ParserReflection;
 
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node\Identifier;
-use PhpParser\Node\Name;
-use PhpParser\Node\NullableType;
-use PhpParser\Node\Param;
+use ESD\Nikic\PhpParser\Node\Identifier;
+use ESD\Nikic\PhpParser\Node\Name;
+use ESD\Nikic\PhpParser\Node\NullableType;
+use ESD\Nikic\PhpParser\Node\Param;
 use ReflectionFunctionAbstract;
 use ReflectionParameter as BaseReflectionParameter;
 

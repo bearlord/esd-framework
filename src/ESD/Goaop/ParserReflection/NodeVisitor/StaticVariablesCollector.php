@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
 use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
-use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to collect static variables in the method/function body and resolve them

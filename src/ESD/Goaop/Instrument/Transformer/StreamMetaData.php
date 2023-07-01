@@ -15,7 +15,7 @@ namespace ESD\Goaop\Instrument\Transformer;
 use ESD\Goaop\Instrument\PathResolver;
 use ESD\Goaop\ParserReflection\ReflectionEngine;
 use InvalidArgumentException;
-use PhpParser\Node;
+use ESD\Nikic\PhpParser\Node;
 use function is_array, is_resource;
 
 /**

@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
-use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node;
+use ESD\Nikic\PhpParser\NodeTraverser;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to check if the method body

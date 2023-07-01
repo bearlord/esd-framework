@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
-use PhpParser\Node\Stmt\Declare_;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\NodeVisitorAbstract;
+use ESD\Nikic\PhpParser\Node\Stmt\Declare_;
+use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
+use ESD\Nikic\PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to normalize the root namespace for the files without the namespace (root namespace)
