@@ -16,6 +16,7 @@ esd:
     workerNum: 4
     maxConn: 10240
     debug: false
+    coroutineSocketRecvLength: 65535
 
   port:
     http:

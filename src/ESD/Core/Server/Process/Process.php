@@ -109,6 +109,11 @@ abstract class Process
     protected $waitChannel = [];
 
     /**
+     * @var int \Coroutine\Socket->recv length
+     */
+    protected $coroutineSocketRecvLength = 65535;
+
+    /**
      * Process constructor.
      * @param Server $server
      * @param int $processId
@@ -132,6 +137,11 @@ abstract class Process
                 return new ProcessContextBuilder($this);
             });
         $this->context = $contextBuilder->build();
+
+        $coroutineSocketRecvLength = $server->getConfigContext()->get('esd.server.coroutineSocketRecvLength');
+        if ($coroutineSocketRecvLength > $this->coroutineSocketRecvLength) {
+            $this->coroutineSocketRecvLength = $coroutineSocketRecvLength;
+        }
     }
 
     /**
@@ -284,7 +294,7 @@ abstract class Process
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
                 Process::signal(SIGTERM, [$this, '_onProcessStop']);
-                $this->socket = $this->swooleProcess->exportSocket();
+                $this->socket = $this->swooleProcess->exportSocket($this->coroutineSocketRecvLength);
                 \Swoole\Coroutine::create(function () {
                     while (true) {
                         $recv = $this->socket->recv();
