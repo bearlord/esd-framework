@@ -11,6 +11,7 @@ use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Process\Process;
+use ESD\Plugins\EasyRoute\Filter\XmlResponseFilter;
 use ESD\Server\Coroutine\Server;
 use ESD\Plugins\AnnotationsScan\AnnotationsScanPlugin;
 use ESD\Plugins\AnnotationsScan\ScanClass;
@@ -152,6 +153,7 @@ class EasyRoutePlugin extends AbstractPlugin
         $this->setToDIContainer(ClientData::class, new ClientDataProxy());
         $this->filterManager->addFilter(new ServerFilter());
         $this->filterManager->addFilter(new JsonResponseFilter());
+        $this->filterManager->addFilter(new XmlResponseFilter());
     }
 
     /**

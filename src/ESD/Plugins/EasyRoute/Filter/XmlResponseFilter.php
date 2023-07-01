@@ -8,12 +8,13 @@ namespace ESD\Plugins\EasyRoute\Filter;
 
 use ESD\Core\Server\Beans\Http\HttpStream;
 use ESD\Plugins\Pack\ClientData;
+use ESD\Utils\ArrayToXml;
 
 /**
- * Class JsonResponseFilter
+ * Class XmlResponseFilter
  * @package ESD\Plugins\EasyRoute\Filter
  */
-class JsonResponseFilter extends AbstractFilter
+class XmlResponseFilter extends AbstractFilter
 {
     /**
      * @return mixed|string
@@ -30,17 +31,15 @@ class JsonResponseFilter extends AbstractFilter
     public function filter(ClientData $clientData): int
     {
         $contentType = $clientData->getResponse()->getContentType();
-        if (strpos($contentType, "application/json") === false) {
+        if (strpos($contentType, "application/xml") === false) {
             return AbstractFilter::RETURN_NEXT;
         }
 
+        $xmlStartElement = $clientData->getResponse()->getHeaderLine('Xml-Start-Element');
+
         $data = $clientData->getResponseRaw();
-        if (!is_string($data)) {
-            if ($data instanceof HttpStream) {
-                $data = $data->__toString();
-            } else {
-                $data = json_encode($data, JSON_UNESCAPED_UNICODE);
-            }
+        if (is_array($data)){
+            $data = (new ArrayToXml())->buildXML($data, $xmlStartElement);
             $clientData->setResponseRaw($data);
         }
         return AbstractFilter::RETURN_NEXT;
@@ -51,7 +50,7 @@ class JsonResponseFilter extends AbstractFilter
      */
     public function getName(): string
     {
-        return "JsonResponseFilter";
+        return "XmlResponseFilter";
     }
 
     /**
