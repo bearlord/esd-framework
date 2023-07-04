@@ -298,7 +298,7 @@ abstract class Process
                 $this->socket = $this->swooleProcess->exportSocket($this->coroutineSocketRecvLength);
                 \Swoole\Coroutine::create(function () {
                     while (true) {
-                        $recv = $this->socket->recv();
+                        $recv = $this->socket->recv($this->coroutineSocketRecvLength);
                         if (!empty($recv)) {
                             //Get process id
                             $unpackData = unpack("N", $recv);
