@@ -4,6 +4,7 @@ actor:
   actorWorkerCount: 1
   actorMailboxCapacity: 100
   autoSaveTime: 5000
+  delayedRecoveryWaitTime: 3000
 
 reload:
   enable: true
