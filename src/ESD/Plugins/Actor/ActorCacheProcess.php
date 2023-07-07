@@ -138,7 +138,6 @@ class ActorCacheProcess extends Process
 
         //Recovery
         Timer::after($this->delayedRecoveryWaitTime, function (){
-            Server::$instance->getLog()->warning("recovery");
             $this->recovery();
         });
 
