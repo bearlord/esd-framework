@@ -27,7 +27,7 @@ class UidAspect extends OrderAspect
     protected $uid;
 
     /**
-     * Around onTcpReceive
+     * After onTcpReceive
      *
      * @param MethodInvocation $invocation Invocation
      * @throws \Throwable
@@ -40,7 +40,7 @@ class UidAspect extends OrderAspect
     }
 
     /**
-     * Around onTcpReceive
+     * After onWsClose
      *
      * @param MethodInvocation $invocation Invocation
      * @throws \Throwable
