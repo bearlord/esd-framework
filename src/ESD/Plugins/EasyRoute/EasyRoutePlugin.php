@@ -11,6 +11,7 @@ use ESD\Core\Plugin\AbstractPlugin;
 use ESD\Core\Plugin\PluginInterfaceManager;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Process\Process;
+use ESD\Plugins\EasyRoute\Filter\CorsFilter;
 use ESD\Plugins\EasyRoute\Filter\XmlResponseFilter;
 use ESD\Server\Coroutine\Server;
 use ESD\Plugins\AnnotationsScan\AnnotationsScanPlugin;
@@ -152,8 +153,10 @@ class EasyRoutePlugin extends AbstractPlugin
         $this->routeConfig->merge();
         $this->setToDIContainer(ClientData::class, new ClientDataProxy());
         $this->filterManager->addFilter(new ServerFilter());
+        $this->filterManager->addFilter(new CorsFilter());
         $this->filterManager->addFilter(new JsonResponseFilter());
         $this->filterManager->addFilter(new XmlResponseFilter());
+
     }
 
     /**
@@ -266,8 +269,8 @@ class EasyRoutePlugin extends AbstractPlugin
             if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessId() == 0) {
                 $message = sprintf("{Mapping} %s:%-7s %s {onto} %s::%s", $port, $type, $routeRole->getRoute(), $reflectionClass->name, $reflectionMethod->name);
                 $message = Yii::t('esd', $message, [
-                   'Mapping' => Yii::t('esd', 'Mapping'),
-                   'onto' => Yii::t('esd', 'onto'),
+                    'Mapping' => Yii::t('esd', 'Mapping'),
+                    'onto' => Yii::t('esd', 'onto'),
                 ]);
                 Server::$instance->getLog()->info($message);
             }
