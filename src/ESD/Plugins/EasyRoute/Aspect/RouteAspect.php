@@ -252,6 +252,39 @@ class RouteAspect extends OrderAspect
     }
 
     /**
+     * Before onTcpClose
+     *
+     * @param MethodInvocation $invocation Invocation
+     * @throws \Throwable
+     * @Before("within(ESD\Core\Server\Port\IServerPort+) && execution(public **->onTcpClose(*))")
+     */
+    protected function beforeTcpClose(MethodInvocation $invocation)
+    {
+        list($fd, $reactorId) = $invocation->getArguments();
+
+        $clientInfo = Server::$instance->getClientInfo($fd);
+        //Server port
+        $serverPort = $clientInfo->getServerPort();
+        //Request method
+        $requestMethod = 'TCP';
+        //Defined path
+        $onClosePath = '/beforeClose';
+        //Route info
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+
+        if ($routeInfo[0] !== Dispatcher::FOUND) {
+            return false;
+        }
+
+        try {
+            $instance = new $routeInfo[1][0]->name();
+            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId]);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+    }
+
+    /**
      * After onTcpClose
      *
      * @param MethodInvocation $invocation Invocation
@@ -368,6 +401,39 @@ class RouteAspect extends OrderAspect
             throw $e;
         }
         return;
+    }
+
+    /**
+     * Before onWsClose
+     *
+     * @param MethodInvocation $invocation Invocation
+     * @throws \Throwable
+     * @Before("within(ESD\Core\Server\Port\IServerPort+) && execution(public **->onWsClose(*))")
+     */
+    protected function beforeWSClose(MethodInvocation $invocation)
+    {
+        list($fd, $reactorId) = $invocation->getArguments();
+
+        $clientInfo = Server::$instance->getClientInfo($fd);
+        //Server port
+        $serverPort = $clientInfo->getServerPort();
+        //Request method
+        $requestMethod = 'WS';
+        //Define path
+        $onClosePath = '/beforeWsClose';
+        //Route info
+        $routeInfo = EasyRoutePlugin::$instance->getDispatcher()->dispatch(sprintf("%s:%s", $serverPort, $requestMethod), $onClosePath);
+
+        if ($routeInfo[0] !== Dispatcher::FOUND) {
+            return false;
+        }
+
+        try {
+            $instance = new $routeInfo[1][0]->name();
+            call_user_func_array([$instance, $routeInfo[1][1]->name], [$fd, $reactorId]);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
     }
 
     /**
