@@ -16,28 +16,33 @@ class CrossOrigin extends Annotation
 {
 
     /**
-     * @var string allow origins
+     * @var array allow origins
      */
-    public $allowedOrigins = "*";
+    public $allowedOrigins = ["*"];
 
     /**
-     * @var string[] allowed methods
+     * @var array allowed methods
      */
-    public $allowedMethods = ["PUT", "DELETE", "POST", "GET"];
+    public $allowedMethods = ["*"];
 
     /**
      * @var array allow headers
      */
-    public $allowedHeaders = [];
+    public $allowedHeaders = ["*"];
 
     /**
      * @var array exposed headers
      */
-    public $exposedHeaders = [];
+    public $exposedHeaders = ["*"];
 
     /**
      * @var bool allow credentials
      */
     public $allowCredentials = false;
+
+    /**
+     * @var int max age
+     */
+    public $maxAge = 3628800;
 
 }
