@@ -34,17 +34,26 @@ class FilterManager
      */
     public function addFilter(AbstractFilter $filter)
     {
-        $this->managers[$filter->getType()]->addOrder($filter);
-        $this->managers[$filter->getType()]->order();
+        $type = $filter->getType();
+        
+        if (is_string($type)) {
+            $this->managers[$type]->addOrder($filter);
+            $this->managers[$type]->order();
+        } elseif(is_array($type)) {
+            foreach ($type as $_type) {
+                $this->managers[$_type]->addOrder($filter);
+                $this->managers[$_type]->order();
+            }
+        }
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @param ClientData $clientData
      * @param null $data
      * @return int
      */
-    public function filter($type, ClientData $clientData, $data = null): int
+    public function filter(string $type, ClientData $clientData, $data = null): int
     {
         return $this->managers[$type]->filter($clientData, $data);
     }

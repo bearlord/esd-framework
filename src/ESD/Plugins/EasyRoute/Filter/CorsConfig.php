@@ -17,7 +17,7 @@ class CorsConfig
      * and can also be set to * to indicate that all domains can pass;
      * @var string
      */
-    protected $allowOrigin = "*";
+    protected $allowOrigins = "*";
 
     /**
      * It means that cross-domain Ajax can carry cookies.
@@ -43,22 +43,22 @@ class CorsConfig
      * and the result can be cached, which is generally the default.
      * @var int
      */
-    protected $allowMaxAge = 3628800;
+    protected $maxAge = 3628800;
 
     /**
      * @return string
      */
-    public function getAllowOrigin(): string
+    public function getAllowOrigins(): string
     {
-        return $this->allowOrigin;
+        return $this->allowOrigins;
     }
 
     /**
-     * @param string $allowOrigin
+     * @param string $allowOrigins
      */
-    public function setAllowOrigin(string $allowOrigin): void
+    public function setAllowOrigins(string $allowOrigins): void
     {
-        $this->allowOrigin = $allowOrigin;
+        $this->allowOrigins = $allowOrigins;
     }
 
     /**
@@ -112,16 +112,16 @@ class CorsConfig
     /**
      * @return int
      */
-    public function getAllowMaxAge(): int
+    public function getMaxAge(): int
     {
-        return $this->allowMaxAge;
+        return $this->maxAge;
     }
 
     /**
-     * @param int $allowMaxAge
+     * @param int $maxAge
      */
-    public function setAllowMaxAge(int $allowMaxAge): void
+    public function setMaxAge(int $maxAge): void
     {
-        $this->allowMaxAge = $allowMaxAge;
+        $this->maxAge = $maxAge;
     }
 }

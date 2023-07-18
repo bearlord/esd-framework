@@ -27,7 +27,9 @@ class EveryFilterManager
         foreach ($this->orderList as $order) {
             if ($order->isEnable($clientData)) {
                 $code = $order->filter($clientData);
-                if ($code < AbstractFilter::RETURN_NEXT) return $code;
+                if ($code < AbstractFilter::RETURN_NEXT) {
+                    return $code;
+                }
             }
         }
         return AbstractFilter::RETURN_END_FILTER;

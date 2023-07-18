@@ -6,6 +6,9 @@
 
 namespace ESD\Plugins\EasyRoute\Filter;
 
+use ESD\Core\Server\Beans\Http\HttpStream;
+use ESD\Plugins\EasyRoute\Annotation\CrossOrigin;
+use ESD\Plugins\EasyRoute\Annotation\ResponseBody;
 use ESD\Plugins\Pack\ClientData;
 
 /**
@@ -36,7 +39,10 @@ class CorsFilter extends AbstractFilter
      */
     public function getType()
     {
-        return AbstractFilter::FILTER_PRE;
+        return [
+            AbstractFilter::FILTER_PRE,
+            AbstractFilter::FILTER_PRO,
+        ];
     }
 
     /**
@@ -45,22 +51,42 @@ class CorsFilter extends AbstractFilter
      */
     public function filter(ClientData $clientData): int
     {
-        if($this->corsConfig->getAllowOrigin() == '*'){
-            $clientData->getResponse()->withHeader('Access-Control-Allow-Origin', $this->corsConfig->getAllowOrigin());
-        }else{
-            $origin = $clientData->getRequest()->getHeader('origin');
-            if(!empty($origin)){
-                $originBlackList = explode(',',$this->corsConfig->getAllowOrigin());
-                if(in_array($origin[0],$originBlackList)){
-                    $clientData->getResponse()->withHeader('Access-Control-Allow-Origin', $origin[0]);
+        $annotations = $clientData->getAnnotations();
+        if (empty($annotations)) {
+            return AbstractFilter::RETURN_NEXT;
+        }
+        
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof CrossOrigin) {
+                $allowedOrigins = $annotation->allowedOrigins;
+                $allowedMethods = $annotation->allowedMethods;
+                $allowedHeaders = $annotation->allowedHeaders;
+                $allowCredentials = $annotation->allowCredentials ? "true" : "false";
+                $maxAge = $annotation->maxAge;
+
+                if ($this->corsConfig->getAllowOrigins() == '*') {
+                    $clientData->getResponse()->withHeader('Access-Control-Allow-Origin', $allowedOrigins);
+                } else {
+                    $origin = $clientData->getRequest()->getHeader('origin');
+                    if (!empty($origin)) {
+                        $originBlackList = explode(',', $allowedOrigins);
+                        if (in_array($origin[0], $originBlackList)) {
+                            $clientData->getResponse()->withHeader('Access-Control-Allow-Origin', $origin[0]);
+                        }
+                    }
                 }
+                $clientData->getResponse()->withHeader('Access-Control-Allow-Credentials', $allowCredentials);
+                $clientData->getResponse()->withHeader('Access-Control-Allow-Methods', $allowedMethods);
+                $clientData->getResponse()->withHeader('Access-Control-Allow-Headers', $allowedHeaders);
+                $clientData->getResponse()->withHeader('Access-Control-Max-Age', $maxAge);
+                
+                return AbstractFilter::RETURN_NEXT;
             }
         }
-        $clientData->getResponse()->withHeader('Access-Control-Allow-Credentials', $this->corsConfig->isAllowCredentials());
-        $clientData->getResponse()->withHeader('Access-Control-Allow-Methods', $this->corsConfig->getAllowMethods());
-        $clientData->getResponse()->withHeader('Access-Control-Allow-Headers', $this->corsConfig->getAllowHeaders());
-        $clientData->getResponse()->withHeader('Access-Control-Max-Age', $this->corsConfig->getAllowMaxAge());
+
         return AbstractFilter::RETURN_NEXT;
+
+
     }
 
     /**

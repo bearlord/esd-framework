@@ -7,7 +7,9 @@
 namespace ESD\Plugins\EasyRoute\Filter;
 
 use ESD\Core\Server\Beans\Http\HttpStream;
+use ESD\Plugins\EasyRoute\Annotation\ResponseBody;
 use ESD\Plugins\Pack\ClientData;
+use ESD\Utils\ArrayToXml;
 
 /**
  * Class JsonResponseFilter
@@ -29,20 +31,27 @@ class JsonResponseFilter extends AbstractFilter
      */
     public function filter(ClientData $clientData): int
     {
-        $contentType = $clientData->getResponse()->getContentType();
-        if (strpos($contentType, "application/json") === false) {
-            return AbstractFilter::RETURN_NEXT;
+        $annotations = $clientData->getAnnotations();
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof ResponseBody && strpos($annotation->value, "application/json") !== false) {
+                $data = $clientData->getResponseRaw();
+
+                if (!is_string($data)) {
+                    if ($data instanceof HttpStream) {
+                        $data = $data->__toString();
+                    } else {
+                        $data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    }
+                    $clientData->setResponseRaw($data);
+                }
+
+                $clientData->getResponse()->withHeader("Content-type", $annotation->value);
+                return AbstractFilter::RETURN_NEXT;
+            }
+
         }
 
-        $data = $clientData->getResponseRaw();
-        if (!is_string($data)) {
-            if ($data instanceof HttpStream) {
-                $data = $data->__toString();
-            } else {
-                $data = json_encode($data, JSON_UNESCAPED_UNICODE);
-            }
-            $clientData->setResponseRaw($data);
-        }
         return AbstractFilter::RETURN_NEXT;
     }
 

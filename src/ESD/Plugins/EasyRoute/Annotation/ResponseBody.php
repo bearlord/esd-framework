@@ -18,4 +18,6 @@ class ResponseBody extends Annotation
      * @var string
      */
     public $value = "application/json;charset=UTF-8";
+
+    public $xmlStartElement = "data";
 }

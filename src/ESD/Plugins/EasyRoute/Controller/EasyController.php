@@ -152,7 +152,7 @@ abstract class EasyController extends Controller implements IController
      * Defaults to empty. Make sure the anchor starts with '#' if you want to specify it.
      * @return Response the response object itself
      */
-    public function refresh($anchor = '')
+    public function refresh(?string $anchor = ''): Response
     {
         return $this->response->redirect($this->request->getUri() . $anchor);
     }

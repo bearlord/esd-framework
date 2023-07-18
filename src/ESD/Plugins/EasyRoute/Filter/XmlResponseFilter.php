@@ -7,6 +7,7 @@
 namespace ESD\Plugins\EasyRoute\Filter;
 
 use ESD\Core\Server\Beans\Http\HttpStream;
+use ESD\Plugins\EasyRoute\Annotation\ResponseBody;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Utils\ArrayToXml;
 
@@ -30,18 +31,23 @@ class XmlResponseFilter extends AbstractFilter
      */
     public function filter(ClientData $clientData): int
     {
-        $contentType = $clientData->getResponse()->getContentType();
-        if (strpos($contentType, "application/xml") === false) {
-            return AbstractFilter::RETURN_NEXT;
+        $annotations = $clientData->getAnnotations();
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof ResponseBody && strpos($annotation->value, "application/xml") !== false) {
+                $data = $clientData->getResponseRaw();
+
+                $xmlStartElement = $annotation->xmlStartElement;
+                if (is_array($data)){
+                    $data = (new ArrayToXml())->buildXML($data, $xmlStartElement);
+                    $clientData->setResponseRaw($data);
+                }
+
+                $clientData->getResponse()->withHeader("Content-type", $annotation->value);
+                return AbstractFilter::RETURN_NEXT;
+            }
         }
 
-        $xmlStartElement = $clientData->getResponse()->getHeaderLine('Xml-Start-Element');
-
-        $data = $clientData->getResponseRaw();
-        if (is_array($data)){
-            $data = (new ArrayToXml())->buildXML($data, $xmlStartElement);
-            $clientData->setResponseRaw($data);
-        }
         return AbstractFilter::RETURN_NEXT;
     }
 
