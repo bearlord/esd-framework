@@ -19,6 +19,7 @@ use ESD\Nikic\PhpParser\Node\Expr\Instanceof_;
 use ESD\Nikic\PhpParser\Node\Expr\New_;
 use ESD\Nikic\PhpParser\Node\Expr\StaticCall;
 use ESD\Nikic\PhpParser\Node\Identifier;
+use ESD\Nikic\PhpParser\Node\UnionType;
 use ESD\Nikic\PhpParser\Node\Name;
 use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
 use ESD\Nikic\PhpParser\Node\NullableType;
@@ -154,6 +155,9 @@ final class SelfValueVisitor extends NodeVisitorAbstract
             return $this->resolveClassName($node);
         }
         if ($node instanceof Identifier) {
+            return $node;
+        }
+        if ($node instanceof UnionType) {
             return $node;
         }
 
