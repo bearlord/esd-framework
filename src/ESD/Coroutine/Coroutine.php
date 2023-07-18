@@ -163,9 +163,9 @@ class Coroutine
      * Run task
      *
      * @param $runnable
-     * @return int|bool
+     * @return int
      */
-    public static function runTask($runnable): bool|int
+    public static function runTask($runnable): int
     {
         $cid = goWithContext(function () use ($runnable) {
             if ($runnable != null) {
