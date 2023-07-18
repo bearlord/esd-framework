@@ -30,6 +30,11 @@ class ActorCacheProcess extends Process
     protected $autoSaveTime = 5 * 1000;
 
     /**
+     * @var int delayed recovery wait time
+     */
+    protected $delayedRecoveryWaitTime = 3000;
+
+    /**
      * @var ActorCacheHash cache hash
      */
     protected $cacheHash;
@@ -83,6 +88,11 @@ class ActorCacheProcess extends Process
         if ($autoSaveTime > 0) {
             $this->setAutoSaveTime($autoSaveTime);
         }
+
+        $delayedRecoveryWaitTime = Server::$instance->getConfigContext()->get('actor.delayedRecoveryWaitTime');
+        if ($delayedRecoveryWaitTime > 0) {
+            $this->delayedRecoveryWaitTime = $delayedRecoveryWaitTime;
+        }
     }
 
     /**
@@ -109,7 +119,9 @@ class ActorCacheProcess extends Process
         });
 
         //Recovery
-        $this->recovery();
+        Timer::after($this->delayedRecoveryWaitTime, function (){
+            $this->recovery();
+        });
 
         //Auto save to redis
         Timer::tick($this->autoSaveTime, function () {
