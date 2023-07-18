@@ -111,17 +111,10 @@ class AnnotationRoute implements IRoute
                 $this->clientData->setMethodName($handler[1]->name);
                 $params = [];
                 $methodReflection = $handler[1]->getReflectionMethod();
-                foreach (EasyRoutePlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection) as $annotation) {
-                    if ($annotation instanceof ResponseBody) {
-                        if (!empty($clientData->getResponse())) {
-                            $clientData->getResponse()->withHeader("Content-Type", $annotation->value);
+                $annotations = EasyRoutePlugin::$instance->getScanClass()->getMethodAndInterfaceAnnotations($methodReflection);
+                $this->clientData->setAnnotations($annotations);
 
-                            if (strpos($annotation->value, "application/xml") !== false) {
-                                $clientData->getResponse()->withHeader("Xml-Start-Element", $annotation->xmlStartElement);
-                            }
-                        }
-                    }
-
+                foreach ($annotations as $annotation) {
                     switch (true) {
                         case ($annotation instanceof PathVariable):
                             $result = $vars[$annotation->value] ?? null;
