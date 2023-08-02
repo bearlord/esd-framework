@@ -71,6 +71,11 @@ class ClientData
     protected $responseRaw;
 
     /**
+     * @var array Annotation
+     */
+    protected $annotations = [];
+
+    /**
      * ClientData constructor.
      * @param $fd
      * @param $requestMethod
@@ -272,5 +277,21 @@ class ClientData
     public function setResponseRaw($responseRaw): void
     {
         $this->responseRaw = $responseRaw;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAnnotations(): array
+    {
+        return $this->annotations;
+    }
+
+    /**
+     * @param array $annotations
+     */
+    public function setAnnotations(array $annotations): void
+    {
+        $this->annotations = $annotations;
     }
 }
