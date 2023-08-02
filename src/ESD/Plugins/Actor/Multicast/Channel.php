@@ -6,6 +6,7 @@ use Ds\Set;
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Actor\Actor;
+use ESD\Plugins\Actor\ActorException;
 use ESD\Plugins\Actor\ActorMessage;
 use ESD\Yii\Yii;
 
@@ -78,6 +79,7 @@ class Channel
      *
      * @param string $channel
      * @return void
+     * @throws \Exception
      */
     public function deleteChannel(string $channel)
     {
@@ -102,9 +104,10 @@ class Channel
      *
      * @param string $channel
      * @param string $message
-     * @param $excludeActorList
+     * @param array $excludeActorList
+     * @param string|null $from
      * @return void
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      */
     public function publish(string $channel, string $message, array $excludeActorList = [], ?string $from = '')
     {
@@ -127,8 +130,9 @@ class Channel
      * @param string $channel
      * @param string $toActor
      * @param $message
+     * @param string|null $fromActor
      * @return void
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      */
     protected function publishToActor(string $channel, string $toActor, $message, ?string $fromActor = '')
     {
@@ -152,7 +156,7 @@ class Channel
      * @return bool
      * @throws \ESD\Core\Exception
      */
-    public function subscribe(string $channel, string $actor)
+    public function subscribe(string $channel, string $actor): bool
     {
         Helper::checkChannelFilter($channel);
 
@@ -177,7 +181,7 @@ class Channel
      * @param string $actor
      * @return bool
      */
-    public function unsubscribe(string $channel, string $actor)
+    public function unsubscribe(string $channel, string $actor): bool
     {
         if (empty($actor)) {
             return false;
@@ -206,7 +210,7 @@ class Channel
      * @param string $actor
      * @return bool
      */
-    public function unsubscribeAll(string $actor)
+    public function unsubscribeAll(string $actor): bool
     {
         if (empty($actor)) {
             return false;
