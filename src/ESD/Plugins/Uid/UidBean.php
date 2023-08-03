@@ -17,6 +17,7 @@ use ESD\Server\Coroutine\Server;
 class UidBean
 {
     use GetLogger;
+
     /**
      * @var Table
      */
@@ -40,6 +41,7 @@ class UidBean
         $this->uidFdTable = new Table($getMaxCoroutine);
         $this->uidFdTable->column("fd", Table::TYPE_INT);
         $this->uidFdTable->create();
+
         $this->fdUidTable = new Table($getMaxCoroutine);
         $this->fdUidTable->column("uid", Table::TYPE_STRING, $uidConfig->getUidMaxLength());
         $this->fdUidTable->create();
@@ -62,39 +64,45 @@ class UidBean
     }
 
     /**
-     * @param $uid
+     * @param string $uid
+     * @throws \Exception
      */
-    public function kickUid($uid)
+    public function kickUid(string $uid)
     {
         $fd = $this->getUidFd($uid);
         if ($fd != null) {
             $this->unBindUid($fd);
             Server::$instance->closeFd($fd);
         }
+
         $this->debug("Kick uid: $uid");
     }
 
     /**
-     * @param $fd
-     * @param $uid
+     * @param int $fd
+     * @param string $uid
      * @param bool $autoKick
- */
-    public function bindUid($fd, $uid, $autoKick = true)
+     * @throws \Exception
+     */
+    public function bindUid(int $fd, string $uid, ?bool $autoKick = true)
     {
         if ($autoKick) {
             $this->kickUid($uid);
         }
         $this->fdUidTable->set($fd, ["uid" => $uid]);
         $this->uidFdTable->set($uid, ["fd" => $fd]);
+
         $this->debug("$fd Bind uid: $uid");
     }
 
     /**
      * @param $fd
-
+     * @throws \Exception
      */
-    public function unBindUid($fd)
+    public function unBindUid(int $fd)
     {
+        $fd = (string)$fd;
+
         $uid = $this->fdUidTable->get($fd, "uid");
         $this->fdUidTable->del($fd);
         if ($uid != null) {
@@ -104,39 +112,63 @@ class UidBean
     }
 
     /**
-     * @param $uid
+     * @param string $uid
      * @return mixed
      */
-    public function getUidFd($uid)
+    public function getUidFd(string $uid)
     {
         return $this->uidFdTable->get($uid, "fd");
     }
 
     /**
-     * @param $fd
+     * @param int $fd
      * @return mixed
      */
-    public function getFdUid($fd)
+    public function getFdUid(int $fd)
     {
+        $fd = (string)$fd;
+
         return $this->fdUidTable->get($fd, "uid");
     }
 
-    public function isOnline($uid)
+    /**
+     * @param string $uid
+     * @return bool
+     */
+    public function isOnline(string $uid): bool
     {
         $fd = $this->getUidFd($uid);
-        if ($fd != null) return true;
+        if ($fd != null) {
+            return true;
+        }
+
         return false;
     }
 
-    public function getUidCount()
+    /**
+     * @return int
+     */
+    public function getUidCount(): int
     {
         return $this->fdUidTable->count();
     }
 
-    public function getAllUid()
+    /**
+     * @return array
+     */
+    public function getAllUid(): array
     {
         $result = [];
         foreach ($this->uidFdTable as $key => $value) {
+            $result[] = $key;
+        }
+        return $result;
+    }
+
+    public function getAllFd(): array
+    {
+        $result = [];
+        foreach ($this->fdUidTable as $key => $value) {
             $result[] = $key;
         }
         return $result;

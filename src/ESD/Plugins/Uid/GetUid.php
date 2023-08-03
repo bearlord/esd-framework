@@ -32,27 +32,30 @@ trait GetUid
     }
 
     /**
-     * @param $uid
+     * @param string $uid
+     * @throws \Exception
      */
-    public function kickUid($uid)
+    public function kickUid(string $uid)
     {
         $this->getUidBean()->kickUid($uid);
     }
 
     /**
-     * @param $fd
-     * @param $uid
+     * @param int $fd
+     * @param string $uid
      * @param bool $autoKick
+     * @throws \Exception
      */
-    public function bindUid($fd, $uid, $autoKick = true)
+    public function bindUid(int $fd, string $uid, ?bool $autoKick = true)
     {
         $this->getUidBean()->bindUid($fd, $uid, $autoKick);
     }
 
     /**
-     * @param $fd
+     * @param int $fd
+     * @throws \Exception
      */
-    public function unBindUid($fd)
+    public function unBindUid(int $fd)
     {
         $this->getUidBean()->unBindUid($fd);
     }
@@ -79,7 +82,7 @@ trait GetUid
      * @param $uid
      * @return bool
      */
-    public function isOnline($uid)
+    public function isOnline($uid): bool
     {
         return $this->getUidBean()->isOnline($uid);
     }
@@ -87,7 +90,7 @@ trait GetUid
     /**
      * @return int
      */
-    public function getUidCount()
+    public function getUidCount(): int
     {
         return $this->getUidBean()->getUidCount();
     }
@@ -95,9 +98,17 @@ trait GetUid
     /**
      * @return array
      */
-    public function getAllUid()
+    public function getAllUid(): array
     {
         return $this->getUidBean()->getAllUid();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllFd(): array
+    {
+        return $this->getUidBean()->getAllFd();
     }
 
     /**
