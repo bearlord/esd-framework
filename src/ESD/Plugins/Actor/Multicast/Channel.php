@@ -8,6 +8,7 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Actor\Actor;
 use ESD\Plugins\Actor\ActorException;
 use ESD\Plugins\Actor\ActorMessage;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 class Channel
@@ -17,9 +18,9 @@ class Channel
     protected $subscribeArr = [];
 
     /**
-     * @var
+     * @var \ESD\Core\Channel\Channel
      */
-    protected $channel;
+    protected $swooleChannel;
 
     /**
      * @var Table
@@ -38,6 +39,18 @@ class Channel
         foreach ($this->channelTable as $value) {
             $this->addSubscribeFormTable($value['channel'], $value['actor']);
         }
+
+        $config = Server::$instance->getConfigContext()->get('actor');
+        $this->swooleChannel = DIGet(\ESD\Core\Channel\Channel::class, [$config['actorMulticastChannelCapacity']]);
+
+        //Iterate to publish messages to the actor
+        goWithContext(function () {
+            while (true) {
+                $message = $this->swooleChannel->pop();
+                $this->publishToActor($message[0], $message[1], $message[2], $message[3]);
+                \Swoole\Coroutine::sleep(0.001);
+            }
+        });
     }
 
     /**
@@ -117,7 +130,7 @@ class Channel
             if (isset($this->subscribeArr[$item])) {
                 foreach ($this->subscribeArr[$item] as $actor) {
                     if (!in_array($actor, $excludeActorList)) {
-                        $this->publishToActor($channel, $actor, $message, $from);
+                        $this->swooleChannel->push([$channel, $actor, $message, $from]);
                     }
                 }
             }

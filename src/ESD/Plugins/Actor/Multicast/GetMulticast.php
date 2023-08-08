@@ -35,10 +35,10 @@ trait GetMulticast
     /**
      * Delete channel
      *
-     * @param $channel
+     * @param string $channel
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function deleteChannel($channel)
+    public function deleteChannel(string $channel)
     {
         /** @var Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);
@@ -65,7 +65,7 @@ trait GetMulticast
      * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function subscribe($channel, $actor)
+    public function subscribe(string $channel, string $actor)
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -80,11 +80,11 @@ trait GetMulticast
     /**
      * Unsubscribe
      *
-     * @param $channel
-     * @param $actor
+     * @param string $channel
+     * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function unsubscribe($channel, $actor)
+    public function unsubscribe(string $channel, string $actor)
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
