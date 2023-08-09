@@ -61,19 +61,19 @@ trait GetUid
     }
 
     /**
-     * @param $uid
+     * @param string $uid
      * @return mixed
      */
-    public function getUidFd($uid)
+    public function getUidFd(string $uid)
     {
         return $this->getUidBean()->getUidFd($uid);
     }
 
     /**
-     * @param $fd
+     * @param int $fd
      * @return mixed
      */
-    public function getFdUid($fd)
+    public function getFdUid(int $fd)
     {
         return $this->getUidBean()->getFdUid($fd);
     }

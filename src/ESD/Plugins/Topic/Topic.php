@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Topic;
 
 use Ds\Set;
+use ESD\Core\Exception;
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Pack\GetBoostSend;
@@ -37,49 +38,53 @@ class Topic
     {
         //Read the table first, because the process may restart
         $this->topicTable = $topicTable;
+
         foreach ($this->topicTable as $value) {
             $this->addSubFormTable($value['topic'], $value['uid']);
         }
     }
 
     /**
-     * @param $topic
-     * @param $uid
+     * @param string $topic
+     * @param string $uid
      */
-    private function addSubFormTable($topic, $uid)
+    private function addSubFormTable(string $topic, string $uid)
     {
         if (empty($uid)) {
             return;
         }
+
         if (!isset($this->subArr[$topic])) {
             $this->subArr[$topic] = new Set();
         }
+
         $this->subArr[$topic]->add($uid);
     }
 
     /**
-     * @param $topic
-     * @param $uid
+     * @param string $topic
+     * @param string $uid
      * @return bool
      */
-    public function hasTopic($topic, $uid)
+    public function hasTopic(string $topic, string $uid): bool
     {
         $set = !empty($this->subArr[$topic]) ? $this->subArr[$topic] : null;
         if ($set == null) {
             return false;
         }
+
         return $set->contains($uid);
     }
 
     /**
      * Add subscription
      *
-     * @param $topic
-     * @param $uid
+     * @param string $topic
+     * @param string $uid
      * @throws BadUTF8
-     * @throws \ESD\Core\Exception
+     * @throws Exception
      */
-    public function addSub($topic, $uid)
+    public function addSub(string $topic, string $uid)
     {
         Utility::CheckTopicFilter($topic);
         $this->addSubFormTable($topic, $uid);
@@ -90,14 +95,15 @@ class Topic
     /**
      * Clear fd's subscription
      *
-     * @param $fd
+     * @param int $fd
      * @throws \Exception
      */
-    public function clearFdSub($fd)
+    public function clearFdSub(int $fd)
     {
         if (empty($fd)) {
             return;
         }
+
         $uid = $this->getFdUid($fd);
         $this->clearUidSub($uid);
     }
@@ -108,11 +114,12 @@ class Topic
      * @param $uid
      * @throws \Exception
      */
-    public function clearUidSub($uid)
+    public function clearUidSub(string $uid)
     {
         if (empty($uid)) {
             return;
         }
+
         foreach ($this->subArr as $topic => $sub) {
             $this->removeSub($topic, $uid);
         }
@@ -120,11 +127,11 @@ class Topic
 
     /**
      * Remove subscription
-     * @param $topic
-     * @param $uid
+     * @param string $topic
+     * @param string $uid
      * @throws \Exception
      */
-    public function removeSub($topic, $uid)
+    public function removeSub(string $topic, string $uid)
     {
         if (empty($uid)) {
             return;
@@ -135,6 +142,7 @@ class Topic
                 unset($this->subArr[$topic]);
             }
         }
+
         $this->topicTable->del($topic . $uid);
         $this->debug("$uid Remove Sub $topic");
     }
@@ -142,12 +150,13 @@ class Topic
     /**
      * Delete subscription
      *
-     * @param $topic
+     * @param string $topic
      */
-    public function delTopic($topic)
+    public function delTopic(string $topic)
     {
         $uidArr = !empty($this->subArr[$topic]) ? $this->subArr[$topic] : [];
         unset($this->subArr[$topic]);
+
         foreach ($uidArr as $uid) {
             $this->topicTable->del($topic . $uid);
         }
@@ -156,13 +165,14 @@ class Topic
     /**
      * Publish subscription
      *
-     * @param $topic
+     * @param string $topic
      * @param $data
-     * @param array $excludeUidList
+     * @param array|null $excludeUidList
      */
-    public function pub($topic, $data, $excludeUidList = [])
+    public function pub(string $topic, $data, ?array $excludeUidList = [])
     {
         $tree = $this->buildTrees($topic);
+
         foreach ($tree as $one) {
             if (isset($this->subArr[$one])) {
                 foreach ($this->subArr[$one] as $uid) {
@@ -177,10 +187,10 @@ class Topic
     /**
      * Build a subscription tree, allowing only 5 layers
      *
-     * @param $topic
+     * @param string $topic
      * @return Set
      */
-    private function buildTrees($topic)
+    private function buildTrees(string $topic)
     {
         $isSYS = false;
         if ($topic[0] == "$") {
@@ -242,11 +252,11 @@ class Topic
     /**
      * Publish subscription to uid
      *
-     * @param $uid
+     * @param string $uid
      * @param $data
-     * @param $topic
+     * @param string $topic
      */
-    private function pubToUid($uid, $data, $topic)
+    private function pubToUid(string $uid, $data, string $topic)
     {
         $fd = $this->getUidFd($uid);
         if (empty($uid)) {

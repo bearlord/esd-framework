@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Topic;
 
 use ESD\Plugins\ProcessRPC\GetProcessRpc;
+use ESD\Plugins\ProcessRPC\ProcessRPCException;
 
 /**
  * Trait GetTopic
@@ -22,27 +23,30 @@ trait GetTopic
     protected $topicConfig;
 
     /**
-     * @param $topic
-     * @param $uid
+     * @param string $topic
+     * @param string $uid
      * @return bool
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws ProcessRPCException
      */
-    public function hasTopic($topic, $uid)
+    public function hasTopic(string $topic, string $uid): bool
     {
         if (empty($uid)) {
             $this->warn("Uid is empty");
             return false;
         }
+
+        /** @var Topic $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class);
         return $rpcProxy->hasTopic($topic, $uid);
     }
 
     /**
-     * @param $topic
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @param string $topic
+     * @throws ProcessRPCException
      */
-    public function delTopic($topic)
+    public function delTopic(string $topic)
     {
+        /** @var Topic $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
         $rpcProxy->delTopic($topic);
     }
@@ -62,16 +66,18 @@ trait GetTopic
     /**
      * Add subscription
      *
-     * @param $topic
-     * @param $uid
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @param string $topic
+     * @param string $uid
+     * @throws ProcessRPCException
      */
-    public function addSub($topic, $uid)
+    public function addSub(string $topic, string $uid)
     {
         if (empty($uid)) {
             $this->warn("Uid is empty");
             return;
         }
+
+        /** @var Topic $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
         $rpcProxy->addSub($topic, $uid);
     }
@@ -79,16 +85,18 @@ trait GetTopic
     /**
      * Clear uid's subscription
      *
-     * @param $topic
-     * @param $uid
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @param string $topic
+     * @param string $uid
+     * @throws ProcessRPCException
      */
-    public function removeSub($topic, $uid)
+    public function removeSub(string $topic, string $uid)
     {
         if (empty($uid)) {
             $this->warn("Uid is empty");
             return;
         }
+
+        /** @var Topic $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
         $rpcProxy->removeSub($topic, $uid);
     }
@@ -96,30 +104,33 @@ trait GetTopic
     /**
      * Clear fd's subscription
      *
-     * @param $fd
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @param int $fd
+     * @throws ProcessRPCException
      */
-    public function clearFdSub($fd)
+    public function clearFdSub(int $fd)
     {
         if (empty($fd)) {
             $this->warn("Fd is empty");
             return;
         }
+        /** @var Topic $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
         $rpcProxy->clearFdSub($fd);
     }
 
     /**
      * Clear uid's subscription
-     * @param $uid
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @param string $uid
+     * @throws ProcessRPCException
      */
-    public function clearUidSub($uid)
+    public function clearUidSub(string $uid)
     {
         if (empty($uid)) {
             $this->warn("Uid is empty");
             return;
         }
+
+        /** @var Topic $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
         $rpcProxy->clearUidSub($uid);
     }
@@ -127,13 +138,14 @@ trait GetTopic
     /**
      * Publish subscription
      *
-     * @param $topic
+     * @param string $topic
      * @param $data
-     * @param array $excludeUidList
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @param array|null $excludeUidList
+     * @throws ProcessRPCException
      */
-    public function pub($topic, $data, $excludeUidList = [])
+    public function pub(string $topic, $data, ?array $excludeUidList = [])
     {
+        /** @var Topic $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getTopicConfig()->getProcessName(), Topic::class, true);
         $rpcProxy->pub($topic, $data, $excludeUidList);
     }
