@@ -216,7 +216,6 @@ class ActorCacheProcess extends Process
                     $valueJson = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
                     $redisKey = self::KEY_PREFIX . $key;
-                    $this->redis()->del($redisKey);
                     $this->redis()->set($redisKey, $valueJson);
 
                     Coroutine::sleep(0.001);
