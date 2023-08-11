@@ -202,16 +202,7 @@ class ActorCacheProcess extends Process
     protected function autoSave()
     {
         goWithContext(function () {
-            $saveData = [];
             if (!empty($this->cacheHash->getContainer())) {
-                /*
-                foreach ($this->cacheHash[self::SAVE_NAME] as $key => $value) {
-                    $saveData[$key] = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-                }
-
-                $this->redis()->del(self::HASH_KEY);
-                $this->redis()->hMSet(self::HASH_KEY, $saveData);
-                */
                 foreach ($this->cacheHash[self::SAVE_NAME] as $key => $value) {
                     $valueJson = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
@@ -231,17 +222,6 @@ class ActorCacheProcess extends Process
      */
     protected function recovery()
     {
-        /*
-        $acotrs = $this->redis()->hGetAll(self::HASH_KEY);
-        if (!empty($acotrs)) {
-            foreach ($acotrs as $key => $value) {
-                $valueArray = json_decode($value, true);
-                Actor::create($valueArray[0], $valueArray[1], $valueArray[2], false, 30);
-                Coroutine::sleep(0.001);
-            }
-        }
-        */
-
         $actorKeys = $this->redis()->keys(self::KEY_PREFIX . "*");
         if (!empty($actorKeys)) {
             foreach ($actorKeys as $k => $v) {
