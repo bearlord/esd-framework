@@ -104,7 +104,6 @@ class AutostartPlugin extends AbstractPlugin
             if (!empty($taskList)) {
                 ksort($taskList);
                 foreach ($taskList as $key => $value) {
-                    var_dump($value);
                     Timer::after($value['delay'] * 1000, function () use ($value) {
                         call_user_func([new $value['class'], $value['method']]);
                     });

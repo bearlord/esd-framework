@@ -139,7 +139,7 @@ class ActorCacheProcess extends Process
         });
 
         //Recovery
-        Timer::after($this->delayedRecoveryWaitTime, function (){
+        Timer::after($this->delayedRecoveryWaitTime, function () {
             $this->recovery();
         });
 
@@ -203,13 +203,27 @@ class ActorCacheProcess extends Process
     {
         goWithContext(function () {
             if (!empty($this->cacheHash->getContainer())) {
-                foreach ($this->cacheHash[self::SAVE_NAME] as $key => $value) {
-                    $valueJson = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                foreach ($this->cacheHash[self::SAVE_NAME] as $k1 => $v1) {
+                    $valueJson = json_encode($v1, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-                    $redisKey = self::KEY_PREFIX . $key;
+                    $redisKey = self::KEY_PREFIX . $k1;
                     $this->redis()->set($redisKey, $valueJson);
 
                     Coroutine::sleep(0.001);
+                }
+
+                //actor keys of redis
+                $actorKeysRedis = $this->redis()->keys(self::KEY_PREFIX . "*");
+                //actor keys current
+                $actorKeysCurrent = array_map(function ($value) {
+                    return self::KEY_PREFIX . $value;
+                }, array_keys($this->cacheHash[self::SAVE_NAME]));
+
+                //delete data from redis for non-existent actors
+                foreach ($actorKeysRedis as $k2 => $v2) {
+                    if (!in_array($v2, $actorKeysCurrent)) {
+                        $this->redis()->del($v2);
+                    }
                 }
             }
         });
@@ -242,8 +256,8 @@ class ActorCacheProcess extends Process
      */
     protected function call($callback, $parameter)
     {
-        if (is_callable($function)) {
-            return $function(...$parameter);
+        if (is_callable($callback)) {
+            return $callback(...$parameter);
         }
     }
 
