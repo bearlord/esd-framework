@@ -5,6 +5,7 @@ actor:
   actorMailboxCapacity: 100
   autoSaveTime: 5000
   delayedRecoveryWaitTime: 3000
+  actorMulticastChannelCapacity: 10000
 
 reload:
   enable: true
