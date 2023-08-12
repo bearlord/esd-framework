@@ -25,4 +25,9 @@ class Autostart extends Annotation
      * @var int
      */
     public $sort;
+
+    /**
+     * @var int
+     */
+    public $delay;
 }

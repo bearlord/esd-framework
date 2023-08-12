@@ -16,6 +16,7 @@ use ESD\Plugins\AnnotationsScan\ScanClass;
 use ESD\Plugins\Autostart\Annotation\Autostart;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
+use Swoole\Timer;
 
 /**
  * Class AutostartPlugin
@@ -88,10 +89,14 @@ class AutostartPlugin extends AbstractPlugin
                     if (empty($autostart->name)) {
                         $autostart->name = $reflectionClass->getName() . "::" . $reflectionMethod->getName();
                     }
+                    if (empty($autostart->delay)) {
+                        $autostart->delay = 0;
+                    }
 
                     $taskList[$autostart->sort] = [
                         'class' => $reflectionClass->getName(),
-                        'method' => $reflectionMethod->getName()
+                        'method' => $reflectionMethod->getName(),
+                        'delay' => $autostart->delay
                     ];
                 }
             }
@@ -99,7 +104,9 @@ class AutostartPlugin extends AbstractPlugin
             if (!empty($taskList)) {
                 ksort($taskList);
                 foreach ($taskList as $key => $value) {
-                    call_user_func([new $value['class'], $value['method']]);
+                    Timer::after($value['delay'] * 1000, function () use ($value) {
+                        call_user_func([new $value['class'], $value['method']]);
+                    });
                 }
             }
         }

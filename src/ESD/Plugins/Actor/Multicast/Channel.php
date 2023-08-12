@@ -6,7 +6,9 @@ use Ds\Set;
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Actor\Actor;
+use ESD\Plugins\Actor\ActorException;
 use ESD\Plugins\Actor\ActorMessage;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
 class Channel
@@ -16,9 +18,9 @@ class Channel
     protected $subscribeArr = [];
 
     /**
-     * @var
+     * @var \ESD\Core\Channel\Channel
      */
-    protected $channel;
+    protected $swooleChannel;
 
     /**
      * @var Table
@@ -37,6 +39,18 @@ class Channel
         foreach ($this->channelTable as $value) {
             $this->addSubscribeFormTable($value['channel'], $value['actor']);
         }
+
+        $config = Server::$instance->getConfigContext()->get('actor');
+        $this->swooleChannel = DIGet(\ESD\Core\Channel\Channel::class, [$config['actorMulticastChannelCapacity']]);
+
+        //Iterate to publish messages to the actor
+        goWithContext(function () {
+            while (true) {
+                $message = $this->swooleChannel->pop();
+                $this->publishToActor($message[0], $message[1], $message[2], $message[3]);
+                \Swoole\Coroutine::sleep(0.001);
+            }
+        });
     }
 
     /**
@@ -78,6 +92,7 @@ class Channel
      *
      * @param string $channel
      * @return void
+     * @throws \Exception
      */
     public function deleteChannel(string $channel)
     {
@@ -102,11 +117,12 @@ class Channel
      *
      * @param string $channel
      * @param string $message
-     * @param $excludeActorList
+     * @param array $excludeActorList
+     * @param string|null $from
      * @return void
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      */
-    public function publish(string $channel, string $message, array $excludeActorList = [], ?string $frome = '')
+    public function publish(string $channel, string $message, array $excludeActorList = [], ?string $from = '')
     {
         $tree = $this->buildTrees($channel);
 
@@ -114,7 +130,7 @@ class Channel
             if (isset($this->subscribeArr[$item])) {
                 foreach ($this->subscribeArr[$item] as $actor) {
                     if (!in_array($actor, $excludeActorList)) {
-                        $this->publishToActor($channel, $actor, $message, $from);
+                        $this->swooleChannel->push([$channel, $actor, $message, $from]);
                     }
                 }
             }
@@ -127,8 +143,9 @@ class Channel
      * @param string $channel
      * @param string $toActor
      * @param $message
+     * @param string|null $fromActor
      * @return void
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      */
     protected function publishToActor(string $channel, string $toActor, $message, ?string $fromActor = '')
     {
@@ -152,7 +169,7 @@ class Channel
      * @return bool
      * @throws \ESD\Core\Exception
      */
-    public function subscribe(string $channel, string $actor)
+    public function subscribe(string $channel, string $actor): bool
     {
         Helper::checkChannelFilter($channel);
 
@@ -177,7 +194,7 @@ class Channel
      * @param string $actor
      * @return bool
      */
-    public function unsubscribe(string $channel, string $actor)
+    public function unsubscribe(string $channel, string $actor): bool
     {
         if (empty($actor)) {
             return false;
@@ -206,7 +223,7 @@ class Channel
      * @param string $actor
      * @return bool
      */
-    public function unsubscribeAll(string $actor)
+    public function unsubscribeAll(string $actor): bool
     {
         if (empty($actor)) {
             return false;
