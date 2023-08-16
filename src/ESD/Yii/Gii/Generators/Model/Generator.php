@@ -398,7 +398,7 @@ class Generator extends \ESD\Yii\Gii\Generator
             foreach ($uniqueIndexes as $uniqueColumns) {
                 // Avoid validating auto incremental columns
                 if (!$this->isColumnAutoIncremental($table, $uniqueColumns)) {
-                    $attributesCount = count($uniqueColumns);
+                    $attributesCount = count($uniqueColumns ?? []);
 
                     if ($attributesCount === 1) {
                         $rules[] = "[['" . $uniqueColumns[0] . "'], 'unique']";
