@@ -63,10 +63,11 @@ abstract class Actor
      * @var array timer ids
      */
     protected $timerIds = [];
-    
+
     /**
      * Actor constructor.
      * @param string $name
+     * @param bool $isCreated
      * @throws \DI\DependencyException
      * @throws ActorException
      */
@@ -78,6 +79,8 @@ abstract class Actor
             ActorManager::getInstance()->addActor($this);
         }
 
+        $this->init();
+
         $this->channel = DIGet(Channel::class, [$this->actorConfig->getActorMailboxCapacity()]);
 
         //Loop process the information in the mailbox
@@ -87,6 +90,15 @@ abstract class Actor
                 $this->handleMessage($message);
             }
         });
+    }
+
+    /**
+     * Init
+     * @return void
+     */
+    public function init()
+    {
+
     }
 
     /**
