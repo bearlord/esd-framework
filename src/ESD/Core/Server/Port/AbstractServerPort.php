@@ -336,12 +336,16 @@ abstract class AbstractServerPort
     {
         Server::$instance->getProcessManager()->getCurrentProcess()->waitReady();
 
-        /**
-         * @var $_request Request
-         */
-        $_request = DIGet(AbstractRequest::class);
-        $_request->load($request);
-        setContextValueWithClass("request", $_request, Request::class);
+        try {
+            /**
+             * @var $_request Request
+             */
+            $_request = DIGet(AbstractRequest::class);
+            $_request->load($request);
+            setContextValueWithClass("request", $_request, Request::class);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
 
         $success = $this->onWsPassCustomHandshake($_request);
         if (!$success) {
