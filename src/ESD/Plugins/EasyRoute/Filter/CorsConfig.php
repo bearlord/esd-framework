@@ -42,6 +42,20 @@ class CorsConfig
     public $exposedHeaders = ["*"];
 
     /**
+     * It means that cross-domain Ajax can carry cookies.
+     * At this time, the first setting cannot be *, you need to specify the domain name;
+     * @var bool
+     */
+    protected $allowCredentials = false;
+
+    /**
+     * It means that within 3628800 seconds, no pre-inspection request needs to be sent again,
+     * and the result can be cached, which is generally the default.
+     * @var int
+     */
+    protected $maxAge = 3628800;
+    
+    /**
      * @return bool
      */
     public function isEnable(): bool
@@ -56,20 +70,6 @@ class CorsConfig
     {
         $this->enable = $enable;
     }
-
-    /**
-     * It means that cross-domain Ajax can carry cookies.
-     * At this time, the first setting cannot be *, you need to specify the domain name;
-     * @var bool
-     */
-    protected $allowCredentials = false;
-
-    /**
-     * It means that within 3628800 seconds, no pre-inspection request needs to be sent again,
-     * and the result can be cached, which is generally the default.
-     * @var int
-     */
-    protected $maxAge = 3628800;
 
     /**
      * @return array|string[]
