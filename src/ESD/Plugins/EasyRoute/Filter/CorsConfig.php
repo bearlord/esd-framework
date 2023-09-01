@@ -13,11 +13,33 @@ namespace ESD\Plugins\EasyRoute\Filter;
 class CorsConfig
 {
     /**
+     * @var bool
+     */
+    protected $enable = false;
+
+    /**
      * Represents the IP address and port number of the access server,
      * and can also be set to * to indicate that all domains can pass;
-     * @var string
+     * @var array
      */
-    protected $allowOrigins = "*";
+    protected $allowOrigins = ["*"];
+
+    /**
+     * Represents a request method that allows cross-domain
+     * @var array
+     */
+    protected $allowMethods = ["*"];
+
+    /**
+     * Indicates that cross-domain requests are allowed to include content-type headers;
+     * @var array
+     */
+    protected $allowHeaders = ["*"];
+
+    /**
+     * @var array exposed headers
+     */
+    public $exposedHeaders = ["*"];
 
     /**
      * It means that cross-domain Ajax can carry cookies.
@@ -27,46 +49,98 @@ class CorsConfig
     protected $allowCredentials = false;
 
     /**
-     * Represents a request method that allows cross-domain
-     * @var string
-     */
-    protected $allowMethods = "*";
-
-    /**
-     * Indicates that cross-domain requests are allowed to include content-type headers;
-     * @var string
-     */
-    protected $allowHeaders = "*";
-
-    /**
      * It means that within 3628800 seconds, no pre-inspection request needs to be sent again,
      * and the result can be cached, which is generally the default.
      * @var int
      */
     protected $maxAge = 3628800;
+    
+    /**
+     * @return bool
+     */
+    public function isEnable(): bool
+    {
+        return $this->enable;
+    }
 
     /**
-     * @return string
+     * @param bool $enable
      */
-    public function getAllowOrigins(): string
+    public function setEnable(bool $enable): void
+    {
+        $this->enable = $enable;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getAllowOrigins(): array
     {
         return $this->allowOrigins;
     }
 
     /**
-     * @param string $allowOrigins
+     * @param array|string[] $allowOrigins
      */
-    public function setAllowOrigins(string $allowOrigins): void
+    public function setAllowOrigins(array $allowOrigins): void
     {
         $this->allowOrigins = $allowOrigins;
     }
 
     /**
-     * @return string
+     * @return array|string[]
      */
-    public function isAllowCredentials(): string
+    public function getAllowMethods(): array
     {
-        return $this->allowCredentials ? "true" : "false";
+        return $this->allowMethods;
+    }
+
+    /**
+     * @param array|string[] $allowMethods
+     */
+    public function setAllowMethods(array $allowMethods): void
+    {
+        $this->allowMethods = $allowMethods;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getAllowHeaders(): array
+    {
+        return $this->allowHeaders;
+    }
+
+    /**
+     * @param array|string[] $allowHeaders
+     */
+    public function setAllowHeaders(array $allowHeaders): void
+    {
+        $this->allowHeaders = $allowHeaders;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getExposedHeaders(): array
+    {
+        return $this->exposedHeaders;
+    }
+
+    /**
+     * @param array|string[] $exposedHeaders
+     */
+    public function setExposedHeaders(array $exposedHeaders): void
+    {
+        $this->exposedHeaders = $exposedHeaders;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAllowCredentials(): bool
+    {
+        return $this->allowCredentials;
     }
 
     /**
@@ -75,38 +149,6 @@ class CorsConfig
     public function setAllowCredentials(bool $allowCredentials): void
     {
         $this->allowCredentials = $allowCredentials;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAllowMethods(): string
-    {
-        return $this->allowMethods;
-    }
-
-    /**
-     * @param string $allowMethods
-     */
-    public function setAllowMethods(string $allowMethods): void
-    {
-        $this->allowMethods = $allowMethods;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAllowHeaders(): string
-    {
-        return $this->allowHeaders;
-    }
-
-    /**
-     * @param string $allowHeaders
-     */
-    public function setAllowHeaders(string $allowHeaders): void
-    {
-        $this->allowHeaders = $allowHeaders;
     }
 
     /**
