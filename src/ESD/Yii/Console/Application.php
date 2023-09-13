@@ -99,7 +99,7 @@ class Application extends \ESD\Yii\Base\Application
      * @return static class instance.
      * @throws InvalidConfigException
      */
-    public static function instance($refresh = false)
+    public static function instance(bool $refresh = false): \ESD\Yii\Base\Application
     {
         $className = get_called_class();
         if ($refresh || !isset(self::$_instances[$className])) {
@@ -167,7 +167,7 @@ class Application extends \ESD\Yii\Base\Application
      * @return Response the resulting response
      * @throws Exception
      */
-    public function handleRequest($request)
+    public function handleRequest(Request $request): Response
     {
         list($route, $params) = $request->resolve();
         $this->requestedRoute = $route;
@@ -183,11 +183,11 @@ class Application extends \ESD\Yii\Base\Application
     }
 
     /**
-     * @param $route
+     * @param string $route
      * @return array|false
      * @throws InvalidConfigException
      */
-    public function createController($route)
+    public function createController(string $route)
     {
         // double slashes or leading/ending slashes may cause substr problem
         $route = trim($route, '/');
@@ -235,7 +235,7 @@ class Application extends \ESD\Yii\Base\Application
      * @throws InvalidConfigException if the controller class and its file name do not match.
      * This exception is only thrown when in debug mode.
      */
-    public function createControllerByID($id)
+    public function createControllerByID(string $id): ?Controller
     {
         $pos = strrpos($id, '/');
         if ($pos === false) {
@@ -259,18 +259,19 @@ class Application extends \ESD\Yii\Base\Application
             return null;
         }
 
-        
+        $debug = Server::$instance->getConfigContext()->get('yii.debug');
+
         if (is_subclass_of($className, 'ESD\Yii\Console\Controller')) {
             $controller = Yii::createObject($className, [
                 $id,
                 $this
             ]);
             return get_class($controller) === $className ? $controller : null;
-        } elseif (true) {
+        } elseif ($debug) {
             throw new InvalidConfigException("Controller class must extend from \\ESD\Yii\\Console\\Controller.");
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -280,7 +281,7 @@ class Application extends \ESD\Yii\Base\Application
      * @param string $prefix
      * @return bool
      */
-    private function isIncorrectClassNameOrPrefix($className, $prefix)
+    private function isIncorrectClassNameOrPrefix(string $className, string $prefix): bool
     {
         if (!preg_match('%^[a-z][a-z0-9\\-_]*$%', $className)) {
             return true;
@@ -295,11 +296,11 @@ class Application extends \ESD\Yii\Base\Application
     /**
      * Run route
      *
-     * @param $route
+     * @param string $route
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function runRoute($route)
+    public function runRoute(string $route)
     {
         $controller = $this->createController($route);
         if (!empty($controller)) {
@@ -326,7 +327,7 @@ class Application extends \ESD\Yii\Base\Application
      * Exit code 0 means normal, and other values mean abnormal. Exit code of `null` is treaded as `0` as well.
      * @throws Exception if the route is invalid
      */
-    public function runAction($route, $params = [])
+    public function runAction(string $route, array $params = [])
     {
         try {
             $parts = $this->createController($route);
