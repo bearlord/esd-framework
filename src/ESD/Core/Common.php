@@ -62,7 +62,7 @@ function serverUnSerialize(string $data)
  * @param array $params
  * @return int
  */
-function addTimerTick(int $msec, callable $callback, ... $params)
+function addTimerTick(int $msec, callable $callback, ...$params): int
 {
     return \Swoole\Timer::tick($msec, $callback, ...$params);
 }
@@ -86,7 +86,7 @@ function clearTimerTick(int $timerId): bool
  * @param array $params
  * @return int
  */
-function addTimerAfter(int $msec, callable $callback, ... $params): int
+function addTimerAfter(int $msec, callable $callback, ...$params): int
 {
     return \Swoole\Timer::after($msec, $callback, ...$params);
 }
@@ -273,7 +273,7 @@ function call($callback, array $args = [])
     return $result;
 }
 
-if (! function_exists('parallel')) {
+if (!function_exists('parallel')) {
     /**
      * @param callable[] $callables
      * @param int $concurrent if $concurrent is equal to 0, that means unlimit
