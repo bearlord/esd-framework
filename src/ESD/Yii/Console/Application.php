@@ -346,7 +346,7 @@ class Application extends \ESD\Yii\Base\Application
      * Returns the configuration of core application components.
      * @see set()
      */
-    public function coreComponents()
+    public function coreComponents(): array
     {
         return array_merge(parent::coreComponents(), [
             'request' => ['class' => '\ESD\Yii\Console\Request'],
@@ -358,7 +358,7 @@ class Application extends \ESD\Yii\Base\Application
      * Returns the configuration of the built-in commands.
      * @return array the configuration of the built-in commands.
      */
-    public function coreCommands()
+    public function coreCommands(): array
     {
         return [
             'cache' => 'ESD\Yii\Console\Controllers\CacheController',

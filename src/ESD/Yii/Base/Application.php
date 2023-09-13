@@ -583,11 +583,11 @@ class Application extends ServiceLocator
     /**
      * Run route
      *
-     * @param $route
+     * @param string $route
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function runRoute($route)
+    public function runRoute(string $route)
     {
         $controller = $this->createController($route);
         if (!empty($controller)) {
@@ -621,7 +621,7 @@ class Application extends ServiceLocator
      * Returns the configuration of core application components.
      * @see set()
      */
-    public function coreComponents()
+    public function coreComponents(): array
     {
         return [
             'formatter' => ['class' => '\ESD\Yii\I18n\Formatter'],
