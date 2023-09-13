@@ -120,7 +120,7 @@ class Application extends ServiceLocator
             }
             $this->setWebPath(Server::$instance->getServerConfig()->getDocumentRoot());
         }
-		
+
 		// set "@runtime"
         $this->getRuntimePath();
 
@@ -293,7 +293,9 @@ class Application extends ServiceLocator
             if (!empty($pdoPools)) {
                 $pool = $pdoPools->getPool($poolKey);
                 if ($pool == null) {
-                    throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+                    $_message = "No Pdo connection pool named {$poolKey} was found";
+                    Server::$instance->getLog()->error($_message);
+                    throw new \PDOException($_message);
                 }
                 return $pool->db();
             } else {
@@ -617,10 +619,7 @@ class Application extends ServiceLocator
             'security' => ['class' => 'ESD\Yii\Base\Security'],
             'view' => ['class' => 'ESD\Yii\Web\View'],
             'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager'],
-            'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager'],
-            'security' => ['class' => 'ESD\Yii\Base\Security'],
-            'view' => ['class' => 'ESD\Yii\Web\View'],
-            'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager']
+            'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager']
         ];
     }
 }
