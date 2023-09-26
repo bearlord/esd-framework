@@ -46,7 +46,7 @@ abstract class Server
     /**
      * @var float Version
      */
-    public static $version = "1.7.12";
+    public static $version = "1.7.14";
 
     /**
      * @var Server
@@ -745,7 +745,7 @@ abstract class Server
 
     /**
      * Close websocket client connection
-     * 
+     *
      * @param int $fd
      * @param int $code
      * @param string $reason
