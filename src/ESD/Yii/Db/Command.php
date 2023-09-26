@@ -1097,12 +1097,13 @@ class Command extends Component
 
             return $n;
         } catch (Exception $e) {
-            if (!$this->isBreak($e)) {
-                $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
-                    $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
-                Server::$instance->getLog()->error($_message);
+            $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
+                $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
+            Server::$instance->getLog()->error($_message);
 
-                Yii::error($_message);
+            Yii::error($_message);
+
+            if (!$this->isBreak($e)) {
                 $profile and Yii::endProfile($rawSql, __METHOD__);
                 throw $this->db->getSchema()->convertException($e, $rawSql ?: $this->getRawSql());
             }
@@ -1214,12 +1215,13 @@ class Command extends Component
 
             $profile and Yii::endProfile($rawSql, 'ESD\Yii\Db\Command::query');
         } catch (Exception $e) {
-            if (!$this->isBreak($e)) {
-                $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
-                    $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
-                Server::$instance->getLog()->error($_message);
+            $_message = sprintf("\nFile: %s, \nLine: %s, \nCode: %s, \nMessage: %s, \nTrace: %s\n",
+                $e->getFile(), $e->getLine(), $e->getCode(), $e->getMessage(), $e->getTraceAsString());
+            Server::$instance->getLog()->error($_message);
 
-                Yii::error($_message);
+            Yii::error($_message);
+
+            if (!$this->isBreak($e)) {
                 $profile and Yii::endProfile($rawSql, __METHOD__);
                 throw $this->db->getSchema()->convertException($e, $rawSql ?: $this->getRawSql());
             }
