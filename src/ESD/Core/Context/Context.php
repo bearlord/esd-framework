@@ -144,7 +144,7 @@ class Context
     /**
      * @return Context|null
      */
-    public function getParentContext()
+    public function getParentContext(): ?Context
     {
         return $this->parentContext;
     }
@@ -152,16 +152,16 @@ class Context
     /**
      * @return array
      */
-    public function getKeys()
+    public function getKeys(): array
     {
         return array_keys($this->contain);
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return bool
      */
-    public function delete($key)
+    public function delete(string $key): bool
     {
         if (array_key_exists($key, array_keys($this->contain))) {
             unset($this->contain[$key]);
