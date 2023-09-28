@@ -54,6 +54,11 @@ class ServerConfig extends BaseConfig
     protected $dispatchMode;
 
     /**
+     * @var int Maximum Request
+     */
+    protected $maxRequest = 0;
+
+    /**
      * Maximum connection
      * @var int
      */
@@ -323,6 +328,22 @@ class ServerConfig extends BaseConfig
     public function setDispatchMode(int $dispatchMode)
     {
         $this->dispatchMode = $dispatchMode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxRequest(): int
+    {
+        return $this->maxRequest;
+    }
+
+    /**
+     * @param int $maxRequest
+     */
+    public function setMaxRequest(int $maxRequest): void
+    {
+        $this->maxRequest = $maxRequest;
     }
 
     /**
@@ -744,6 +765,11 @@ class ServerConfig extends BaseConfig
         } else {
             throw new ConfigException("ServerConfig dispatchMode cannot be empty or less than 1");
         }
+
+        if ($this->getMaxRequest() != null && $this->getMaxRequest() > 0) {
+            $build['max_request'] = $this->getMaxRequest();
+        }
+
         if ($this->getMaxConn() != null && $this->getMaxConn() > 0) {
             $build['max_connection'] = $this->getMaxConn();
         } else {
