@@ -40,11 +40,11 @@ abstract class AbstractPlugin extends Order implements PluginInterface
     /**
      * Set to DI container
      *
-     * @param $name
+     * @param string $name
      * @param $value
      * @throws \Exception
      */
-    public function setToDIContainer($name, $value)
+    public function setToDIContainer(string $name, $value)
     {
         DISet($name, $value);
     }
