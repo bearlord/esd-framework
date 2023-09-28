@@ -83,7 +83,7 @@ trait ToConfigArray
      * @param $config
      * @return static
      */
-    public function buildFromConfig($config): ToConfigArray
+    public function buildFromConfig($config): self
     {
         if ($config == null) {
             return $this;
