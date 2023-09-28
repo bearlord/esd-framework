@@ -86,7 +86,7 @@ class BaseConfig
      * @param $prefix
      * @return array
      */
-    protected function processPrefix($prefix)
+    protected function processPrefix($prefix): array
     {
         $cabinet = [];
         $box = &$cabinet;

@@ -21,7 +21,7 @@ trait ToConfigArray
      *
      * @throws \ReflectionException
      */
-    public function toConfigArray()
+    public function toConfigArray(): array
     {
         $config = [];
         if ($this->reflectionClass == null) {
@@ -83,7 +83,7 @@ trait ToConfigArray
      * @param $config
      * @return static
      */
-    public function buildFromConfig($config)
+    public function buildFromConfig($config): ToConfigArray
     {
         if ($config == null) {
             return $this;
