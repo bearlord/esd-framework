@@ -91,7 +91,7 @@ class Table implements \Iterator, \Countable
      */
     public function set(string $key, array $value): bool
     {
-        $this->swooleTable->set($key, $value);
+        return $this->swooleTable->set($key, $value);
     }
 
     /**
