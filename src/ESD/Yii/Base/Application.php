@@ -353,6 +353,16 @@ class Application extends ServiceLocator
     }
 
     /**
+     * Returns the error handler component.
+     * @return ErrorHandler|object|null the error handler application component.
+     * @throws InvalidConfigException
+     */
+    public function getErrorHandler()
+    {
+        return $this->get('errorHandler');
+    }
+
+    /**
      * Returns the request component.
      * @return \ESD\Core\Server\Beans\Request the request component.
      */
