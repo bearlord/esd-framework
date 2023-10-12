@@ -526,7 +526,7 @@ class Application extends ServiceLocator
 
     /**
      * Get db once
-     * @return Connection
+     * @return \ESD\Yii\Mongodb\Connection
      * @throws \ESD\Yii\Mongodb\Exception
      */
     public function getMongodbOnce()
