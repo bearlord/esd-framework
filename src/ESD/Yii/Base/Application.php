@@ -120,7 +120,7 @@ class Application extends ServiceLocator
             }
             $this->setWebPath(Server::$instance->getServerConfig()->getDocumentRoot());
         }
-		
+
 		// set "@runtime"
         $this->getRuntimePath();
 
@@ -346,6 +346,16 @@ class Application extends ServiceLocator
     public function getLog()
     {
         return $this->get('log');
+    }
+
+    /**
+     * Returns the error handler component.
+     * @return ErrorHandler the error handler application component.
+     * @throws InvalidConfigException
+     */
+    public function getErrorHandler()
+    {
+        return $this->get('errorHandler');
     }
 
     /**
@@ -615,12 +625,10 @@ class Application extends ServiceLocator
             'i18n' => ['class' => 'ESD\Yii\I18n\I18N'],
             'log' => ['class' => 'ESD\Yii\Log\Dispatcher'],
             'security' => ['class' => 'ESD\Yii\Base\Security'],
+            'errorHandler' => ['class' => 'ESD\Yii\Base\ErrorHandler'],
             'view' => ['class' => 'ESD\Yii\Web\View'],
             'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager'],
-            'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager'],
-            'security' => ['class' => 'ESD\Yii\Base\Security'],
-            'view' => ['class' => 'ESD\Yii\Web\View'],
-            'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager']
+            'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager']
         ];
     }
 }
