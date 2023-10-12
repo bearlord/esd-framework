@@ -31,7 +31,7 @@ class Client
     }
 
     /**
-     * The connect operation will have a coroutine switching overhead, yield is initiated when the connect is initiated, and resume is completed when the connect is completed
+     * The connect operation will have a coroutine switching overhead, yield is initiated when to connect is initiated, and resume is completed when to connect is completed
      *
      * @param string $host The address of the remote server. 2.0.12 or later can be passed directly to the domain name. The bottom layer will automatically perform coroutine switching to resolve the domain name into an IP address.
      * @param int $port The remote server port
@@ -136,7 +136,7 @@ class Client
     }
 
     /**
-     * Obtain the The local host: port of client socket.
+     * Obtain the local host: port of client socket.
      * return an array successfully，as：array('host' => '127.0.0.1', 'port' => 53652)
      *
      * @return array
