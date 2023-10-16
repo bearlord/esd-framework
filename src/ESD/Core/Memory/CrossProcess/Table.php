@@ -59,7 +59,7 @@ class Table implements \Iterator, \Countable
      */
     public function column(string $name, int $type, int $size = 0): bool
     {
-        $this->swooleTable->column($name, $type, $size);
+        return $this->swooleTable->column($name, $type, $size);
     }
 
     /**
