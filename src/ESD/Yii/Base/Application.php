@@ -12,9 +12,13 @@ use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\Session\HttpSession;
+use ESD\Yii\Caching\Cache;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Di\ServiceLocator;
+use ESD\Yii\I18n\Formatter;
+use ESD\Yii\I18n\I18N;
 use ESD\Yii\Plugin\Mongodb\MongodbPools;
+use ESD\Yii\Web\AssetManager;
 use ESD\Yii\Yii;
 use ESD\Yii\Plugin\Pdo\PdoPools;
 use FastRoute\Dispatcher;
@@ -354,58 +358,58 @@ class Application extends ServiceLocator
 
     /**
      * Returns the error handler component.
-     * @return ErrorHandler|object|null the error handler application component.
+     * @return \ESD\Yii\Base\ErrorHandler|object|null the error handler application component.
      * @throws InvalidConfigException
      */
-    public function getErrorHandler()
+    public function getErrorHandler(): ?ErrorHandler
     {
         return $this->get('errorHandler');
     }
 
     /**
      * Returns the request component.
-     * @return \ESD\Core\Server\Beans\Request the request component.
+     * @return \ESD\Core\Server\Beans\Request|object|null the request component.
      */
-    public function getRequest(): Request
+    public function getRequest(): ?Request
     {
         return getDeepContextValueByClassName(Request::class);
     }
 
     /**
      * Returns the response component.
-     * @return \ESD\Core\Server\Beans\Response the response component.
+     * @return \ESD\Core\Server\Beans\Response|object|null the response component.
      */
-    public function getResponse(): Response
+    public function getResponse(): ?Response
     {
         return getDeepContextValueByClassName(Response::class);
     }
 
     /**
      * Returns the formatter component.
-     * @return \ESD\Yii\I18n\Formatter|object the formatter application component.
+     * @return \ESD\Yii\I18n\Formatter|object|null the formatter application component.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getFormatter()
+    public function getFormatter(): ?Formatter
     {
         return $this->get('formatter');
     }
 
     /**
      * Returns the internationalization (i18n) component
-     * @return \ESD\Yii\I18n\I18N|object the internationalization application component.
+     * @return \ESD\Yii\I18n\I18N|object|null the internationalization application component.
      * @throws InvalidConfigException
      */
-    public function getI18n()
+    public function getI18n(): ?I18N
     {
         return $this->get('i18n');
     }
 
     /**
      * Returns the cache component.
-     * @return \ESD\Yii\Caching\Cache|object the cache application component. Null if the component is not enabled.
+     * @return \ESD\Yii\Caching\Cache|object|null the cache application component. Null if the component is not enabled.
      * @throws InvalidConfigException
      */
-    public function getCache()
+    public function getCache(): ?Cache
     {
         return $this->get('cache');
     }
@@ -423,39 +427,39 @@ class Application extends ServiceLocator
 
     /**
      * Returns the asset manager.
-     * @return \ESD\Yii\Web\AssetManager|object the asset manager application component.
+     * @return \ESD\Yii\Web\AssetManager|object|null the asset manager application component.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getAssetManager()
+    public function getAssetManager(): ?AssetManager
     {
         return $this->get('assetManager');
     }
 
     /**
      * Returns the security component.
-     * @return \ESD\Yii\Base\Security|object the security application component.
+     * @return \ESD\Yii\Base\Security|object|null the security application component.
      * @throws InvalidConfigException
      */
-    public function getSecurity()
+    public function getSecurity(): ?Security
     {
         return $this->get('security');
     }
 
     /**
      * Returns the view object.
-     * @return View|\ESD\Yii\Web\View|object the view application component that is used to render various view files.
+     * @return View|\ESD\Yii\Web\View|object|null the view application component that is used to render various view files.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getView()
+    public function getView(): ?View
     {
         return $this->get('view');
     }
 
     /**
      * Returns the session component.
-     * @return HttpSession the session component.
+     * @return HttpSession|null the session component.
      */
-    public function getSession(): HttpSession
+    public function getSession(): ?HttpSession
     {
         $session = getDeepContextValueByClassName(HttpSession::class);
         if ($session == null) {
@@ -504,10 +508,10 @@ class Application extends ServiceLocator
     /**
      * Get Mongodb
      *
-     * @return \ESD\Yii\Mongodb\Connection|mixed
+     * @return \ESD\Yii\Mongodb\Connection|null
      * @throws \ESD\Yii\Db\Exception|\ESD\Yii\Mongodb\Exception
      */
-    public function getMongodb()
+    public function getMongodb(): ?\ESD\Yii\Mongodb\Connection
     {
         $poolKey = "default";
         $contextKey = "Mongodb:default";
