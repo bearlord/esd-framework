@@ -259,7 +259,6 @@ class Application extends \ESD\Yii\Base\Application
             return null;
         }
 
-        
         if (is_subclass_of($className, 'ESD\Yii\Console\Controller')) {
             $controller = Yii::createObject($className, [
                 $id,
@@ -321,12 +320,14 @@ class Application extends \ESD\Yii\Base\Application
      * ```
      *
      * @param string $route the route that specifies the action.
-     * @param array $params the parameters to be passed to the action
+     * @param array|null $params the parameters to be passed to the action
      * @return int|Response the result of the action. This can be either an exit code or Response object.
      * Exit code 0 means normal, and other values mean abnormal. Exit code of `null` is treaded as `0` as well.
-     * @throws Exception if the route is invalid
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Console\Exception if the route is invalid
+     * @throws \ESD\Yii\Console\UnknownCommandException
      */
-    public function runAction($route, $params = [])
+    public function runAction(string $route, ?array $params = [])
     {
         try {
             $parts = $this->createController($route);
@@ -345,7 +346,7 @@ class Application extends \ESD\Yii\Base\Application
      * Returns the configuration of core application components.
      * @see set()
      */
-    public function coreComponents()
+    public function coreComponents(): array
     {
         return array_merge(parent::coreComponents(), [
             'request' => ['class' => '\ESD\Yii\Console\Request'],
@@ -357,7 +358,7 @@ class Application extends \ESD\Yii\Base\Application
      * Returns the configuration of the built-in commands.
      * @return array the configuration of the built-in commands.
      */
-    public function coreCommands()
+    public function coreCommands(): array
     {
         return [
             'cache' => 'ESD\Yii\Console\Controllers\CacheController',
