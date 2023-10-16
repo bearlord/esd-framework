@@ -112,12 +112,13 @@ class SwooleResponse extends Response
      * Create a new object and use it with detach
      * @param $fd
      * @return static
-     * @throws Exception
+     * @throws \ESD\Core\Exception
      */
     public static function create($fd)
     {
-        $obj = new SwooleResponse();
-        $obj->load(Response::create($fd));
-        return $obj;
+        $object = new SwooleResponse();
+        $object->load(\Swoole\Http\Response::create($fd));
+
+        return $object;
     }
 }
