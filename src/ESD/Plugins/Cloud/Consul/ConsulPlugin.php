@@ -116,7 +116,7 @@ class ConsulPlugin extends AbstractPlugin
         //Each process listens to Service changes
         $call = Server::$instance->getEventDispatcher()->listen(ConsulServiceChangeEvent::ConsulServiceChangeEvent);
         $call->call(function (ConsulServiceChangeEvent $event) {
-            $this->debug(sprintf("Receive Service changed event: %s", $event->getConsulServiceListInfo()->getServiceName());
+            $this->debug(sprintf("Receive Service changed event: %s", $event->getConsulServiceListInfo()->getServiceName()));
             Services::modifyServices($event);
         });
 
