@@ -307,10 +307,10 @@ class Application extends ServiceLocator
 
     /**
      * Get db once
-     * @return Connection
-     * @throws \ESD\Yii\Db\Exception
+     * @return Connection|object|null
+     * @throws \ESD\Yii\Db\Exception|\ESD\Yii\Base\InvalidConfigException
      */
-    public function getDbOnce($name)
+    public function getDbOnce($name): ?Connection
     {
         $contextKey = sprintf("Pdo:%s", $name);
         $db = getContextValue($contextKey);
@@ -526,21 +526,24 @@ class Application extends ServiceLocator
 
     /**
      * Get db once
-     * @return \ESD\Yii\Mongodb\Connection
-     * @throws \ESD\Yii\Mongodb\Exception
+     * @return \ESD\Yii\Mongodb\Connection|object|null
+     * @throws \ESD\Yii\Mongodb\Exception|\ESD\Yii\Base\InvalidConfigException
      */
-    public function getMongodbOnce()
+    public function getMongodbOnce(): ?\ESD\Yii\Mongodb\Connection
     {
         $config = Server::$instance->getConfigContext()->get("yii.db.mongodb");
-        $db = new \ESD\Yii\Mongodb\Connection();
-        $db->dsn = $config['dsn'];
-        $db->username = $config['username'];
-        $db->password = $config['password'];
-        $db->options = $config['options'] ?? [];
-        $db->tablePrefix = $config['tablePrefix'];
-        $db->enableSchemaCache = $config['enableSchemaCache'];
-        $db->schemaCacheDuration = $config['schemaCacheDuration'];
-        $db->schemaCache = $config['schemaCache'];
+        $db = Yii::createObject([
+            'class' => \ESD\Yii\Mongodb\Connection::class,
+            'dsn' => $config['dsn'],
+            'username' => $config['username'],
+            'password' => $config['password'],
+            'options' => $config['options'],
+            'tablePrefix' => $config['tablePrefix'],
+            'enableSchemaCache' => $config['enableSchemaCache'],
+            'schemaCacheDuration' => $config['schemaCacheDuration'],
+            'schemaCache' => $config['schemaCache'],
+        ]);
+
         $db->open();
         return $db;
     }
@@ -602,7 +605,7 @@ class Application extends ServiceLocator
      * @return mixed the result of the action.
      * @throws InvalidRouteException if the requested route cannot be resolved into an action successfully.
      */
-    public function runAction($route, $params = [])
+    public function runAction(string $route, ?array $params = [])
     {
         $parts = $this->createController($route);
         if (is_array($parts)) {
@@ -616,9 +619,10 @@ class Application extends ServiceLocator
 
     /**
      * Returns the configuration of core application components.
+     * @return array
      * @see set()
      */
-    public function coreComponents()
+    public function coreComponents(): array
     {
         return [
             'formatter' => ['class' => '\ESD\Yii\I18n\Formatter'],
