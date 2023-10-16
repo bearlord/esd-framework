@@ -92,7 +92,7 @@ class SwooleResponse extends Response
      * Is end
      * @return bool
      */
-    public function isEnd()
+    public function isEnd(): bool
     {
         return $this->isEnd;
     }
@@ -116,8 +116,9 @@ class SwooleResponse extends Response
      */
     public static function create($fd)
     {
-        $obj = new SwooleResponse();
-        $obj->load(Response::create($fd));
-        return $obj;
+        $object = new SwooleResponse();
+        $object->load(\Swoole\Http\Response::create($fd));
+
+        return $object;
     }
 }
