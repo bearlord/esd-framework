@@ -5,6 +5,7 @@ namespace ESD\Plugins\Aop;
 
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use ESD\Core\Exception;
 use ESD\Goaop\Core\AspectContainer;
 use ESD\Goaop\Instrument\PathResolver;
 use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
@@ -106,10 +107,13 @@ class AopComposerLoader extends \ESD\Goaop\Instrument\ClassLoading\AopComposerLo
         enableRuntimeCoroutine(false);
         $file = $this->findFile($class);
 
-        if (strpos($class, "App") === 0) {
-            if (!$file) {
-                Server::$instance->getLog()->error("Class $class not found");
+        if (strpos($class, "App\\") !== false) {
+            if ($file === false) {
+                Server::$instance->getLog()->error(new Exception("Class $class not found"));
+                return;
             }
+
+            include $file;
         } else {
             if ($file !== false) {
                 if (strpos($file, 'php://') === 0) {
