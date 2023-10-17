@@ -11,6 +11,7 @@ use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
 use ESD\Goaop\Instrument\FileSystem\Enumerator;
 use ESD\Goaop\Instrument\ClassLoading\SourceTransformingLoader;
 use ESD\Goaop\Instrument\Transformer\StreamMetaData;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class AopComposerLoader
@@ -105,21 +106,27 @@ class AopComposerLoader extends \ESD\Goaop\Instrument\ClassLoading\AopComposerLo
         enableRuntimeCoroutine(false);
         $file = $this->findFile($class);
 
-        if ($file !== false) {
-            if (strpos($file, 'php://') === 0) {
-                if (strpos($file, "Swoole")
-                    || strpos($file, "Yii")
-                    || strpos($file, "ESD/Nikic")
-                ) {
-                    $oldfile = $file;
-                    if (preg_match('/resource=(.+)$/', $file, $matches)) {
-                        $file = PathResolver::realpath($matches[1]);
-                        $newfile = $file;
-                    }
-                }
-
+        if (strpos($class, "App") === 0) {
+            if (!$file) {
+                Server::$instance->getLog()->error("Class $class not found");
             }
-            include $file;
+        } else {
+            if ($file !== false) {
+                if (strpos($file, 'php://') === 0) {
+                    if (strpos($file, "Swoole")
+                        || strpos($file, "Yii")
+                        || strpos($file, "ESD/Nikic")
+                    ) {
+                        $oldfile = $file;
+                        if (preg_match('/resource=(.+)$/', $file, $matches)) {
+                            $file = PathResolver::realpath($matches[1]);
+                            $newfile = $file;
+                        }
+                    }
+
+                }
+                include $file;
+            }
         }
     }
 
