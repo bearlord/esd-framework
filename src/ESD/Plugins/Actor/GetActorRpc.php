@@ -30,10 +30,10 @@ trait GetActorRpc
     /**
      * Only the process that created the Actor can use this listener
      * @param string $actorName
-     * @param int $timeOut
-     * @throws ActorException
+     * @param float $timeOut
+     * @throws \ESD\Plugins\Actor\ActorException
      */
-    public function waitActorCreate(string $actorName, $timeOut = 5)
+    public function waitActorCreate(string $actorName, float $timeOut = 5)
     {
         if (!ActorManager::getInstance()->hasActor($actorName)) {
             $call = Server::$instance->getEventDispatcher()->listen(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actorName, null, true);

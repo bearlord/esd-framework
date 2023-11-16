@@ -63,7 +63,7 @@ abstract class Actor
      * @var array timer ids
      */
     protected $timerIds = [];
-    
+
     /**
      * Actor constructor.
      * @param string $name
@@ -150,7 +150,11 @@ abstract class Actor
      */
     public static function getProxy(string $actorName, $oneway = false, $timeOut = 5)
     {
-        return new ActorRPCProxy($actorName, $oneway, $timeOut);
+        try {
+            return new ActorRPCProxy($actorName, $oneway, $timeOut);
+        } catch (ActorException $exception) {
+            return false;
+        }
     }
 
     /**
