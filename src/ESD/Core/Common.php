@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
  * @return bool
  * @throws \ErrorException
  */
-function enableRuntimeCoroutine(bool $enable = true, int $flags = SWOOLE_HOOK_ALL ^ SWOOLE_HOOK_FILE): bool
+function enableRuntimeCoroutine(bool $enable = true, int $flags = SWOOLE_HOOK_ALL): bool
 {
     if (!$enable) {
         \Swoole\Runtime::enableCoroutine($enable);
