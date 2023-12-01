@@ -15,9 +15,10 @@ use Psr\Log\LoggerInterface;
  *
  * @param bool $enable
  * @param int $flags
- * @return bool|void
+ * @return bool
+ * @throws \ErrorException
  */
-function enableRuntimeCoroutine(bool $enable = true, int $flags = SWOOLE_HOOK_ALL ^ SWOOLE_HOOK_FILE)
+function enableRuntimeCoroutine(bool $enable = true, int $flags = SWOOLE_HOOK_ALL): bool
 {
     if (!$enable) {
         \Swoole\Runtime::enableCoroutine($enable);
@@ -25,11 +26,9 @@ function enableRuntimeCoroutine(bool $enable = true, int $flags = SWOOLE_HOOK_AL
     }
 
     if (Runtime::$enableCoroutine) {
-        if (version_compare(swoole_version(), "4.6.0", "ge")) {
-            $flags = SWOOLE_HOOK_ALL ^ SWOOLE_HOOK_FILE ^ SWOOLE_HOOK_SOCKETS;
-        }
         \Swoole\Runtime::enableCoroutine($flags);
     }
+    return true;
 }
 
 /**
