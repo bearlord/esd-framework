@@ -44,7 +44,7 @@ class GoIntrospectionProcessor implements ProcessorInterface
     public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(array('ESD\\BaseServer\\Plugins\\Logger\\', 'Monolog\\'), $skipClassesPartials);
+        $this->skipClassesPartials = array_merge(array('ESD\\Core\\Plugins\\Logger\\', 'Monolog\\'), $skipClassesPartials);
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
