@@ -294,10 +294,10 @@ abstract class Process
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
                 Process::signal(SIGTERM, [$this, '_onProcessStop']);
-                $this->socket = $this->swooleProcess->exportSocket($this->coroutineSocketRecvLength);
+                $this->socket = $this->swooleProcess->exportSocket();
                 \Swoole\Coroutine::create(function () {
                     while (true) {
-                        $recv = $this->socket->recv();
+                        $recv = $this->socket->recv($this->coroutineSocketRecvLength);
                         if (!empty($recv)) {
                             //Get process id
                             $unpackData = unpack("N", $recv);
