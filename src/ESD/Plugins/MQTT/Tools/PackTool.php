@@ -9,6 +9,10 @@ namespace ESD\Plugins\MQTT\Tools;
 
 class PackTool extends Common
 {
+    /**
+     * @param string $str
+     * @return string
+     */
     public static function string(string $str): string
     {
         $len = strlen($str);
@@ -16,26 +20,51 @@ class PackTool extends Common
         return pack('n', $len) . $str;
     }
 
+    /**
+     * @param string $key
+     * @param string $value
+     * @return string
+     */
     public static function stringPair(string $key, string $value): string
     {
         return static::string($key) . static::string($value);
     }
 
+    /**
+     * @param int $int
+     * @return string
+     */
     public static function longInt(int $int): string
     {
         return pack('N', $int);
     }
 
+    /**
+     * @param int $int
+     * @return string
+     */
     public static function shortInt(int $int): string
     {
         return pack('n', $int);
     }
 
+    /**
+     * @param int $int
+     * @return string
+     */
     public static function varInt(int $int): string
     {
         return static::packRemainingLength($int);
     }
 
+    /**
+     * @param int $type
+     * @param int $bodyLength
+     * @param int $dup
+     * @param int $qos
+     * @param int $retain
+     * @return string
+     */
     public static function packHeader(int $type, int $bodyLength, int $dup = 0, int $qos = 0, int $retain = 0): string
     {
         $type = $type << 4;
@@ -52,6 +81,10 @@ class PackTool extends Common
         return chr($type) . static::packRemainingLength($bodyLength);
     }
 
+    /**
+     * @param int $bodyLength
+     * @return string
+     */
     private static function packRemainingLength(int $bodyLength): string
     {
         $string = '';
