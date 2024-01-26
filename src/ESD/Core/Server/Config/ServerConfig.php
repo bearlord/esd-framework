@@ -512,7 +512,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getUser(): string
+    public function getUser(): ?string
     {
         return $this->user;
     }
@@ -528,7 +528,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getGroup(): string
+    public function getGroup(): ?string
     {
         return $this->group;
     }
@@ -544,7 +544,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getChroot(): string
+    public function getChroot(): ?string
     {
         return $this->chroot;
     }
@@ -624,7 +624,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getUploadTmpDir(): string
+    public function getUploadTmpDir(): ?string
     {
         return $this->uploadTmpDir;
     }
@@ -656,7 +656,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getDocumentRoot(): string
+    public function getDocumentRoot(): ?string
     {
         return $this->documentRoot;
     }
@@ -704,7 +704,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getWebsocketSubprotocol(): string
+    public function getWebsocketSubprotocol(): ?string
     {
         return $this->websocketSubprotocol;
     }
@@ -846,7 +846,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getBanner(): string
+    public function getBanner(): ?string
     {
         return $this->banner;
     }
