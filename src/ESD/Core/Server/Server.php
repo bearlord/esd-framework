@@ -46,7 +46,7 @@ abstract class Server
     /**
      * @var float Version
      */
-    public static $version = "1.7.15";
+    public static $version = "1.7.16";
 
     /**
      * @var Server

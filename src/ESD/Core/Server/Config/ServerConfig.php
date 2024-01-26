@@ -431,7 +431,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return array
      */
-    public function getCpuAffinityIgnore(): array
+    public function getCpuAffinityIgnore(): ?array
     {
         return $this->cpuAffinityIgnore;
     }
@@ -447,7 +447,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getLogFile(): string
+    public function getLogFile(): ?string
     {
         return $this->logFile;
     }
