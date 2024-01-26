@@ -30,7 +30,7 @@ class Pools
      * @param string $name
      * @return mixed|null
      */
-    public function getPool($name = "default")
+    public function getPool(string $name = "default")
     {
         return $this->poolList[$name] ?? null;
     }

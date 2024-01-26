@@ -224,27 +224,27 @@ class ProcessManager
 
     /**
      * Get the PID of the current server's main process
-     * @return int
+     * @return int|null
      */
-    public function getMasterPid()
+    public function getMasterPid(): ?int
     {
         return $this->server->getServer()->master_pid ?? null;
     }
 
     /**
      * Get the PID of the current server management process.
-     * @return int
+     * @return int|null
      */
-    public function getManagerPid()
+    public function getManagerPid(): ?int
     {
         return $this->server->getServer()->manager_pid ?? null;
     }
 
     /**
      * Get the number of the current Worker process
-     * @return int
+     * @return int|null
      */
-    public function getCurrentProcessId()
+    public function getCurrentProcessId(): ?int
     {
         return $this->server->getServer()->worker_id ?? null;
     }
@@ -252,9 +252,9 @@ class ProcessManager
     /**
      * Set current process id
      *
-     * @param $processId
+     * @param int $processId
      */
-    public function setCurrentProcessId($processId)
+    public function setCurrentProcessId(int $processId)
     {
         $this->server->getServer()->worker_id = $processId;
     }
@@ -265,7 +265,7 @@ class ProcessManager
      *
      * @return int
      */
-    public function getCurrentProcessPid()
+    public function getCurrentProcessPid(): int
     {
         return $this->server->getServer()->worker_pid;
     }
@@ -273,9 +273,9 @@ class ProcessManager
     /**
      * Set current process pid
      *
-     * @param $processPid
+     * @param int $processPid
      */
-    public function setCurrentProcessPid($processPid)
+    public function setCurrentProcessPid(int $processPid)
     {
         $this->server->getServer()->worker_pid = $processPid;
     }
@@ -285,7 +285,7 @@ class ProcessManager
      *
      * @return Process
      */
-    public function getCurrentProcess()
+    public function getCurrentProcess(): ?Process
     {
         if ($this->getCurrentProcessId() === null) {
             if ($this->getMasterPid() === null) {

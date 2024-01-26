@@ -6,6 +6,8 @@
 
 namespace ESD\Core\Server\Process;
 
+use ESD\Core\Message\Message;
+
 /**
  * Class ProcessGroup
  * @package ESD\Core\Server\Process
@@ -58,9 +60,9 @@ class ProcessGroup
 
     /**
      * Send message to group.
-     * @param $message
+     * @param \ESD\Core\Message\Message $message
      */
-    public function sendMessageToGroup($message)
+    public function sendMessageToGroup(Message $message)
     {
         if ($this->index == count($this->processes)) {
             $this->index = 0;

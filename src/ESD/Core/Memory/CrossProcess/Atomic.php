@@ -77,9 +77,9 @@ class Atomic
      *
      * @param int $cmp_value
      * @param int $set_value
-     * @return mixed
+     * @return bool
      */
-    public function cmpset(int $cmp_value, int $set_value)
+    public function cmpset(int $cmp_value, int $set_value): bool
     {
         return $this->swooleAtomic->cmpset($cmp_value, $set_value);
     }
@@ -111,9 +111,9 @@ class Atomic
      * After the awakened process returns, the atomic count will be set to 0, then you can call wakeup again to wake up other processes that are waiting
      *
      * @param int $n
-     * @return mixed
+     * @return bool
      */
-    public function wakeup(int $n = 1)
+    public function wakeup(int $n = 1): bool
     {
         return $this->swooleAtomic->wakeup($n);
     }

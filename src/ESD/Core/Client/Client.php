@@ -49,7 +49,7 @@ class Client
      * If the number of bytes returned is different from the length of the incoming $data, the socket may have been closed by the peer, and the next time you call send or recv, the corresponding error code will be returned.
      *
      * @param string $data
-     * @return mixed
+     * @return false|int
      */
     public function send(string $data)
     {

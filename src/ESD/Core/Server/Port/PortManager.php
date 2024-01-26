@@ -87,7 +87,7 @@ class PortManager
      * @return PortConfig
      * @throws \Exception
      */
-    public function getPortConfig($port)
+    public function getPortConfig($port): PortConfig
     {
         $configs = Server::$instance->getConfigContext()->get(PortConfig::KEY);
         foreach ($configs as $key => $value) {
@@ -107,7 +107,7 @@ class PortManager
      * @throws ConfigException
      * @throws \ReflectionException
      */
-    public function getPortConfigs()
+    public function getPortConfigs(): array
     {
         $this->mergeConfig();
 
@@ -168,10 +168,10 @@ class PortManager
     /**
      * Get port instance with corresponding port number
      *
-     * @param $portNo
+     * @param int $portNo
      * @return ServerPort|null
      */
-    public function getPortFromPortNo($portNo)
+    public function getPortFromPortNo(int $portNo): ?ServerPort
     {
         return $this->ports[$portNo] ?? null;
     }
@@ -179,10 +179,10 @@ class PortManager
     /**
      * Get port instance with corresponding port number
      *
-     * @param $name
+     * @param string $name
      * @return ServerPort|null
      */
-    public function getPortFromName($name)
+    public function getPortFromName(string $name): ?ServerPort
     {
         return $this->namePorts[$name] ?? null;
     }
@@ -228,7 +228,7 @@ class PortManager
      * @param int $fd
      * @return ServerPort|null
      */
-    public function getPortFromFd(int $fd)
+    public function getPortFromFd(int $fd): ?ServerPort
     {
         $clientInfo = Server::$instance->getClientInfo($fd);
         return $this->getPortFromPortNo($clientInfo->getServerPort());

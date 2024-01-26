@@ -23,7 +23,7 @@ class AtomicLong
      *
      * @param int $initValue
      */
-    public function __construct($initValue = 0)
+    public function __construct(int $initValue = 0)
     {
         $this->swooleAtomicLong = new \Swoole\Atomic\Long($initValue);
     }
@@ -52,8 +52,8 @@ class AtomicLong
 
     /**
      * Get
-     * 
-     * @return mixed
+     *
+     * @return int
      */
     public function get()
     {
@@ -75,9 +75,9 @@ class AtomicLong
      *
      * @param int $cmp_value
      * @param int $set_value
-     * @return mixed  如果不等于返回false
+     * @return bool  如果不等于返回false
      */
-    public function cmpset(int $cmp_value, int $set_value)
+    public function cmpset(int $cmp_value, int $set_value): bool
     {
         return $this->swooleAtomicLong->cmpset($cmp_value, $set_value);
     }

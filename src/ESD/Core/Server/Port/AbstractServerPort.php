@@ -182,6 +182,7 @@ abstract class AbstractServerPort
      * @param $server
      * @param int $fd
      * @param int $reactorId
+     * @throws \Exception
      */
     public function _onConnect($server, int $fd, int $reactorId)
     {
@@ -256,6 +257,7 @@ abstract class AbstractServerPort
     /**
      * @param $request
      * @param $response
+     * @return false|void
      * @throws \Exception
      */
     public function _onRequest($request, $response)
@@ -390,6 +392,7 @@ abstract class AbstractServerPort
     /**
      * @param $server
      * @param $request
+     * @throws \Exception
      */
     public function _onOpen($server, $request)
     {

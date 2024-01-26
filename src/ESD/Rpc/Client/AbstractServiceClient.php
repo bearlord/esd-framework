@@ -145,7 +145,7 @@ abstract class AbstractServiceClient extends Component
     /**
      * @return Client
      */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
@@ -153,7 +153,7 @@ abstract class AbstractServiceClient extends Component
     /**
      * @param Client $client
      */
-    public function setClient($client): void
+    public function setClient(Client $client): void
     {
         $this->client = $client;
     }

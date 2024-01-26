@@ -70,7 +70,7 @@ class PluginInterfaceManager implements PluginInterface
      * @param String $className
      * @return PluginInterface|null
      */
-    public function getPlug(String $className)
+    public function getPlug(String $className): ?PluginInterface
     {
         $plugin = $this->orderClassList[$className] ?? null;
         if ($plugin instanceof PluginInterface) {
@@ -83,7 +83,7 @@ class PluginInterfaceManager implements PluginInterface
     /**
      * @inheritDoc
      * @param Context $context
-     * @return mixed|void
+     * @return void
      * @throws \Exception
      */
     public function init(Context $context)
@@ -98,7 +98,7 @@ class PluginInterfaceManager implements PluginInterface
     /**
      * @inheritDoc
      * @param Context $context
-     * @return mixed|void
+     * @return void
      */
     public function beforeServerStart(Context $context)
     {
@@ -120,7 +120,7 @@ class PluginInterfaceManager implements PluginInterface
     /**
      * @inheritDoc
      * @param Context $context
-     * @return mixed|void
+     * @return void
      * @throws \Exception
      */
     public function beforeProcessStart(Context $context)

@@ -21,7 +21,7 @@ trait ToConfigArray
      *
      * @throws \ReflectionException
      */
-    public function toConfigArray()
+    public function toConfigArray(): array
     {
         $config = [];
         if ($this->reflectionClass == null) {
@@ -57,10 +57,10 @@ trait ToConfigArray
     /**
      * Camel case to underline case
      *
-     * @param $var
-     * @return mixed
+     * @param string $var
+     * @return float|int|string
      */
-    protected function toUnderlineCase($var)
+    protected function toUnderlineCase(string $var): string
     {
         if (is_numeric($var)) {
             return $var;
@@ -80,10 +80,10 @@ trait ToConfigArray
     /**
      * Build from config
      *
-     * @param $config
+     * @param array|null $config
      * @return static
      */
-    public function buildFromConfig($config)
+    public function buildFromConfig(?array $config): self
     {
         if ($config == null) {
             return $this;
@@ -101,10 +101,10 @@ trait ToConfigArray
     /**
      * Underline to Camel Case
      *
-     * @param $var
-     * @return mixed
+     * @param string $var
+     * @return string
      */
-    protected function toCamelCase($var)
+    protected function toCamelCase(string $var): string
     {
         if (is_numeric($var)) {
             return $var;

@@ -17,18 +17,30 @@ use ESD\Core\Server\Process\Process;
 class ProcessConfig extends BaseConfig
 {
     const key = "esd.process";
+
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var string
+     */
     protected $className;
+
+    /**
+     * @var string
+     */
     protected $groupName;
 
     /**
      * ProcessConfig constructor.
-     * @param $className
-     * @param $name
-     * @param string $groupName
-     * @throws ConfigException
+     * @param string|null $className
+     * @param string|null $name
+     * @param string|null $groupName
+     * @throws \ESD\Core\Plugins\Config\ConfigException
      */
-    public function __construct($className = '', $name = '', $groupName = 'DefaultGroup')
+    public function __construct(?string $className = '', ?string $name = '', ?string $groupName = 'DefaultGroup')
     {
         parent::__construct(self::key, true, "name");
         if ($groupName == Process::WORKER_GROUP) {
@@ -40,9 +52,9 @@ class ProcessConfig extends BaseConfig
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -56,9 +68,9 @@ class ProcessConfig extends BaseConfig
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getClassName()
+    public function getClassName(): ?string
     {
         return $this->className;
     }
@@ -72,9 +84,9 @@ class ProcessConfig extends BaseConfig
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getGroupName()
+    public function getGroupName(): ?string
     {
         return $this->groupName;
     }

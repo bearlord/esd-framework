@@ -22,6 +22,7 @@ class MasterProcess extends Process
     /**
      * MasterProcess constructor.
      * @param Server $server
+     * @throws \Exception
      */
     public function __construct(Server $server)
     {
@@ -30,7 +31,7 @@ class MasterProcess extends Process
 
     /**
      * inheritDoc
-     * @return mixed|void
+     * @return void
      */
     public function onProcessStart()
     {
@@ -53,7 +54,7 @@ class MasterProcess extends Process
      *
      * @param Message $message
      * @param Process $fromProcess
-     * @return mixed|void
+     * @return void
      */
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
@@ -62,7 +63,7 @@ class MasterProcess extends Process
 
     /**
      * @inheritDoc
-     * @return mixed|void
+     * @return void
      */
     public function init()
     {
