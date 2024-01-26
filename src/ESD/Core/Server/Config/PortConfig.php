@@ -481,7 +481,7 @@ class PortConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getSslCiphers(): string
+    public function getSslCiphers(): ?string
     {
         return $this->sslCiphers;
     }
@@ -674,9 +674,9 @@ class PortConfig extends BaseConfig
     /**
      * Get ssl method
      *
-     * @return string
+     * @return string|null
      */
-    public function getSslMethod(): string
+    public function getSslMethod(): ?string
     {
         return $this->sslMethod;
     }

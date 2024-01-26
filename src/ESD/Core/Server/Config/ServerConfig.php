@@ -590,9 +590,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSocketBufferSize(): int
+    public function getSocketBufferSize(): ?int
     {
         return $this->socketBufferSize;
     }
