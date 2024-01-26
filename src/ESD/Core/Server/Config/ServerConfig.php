@@ -445,7 +445,7 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLogFile(): ?string
     {
@@ -510,7 +510,7 @@ class ServerConfig extends BaseConfig
 
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getUser(): ?string
     {
@@ -526,7 +526,7 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getGroup(): ?string
     {
@@ -542,7 +542,7 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getChroot(): ?string
     {
@@ -558,9 +558,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPidFile(): string
+    public function getPidFile(): ?string
     {
         return $this->pidFile;
     }
@@ -622,7 +622,7 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getUploadTmpDir(): ?string
     {
@@ -654,7 +654,7 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDocumentRoot(): ?string
     {
@@ -702,7 +702,7 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getWebsocketSubprotocol(): ?string
     {
