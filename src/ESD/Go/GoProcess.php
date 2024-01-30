@@ -42,7 +42,10 @@ class GoProcess extends Process
      */
     public function onProcessStop()
     {
-        $this->log->info(Yii::t('esd', 'Process stop'));
+        //$this->log->info(Yii::t('esd', 'Process stop'));
+        $code = swoole_errno();
+        $msg = swoole_strerror($code);
+        $this->log->info(Yii::t('esd', 'Process stop') . " Error Code: {$code}, Error Message: {$msg}");
     }
 
     /**
