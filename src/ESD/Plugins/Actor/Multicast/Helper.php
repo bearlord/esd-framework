@@ -22,7 +22,7 @@ class Helper
      * @throws BadUTF8
      * @throws Exception
      */
-    static public function checkChannelFilter($filter)
+    static public function checkChannelFilter(string $filter)
     {
         $max = DIGet(MulticastConfig::class)->getChannelMaxLength();
         $length = strlen($filter);
@@ -74,7 +74,7 @@ class Helper
      * @return bool
      * @throws BadUTF8
      */
-    static public function validateUTF8($string)
+    static public function validateUTF8(string $string): bool
     {
         $pop_10s = 0;
 
