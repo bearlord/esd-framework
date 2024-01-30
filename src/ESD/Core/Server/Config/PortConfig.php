@@ -933,7 +933,7 @@ class PortConfig extends BaseConfig
     /**
      * @var bool auto send function's return value to remote port
      */
-    protected $autoSendReturnValue;
+    protected $autoSendReturnValue = false;
 
     /**
      * @return bool
