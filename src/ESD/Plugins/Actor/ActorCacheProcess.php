@@ -241,7 +241,12 @@ class ActorCacheProcess extends Process
             foreach ($actorKeys as $k => $v) {
                 $value = $this->redis()->get($v);
                 $valueArray = json_decode($value, true);
-                Actor::create($valueArray[0], $valueArray[1], $valueArray[2], false, 30);
+
+                try {
+                    Actor::create($valueArray[0], $valueArray[1], $valueArray[2], false, 30);
+                } catch (\Exception $exception) {
+                    Server::$instance->getLog()->critical($exception);
+                }
 
                 Coroutine::sleep(0.001);
             }

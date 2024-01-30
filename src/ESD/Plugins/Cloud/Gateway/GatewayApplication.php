@@ -165,10 +165,10 @@ class GatewayApplication extends Server
     /**
      * @inheritDoc
      * @param Process $process
-     * @param int $exit_code
+     * @param int $exitCode
      * @param int $signal
      */
-    public function onWorkerError(Process $process, int $exit_code, int $signal)
+    public function onWorkerError(Process $process, int $exitCode, int $signal)
     {
         return;
     }
