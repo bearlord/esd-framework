@@ -938,7 +938,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function getAutoSendReturnValue(): bool
+    public function getAutoSendReturnValue(): ?bool
     {
         return $this->autoSendReturnValue;
     }
