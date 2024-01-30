@@ -37,7 +37,7 @@ function enableRuntimeCoroutine(bool $enable = true, int $flags = SWOOLE_HOOK_AL
  * @param $data
  * @return string
  */
-function serverSerialize($data)
+function serverSerialize($data): string
 {
     return serialize($data);
 }
@@ -61,7 +61,7 @@ function serverUnSerialize(string $data)
  * @param array $params
  * @return int
  */
-function addTimerTick(int $msec, callable $callback, ... $params)
+function addTimerTick(int $msec, callable $callback, ... $params): int
 {
     return \Swoole\Timer::tick($msec, $callback, ...$params);
 }
@@ -72,7 +72,7 @@ function addTimerTick(int $msec, callable $callback, ... $params)
  * @param int $timerId
  * @return bool
  */
-function clearTimerTick(int $timerId)
+function clearTimerTick(int $timerId): bool
 {
     return \Swoole\Timer::clear($timerId);
 }
@@ -85,7 +85,7 @@ function clearTimerTick(int $timerId)
  * @param array $params
  * @return int
  */
-function addTimerAfter(int $msec, callable $callback, ... $params)
+function addTimerAfter(int $msec, callable $callback, ... $params): int
 {
     return \Swoole\Timer::after($msec, $callback, ...$params);
 }
@@ -94,7 +94,7 @@ function addTimerAfter(int $msec, callable $callback, ... $params)
  * Extent parent's context
  *
  * @param callable $run
- * @return int
+ * @return false|int|void
  */
 function goWithContext(callable $run)
 {
@@ -118,9 +118,9 @@ function goWithContext(callable $run)
 /**
  * Get context
  *
- * @return \ESD\Core\Context\Context
+ * @return \ESD\Core\Context\Context|null
  */
-function getContext()
+function getContext(): ?\ESD\Core\Context\Context
 {
     return ContextManager::getInstance()->getContext();
 }
@@ -128,11 +128,11 @@ function getContext()
 /**
  * Set context value
  *
- * @param $key
+ * @param string $key
  * @param $value
  * @return mixed
  */
-function setContextValue($key, $value)
+function setContextValue(string $key, $value)
 {
     getContext()->add($key, $value);
 }
@@ -140,19 +140,19 @@ function setContextValue($key, $value)
 /**
  * Get context value
  *
- * @param $key
+ * @param string $key
  * @return mixed
  */
-function getContextValue($key)
+function getContextValue(string $key)
 {
     return getContext()->get($key);
 }
 
 /**
- * @param $key
+ * @param string $key
  * @return bool
  */
-function deleteContextValue($key)
+function deleteContextValue(string $key): bool
 {
     return getContext()->delete($key);
 }
@@ -160,12 +160,12 @@ function deleteContextValue($key)
 /**
  * Set context value with class
  *
- * @param $key
+ * @param string $key
  * @param $value
- * @param $class
+ * @param string $class
  * @return mixed
  */
-function setContextValueWithClass($key, $value, $class)
+function setContextValueWithClass(string $key, $value, string $class)
 {
     getContext()->addWithClass($key, $value, $class);
 }
@@ -205,9 +205,9 @@ function getDeepContextValueByClassName($key)
 /**
  * Clear directory
  *
- * @param null $path
+ * @param string|null $path
  */
-function clearDir($path = null)
+function clearDir(?string $path = null)
 {
     if (is_dir($path)) {
         $p = scandir($path);
@@ -227,12 +227,12 @@ function clearDir($path = null)
 /**
  * DI get
  *
- * @param $name
- * @param array $params
+ * @param string $name
+ * @param array|null $params
  * @return mixed
- * @throws Exception
+ * @throws \Exception
  */
-function DIGet($name, $params = [])
+function DIGet(string $name, ?array $params = [])
 {
     return DI::getInstance()->get($name, $params);
 }
@@ -240,12 +240,12 @@ function DIGet($name, $params = [])
 /**
  * DI Set
  *
- * @param $name
+ * @param string $name
  * @param $value
- * @return mixed
- * @throws Exception
+ * @return void
+ * @throws \Exception
  */
-function DISet($name, $value)
+function DISet(string $name, $value)
 {
     DI::getInstance()->set($name, $value);
 }
@@ -273,12 +273,12 @@ function call($callback, array $args = [])
     return $result;
 }
 
-if (! function_exists('parallel')) {
+if (!function_exists('parallel')) {
     /**
      * @param callable[] $callables
      * @param int $concurrent if $concurrent is equal to 0, that means unlimit
      */
-    function parallel(array $callables, int $concurrent = 0)
+    function parallel(array $callables, int $concurrent = 0): array
     {
         $parallel = new Parallel($concurrent);
         foreach ($callables as $key => $callable) {
