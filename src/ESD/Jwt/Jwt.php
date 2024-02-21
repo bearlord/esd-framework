@@ -391,7 +391,6 @@ class Jwt
             throw new TokenValidException("Token parse invalid", 500);
         }
 
-        var_dump($payload);
         switch (true) {
             case isset($payload["scope"]) && $payload["scope"] != Jwt::SCOPE_REFRESH;
                 throw new TokenValidException("Token type is invalid", 401);
