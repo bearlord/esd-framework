@@ -129,6 +129,8 @@ class RouteAspect extends OrderAspect
                 return;
             }
             $controllerInstance = $this->getController($routeTool->getControllerName());
+            $controllerInstance->initialization($routeTool->getControllerName(), $routeTool->getMethodName());
+
             $clientData->setResponseRaw($controllerInstance->handle($routeTool->getControllerName(), $routeTool->getMethodName(), $routeTool->getParams()));
 
             if ($this->filterManager->filter(AbstractFilter::FILTER_ROUTE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
@@ -238,6 +240,8 @@ class RouteAspect extends OrderAspect
                 return;
             }
             $controllerInstance = $this->getController($routeTool->getControllerName());
+            $controllerInstance->initialization($routeTool->getControllerName(), $routeTool->getMethodName());
+
             $clientData->setResponseRaw($controllerInstance->handle($routeTool->getControllerName(), $routeTool->getMethodName(), $routeTool->getParams()));
             if ($this->filterManager->filter(AbstractFilter::FILTER_ROUTE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
                 return;
@@ -356,6 +360,8 @@ class RouteAspect extends OrderAspect
                 return;
             }
             $controllerInstance = $this->getController($routeTool->getControllerName());
+            $controllerInstance->initialization($routeTool->getControllerName(), $routeTool->getMethodName());
+
             $clientData->setResponseRaw($controllerInstance->handle($routeTool->getControllerName(), $routeTool->getMethodName(), $routeTool->getParams()));
 
             if ($this->filterManager->filter(AbstractFilter::FILTER_ROUTE, $clientData) == AbstractFilter::RETURN_END_ROUTE) {
@@ -436,6 +442,8 @@ class RouteAspect extends OrderAspect
                 return;
             }
             $controllerInstance = $this->getController($routeTool->getControllerName());
+            $controllerInstance->initialization($routeTool->getControllerName(), $routeTool->getMethodName());
+
             $controllerInstance->handle($routeTool->getControllerName(), $routeTool->getMethodName(), $routeTool->getParams());
         } catch (\Throwable $e) {
             try {
