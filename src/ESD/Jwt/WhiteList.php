@@ -2,11 +2,7 @@
 
 namespace ESD\Jwt;
 
-use Doctrine\Common\Annotations\Annotation;
 use ESD\Plugins\Redis\GetRedis;
-use Hyperf\Config\Annotation\Value;
-use Hyperf\Di\Annotation\AbstractAnnotation;
-use Hyperf\Di\Annotation\Inject;
 
 class WhiteList
 {
@@ -86,7 +82,7 @@ class WhiteList
      * @param array $payload
      * @return bool
      */
-    public function effective(array $payload)
+    public function effective(array $payload): bool
     {
         switch (true) {
             case ($this->loginType == 'mpop'):
@@ -102,22 +98,22 @@ class WhiteList
     }
 
     /**
-     * @param $uid
-     * @param $version
+     * @param string $uid
+     * @param string $version
      * @param string $type
      * @return bool
      */
-    public function add($uid, $version, $type = Jwt::SCOPE_TOKEN)
+    public function add(string $uid,string $version, $type = Jwt::SCOPE_TOKEN): bool
     {
         return $this->redis()->set($this->cachePrefix . $type . ":" . $uid, $version);
     }
 
     /**
-     * @param $uid
+     * @param string $uid
      * @param string $type
      * @return bool
      */
-    public function remove($uid, $type = Jwt::SCOPE_TOKEN)
+    public function remove(string $uid, string $type = Jwt::SCOPE_TOKEN): bool
     {
         return $this->redis()->set($this->cachePrefix . $type . ":" . $uid, 0, 7200);
     }
