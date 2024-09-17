@@ -18,6 +18,7 @@ use ESD\Yii\Plugin\Mongodb\MongodbPools;
 use ESD\Yii\Yii;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Plugin\Pdo\PdoPools;
+use ESD\Yii\Plugin\Pdo\PdoPool;
 use FastRoute\Dispatcher;
 
 /**
@@ -291,6 +292,7 @@ class Application extends ServiceLocator
             /** @var PdoPools $pdoPools */
             $pdoPools = getDeepContextValueByClassName(PdoPools::class);
             if (!empty($pdoPools)) {
+                /** @var PdoPool $pool */
                 $pool = $pdoPools->getPool($poolKey);
                 if ($pool == null) {
                     throw new \PDOException("No Pdo connection pool named {$poolKey} was found");

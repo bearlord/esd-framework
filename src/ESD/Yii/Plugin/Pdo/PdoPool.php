@@ -9,7 +9,9 @@ namespace ESD\Yii\Plugin\Pdo;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Pool\Pool;
 use ESD\Coroutine\Coroutine;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Db\Connection;
+use ESD\Yii\Db\Exception;
 
 /**
  * Class PdoPool
@@ -22,7 +24,7 @@ class PdoPool extends Pool
      */
     protected $pool;
 
-    /** @var Config  */
+    /** @var Config */
     protected $config;
 
     /**
@@ -45,35 +47,43 @@ class PdoPool extends Pool
      * @return Connection
      * @throws \ESD\Yii\Db\Exception
      */
-    protected function connect(Config $config)
+    protected function connect(Config $config): Connection
     {
-        $db = new Connection();
-        $db->poolName = $config->getName();
-        $db->dsn = $config->getDsn();
-        $db->username = $config->getUsername();
-        $db->password = $config->getPassword();
-        $db->charset = $config->getCharset();
-        $db->tablePrefix = $config->getTablePrefix();
-        $db->enableSchemaCache = $config->getEnableSchemaCache();
-        $db->schemaCacheDuration = $config->getSchemaCacheDuration();
-        $db->schemaCache = $config->getSchemaCache();
-        $db->open();
+        try {
+            $db = new Connection([
+                "poolName" => $config->getName(),
+                "dsn" => $config->getDsn(),
+                "username" => $config->getUsername(),
+                "password" => $config->getPassword(),
+                "charset" => $config->getCharset(),
+                "tablePrefix" => $config->getTablePrefix(),
+                "enableSchemaCache" => $config->getEnableSchemaCache(),
+                "schemaCacheDuration" => $config->getSchemaCacheDuration(),
+                "schemaCache" => $config->getSchemaCache(),
+            ]);
+            $db->open();
+        } catch (Exception $e) {
+            Server::$instance->getLog()->error($e->getMessage());
+
+            throw new Exception($e->getMessage(), $e->errorInfo, (int)$e->getCode(), $e);
+        }
+
         return $db;
     }
 
     /**
-     * @return mixed
+     * @return \ESD\Yii\Db\Connection
      */
-    public function db()
+    public function db(): Connection
     {
         $contextKey = sprintf("Pdo:%s", $this->getConfig()->getName());
 
         $db = getContextValue($contextKey);
- 
+
         if ($db == null) {
             /** @var Connection $db */
             $db = $this->pool->pop();
-            
+
             \Swoole\Coroutine::defer(function () use ($contextKey) {
                 $db = getContextValue($contextKey);
                 $this->pool->push($db);
