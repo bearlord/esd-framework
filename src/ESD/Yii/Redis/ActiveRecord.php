@@ -66,7 +66,7 @@ class ActiveRecord extends BaseActiveRecord
      *
      * @return string[] the primary keys of this record.
      */
-    public static function primaryKey()
+    public static function primaryKey(): array
     {
         return ['id'];
     }
@@ -76,7 +76,7 @@ class ActiveRecord extends BaseActiveRecord
      * This method must be overridden by child classes to define available attributes.
      * @return array list of attribute names.
      */
-    public function attributes()
+    public function attributes(): array
     {
         throw new InvalidConfigException('The attributes() method of redis ActiveRecord has to be implemented by child classes.');
     }
@@ -96,7 +96,7 @@ class ActiveRecord extends BaseActiveRecord
     /**
      * @inheritdoc
      */
-    public function insert($runValidation = true, $attributes = null)
+    public function insert(?bool $runValidation = true, ?array $attributes = null): bool
     {
         if ($runValidation && !$this->validate($attributes)) {
             return false;
@@ -159,11 +159,11 @@ class ActiveRecord extends BaseActiveRecord
      * ~~~
      *
      * @param array $attributes attribute values (name-value pairs) to be saved into the table
-     * @param array $condition the conditions that will be put in the WHERE part of the UPDATE SQL.
+     * @param array|null $condition the conditions that will be put in the WHERE part of the UPDATE SQL.
      * Please refer to [[ActiveQuery::where()]] on how to specify this parameter.
      * @return int the number of rows updated
      */
-    public static function updateAll($attributes, $condition = null)
+    public static function updateAll(array $attributes, ?array $condition = null): int
     {
         if (empty($attributes)) {
             return 0;
@@ -262,11 +262,11 @@ class ActiveRecord extends BaseActiveRecord
      * Customer::deleteAll(['status' => 3]);
      * ~~~
      *
-     * @param array $condition the conditions that will be put in the WHERE part of the DELETE SQL.
+     * @param array|null $condition the conditions that will be put in the WHERE part of the DELETE SQL.
      * Please refer to [[ActiveQuery::where()]] on how to specify this parameter.
      * @return int the number of rows deleted
      */
-    public static function deleteAll($condition = null)
+    public static function deleteAll(array $condition = null)
     {
         $pks = self::fetchPks($condition);
         if (empty($pks)) {

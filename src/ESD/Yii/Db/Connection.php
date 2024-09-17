@@ -505,10 +505,7 @@ class Connection extends Component
             $result = call_user_func($callable, $this);
             array_pop($this->_queryCacheInfo);
             return $result;
-        } catch (\Exception $e) {
-            array_pop($this->_queryCacheInfo);
-            throw $e;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             array_pop($this->_queryCacheInfo);
             throw $e;
         }
@@ -546,10 +543,7 @@ class Connection extends Component
             $result = call_user_func($callable, $this);
             array_pop($this->_queryCacheInfo);
             return $result;
-        } catch (\Exception $e) {
-            array_pop($this->_queryCacheInfo);
-            throw $e;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             array_pop($this->_queryCacheInfo);
             throw $e;
         }
@@ -783,10 +777,7 @@ class Connection extends Component
             if ($transaction->isActive && $transaction->level === $level) {
                 $transaction->commit();
             }
-        } catch (\Exception $e) {
-            $this->rollbackTransactionOnLevel($transaction, $level);
-            throw $e;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             $this->rollbackTransactionOnLevel($transaction, $level);
             throw $e;
         }
@@ -1063,10 +1054,7 @@ class Connection extends Component
             $this->enableSlaves = false;
             try {
                 $result = call_user_func($callback, $this);
-            } catch (\Exception $e) {
-                $this->enableSlaves = true;
-                throw $e;
-            } catch (\Throwable $e) {
+            } catch (\Exception|\Throwable $e) {
                 $this->enableSlaves = true;
                 throw $e;
             }

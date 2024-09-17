@@ -52,7 +52,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function defaultExpressionBuilders()
+    protected function defaultExpressionBuilders(): array
     {
         return array_merge(parent::defaultExpressionBuilders(), [
             'ESD\Yii\Db\Conditions\LikeCondition' => 'ESD\Yii\Db\Cubrid\Conditions\LikeConditionBuilder',
@@ -63,7 +63,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @see https://www.cubrid.org/manual/en/9.3.0/sql/query/merge.html
      */
-    public function upsert($table, $insertColumns, $updateColumns, &$params)
+    public function upsert(string $table, $insertColumns, $updateColumns, array &$params): string
     {
         /** @var Constraint[] $constraints */
         list($uniqueNames, $insertNames, $updateNames) = $this->prepareUpsertColumns($table, $insertColumns, $updateColumns, $constraints);
@@ -119,36 +119,36 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * Creates a SQL statement for resetting the sequence value of a table's primary key.
      * The sequence will be reset such that the primary key of the next new row inserted
      * will have the specified value or 1.
-     * @param string $tableName the name of the table whose primary key sequence will be reset
+     * @param string $table the name of the table whose primary key sequence will be reset
      * @param mixed $value the value for the primary key of the next new row inserted. If this is not set,
      * the next new row's primary key will have a value 1.
      * @return string the SQL statement for resetting sequence
      * @throws InvalidArgumentException if the table does not exist or there is no sequence associated with the table.
      */
-    public function resetSequence($tableName, $value = null)
+    public function resetSequence(string $table, $value = null): string
     {
-        $table = $this->db->getTableSchema($tableName);
+        $table = $this->db->getTableSchema($table);
         if ($table !== null && $table->sequenceName !== null) {
-            $tableName = $this->db->quoteTableName($tableName);
+            $table = $this->db->quoteTableName($table);
             if ($value === null) {
                 $key = reset($table->primaryKey);
-                $value = (int) $this->db->createCommand("SELECT MAX(`$key`) FROM " . $this->db->schema->quoteTableName($tableName))->queryScalar() + 1;
+                $value = (int) $this->db->createCommand("SELECT MAX(`$key`) FROM " . $this->db->schema->quoteTableName($table))->queryScalar() + 1;
             } else {
                 $value = (int) $value;
             }
 
-            return 'ALTER TABLE ' . $this->db->schema->quoteTableName($tableName) . " AUTO_INCREMENT=$value;";
+            return 'ALTER TABLE ' . $this->db->schema->quoteTableName($table) . " AUTO_INCREMENT=$value;";
         } elseif ($table === null) {
-            throw new InvalidArgumentException("Table not found: $tableName");
+            throw new InvalidArgumentException("Table not found: $table");
         }
 
-        throw new InvalidArgumentException("There is not sequence associated with table '$tableName'.");
+        throw new InvalidArgumentException("There is not sequence associated with table '$table'.");
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildLimit($limit, $offset)
+    public function buildLimit(int $limit, int $offset): string
     {
         $sql = '';
         // limit is not optional in CUBRID
@@ -170,7 +170,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function selectExists($rawSql)
+    public function selectExists(string $rawSql): string
     {
         return 'SELECT CASE WHEN EXISTS(' . $rawSql . ') THEN 1 ELSE 0 END';
     }
@@ -179,7 +179,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @see http://www.cubrid.org/manual/93/en/sql/schema/table.html#drop-index-clause
      */
-    public function dropIndex($name, $table)
+    public function dropIndex(string $name, string $table): string
     {
         /** @var Schema $schema */
         $schema = $this->db->getSchema();
@@ -196,7 +196,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by CUBRID.
      */
-    public function addCheck($name, $table, $expression)
+    public function addCheck(string $name, string $table, string $expression): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by CUBRID.');
     }
@@ -205,7 +205,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by CUBRID.
      */
-    public function dropCheck($name, $table)
+    public function dropCheck(string $name, string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by CUBRID.');
     }
@@ -214,7 +214,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function addCommentOnColumn($table, $column, $comment)
+    public function addCommentOnColumn(string $table, string $column, string $comment): string
     {
         $definition = $this->getColumnDefinition($table, $column);
         $definition = trim(preg_replace("/COMMENT '(.*?)'/i", '', $definition));
@@ -230,7 +230,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function addCommentOnTable($table, $comment)
+    public function addCommentOnTable(string $table, string $comment): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' COMMENT ' . $this->db->quoteValue($comment);
     }
@@ -239,7 +239,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromColumn($table, $column)
+    public function dropCommentFromColumn(string $table, string $column): string
     {
         return $this->addCommentOnColumn($table, $column, '');
     }
@@ -248,7 +248,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromTable($table)
+    public function dropCommentFromTable(string $table): string
     {
         return $this->addCommentOnTable($table, '');
     }

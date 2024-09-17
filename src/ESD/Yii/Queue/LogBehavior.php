@@ -31,15 +31,15 @@ class LogBehavior extends Behavior
     /**
      * @inheritdoc
      */
-    public function events()
+    public function events(): array
     {
         return [
             Queue::EVENT_AFTER_PUSH => 'afterPush',
             Queue::EVENT_BEFORE_EXEC => 'beforeExec',
             Queue::EVENT_AFTER_EXEC => 'afterExec',
             Queue::EVENT_AFTER_ERROR => 'afterError',
-            cli\Queue::EVENT_WORKER_START => 'workerStart',
-            cli\Queue::EVENT_WORKER_STOP => 'workerStop',
+            Cli\Queue::EVENT_WORKER_START => 'workerStart',
+            Cli\Queue::EVENT_WORKER_STOP => 'workerStop',
         ];
     }
 

@@ -61,7 +61,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function defaultExpressionBuilders()
+    protected function defaultExpressionBuilders(): array
     {
         return array_merge(parent::defaultExpressionBuilders(), [
             'ESD\Yii\Db\JsonExpression' => 'ESD\Yii\Db\Mysql\JsonExpressionBuilder',
@@ -76,7 +76,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SQL statement for renaming a DB column.
      * @throws Exception
      */
-    public function renameColumn($table, $oldName, $newName)
+    public function renameColumn(string $table, string $oldName, string $newName): string
     {
         $quotedTable = $this->db->quoteTableName($table);
         $row = $this->db->createCommand('SHOW CREATE TABLE ' . $quotedTable)->queryOne();
@@ -109,7 +109,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @see https://bugs.mysql.com/bug.php?id=48875
      */
-    public function createIndex($name, $table, $columns, $unique = false)
+    public function createIndex(string $name, string $table, $columns, bool $unique = false): string
     {
         return 'ALTER TABLE '
         . $this->db->quoteTableName($table)
@@ -124,7 +124,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table whose foreign is to be dropped. The name will be properly quoted by the method.
      * @return string the SQL statement for dropping a foreign key constraint.
      */
-    public function dropForeignKey($name, $table)
+    public function dropForeignKey(string $name, string $table): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($table)
             . ' DROP FOREIGN KEY ' . $this->db->quoteColumnName($name);
@@ -136,7 +136,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table that the primary key constraint will be removed from.
      * @return string the SQL statement for removing a primary key constraint from an existing table.
      */
-    public function dropPrimaryKey($name, $table)
+    public function dropPrimaryKey(string $name, string $table): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' DROP PRIMARY KEY';
     }
@@ -144,7 +144,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function dropUnique($name, $table)
+    public function dropUnique(string $name, string $table): string
     {
         return $this->dropIndex($name, $table);
     }
@@ -153,7 +153,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by MySQL.
      */
-    public function addCheck($name, $table, $expression)
+    public function addCheck(string $name, string $table, string $expression): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by MySQL.');
     }
@@ -162,7 +162,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by MySQL.
      */
-    public function dropCheck($name, $table)
+    public function dropCheck(string $name, string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by MySQL.');
     }
@@ -171,30 +171,30 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * Creates a SQL statement for resetting the sequence value of a table's primary key.
      * The sequence will be reset such that the primary key of the next new row inserted
      * will have the specified value or 1.
-     * @param string $tableName the name of the table whose primary key sequence will be reset
+     * @param string $table the name of the table whose primary key sequence will be reset
      * @param mixed $value the value for the primary key of the next new row inserted. If this is not set,
      * the next new row's primary key will have a value 1.
      * @return string the SQL statement for resetting sequence
      * @throws InvalidArgumentException if the table does not exist or there is no sequence associated with the table.
      */
-    public function resetSequence($tableName, $value = null)
+    public function resetSequence(string $table, $value = null): string
     {
-        $table = $this->db->getTableSchema($tableName);
+        $table = $this->db->getTableSchema($table);
         if ($table !== null && $table->sequenceName !== null) {
-            $tableName = $this->db->quoteTableName($tableName);
+            $table = $this->db->quoteTableName($table);
             if ($value === null) {
                 $key = reset($table->primaryKey);
-                $value = $this->db->createCommand("SELECT MAX(`$key`) FROM $tableName")->queryScalar() + 1;
+                $value = $this->db->createCommand("SELECT MAX(`$key`) FROM $table")->queryScalar() + 1;
             } else {
                 $value = (int) $value;
             }
 
-            return "ALTER TABLE $tableName AUTO_INCREMENT=$value";
+            return "ALTER TABLE $table AUTO_INCREMENT=$value";
         } elseif ($table === null) {
-            throw new InvalidArgumentException("Table not found: $tableName");
+            throw new InvalidArgumentException("Table not found: $table");
         }
 
-        throw new InvalidArgumentException("There is no sequence associated with table '$tableName'.");
+        throw new InvalidArgumentException("There is no sequence associated with table '$table'.");
     }
 
     /**
@@ -204,7 +204,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table name. Meaningless for MySQL.
      * @return string the SQL statement for checking integrity
      */
-    public function checkIntegrity($check = true, $schema = '', $table = '')
+    public function checkIntegrity(bool $check = true, ?string $schema = '', ?string $table = ''): string
     {
         return 'SET FOREIGN_KEY_CHECKS = ' . ($check ? 1 : 0);
     }
@@ -212,7 +212,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildLimit($limit, $offset)
+    public function buildLimit(int $limit, int $offset): string
     {
         $sql = '';
         if ($this->hasLimit($limit)) {
@@ -233,7 +233,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function hasLimit($limit)
+    protected function hasLimit($limit): bool
     {
         // In MySQL limit argument must be nonnegative integer constant
         return ctype_digit((string) $limit);
@@ -242,7 +242,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function hasOffset($offset)
+    protected function hasOffset($offset): bool
     {
         // In MySQL offset argument must be nonnegative integer constant
         $offset = (string) $offset;
@@ -252,7 +252,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function prepareInsertValues($table, $columns, $params = [])
+    protected function prepareInsertValues(string $table, $columns, ?array $params = []): array
     {
         list($names, $placeholders, $values, $params) = parent::prepareInsertValues($table, $columns, $params);
         if (!$columns instanceof Query && empty($names)) {
@@ -272,7 +272,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @see https://downloads.mysql.com/docs/refman-5.1-en.pdf
      */
-    public function upsert($table, $insertColumns, $updateColumns, &$params)
+    public function upsert(string $table, $insertColumns, $updateColumns, array &$params): string
     {
         $insertSql = $this->insert($table, $insertColumns, $params);
         list($uniqueNames, , $updateNames) = $this->prepareUpsertColumns($table, $insertColumns, $updateColumns);
@@ -297,7 +297,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function addCommentOnColumn($table, $column, $comment)
+    public function addCommentOnColumn(string $table, string $column, string $comment): string
     {
         // Strip existing comment which may include escaped quotes
         $definition = trim(preg_replace("/COMMENT '(?:''|[^'])*'/i", '',
@@ -314,7 +314,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function addCommentOnTable($table, $comment)
+    public function addCommentOnTable(string $table, string $comment): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' COMMENT ' . $this->db->quoteValue($comment);
     }
@@ -323,7 +323,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromColumn($table, $column)
+    public function dropCommentFromColumn(string $table, string $column): string
     {
         return $this->addCommentOnColumn($table, $column, '');
     }
@@ -332,7 +332,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromTable($table)
+    public function dropCommentFromTable(string $table): string
     {
         return $this->addCommentOnTable($table, '');
     }

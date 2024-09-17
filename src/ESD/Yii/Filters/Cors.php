@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Filters;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\ActionFilter;
 use ESD\Yii\Base\InvalidConfigException;
@@ -97,7 +98,7 @@ class Cors extends ActionFilter
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         $this->request = $this->request ?: Yii::$app->getRequest();
         $this->response = $this->response ?: Yii::$app->getResponse();
@@ -197,7 +198,7 @@ class Cors extends ActionFilter
         if (isset($this->cors['Access-Control-Expose-Headers'])) {
             $responseHeaders['Access-Control-Expose-Headers'] = implode(', ', $this->cors['Access-Control-Expose-Headers']);
         }
-        
+
         if (isset($this->cors['Access-Control-Allow-Headers'])) {
             $responseHeaders['Access-Control-Allow-Headers'] = implode(', ', $this->cors['Access-Control-Allow-Headers']);
         }

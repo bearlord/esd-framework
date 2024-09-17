@@ -11,6 +11,7 @@ use ESD\Core\DI\DI;
 use ESD\Core\Server\Server;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
+use ESD\Nikic\FastRoute\Dispatcher;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\Session\HttpSession;
 use ESD\Yii\Di\ServiceLocator;
@@ -19,7 +20,6 @@ use ESD\Yii\Yii;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Plugin\Pdo\PdoPools;
 use ESD\Yii\Plugin\Pdo\PdoPool;
-use FastRoute\Dispatcher;
 
 /**
  * Class Application
@@ -85,13 +85,11 @@ class Application extends ServiceLocator
      * Returns static class instance, which can be used to obtain meta information.
      * @param bool $refresh whether to re-create static instance even, if it is already cached.
      * @return static class instance.
-     * @throws InvalidConfigException
      */
-    public static function instance($refresh = false)
+    public static function instance(?bool $refresh = false): self
     {
         $className = get_called_class();
         if ($refresh || !isset(self::$_instances[$className])) {
-            /** @var Application $instance */
             $instance = new self();
             self::$_instances[$className] = $instance;
         }
@@ -159,7 +157,7 @@ class Application extends ServiceLocator
      * It defaults to the directory containing the module class file.
      * @return string the root directory of the module.
      */
-    public function getBasePath()
+    public function getBasePath(): string
     {
         if ($this->_basePath === null) {
             $class = new \ReflectionClass($this);
@@ -175,7 +173,7 @@ class Application extends ServiceLocator
      * @param string $path the root directory of the module. This can be either a directory name or a [path alias](guide:concept-aliases).
      * @throws InvalidParamException if the directory does not exist.
      */
-    public function setBasePath($path)
+    public function setBasePath(string $path)
     {
         $path = Yii::getAlias($path);
         $p = strncmp($path, 'phar://', 7) === 0 ? $path : realpath($path);
@@ -195,7 +193,7 @@ class Application extends ServiceLocator
      * @return string the directory that stores vendor files.
      * Defaults to "vendor" directory under [[basePath]].
      */
-    public function getVendorPath()
+    public function getVendorPath(): string
     {
         if ($this->_vendorPath === null) {
             $this->setVendorPath($this->getBasePath() . DIRECTORY_SEPARATOR . 'vendor');
@@ -208,7 +206,7 @@ class Application extends ServiceLocator
      * Sets the directory that stores vendor files.
      * @param string $path the directory that stores vendor files.
      */
-    public function setVendorPath($path)
+    public function setVendorPath(string $path)
     {
         $this->_vendorPath = Yii::getAlias($path);
         Yii::setAlias('@vendor', $this->_vendorPath);
@@ -218,9 +216,9 @@ class Application extends ServiceLocator
 
     /**
      * Sets the web and webroot path
-     * @param $path
+     * @param string $path
      */
-    public function setWebPath($path)
+    public function setWebPath(string $path)
     {
         Yii::setAlias('@webroot', $path);
         Yii::setAlias('@web', '/');
@@ -233,7 +231,7 @@ class Application extends ServiceLocator
      * @return string the directory that stores runtime files.
      * Defaults to the "runtime" subdirectory under [[basePath]].
      */
-    public function getRuntimePath()
+    public function getRuntimePath(): string
     {
         if ($this->_runtimePath === null) {
             $this->setRuntimePath(realpath(dirname($this->getBasePath())) . DIRECTORY_SEPARATOR . 'bin/runtime');
@@ -246,18 +244,19 @@ class Application extends ServiceLocator
      * Sets the directory that stores runtime files.
      * @param string $path the directory that stores runtime files.
      */
-    public function setRuntimePath($path)
+    public function setRuntimePath(string $path)
     {
         $this->_runtimePath = Yii::getAlias($path);
         Yii::setAlias('@runtime', $this->_runtimePath);
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      * @return mixed
-     * @throws \Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function getDb($name = "default")
+    public function getDb(?string $name = "default")
     {
         $subname = "";
         if (strpos($name, ".") > 0) {
@@ -345,7 +344,7 @@ class Application extends ServiceLocator
      * @return \ESD\Yii\Log\Dispatcher the log dispatcher application component.
      * @throws InvalidConfigException
      */
-    public function getLog()
+    public function getLog(): \ESD\Yii\Log\Dispatcher
     {
         return $this->get('log');
     }
@@ -355,7 +354,7 @@ class Application extends ServiceLocator
      * @return ErrorHandler the error handler application component.
      * @throws InvalidConfigException
      */
-    public function getErrorHandler()
+    public function getErrorHandler(): ErrorHandler
     {
         return $this->get('errorHandler');
     }
@@ -383,8 +382,9 @@ class Application extends ServiceLocator
     /**
      * Returns the formatter component.
      * @return \ESD\Yii\I18n\Formatter the formatter application component.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getFormatter()
+    public function getFormatter(): \ESD\Yii\I18n\Formatter
     {
         return $this->get('formatter');
     }
@@ -394,7 +394,7 @@ class Application extends ServiceLocator
      * @return \ESD\Yii\I18n\I18N the internationalization application component.
      * @throws InvalidConfigException
      */
-    public function getI18n()
+    public function getI18n(): \ESD\Yii\I18n\I18N
     {
         return $this->get('i18n');
     }
@@ -404,7 +404,7 @@ class Application extends ServiceLocator
      * @return \ESD\Yii\Caching\Cache the cache application component. Null if the component is not enabled.
      * @throws InvalidConfigException
      */
-    public function getCache()
+    public function getCache(): \ESD\Yii\Caching\Cache
     {
         return $this->get('cache');
     }
@@ -412,8 +412,9 @@ class Application extends ServiceLocator
     /**
      * Returns the URL manager for this application.
      * @return \ESD\Yii\Web\UrlManager the URL manager for this application.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getUrlManager()
+    public function getUrlManager(): \ESD\Yii\Web\UrlManager
     {
         return $this->get('urlManager');
     }
@@ -422,18 +423,19 @@ class Application extends ServiceLocator
     /**
      * Returns the asset manager.
      * @return \ESD\Yii\Web\AssetManager the asset manager application component.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getAssetManager()
+    public function getAssetManager(): \ESD\Yii\Web\AssetManager
     {
         return $this->get('assetManager');
     }
 
     /**
      * Returns the security component.
-     * @return Security the security application component.
+     * @return \ESD\Yii\Base\Security the security application component.
      * @throws InvalidConfigException
      */
-    public function getSecurity()
+    public function getSecurity(): \ESD\Yii\Base\Security
     {
         return $this->get('security');
     }
@@ -441,6 +443,7 @@ class Application extends ServiceLocator
     /**
      * Returns the view object.
      * @return View|\ESD\Yii\Web\View the view application component that is used to render various view files.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     public function getView()
     {
@@ -451,7 +454,7 @@ class Application extends ServiceLocator
      * Returns the session component.
      * @return HttpSession the session component.
      */
-    public function getSession()
+    public function getSession(): HttpSession
     {
         $session = getDeepContextValueByClassName(HttpSession::class);
         if ($session == null) {
@@ -499,6 +502,7 @@ class Application extends ServiceLocator
 
     /**
      * @return \ESD\Yii\Mongodb\Connection|mixed
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @throws \ESD\Yii\Db\Exception
      */
     public function getMongodb()
@@ -555,7 +559,7 @@ class Application extends ServiceLocator
      * @return array
      * @throws InvalidConfigException
      */
-    public function createController($route)
+    public function createController($route): array
     {
         $route = "/" . trim($route, "/");
         if (strpos($route, '/') !== false) {
@@ -580,6 +584,7 @@ class Application extends ServiceLocator
                 ], [$id, $this]);
                 return [$controller, $actionName];
         }
+        return [];
     }
 
     /**
@@ -595,6 +600,7 @@ class Application extends ServiceLocator
         if (!empty($controller)) {
             return call_user_func([$controller[0], $controller[1]]);
         }
+        return null;
     }
 
     /**
@@ -603,9 +609,11 @@ class Application extends ServiceLocator
      * instances. It then calls [[Controller::runAction()]] to run the action with the given parameters.
      * If the route is empty, the method will use [[defaultRoute]].
      * @param string $route the route that specifies the action.
-     * @param array $params the parameters to be passed to the action
+     * @param array|null $params the parameters to be passed to the action
      * @return mixed the result of the action.
-     * @throws InvalidRouteException if the requested route cannot be resolved into an action successfully.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidRouteException if the requested route cannot be resolved into an action successfully.
      */
     public function runAction(string $route, ?array $params = [])
     {
@@ -613,10 +621,10 @@ class Application extends ServiceLocator
         if (is_array($parts)) {
             /* @var $controller Controller */
             list($controller, $actionID) = $parts;
-            $result = $controller->runAction($actionID, $params);
-
-            return $result;
+            return $controller->runAction($actionID, $params);
         }
+
+        return null;
     }
 
     /**

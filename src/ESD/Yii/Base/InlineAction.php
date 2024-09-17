@@ -45,8 +45,10 @@ class InlineAction extends Action
      * This method is mainly invoked by the controller.
      * @param array $params action parameters
      * @return mixed the result of the action
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ReflectionException
      */
-    public function runWithParams($params)
+    public function runWithParams(array $params)
     {
         $args = $this->controller->bindActionParams($this, $params);
         Yii::debug('Running action: ' . get_class($this->controller) . '::' . $this->actionMethod . '()', __METHOD__);

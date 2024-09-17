@@ -10,6 +10,7 @@ namespace ESD\Yii\Mongodb\File;
 use ESD\Yii\Db\ActiveQueryInterface;
 use ESD\Yii\Db\ActiveQueryTrait;
 use ESD\Yii\Db\ActiveRelationTrait;
+use ESD\Yii\Db\Connection;
 
 /**
  * ActiveQuery represents a Mongo query associated with an file Active Record class.
@@ -114,13 +115,13 @@ class ActiveQuery extends Query implements ActiveQueryInterface
 
     /**
      * Executes query and returns a single row of result.
-     * @param \ESD\Yii\Mongodb\Connection $db the Mongo connection used to execute the query.
+     * @param \ESD\Yii\Mongodb\File\Connection|null $db the Mongo connection used to execute the query.
      * If null, the Mongo connection returned by [[modelClass]] will be used.
      * @return ActiveRecord|array|null a single row of query result. Depending on the setting of [[asArray]],
      * the query result may be either an array or an ActiveRecord object. Null will be returned
      * if the query results in nothing.
      */
-    public function one($db = null)
+    public function one(Connection $db = null)
     {
         $row = parent::one($db);
         if ($row !== false) {

@@ -287,13 +287,13 @@ class Query extends Component implements QueryInterface
 
     /**
      * Executes the query and returns a single row of result.
-     * @param Connection $db the database connection used to execute the query.
+     * @param Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `elasticsearch` application
      * component will be used.
      * @return array|bool the first row (in terms of an array) of the query
      * result. False is returned if the query results in nothing.
      */
-    public function one($db = null)
+    public function one(\ESD\Yii\Db\Connection $db = null)
     {
         if ($this->emulateExecution) {
             return false;
@@ -450,7 +450,7 @@ class Query extends Component implements QueryInterface
         if ($this->emulateExecution) {
             return 0;
         }
-        
+
         $command = $this->createCommand($db);
 
         // performing a query with return size of 0, is equal to getting result stats such as count
@@ -815,7 +815,7 @@ class Query extends Component implements QueryInterface
     /**
      * @inheritdoc
      */
-    public function andWhere($condition)
+    public function andWhere(array $condition)
     {
         if ($this->where === null) {
             $this->where = $condition;
@@ -830,7 +830,7 @@ class Query extends Component implements QueryInterface
     /**
      * @inheritdoc
      */
-    public function orWhere($condition)
+    public function orWhere(array $condition)
     {
         if ($this->where === null) {
             $this->where = $condition;

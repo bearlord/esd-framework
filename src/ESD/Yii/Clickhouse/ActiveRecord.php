@@ -23,7 +23,7 @@ class ActiveRecord extends \ESD\Yii\Db\ActiveRecord
      * @inheritdoc
      * @return \ESD\Yii\Clickhouse\ActiveQuery the newly created [[\ESD\Yii\Clickhouse\ActiveQuery]] instance.
      */
-    public static function find()
+    public static function find(): \ESD\Yii\Db\ActiveQuery
     {
         return Yii::createObject(ActiveQuery::className(), [get_called_class()]);
     }
@@ -37,7 +37,7 @@ class ActiveRecord extends \ESD\Yii\Db\ActiveRecord
      *
      * @return string[] the primary key name(s) for this AR class.
      */
-    public static function primaryKey()
+    public static function primaryKey(): ?array
     {
         // TODO: Implement primaryKey() method.
         return null;
@@ -59,11 +59,12 @@ class ActiveRecord extends \ESD\Yii\Db\ActiveRecord
      * @param boolean $runValidation whether to perform validation (calling [[validate()]])
      * before saving the record. Defaults to `true`. If the validation fails, the record
      * will not be saved to the database and this method will return `false`.
-     * @param array $attributes list of attributes that need to be saved. Defaults to null,
+     * @param array|null $attributes list of attributes that need to be saved. Defaults to null,
      * meaning all attributes that are loaded from DB will be saved.
      * @return boolean whether the attributes are valid and the record is inserted successfully.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function insert($runValidation = true, $attributes = null)
+    public function insert(?bool $runValidation = true, ?array $attributes = null): bool
     {
         if ($runValidation && !$this->validate($attributes)) {
             Yii::info('Model not inserted due to validation error.', __METHOD__);

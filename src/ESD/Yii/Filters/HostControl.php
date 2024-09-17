@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Filters;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\ActionFilter;
 use ESD\Yii\Helpers\StringHelper;
@@ -119,7 +120,7 @@ class HostControl extends ActionFilter
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         $allowedHosts = $this->allowedHosts;
         if ($allowedHosts instanceof \Closure) {

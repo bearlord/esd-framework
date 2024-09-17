@@ -115,7 +115,9 @@ class Controller extends Component implements ViewContextInterface
      * @param string $id the ID of the action to be executed.
      * @param array $params the parameters (name-value pairs) to be passed to the action.
      * @return mixed the result of the action.
-     * @throws InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
      * @see createAction()
      */
     public function runAction($id, $params = [])
@@ -164,6 +166,10 @@ class Controller extends Component implements ViewContextInterface
      * @param string $route the route to be handled, e.g., 'view', 'comment/view', '/admin/comment/view'.
      * @param array $params the parameters to be passed to the action.
      * @return mixed the result of the action.
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidRouteException
+     * @throws \ESD\Yii\Console\Exception
+     * @throws \ESD\Yii\Console\UnknownCommandException
      * @see runAction()
      */
     public function run($route, $params = [])
@@ -184,6 +190,8 @@ class Controller extends Component implements ViewContextInterface
      * @param Action $action the action to be bound with parameters.
      * @param array $params the parameters to be bound to the action.
      * @return array the valid parameters that the action can run with.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ReflectionException
      */
     public function bindActionParams($action, $params)
     {
@@ -241,6 +249,7 @@ class Controller extends Component implements ViewContextInterface
      * method will be created and returned.
      * @param string $id the action ID.
      * @return Action|null the newly created action instance. Null if the ID doesn't resolve into any action.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     public function createAction($id)
     {
@@ -401,6 +410,8 @@ class Controller extends Component implements ViewContextInterface
      * @param string $content the static string being rendered
      * @return string the rendering result of the layout with the given static string as the `$content` variable.
      * If the layout is disabled, the string will be returned back.
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \Throwable
      * @since 2.0.1
      */
     public function renderContent($content)
@@ -431,7 +442,8 @@ class Controller extends Component implements ViewContextInterface
      * @param string $file the view file to be rendered. This can be either a file path or a [path alias](guide:concept-aliases).
      * @param array $params the parameters (name-value pairs) that should be made available in the view.
      * @return string the rendering result.
-     * @throws InvalidArgumentException if the view file does not exist.
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \Throwable
      */
     public function renderFile($file, $params = [])
     {
@@ -469,7 +481,7 @@ class Controller extends Component implements ViewContextInterface
      * [[viewPath]] directory.
      * @return string the directory containing the view files for this controller.
      */
-    public function getViewPath()
+    public function getViewPath(): string
     {
         if ($this->_viewPath === null) {
             $this->setViewPath('@app/Views');
@@ -531,10 +543,9 @@ class Controller extends Component implements ViewContextInterface
      * @param string $name The name of the parameter.
      * @param array &$args The array of arguments for the action, this function may append items to it.
      * @param array &$requestedParams The array with requested params, this function may write specific keys to it.
-     * @throws ErrorException when we cannot load a required service.
-     * @throws InvalidConfigException Thrown when there is an error in the DI configuration.
-     * @throws NotInstantiableException Thrown when a definition cannot be resolved to a concrete class
-     * (for example an interface type hint) without a proper definition in the container.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException Thrown when there is an error in the DI configuration.
+     * @throws \ESD\Yii\Di\NotInstantiableException
      * @since 2.0.36
      */
     final protected function bindInjectedParams(\ReflectionType $type, $name, &$args, &$requestedParams)

@@ -23,7 +23,7 @@ class Command extends \ESD\Yii\Db\Command
     /**
      * {@inheritdoc}
      */
-    public function execute()
+    public function execute(): ?int
     {
         $sql = $this->getSql();
         $params = $this->params;

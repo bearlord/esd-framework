@@ -90,7 +90,7 @@ class AttributeBehavior extends Behavior
     /**
      * @inheritdoc
      */
-    public function events()
+    public function events(): array
     {
         return array_fill_keys(
             array_keys($this->attributes),

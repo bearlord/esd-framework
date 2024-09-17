@@ -45,12 +45,13 @@ abstract class ActiveRecord extends BaseActiveRecord
      * ```
      *
      * @param array $attributes attribute values (name-value pairs) to be saved into the collection
-     * @param array $condition description of the objects to update.
+     * @param array|null $condition description of the objects to update.
      * Please refer to [[Query::where()]] on how to specify this parameter.
-     * @param array $options list of options in format: optionName => optionValue.
+     * @param array|null $options
      * @return int the number of documents updated.
+     * @throws \ESD\Yii\Mongodb\Exception
      */
-    public static function updateAll($attributes, $condition = [], $options = [])
+    public static function updateAll(array $attributes, ?array $condition = [], ?array $options = null): int
     {
         return static::getCollection()->update($condition, $attributes, $options);
     }
@@ -85,12 +86,13 @@ abstract class ActiveRecord extends BaseActiveRecord
      * Customer::deleteAll(['status' => 3]);
      * ```
      *
-     * @param array $condition description of the objects to delete.
+     * @param array|null $condition description of the objects to delete.
      * Please refer to [[Query::where()]] on how to specify this parameter.
-     * @param array $options list of options in format: optionName => optionValue.
+     * @param array|null $options
      * @return int the number of documents deleted.
+     * @throws \ESD\Yii\Mongodb\Exception
      */
-    public static function deleteAll($condition = [], $options = [])
+    public static function deleteAll(?array $condition = [], ?array $options = null): int
     {
         return static::getCollection()->remove($condition, $options);
     }
@@ -139,7 +141,7 @@ abstract class ActiveRecord extends BaseActiveRecord
      *
      * @return string[] the primary keys of the associated Mongo collection.
      */
-    public static function primaryKey()
+    public static function primaryKey(): array
     {
         return ['_id'];
     }
@@ -160,7 +162,7 @@ abstract class ActiveRecord extends BaseActiveRecord
      * @throws \ESD\Yii\Base\InvalidConfigException if not implemented
      * @return array list of attribute names.
      */
-    public function attributes()
+    public function attributes(): array
     {
         throw new InvalidConfigException('The attributes() method of mongodb ActiveRecord has to be implemented by child classes.');
     }
@@ -198,12 +200,12 @@ abstract class ActiveRecord extends BaseActiveRecord
      *
      * @param bool $runValidation whether to perform validation before saving the record.
      * If the validation fails, the record will not be inserted into the collection.
-     * @param array $attributes list of attributes that need to be saved. Defaults to null,
+     * @param array|null $attributes list of attributes that need to be saved. Defaults to null,
      * meaning all attributes that are loaded will be saved.
      * @return bool whether the attributes are valid and the record is inserted successfully.
      * @throws \Exception in case insert failed.
      */
-    public function insert($runValidation = true, $attributes = null)
+    public function insert(?bool $runValidation = true, ?array $attributes = null): bool
     {
         if ($runValidation && !$this->validate($attributes)) {
             return false;
@@ -346,7 +348,7 @@ abstract class ActiveRecord extends BaseActiveRecord
      * @param ActiveRecord $record record to compare to
      * @return bool whether the two active records refer to the same row in the same Mongo collection.
      */
-    public function equals($record)
+    public function equals($record): bool
     {
         if ($this->isNewRecord || $record->isNewRecord) {
             return false;
@@ -358,7 +360,7 @@ abstract class ActiveRecord extends BaseActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function toArray(array $fields = [], array $expand = [], $recursive = true)
+    public function toArray(array $fields = [], array $expand = [], ?bool $recursive = true): array
     {
         $data = parent::toArray($fields, $expand, false);
         if (!$recursive) {

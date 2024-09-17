@@ -299,7 +299,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
      * the query result may be either an array or an ActiveRecord object. `null` will be returned
      * if the query results in nothing.
      */
-    public function one($db = null)
+    public function one(Connection $db = null)
     {
         $row = parent::one($db);
         if ($row !== false) {
@@ -315,8 +315,9 @@ class ActiveQuery extends Query implements ActiveQueryInterface
      * @param Connection|null $db the DB connection used to create the DB command.
      * If `null`, the DB connection returned by [[modelClass]] will be used.
      * @return Command the created DB command instance.
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function createCommand($db = null)
+    public function createCommand(Connection $db = null): Command
     {
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;

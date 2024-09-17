@@ -1,4 +1,35 @@
-<?php
+<?php /** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection ALL */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+
+/** @noinspection PhpUndefinedVariableInspection */
 
 namespace ESD\Yii\Db\Taos;
 

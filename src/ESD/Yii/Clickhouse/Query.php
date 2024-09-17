@@ -169,7 +169,7 @@ class Query extends \ESD\Yii\Db\Query
     }
 
 
-    public function __call($name, $params)
+    public function __call(string $name, array $params)
     {
         $methods = ['getmeta', 'getdata', 'getextremes', 'gettotals', 'getcountall', 'getrows'];
         if (in_array(strtolower($name), $methods)) {

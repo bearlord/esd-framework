@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Filters;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\ActionFilter;
 use ESD\Yii\Web\Request;
@@ -78,7 +79,7 @@ class RateLimiter extends ActionFilter
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if ($this->user === null && Yii::$app->getUser()) {
             $this->user = Yii::$app->getUser()->getIdentity(false);

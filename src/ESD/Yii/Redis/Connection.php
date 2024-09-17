@@ -524,7 +524,7 @@ class Connection extends Component
      * @param array $params method call arguments
      * @return mixed
      */
-    public function __call($name, $params)
+    public function __call(string $name, array $params)
     {
         $redisHandle= $this->redis();
         $database  = Server::$instance->getConfigContext()->get('yii.components.cache.redis.database');

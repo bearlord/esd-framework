@@ -21,14 +21,14 @@ interface DynamicContentAwareInterface
      * is used internally to implement the content caching feature.
      * @return array a list of placeholders.
      */
-    public function getDynamicPlaceholders();
+    public function getDynamicPlaceholders(): array;
 
     /**
      * Sets a list of placeholders for dynamic content. This method
      * is used internally to implement the content caching feature.
      * @param array $placeholders a list of placeholders.
      */
-    public function setDynamicPlaceholders($placeholders);
+    public function setDynamicPlaceholders(array $placeholders);
 
     /**
      * Adds a placeholder for dynamic content.
@@ -36,5 +36,5 @@ interface DynamicContentAwareInterface
      * @param string $name the placeholder name.
      * @param string $statements the PHP statements for generating the dynamic content.
      */
-    public function addDynamicPlaceholder($name, $statements);
+    public function addDynamicPlaceholder(string $name, string $statements);
 }

@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Elasticsearch;
 
+use ESD\Yii\Base\InvalidParamException;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\InvalidCallException;
@@ -90,7 +91,7 @@ class ActiveRecord extends BaseActiveRecord
     /**
      * @inheritdoc
      */
-    public static function findOne($condition)
+    public static function findOne($condition): ?BaseActiveRecord
     {
         if (!is_array($condition)) {
             return static::get($condition);
@@ -237,7 +238,7 @@ class ActiveRecord extends BaseActiveRecord
      * @return mixed
      * @deprecated since 2.1.0
      */
-    public function getPrimaryKey($asArray = false)
+    public function getPrimaryKey(?bool $asArray = false)
     {
         $pk = static::primaryKey()[0];
         if ($asArray) {
@@ -287,7 +288,7 @@ class ActiveRecord extends BaseActiveRecord
     /**
      * @inheritdoc
      */
-    public function getOldPrimaryKey($asArray = false)
+    public function getOldPrimaryKey(?bool $asArray = false)
     {
         $pk = static::primaryKey()[0];
         if ($this->getIsNewRecord()) {
@@ -312,7 +313,7 @@ class ActiveRecord extends BaseActiveRecord
      *
      * @return string[] array of primary key attributes. Only the first element of the array will be used.
      */
-    final public static function primaryKey()
+    final public static function primaryKey(): ?array
     {
         return ['_id'];
     }
@@ -328,7 +329,7 @@ class ActiveRecord extends BaseActiveRecord
      * @return string[] list of attribute names.
      * @throws \ESD\Yii\Base\InvalidConfigException if not overridden in a child class.
      */
-    public function attributes()
+    public function attributes(): array
     {
         throw new InvalidConfigException('The attributes() method of Elasticsearch ActiveRecord has to be implemented by child classes.');
     }
@@ -453,9 +454,8 @@ class ActiveRecord extends BaseActiveRecord
      *
      * @param bool $runValidation whether to perform validation before saving the record.
      * If the validation fails, the record will not be inserted into the database.
-     * @param array $attributes list of attributes that need to be saved. Defaults to null,
+     * @param array|null $attributes list of attributes that need to be saved. Defaults to null,
      * meaning all attributes will be saved.
-     * @param array $options options given in this parameter are passed to Elasticsearch
      * as request URI parameters. These are among others:
      *
      * - `routing` define shard placement of this record.
@@ -467,7 +467,7 @@ class ActiveRecord extends BaseActiveRecord
      * By default the `op_type` is set to `create` if model primary key is present.
      * @return bool whether the attributes are valid and the record is inserted successfully.
      */
-    public function insert($runValidation = true, $attributes = null, $options = [ ])
+    public function insert(?bool $runValidation = true, ?array $attributes = null): bool
     {
         if ($runValidation && !$this->validate($attributes)) {
             return false;
@@ -479,6 +479,8 @@ class ActiveRecord extends BaseActiveRecord
 
         if ($this->getPrimaryKey() !== null) {
             $options['op_type'] = isset($options['op_type']) ? $options['op_type'] : 'create';
+        } else {
+            $options = [];
         }
 
         $response = static::getDb()->createCommand()->insert(
@@ -513,9 +515,8 @@ class ActiveRecord extends BaseActiveRecord
      *
      * @param bool $runValidation whether to perform validation before saving the record.
      * If the validation fails, the record will not be inserted into the database.
-     * @param array $attributeNames list of attribute names that need to be saved. Defaults to null,
+     * @param array|null $attributeNames list of attribute names that need to be saved. Defaults to null,
      * meaning all attributes that are loaded from DB will be saved.
-     * @param array $options options given in this parameter are passed to Elasticsearch
      * as request URI parameters. These are among others:
      *
      * - `routing` define shard placement of this record.
@@ -544,7 +545,7 @@ class ActiveRecord extends BaseActiveRecord
      * @throws InvalidParamException if no [[version]] is available and optimistic locking is enabled.
      * @throws Exception in case update failed.
      */
-    public function update($runValidation = true, $attributeNames = null, $options = [])
+    public function update(?bool $runValidation = true, ?array $attributeNames = null, ?array $options = null)
     {
         if ($runValidation && !$this->validate($attributeNames)) {
             return false;
@@ -658,7 +659,7 @@ class ActiveRecord extends BaseActiveRecord
      * @throws Exception on error.
      * @see [[ActiveRecord::primaryKeysByCondition()]]
      */
-    public static function updateAll($attributes, $condition = [])
+    public static function updateAll(array $attributes, ?array $condition = []): int
     {
         $primaryKeys = static::primaryKeysByCondition($condition);
         if (empty($primaryKeys)) {
@@ -834,7 +835,7 @@ class ActiveRecord extends BaseActiveRecord
      * @throws Exception on error.
      * @see [[ActiveRecord::primaryKeysByCondition()]]
      */
-    public static function deleteAll($condition = [])
+    public static function deleteAll(?array $condition = [])
     {
         $primaryKeys = static::primaryKeysByCondition($condition);
         if (empty($primaryKeys)) {
@@ -893,7 +894,7 @@ class ActiveRecord extends BaseActiveRecord
         throw new NotSupportedException('unlinkAll() is not supported by Elasticsearch, use unlink() instead.');
     }
 
-    public function link($name, $model, $extraColumns = [])
+    public function link(string $name, $model, array $extraColumns = [])
     {
         $relation = $this->getRelation($name);
 

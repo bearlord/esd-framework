@@ -66,11 +66,11 @@ class ActiveQuery extends Query implements ActiveQueryInterface
     }
 
     /**
-     * @param null $db
+     * @param \ESD\Yii\Clickhouse\Connection|null $db
      * @return ActiveRecord|null
      * @throws InvalidConfigException
      */
-    public function one($db = null)
+    public function one(\ESD\Yii\Db\Connection $db = null)
     {
         $row = parent::one($db);
         if ($row !== null) {

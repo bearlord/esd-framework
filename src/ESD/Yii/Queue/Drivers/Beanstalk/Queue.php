@@ -25,7 +25,7 @@ class Queue extends CliQueue
      * @var string connection host
      */
     public $host = 'localhost';
-    
+
     /**
      * @var int connection port
      */
@@ -68,6 +68,9 @@ class Queue extends CliQueue
 
     /**
      * @inheritdoc
+     * @noinspection PhpUndefinedClassConstantInspection
+     * @noinspection PhpUndefinedClassConstantInspection
+     * @noinspection PhpUndefinedClassConstantInspection
      */
     public function status($id)
     {

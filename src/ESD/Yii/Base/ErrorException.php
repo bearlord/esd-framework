@@ -33,14 +33,14 @@ class ErrorException extends \ErrorException
     /**
      * Constructs the exception.
      * @link https://secure.php.net/manual/en/errorexception.construct.php
-     * @param $message [optional]
-     * @param $code [optional]
-     * @param $severity [optional]
-     * @param $filename [optional]
-     * @param $lineno [optional]
-     * @param $previous [optional]
+     * @param string $message [optional]
+     * @param int|null $code [optional]
+     * @param int $severity [optional]
+     * @param string|null $filename [optional]
+     * @param int|null $lineno [optional]
+     * @param \Exception|null $previous [optional]
      */
-    public function __construct($message = '', $code = 0, $severity = 1, $filename = __FILE__, $lineno = __LINE__, \Exception $previous = null)
+    public function __construct(string $message = '', ?int $code = 0, ?int $severity = 1, ?string $filename = __FILE__, ?int $lineno = __LINE__, ?\Exception $previous = null)
     {
         parent::__construct($message, $code, $severity, $filename, $lineno, $previous);
 
@@ -80,7 +80,7 @@ class ErrorException extends \ErrorException
      * @param array $error error got from error_get_last()
      * @return bool if error is one of fatal type
      */
-    public static function isFatalError($error)
+    public static function isFatalError(array $error): bool
     {
         return isset($error['type']) && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_CORE_WARNING, E_COMPILE_ERROR, E_COMPILE_WARNING, self::E_HHVM_FATAL_ERROR]);
     }
@@ -88,7 +88,7 @@ class ErrorException extends \ErrorException
     /**
      * @return string the user-friendly name of this exception
      */
-    public function getName()
+    public function getName(): string
     {
         static $names = [
             E_COMPILE_ERROR => 'PHP Compile Error',
@@ -109,6 +109,6 @@ class ErrorException extends \ErrorException
             self::E_HHVM_FATAL_ERROR => 'HHVM Fatal Error',
         ];
 
-        return isset($names[$this->getCode()]) ? $names[$this->getCode()] : 'Error';
+        return $names[$this->getCode()] ?? 'Error';
     }
 }

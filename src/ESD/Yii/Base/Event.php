@@ -100,7 +100,7 @@ class Event extends BaseObject
      * handler list.
      * @see off()
      */
-    public static function on($class, $name, $handler, $data = null, $append = true)
+    public static function on(string $class, string $name, callable $handler, $data = null, ?bool $append = true)
     {
         $class = ltrim($class, '\\');
 

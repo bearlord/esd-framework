@@ -68,7 +68,7 @@ class ServiceLocator extends Component
      * @param string $name component or property name
      * @return mixed the named property value
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         if ($this->has($name)) {
             return $this->get($name);
@@ -83,7 +83,7 @@ class ServiceLocator extends Component
      * @param string $name the property name or the event name
      * @return bool whether the property value is null
      */
-    public function __isset($name)
+    public function __isset(string $name)
     {
         if ($this->has($name)) {
             return true;

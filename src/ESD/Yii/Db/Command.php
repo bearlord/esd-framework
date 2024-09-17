@@ -221,7 +221,7 @@ class Command extends Component
         }
         $sql = '';
         foreach (explode('?', $this->_sql) as $i => $part) {
-            $sql .= (isset($params[$i]) ? $params[$i] : '') . $part;
+            $sql .= ($params[$i] ?? '') . $part;
         }
 
         return $sql;
@@ -986,7 +986,7 @@ class Command extends Component
      * @return $this the command object itself
      * @since 2.0.8
      */
-    public function addCommentOnColumn($table, $column, $comment)
+    public function addCommentOnColumn($table, string $column, string $comment): Command
     {
         $sql = $this->db->getQueryBuilder()->addCommentOnColumn($table, $column, $comment);
 
@@ -1001,7 +1001,7 @@ class Command extends Component
      * @return $this the command object itself
      * @since 2.0.8
      */
-    public function addCommentOnTable($table, $comment)
+    public function addCommentOnTable(string $table, string $comment): Command
     {
         $sql = $this->db->getQueryBuilder()->addCommentOnTable($table, $comment);
 
@@ -1016,7 +1016,7 @@ class Command extends Component
      * @return $this the command object itself
      * @since 2.0.8
      */
-    public function dropCommentFromColumn($table, $column)
+    public function dropCommentFromColumn(string $table, string $column): Command
     {
         $sql = $this->db->getQueryBuilder()->dropCommentFromColumn($table, $column);
 
@@ -1030,7 +1030,7 @@ class Command extends Component
      * @return $this the command object itself
      * @since 2.0.8
      */
-    public function dropCommentFromTable($table)
+    public function dropCommentFromTable(string $table): Command
     {
         $sql = $this->db->getQueryBuilder()->dropCommentFromTable($table);
 
@@ -1044,9 +1044,10 @@ class Command extends Component
      * @param string|Query $subquery the select statement which defines the view.
      * This can be either a string or a [[Query]] object.
      * @return $this the command object itself.
+     * @throws \ESD\Yii\Db\Exception
      * @since 2.0.14
      */
-    public function createView($viewName, $subquery)
+    public function createView(string $viewName, $subquery): Command
     {
         $sql = $this->db->getQueryBuilder()->createView($viewName, $subquery);
 
@@ -1060,7 +1061,7 @@ class Command extends Component
      * @return $this the command object itself.
      * @since 2.0.14
      */
-    public function dropView($viewName)
+    public function dropView(string $viewName): Command
     {
         $sql = $this->db->getQueryBuilder()->dropView($viewName);
 
@@ -1074,7 +1075,7 @@ class Command extends Component
      * @return int number of rows affected by the execution.
      * @throws Exception execution failed
      */
-    public function execute()
+    public function execute(): ?int
     {
         $sql = $this->getSql();
         list($profile, $rawSql) = $this->logQuery(__METHOD__);
@@ -1145,6 +1146,7 @@ class Command extends Component
                 throw $this->db->getSchema()->convertException($e, $rawSql ?: $this->getRawSql());
             }
         }
+        return null;
     }
 
     /**
@@ -1161,10 +1163,10 @@ class Command extends Component
             Yii::info($rawSql, $category);
         }
         if (!$this->db->enableProfiling) {
-            return [false, isset($rawSql) ? $rawSql : null];
+            return [false, $rawSql ?? null];
         }
 
-        return [true, isset($rawSql) ? $rawSql : $this->getRawSql()];
+        return [true, $rawSql ?? $this->getRawSql()];
     }
 
     /**

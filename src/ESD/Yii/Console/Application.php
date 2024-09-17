@@ -99,7 +99,7 @@ class Application extends \ESD\Yii\Base\Application
      * @return static class instance.
      * @throws InvalidConfigException
      */
-    public static function instance($refresh = false)
+    public static function instance(?bool $refresh = false): \ESD\Yii\Base\Application
     {
         $className = get_called_class();
         if ($refresh || !isset(self::$_instances[$className])) {
@@ -187,7 +187,7 @@ class Application extends \ESD\Yii\Base\Application
      * @return array|false
      * @throws InvalidConfigException
      */
-    public function createController($route)
+    public function createController($route): array
     {
         // double slashes or leading/ending slashes may cause substr problem
         $route = trim($route, '/');

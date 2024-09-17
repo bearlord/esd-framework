@@ -104,14 +104,14 @@ class Cache extends \ESD\Yii\Caching\Cache
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
      * @param string $value the value to be cached
-     * @param int $expire the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
      */
-    protected function setValue($key, $value, $expire)
+    protected function setValue($key, $value, $duration): bool
     {
         $result = $this->db->getCollection($this->cacheCollection)
             ->update(['id' => $key], [
-                'expire' => $expire > 0 ? $expire + time() : 0,
+                'expire' => $duration > 0 ? $duration + time() : 0,
                 'data' => $value,
             ]);
 
@@ -119,7 +119,7 @@ class Cache extends \ESD\Yii\Caching\Cache
             $this->gc();
             return true;
         }
-        return $this->addValue($key, $value, $expire);
+        return $this->addValue($key, $value, $duration);
     }
 
     /**
@@ -128,24 +128,24 @@ class Cache extends \ESD\Yii\Caching\Cache
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
      * @param string $value the value to be cached
-     * @param int $expire the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
      */
-    protected function addValue($key, $value, $expire)
+    protected function addValue($key, $value, $duration): bool
     {
         $this->gc();
 
-        if ($expire > 0) {
-            $expire += time();
+        if ($duration > 0) {
+            $duration += time();
         } else {
-            $expire = 0;
+            $duration = 0;
         }
 
         try {
             $this->db->getCollection($this->cacheCollection)
                 ->insert([
                     'id' => $key,
-                    'expire' => $expire,
+                    'expire' => $duration,
                     'data' => $value,
                 ]);
 
@@ -160,8 +160,9 @@ class Cache extends \ESD\Yii\Caching\Cache
      * This method should be implemented by child classes to delete the data from actual cache storage.
      * @param string $key the key of the value to be deleted
      * @return bool if no error happens during deletion
+     * @throws \ESD\Yii\Mongodb\Exception
      */
-    protected function deleteValue($key)
+    protected function deleteValue($key): bool
     {
         $this->db->getCollection($this->cacheCollection)->remove(['id' => $key]);
         return true;
@@ -171,8 +172,9 @@ class Cache extends \ESD\Yii\Caching\Cache
      * Deletes all values from cache.
      * Child classes may implement this method to realize the flush operation.
      * @return bool whether the flush operation was successful.
+     * @throws \ESD\Yii\Mongodb\Exception
      */
-    protected function flushValues()
+    protected function flushValues(): bool
     {
         $this->db->getCollection($this->cacheCollection)->remove();
         return true;
@@ -182,6 +184,7 @@ class Cache extends \ESD\Yii\Caching\Cache
      * Removes the expired data values.
      * @param bool $force whether to enforce the garbage collection regardless of [[gcProbability]].
      * Defaults to false, meaning the actual deletion happens with the probability as specified by [[gcProbability]].
+     * @throws \ESD\Yii\Mongodb\Exception
      */
     public function gc($force = false)
     {

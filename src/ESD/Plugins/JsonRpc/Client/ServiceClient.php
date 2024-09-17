@@ -217,7 +217,7 @@ class ServiceClient extends AbstractServiceClient
      * @return mixed|void
      * @throws RpcException
      */
-    public function __call($name, $params)
+    public function __call(string $name, array $params)
     {
         return $this->request($name, $params);
     }

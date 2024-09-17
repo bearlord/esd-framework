@@ -16,7 +16,7 @@ namespace ESD\Yii\Db\Conditions;
 abstract class ConjunctionCondition implements ConditionInterface
 {
     /**
-     * @var mixed[]
+     * @var array
      */
     protected $expressions;
 
@@ -30,9 +30,9 @@ abstract class ConjunctionCondition implements ConditionInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array
      */
-    public function getExpressions()
+    public function getExpressions(): array
     {
         return $this->expressions;
     }
@@ -41,7 +41,7 @@ abstract class ConjunctionCondition implements ConditionInterface
      * Returns the operator that is represented by this condition class, e.g. `AND`, `OR`.
      * @return string
      */
-    abstract public function getOperator();
+    abstract public function getOperator(): string;
 
     /**
      * {@inheritdoc}

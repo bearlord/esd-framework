@@ -27,8 +27,9 @@ class QueuePool
 
     /**
      * QueuePool constructor.
+     * @param string $name
      * @param array $config
-     * @throws \Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     public function __construct(string $name, array $config)
     {

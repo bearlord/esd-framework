@@ -50,7 +50,7 @@ class InlineAction extends \ESD\Yii\Base\InlineAction
      * @param array $params action parameters
      * @return mixed the result of the action
      */
-    public function runWithParams($params)
+    public function runWithParams(array $params)
     {
         $args = $this->controller->bindActionParams($this, $params);
         Yii::debug('Running action: ' . get_class($this->controller) . '::' . $this->actionMethod . '()', __METHOD__);

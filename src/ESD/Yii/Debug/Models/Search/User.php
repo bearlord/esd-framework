@@ -42,7 +42,7 @@ class User extends Model
     /**
      * {@inheritdoc}
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->identityImplement->__get($name);
     }
@@ -50,7 +50,7 @@ class User extends Model
     /**
      * {@inheritdoc}
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         return $this->identityImplement->__set($name, $value);
     }
@@ -58,7 +58,7 @@ class User extends Model
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [[array_keys($this->identityImplement->getAttributes()), 'safe']];
     }
@@ -66,7 +66,7 @@ class User extends Model
     /**
      * {@inheritdoc}
      */
-    public function attributes()
+    public function attributes(): array
     {
         return $this->identityImplement->attributes();
     }

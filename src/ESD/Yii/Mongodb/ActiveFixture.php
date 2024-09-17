@@ -105,8 +105,9 @@ class ActiveFixture extends BaseActiveFixture
      * If the data file does not exist, an empty array will be returned.
      *
      * @return array the data rows to be inserted into the collection.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    protected function getData()
+    protected function getData(): array
     {
         if ($this->dataFile === null) {
             $class = new \ReflectionClass($this);

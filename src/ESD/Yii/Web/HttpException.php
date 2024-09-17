@@ -51,7 +51,7 @@ class HttpException extends UserException
     /**
      * @return string the user-friendly name of this exception
      */
-    public function getName()
+    public function getName(): string
     {
         if (isset(Response::$httpStatuses[$this->statusCode])) {
             return Response::$httpStatuses[$this->statusCode];

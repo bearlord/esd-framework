@@ -50,7 +50,7 @@ abstract class AuthMethod extends ActionFilter implements AuthInterface
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         $response = $this->response ?: Yii::$app->getResponse();
 

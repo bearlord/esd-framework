@@ -487,15 +487,6 @@ class Security
             }
         }
 
-        // mcrypt_create_iv() does not use libmcrypt. Since PHP 5.3.7 it directly reads
-        // CryptGenRandom on Windows. Elsewhere it directly reads /dev/urandom.
-        if (function_exists('mcrypt_create_iv')) {
-            $key = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
-            if (StringHelper::byteLength($key) === $length) {
-                return $key;
-            }
-        }
-
         // If not on Windows, try to open a random device.
         if ($this->_randomFile === null && DIRECTORY_SEPARATOR === '/') {
             // urandom is a symlink to random on FreeBSD.

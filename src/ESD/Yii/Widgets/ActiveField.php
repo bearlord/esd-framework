@@ -226,6 +226,7 @@ class ActiveField extends Component
     /**
      * Renders the opening tag of the field container.
      * @return string the rendering result.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     public function begin()
     {
@@ -815,6 +816,7 @@ class ActiveField extends Component
     /**
      * Returns the JS options for the field.
      * @return array the JS options.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     protected function getClientOptions()
     {
@@ -921,6 +923,7 @@ class ActiveField extends Component
     /**
      * Adds aria attributes to the input options.
      * @param $options array input options
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @since 2.0.11
      */
     protected function addAriaAttributes(&$options)

@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Filters\Auth;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
 
@@ -52,7 +53,7 @@ class CompositeAuth extends AuthMethod
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         return empty($this->authMethods) ? true : parent::beforeAction($action);
     }

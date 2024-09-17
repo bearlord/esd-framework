@@ -25,12 +25,12 @@ class ExitException extends \Exception
 
     /**
      * Constructor.
-     * @param int $status the exit status code
-     * @param string $message error message
-     * @param int $code error code
-     * @param \Exception $previous The previous exception used for the exception chaining.
+     * @param int|null $status the exit status code
+     * @param string|null $message error message
+     * @param int|null $code error code
+     * @param \Exception|null $previous The previous exception used for the exception chaining.
      */
-    public function __construct($status = 0, $message = null, $code = 0, \Exception $previous = null)
+    public function __construct(?int $status = 0, ?string $message = null, ?int $code = 0, ?\Exception $previous = null)
     {
         $this->statusCode = $status;
         parent::__construct($message, $code, $previous);

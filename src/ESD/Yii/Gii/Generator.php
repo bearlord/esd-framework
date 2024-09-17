@@ -89,7 +89,7 @@ abstract class Generator extends Model
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'enableI18N' => 'Enable I18N',
@@ -202,7 +202,7 @@ abstract class Generator extends Model
      * ]);
      * ~~~
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['template'], 'required', 'message' => 'A code template must be selected.'],

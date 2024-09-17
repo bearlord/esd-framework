@@ -131,7 +131,7 @@ class Component extends BaseObject
      * @throws InvalidCallException if the property is write-only.
      * @see __set()
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
@@ -168,11 +168,11 @@ class Component extends BaseObject
      * will be implicitly called when executing `$component->property = $value;`.
      * @param string $name the property name or the event name
      * @param mixed $value the property value
-     * @throws UnknownPropertyException if the property is not defined
-     * @throws InvalidCallException if the property is read-only.
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Base\UnknownPropertyException if the property is not defined
      * @see __get()
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         $setter = 'set' . $name;
         if (method_exists($this, $setter)) {
@@ -224,7 +224,7 @@ class Component extends BaseObject
      * @return bool whether the named property is set
      * @see https://secure.php.net/manual/en/function.isset.php
      */
-    public function __isset($name)
+    public function __isset(string $name)
     {
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
@@ -256,7 +256,7 @@ class Component extends BaseObject
      * @throws InvalidCallException if the property is read only.
      * @see https://secure.php.net/manual/en/function.unset.php
      */
-    public function __unset($name)
+    public function __unset(string $name)
     {
         $setter = 'set' . $name;
         if (method_exists($this, $setter)) {
@@ -289,7 +289,7 @@ class Component extends BaseObject
      * @return mixed the method return value
      * @throws UnknownMethodException when calling unknown method
      */
-    public function __call($name, $params)
+    public function __call(string $name, array $params)
     {
         $this->ensureBehaviors();
         foreach ($this->_behaviors as $object) {
@@ -328,7 +328,7 @@ class Component extends BaseObject
      * @see canGetProperty()
      * @see canSetProperty()
      */
-    public function hasProperty($name, $checkVars = true, $checkBehaviors = true)
+    public function hasProperty(string $name, ?bool $checkVars = true, ?bool $checkBehaviors = true)
     {
         return $this->canGetProperty($name, $checkVars, $checkBehaviors) || $this->canSetProperty($name, false, $checkBehaviors);
     }
@@ -349,7 +349,7 @@ class Component extends BaseObject
      * @return bool whether the property can be read
      * @see canSetProperty()
      */
-    public function canGetProperty($name, $checkVars = true, $checkBehaviors = true)
+    public function canGetProperty(string $name, ?bool $checkVars = true, ?bool $checkBehaviors = true): bool
     {
         if (method_exists($this, 'get' . $name) || $checkVars && property_exists($this, $name)) {
             return true;
@@ -381,7 +381,7 @@ class Component extends BaseObject
      * @return bool whether the property can be written
      * @see canGetProperty()
      */
-    public function canSetProperty($name, $checkVars = true, $checkBehaviors = true)
+    public function canSetProperty(string $name, ?bool $checkVars = true, ?bool $checkBehaviors = true): bool
     {
         if (method_exists($this, 'set' . $name) || $checkVars && property_exists($this, $name)) {
             return true;
@@ -409,7 +409,7 @@ class Component extends BaseObject
      * @param bool $checkBehaviors whether to treat behaviors' methods as methods of this component
      * @return bool whether the method is defined
      */
-    public function hasMethod($name, $checkBehaviors = true)
+    public function hasMethod(string $name, ?bool $checkBehaviors = true): bool
     {
         if (method_exists($this, $name)) {
             return true;
@@ -598,7 +598,7 @@ class Component extends BaseObject
      * @param string $name the event name
      * @param Event $event the event parameter. If not set, a default [[Event]] object will be created.
      */
-    public function trigger($name, Event $event = null)
+    public function trigger(string $name, ?Event $event = null)
     {
         $this->ensureBehaviors();
 
@@ -743,6 +743,7 @@ class Component extends BaseObject
      * will be detached first.
      * @param string|array|Behavior $behavior the behavior to be attached
      * @return Behavior the attached behavior.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     private function attachBehaviorInternal($name, $behavior)
     {

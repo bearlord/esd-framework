@@ -27,17 +27,17 @@ interface ActiveQueryInterface extends QueryInterface
      * @param bool $value whether to return the query results in terms of arrays instead of Active Records.
      * @return $this the query object itself
      */
-    public function asArray($value = true);
+    public function asArray(bool $value = true);
 
     /**
      * Executes query and returns a single row of result.
-     * @param Connection $db the DB connection used to create the DB command.
+     * @param \ESD\Yii\Db\Connection|null $db the DB connection used to create the DB command.
      * If `null`, the DB connection returned by [[ActiveQueryTrait::$modelClass|modelClass]] will be used.
      * @return ActiveRecordInterface|array|null a single row of query result. Depending on the setting of [[asArray]],
      * the query result may be either an array or an ActiveRecord object. `null` will be returned
      * if the query results in nothing.
      */
-    public function one($db = null);
+    public function one(Connection $db = null);
 
     /**
      * Sets the [[indexBy]] property.
@@ -96,7 +96,7 @@ interface ActiveQueryInterface extends QueryInterface
      * Its signature should be `function($query)`, where `$query` is the query to be customized.
      * @return $this the relation object itself.
      */
-    public function via($relationName, callable $callable = null);
+    public function via(string $relationName, callable $callable = null);
 
     /**
      * Finds the related records for the specified primary record.

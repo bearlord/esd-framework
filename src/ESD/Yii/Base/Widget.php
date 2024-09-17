@@ -78,11 +78,12 @@ class Widget extends Component implements ViewContextInterface
      * to the created instance. A matching [[end()]] call should be called later.
      * As some widgets may use output buffering, the [[end()]] call should be made in the same view
      * to avoid breaking the nesting of output buffers.
-     * @param array $config name-value pairs that will be used to initialize the object properties
+     * @param array|null $config name-value pairs that will be used to initialize the object properties
      * @return static the newly created widget instance
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @see end()
      */
-    public static function begin($config = [])
+    public static function begin(?array $config = [])
     {
         $config['class'] = get_called_class();
         /* @var $widget Widget */
@@ -99,7 +100,7 @@ class Widget extends Component implements ViewContextInterface
      * @throws InvalidCallException if [[begin()]] and [[end()]] calls are not properly nested
      * @see begin()
      */
-    public static function end()
+    public static function end(): Widget
     {
         if (!empty(self::$stack)) {
             $widget = array_pop(self::$stack);
@@ -123,11 +124,11 @@ class Widget extends Component implements ViewContextInterface
     /**
      * Creates a widget instance and runs it.
      * The widget rendering result is returned by this method.
-     * @param array $config name-value pairs that will be used to initialize the object properties
+     * @param array|null $config name-value pairs that will be used to initialize the object properties
      * @return string the rendering result of the widget.
-     * @throws \Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public static function widget($config = [])
+    public static function widget(?array $config = [])
     {
         ob_start();
         ob_implicit_flush(false);
@@ -158,7 +159,7 @@ class Widget extends Component implements ViewContextInterface
      * @param bool $autoGenerate whether to generate an ID if it is not set previously
      * @return string ID of the widget.
      */
-    public function getId($autoGenerate = true)
+    public function getId(?bool $autoGenerate = true): string
     {
         if ($autoGenerate && $this->_id === null) {
             $this->_id = static::$autoIdPrefix . static::$counter++;
@@ -171,7 +172,7 @@ class Widget extends Component implements ViewContextInterface
      * Sets the ID of the widget.
      * @param string $value id of the widget.
      */
-    public function setId($value)
+    public function setId(string $value)
     {
         $this->_id = $value;
     }
@@ -184,8 +185,9 @@ class Widget extends Component implements ViewContextInterface
      * this view object to implement the actual view rendering.
      * If not set, it will default to the "view" application component.
      * @return \ESD\Yii\Web\View the view object that can be used to render views or view files.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getView()
+    public function getView(): \ESD\Yii\Web\View
     {
         if ($this->_view === null) {
             $this->_view = Yii::$app->getView();
@@ -198,7 +200,7 @@ class Widget extends Component implements ViewContextInterface
      * Sets the view object to be used by this widget.
      * @param View $view the view object that can be used to render views or view files.
      */
-    public function setView($view)
+    public function setView(View $view)
     {
         $this->_view = $view;
     }
@@ -231,7 +233,7 @@ class Widget extends Component implements ViewContextInterface
      * @return string the rendering result.
      * @throws InvalidArgumentException if the view file does not exist.
      */
-    public function render($view, $params = [])
+    public function render(string $view, array $params = [])
     {
         return $this->getView()->render($view, $params, $this);
     }
@@ -241,9 +243,10 @@ class Widget extends Component implements ViewContextInterface
      * @param string $file the view file to be rendered. This can be either a file path or a [path alias](guide:concept-aliases).
      * @param array $params the parameters (name-value pairs) that should be made available in the view.
      * @return string the rendering result.
-     * @throws InvalidArgumentException if the view file does not exist.
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \Throwable
      */
-    public function renderFile($file, $params = [])
+    public function renderFile(string $file, array $params = [])
     {
         return $this->getView()->renderFile($file, $params, $this);
     }
@@ -253,7 +256,7 @@ class Widget extends Component implements ViewContextInterface
      * The default implementation returns the 'views' subdirectory under the directory containing the widget class file.
      * @return string the directory containing the view files for this widget.
      */
-    public function getViewPath()
+    public function getViewPath(): string
     {
         $class = new ReflectionClass($this);
 
@@ -284,7 +287,7 @@ class Widget extends Component implements ViewContextInterface
      * @return bool whether the widget should continue to be executed.
      * @since 2.0.11
      */
-    public function beforeRun()
+    public function beforeRun(): bool
     {
         $event = new WidgetEvent();
         $this->trigger(self::EVENT_BEFORE_RUN, $event);

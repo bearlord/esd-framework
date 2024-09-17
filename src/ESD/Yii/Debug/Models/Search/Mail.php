@@ -63,7 +63,7 @@ class Mail extends Base
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['from', 'to', 'reply', 'cc', 'bcc', 'subject', 'body', 'charset'], 'safe'],
@@ -73,7 +73,7 @@ class Mail extends Base
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'from' => 'From',

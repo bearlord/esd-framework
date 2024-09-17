@@ -82,7 +82,7 @@ abstract class ActiveRecord extends \ESD\Yii\Mongodb\ActiveRecord
      *
      * @return array list of attribute names.
      */
-    public function attributes()
+    public function attributes(): array
     {
         return [
             '_id',

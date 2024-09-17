@@ -164,7 +164,7 @@ class BatchQueryResult extends BaseObject implements \Iterator
                 $rows[] = $row;
             }
         } catch (\PDOException $e) {
-            $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
+            $errorCode = $e->errorInfo[1] ?? null;
             if ($this->getDbDriverName() !== 'sqlsrv' || $errorCode !== $this->mssqlNoMoreRowsErrorCode) {
                 throw $e;
             }
