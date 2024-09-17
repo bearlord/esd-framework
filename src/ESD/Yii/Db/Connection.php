@@ -611,6 +611,8 @@ class Connection extends Component
         $token = 'Opening DB connection: ' . $this->dsn;
         $enableProfiling = $this->enableProfiling;
         try {
+            Server::$instance->getLog()->info('Opening DB connection: ' . $this->dsn);
+
             Yii::info($token, __METHOD__);
             if ($enableProfiling) {
                 Yii::beginProfile($token, __METHOD__);
@@ -642,8 +644,8 @@ class Connection extends Component
         }
 
         if ($this->pdo !== null) {
-            Server::$instance->getLog()->debug('Closing DB connection: ' . $this->dsn);
-            Yii::debug('Closing DB connection: ' . $this->dsn, __METHOD__);
+            Server::$instance->getLog()->info('Closing DB connection: ' . $this->dsn);
+            Yii::info('Closing DB connection: ' . $this->dsn, __METHOD__);
 
             $this->pdo = null;
             $this->_schema = null;
