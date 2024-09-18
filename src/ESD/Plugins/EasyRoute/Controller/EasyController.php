@@ -74,7 +74,7 @@ abstract class EasyController extends Controller implements IController
             $callMethodName = $methodName;
         }
         try {
-            $action = $this->createAction($methodName);
+            $action = $this->createAction($callMethodName);
 
             $result = null;
             if ($this->beforeAction($action)) {

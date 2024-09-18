@@ -191,12 +191,12 @@ class Controller extends Component implements ViewContextInterface
      * Binds the parameters to the action.
      * This method is invoked by [[Action]] when it begins to run with the given parameters.
      * @param Action $action the action to be bound with parameters.
-     * @param array $params the parameters to be bound to the action.
+     * @param array|null $params the parameters to be bound to the action.
      * @return array the valid parameters that the action can run with.
      * @throws \ESD\Yii\Base\Exception
      * @throws \ReflectionException
      */
-    public function bindActionParams(Action $action, array $params)
+    public function bindActionParams(Action $action, ?array $params = null): array
     {
         if ($action instanceof InlineAction) {
             $method = new \ReflectionMethod($this, $action->actionMethod);
