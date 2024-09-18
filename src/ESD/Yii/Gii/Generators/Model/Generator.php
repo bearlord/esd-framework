@@ -53,7 +53,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Model Generator';
     }
@@ -61,7 +61,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'This generator generates an ActiveRecord class for the specified database table.';
     }
@@ -119,7 +119,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function hints()
+    public function hints(): array
     {
         return array_merge(parent::hints(), [
             'ns' => 'This is the namespace of the ActiveRecord class to be generated, e.g., <code>app\models</code>',
@@ -165,7 +165,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function autoCompleteData()
+    public function autoCompleteData(): array
     {
         $db = $this->getDbConnection();
         if ($db !== null) {
@@ -182,7 +182,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function requiredTemplates()
+    public function requiredTemplates(): array
     {
         // @todo make 'query.php' to be required before 2.1 release
         return ['model.php'/*, 'query.php'*/];
@@ -191,7 +191,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function stickyAttributes()
+    public function stickyAttributes(): array
     {
         return array_merge(parent::stickyAttributes(), ['ns', 'db', 'baseClass', 'generateRelations', 'generateLabelsFromComments', 'queryNs', 'queryBaseClass', 'useTablePrefix', 'generateQuery']);
     }
@@ -203,7 +203,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @since 2.0.5
      * @see getDbConnection
      */
-    public function getTablePrefix()
+    public function getTablePrefix(): string
     {
         $db = $this->getDbConnection();
         if ($db !== null) {
@@ -216,7 +216,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function generate()
+    public function generate(): array
     {
         $files = [];
         $relations = $this->generateRelations();
@@ -262,7 +262,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @return array the generated properties (property => type)
      * @since 2.0.6
      */
-    protected function generateProperties($table)
+    protected function generateProperties(TableSchema $table): array
     {
         $properties = [];
         foreach ($table->columns as $column) {
@@ -310,7 +310,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param \ESD\Yii\Db\TableSchema $table the table schema
      * @return array the generated attribute labels (name => label)
      */
-    public function generateLabels($table)
+    public function generateLabels(TableSchema $table): array
     {
         $labels = [];
         foreach ($table->columns as $column) {
@@ -335,7 +335,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param \ESD\Yii\Db\TableSchema $table the table schema
      * @return array the generated validation rules
      */
-    public function generateRules($table)
+    public function generateRules(TableSchema $table): array
     {
         $types = [];
         $lengths = [];
@@ -441,7 +441,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param array $relations
      * @return array modified $relations
      */
-    private function generateManyManyRelations($table, $fks, $relations)
+    private function generateManyManyRelations(TableSchema $table, array $fks, array $relations): array
     {
         $db = $this->getDbConnection();
 
@@ -489,7 +489,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @throws NotSupportedException
      * @since 2.0.5
      */
-    protected function getSchemaNames()
+    protected function getSchemaNames(): array
     {
         $db = $this->getDbConnection();
 
@@ -520,8 +520,9 @@ class Generator extends \ESD\Yii\Gii\Generator
 
     /**
      * @return array the generated relation declarations
+     * @throws \ESD\Yii\Base\NotSupportedException
      */
-    protected function generateRelations()
+    protected function generateRelations(): array
     {
         if ($this->generateRelations === self::RELATIONS_NONE) {
             return [];
@@ -584,9 +585,10 @@ class Generator extends \ESD\Yii\Gii\Generator
      *
      * @param array $relations relation declarations
      * @return array relation declarations extended with inverse relation names
+     * @throws \ESD\Yii\Base\NotSupportedException
      * @since 2.0.5
      */
-    protected function addInverseRelations($relations)
+    protected function addInverseRelations(array $relations): array
     {
         $db = $this->getDbConnection();
         $relationNames = [];
@@ -636,7 +638,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @return bool
      * @since 2.0.5
      */
-    protected function isHasManyRelation($table, $fks)
+    protected function isHasManyRelation(TableSchema $table, array $fks)
     {
         $uniqueKeys = [$table->primaryKey];
         try {
@@ -657,7 +659,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param array $refs reference constraint
      * @return string the generated link parameter.
      */
-    protected function generateRelationLink($refs)
+    protected function generateRelationLink(array $refs): string
     {
         $pairs = [];
         foreach ($refs as $a => $b) {
@@ -673,7 +675,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @return array|bool all unique foreign key pairs if the table is a junction table,
      * or false if the table is not a junction table.
      */
-    protected function checkJunctionTable($table)
+    protected function checkJunctionTable(TableSchema $table)
     {
         if (count($table->foreignKeys) < 2) {
             return false;
@@ -717,8 +719,9 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param string $key a base name that the relation name may be generated from
      * @param bool $multiple whether this is a has-many relation
      * @return string the relation name
+     * @throws \ReflectionException
      */
-    protected function generateRelationName($relations, $table, $key, $multiple)
+    protected function generateRelationName(array $relations, TableSchema $table, string $key, bool $multiple)
     {
         static $baseModel;
         /* @var $baseModel \ESD\Yii\Db\ActiveRecord */
@@ -769,7 +772,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * Validates the [[db]] attribute.
      */
-    public function validateDb()
+    public function validateDb(): bool
     {
         return true;
         /*
@@ -787,7 +790,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      *
      * @param string $attribute Namespace variable.
      */
-    public function validateNamespace($attribute)
+    public function validateNamespace(string $attribute)
     {
         $value = $this->$attribute;
         $value = ltrim($value, '\\');
@@ -840,7 +843,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * @return array the table names that match the pattern specified by [[tableName]].
      */
-    protected function getTableNames()
+    protected function getTableNames(): array
     {
         if ($this->tableNames !== null) {
             return $this->tableNames;
@@ -878,7 +881,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param string $tableName the table name (which may contain schema prefix)
      * @return string the generated table name
      */
-    public function generateTableName($tableName)
+    public function generateTableName(string $tableName): string
     {
         if (!$this->useTablePrefix) {
             return $tableName;
@@ -896,10 +899,10 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * Generates a class name from the specified table name.
      * @param string $tableName the table name (which may contain schema prefix)
-     * @param bool $useSchemaName should schema name be included in the class name, if present
+     * @param bool|null $useSchemaName should schema name be included in the class name, if present
      * @return string the generated class name
      */
-    protected function generateClassName($tableName, $useSchemaName = null)
+    protected function generateClassName(string $tableName, ?bool $useSchemaName = null)
     {
         if (isset($this->classNames[$tableName])) {
             return $this->classNames[$tableName];
@@ -958,7 +961,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param string $modelClassName model class name
      * @return string generated class name
      */
-    protected function generateQueryClassName($modelClassName)
+    protected function generateQueryClassName(string $modelClassName): string
     {
         $queryClassName = $this->queryClass;
         if (empty($queryClassName) || strpos($this->tableName, '*') !== false) {
@@ -985,7 +988,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * In case db is not instance of \ESD\Yii\Db\Connection null will be returned.
      * @since 2.0.6
      */
-    protected function getDbDriverName()
+    protected function getDbDriverName(): ?string
     {
         /** @var Connection $db */
         $db = $this->getDbConnection();
@@ -998,7 +1001,7 @@ class Generator extends \ESD\Yii\Gii\Generator
      * @param array $columns columns to check for autoIncrement property
      * @return bool whether any of the specified columns is auto incremental.
      */
-    protected function isColumnAutoIncremental($table, $columns)
+    protected function isColumnAutoIncremental(TableSchema $table, array $columns): bool
     {
         foreach ($columns as $column) {
             if (isset($table->columns[$column]) && $table->columns[$column]->autoIncrement) {

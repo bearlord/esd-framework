@@ -27,7 +27,7 @@ class GenerateController extends Controller
      * @return int|void
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function runAction(string $id, array $params = [])
+    public function runAction(string $id, ?array $params = []): int
     {
         $generator = $this->getGenerator($id);
         /** @var \ESD\Yii\Gii\Generator | \ESD\Yii\Gii\Generators\Model\Generator $generatorObject */
@@ -115,10 +115,10 @@ class GenerateController extends Controller
     /**
      * Return the special code generator
      *
-     * @param $type
-     * @return mixed
+     * @param string $type
+     * @return array|null
      */
-    public function getGenerator($type)
+    public function getGenerator(string $type): ?array
     {
         $coreGenerators = $this->coreGenerators();
         if (!empty($coreGenerators[$type])) {
@@ -130,7 +130,7 @@ class GenerateController extends Controller
      * Returns the list of the core code generator configurations.
      * @return array the list of the core code generator configurations.
      */
-    protected function coreGenerators()
+    protected function coreGenerators(): array
     {
         return [
             'model' => ['class' => 'ESD\Yii\Gii\Generators\Model\Generator'],
