@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Mongodb\console\controllers;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Console\Controllers\BaseMigrateController;
 use ESD\Yii\Console\Exception;
@@ -102,11 +103,11 @@ class MigrateController extends BaseMigrateController
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
      * It checks the existence of the [[migrationPath]].
-     * @param \ESD\Yii\Base\Action $action the action to be executed.
-     * @throws Exception if db component isn't configured
+     * @param \ESD\Yii\Mongodb\console\controllers\Action $action the action to be executed.
      * @return bool whether the action should continue to be executed.
+     *@throws Exception if db component isn't configured
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if (parent::beforeAction($action)) {
             if ($action->id !== 'create') {

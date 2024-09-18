@@ -22,16 +22,16 @@ class GenerateController extends Controller
     public $generator;
 
     /**
-     * @param string $type
-     * @param array $options
+     * @param string $id
+     * @param array $params
      * @return int|void
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function runAction($type, $options = [])
+    public function runAction(string $id, array $params = [])
     {
-        $generator = $this->getGenerator($type);
+        $generator = $this->getGenerator($id);
         /** @var \ESD\Yii\Gii\Generator | \ESD\Yii\Gii\Generators\Model\Generator $generatorObject */
-        $this->generator = Yii::createObject(array_merge($generator, $options));
+        $this->generator = Yii::createObject(array_merge($generator, $params));
 
         if ($this->generator->validate()) {
             $this->generateCode();

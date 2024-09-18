@@ -171,7 +171,7 @@ class View extends Component implements DynamicContentAwareInterface
      *
      * @param string $view the view name.
      * @param array|null $params the parameters (name-value pairs) that will be extracted and made available in the view file.
-     * @param array|null $context the context to be assigned to the view and can later be accessed via [[context]]
+     * @param object|null $context the context to be assigned to the view and can later be accessed via [[context]]
      * in the view. If the context implements [[ViewContextInterface]], it may also be used to locate
      * the view file corresponding to a relative view name.
      * @return string the rendering result
@@ -179,7 +179,7 @@ class View extends Component implements DynamicContentAwareInterface
      * @throws \Throwable
      * @see renderFile()
      */
-    public function render(string $view, ?array $params = [], ?array $context = null)
+    public function render(string $view, ?array $params = [], ?object $context = null): string
     {
         $this->setLayoutPath($view, $context);
         $viewFile = $this->findViewFile($view, $context);
@@ -190,12 +190,12 @@ class View extends Component implements DynamicContentAwareInterface
      * Finds the view file based on the given view name.
      * @param string $view the view name or the [path alias](guide:concept-aliases) of the view file. Please refer to [[render()]]
      * on how to specify this parameter.
-     * @param array|null $context the context to be assigned to the view and can later be accessed via [[context]]
+     * @param object|null $context the context to be assigned to the view and can later be accessed via [[context]]
      * in the view. If the context implements [[ViewContextInterface]], it may also be used to locate
      * the view file corresponding to a relative view name.
      * @return string the view file path. Note that the file may not exist.
      */
-    protected function findViewFile(string $view, ?array $context = null): string
+    protected function findViewFile(string $view, ?object $context = null): string
     {
         if (strncmp($view, '@', 1) === 0) {
             // e.g. "@app/views/main"
@@ -245,7 +245,7 @@ class View extends Component implements DynamicContentAwareInterface
      * @throws \ESD\Yii\Base\InvalidConfigException
      * @throws \Throwable
      */
-    public function renderFile(string $viewFile, ?array $params = [], ?array $context = null)
+    public function renderFile(string $viewFile, ?array $params = [], ?object $context = null): string
     {
         $viewFile = $requestedFile = Yii::getAlias($viewFile);
 

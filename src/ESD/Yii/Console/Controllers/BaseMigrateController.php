@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Console\Controllers;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\BaseObject;
 use ESD\Yii\Base\InvalidConfigException;
@@ -108,11 +109,11 @@ abstract class BaseMigrateController extends Controller
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
      * It checks the existence of the [[migrationPath]].
-     * @param \ESD\Yii\Base\Action $action the action to be executed.
-     * @throws InvalidConfigException if directory specified in migrationPath doesn't exist and action isn't "create".
+     * @param \ESD\Yii\Console\Controllers\Action $action the action to be executed.
      * @return bool whether the action should continue to be executed.
+     *@throws InvalidConfigException if directory specified in migrationPath doesn't exist and action isn't "create".
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if (parent::beforeAction($action)) {
             if (empty($this->migrationNamespaces) && empty($this->migrationPath)) {

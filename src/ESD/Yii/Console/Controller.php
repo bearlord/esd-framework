@@ -93,7 +93,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @throws Exception if there are unknown options or missing arguments
      * @see createAction
      */
-    public function runAction($id, $params = [])
+    public function runAction(string $id, array $params = [])
     {
         if (!empty($params)) {
             // populate options here so that they are available in beforeAction().
@@ -178,7 +178,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @return array the valid parameters that the action can run with.
      * @throws Exception if there are unknown options or missing arguments
      */
-    public function bindActionParams($action, $params)
+    public function bindActionParams(Action $action, array $params)
     {
         if ($action instanceof InlineAction) {
             $method = new \ReflectionMethod($this, $action->actionMethod);

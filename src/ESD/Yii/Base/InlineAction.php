@@ -32,9 +32,9 @@ class InlineAction extends Action
      * @param string $id the ID of this action
      * @param Controller $controller the controller that owns this action
      * @param string $actionMethod the controller method that this inline action is associated with
-     * @param array $config name-value pairs that will be used to initialize the object properties
+     * @param array|null $config name-value pairs that will be used to initialize the object properties
      */
-    public function __construct($id, $controller, $actionMethod, $config = [])
+    public function __construct(string $id, Controller $controller, string $actionMethod, ?array $config = [])
     {
         $this->actionMethod = $actionMethod;
         parent::__construct($id, $controller, $config);
@@ -43,12 +43,12 @@ class InlineAction extends Action
     /**
      * Runs this action with the specified parameters.
      * This method is mainly invoked by the controller.
-     * @param array $params action parameters
+     * @param array|null $params action parameters
      * @return mixed the result of the action
      * @throws \ESD\Yii\Base\Exception
      * @throws \ReflectionException
      */
-    public function runWithParams(array $params)
+    public function runWithParams(?array $params = null)
     {
         $args = $this->controller->bindActionParams($this, $params);
         Yii::debug('Running action: ' . get_class($this->controller) . '::' . $this->actionMethod . '()', __METHOD__);
