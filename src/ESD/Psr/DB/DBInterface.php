@@ -18,11 +18,11 @@ interface DBInterface
     public function getType();
 
     /**
-     * @param $name
+     * @param string $name
      * @param callable|null $call
      * @return mixed
      */
-    public function execute($name, callable $call = null);
+    public function execute(string $name, ?callable $call = null);
 
     /**
      * @return mixed

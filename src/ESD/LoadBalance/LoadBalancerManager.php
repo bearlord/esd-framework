@@ -38,7 +38,7 @@ class LoadBalancerManager
     public function get(string $name): string
     {
         if (!$this->has($name)) {
-            throw new Inva(sprintf('The %s algorithm does not exists.', $name));
+            throw new InvalidArgumentException(sprintf('The %s algorithm does not exists.', $name));
         }
         return $this->algorithms[$name];
     }
@@ -56,11 +56,8 @@ class LoadBalancerManager
             return $this->instances[$key];
         }
         $class = $this->get($algorithm);
-        if (function_exists('make')) {
-            $instance = make($class);
-        } else {
-            $instance = new $class();
-        }
+        $instance = new $class();
+
         $this->instances[$key] = $instance;
         return $instance;
     }

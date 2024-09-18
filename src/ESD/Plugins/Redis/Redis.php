@@ -30,11 +30,11 @@ class Redis implements DBInterface
     }
 
     /**
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param array|null $arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, ?array $arguments = null)
     {
         $this->_lastQuery = $name;
         return $this->execute($name, function () use ($name, $arguments) {
@@ -43,25 +43,25 @@ class Redis implements DBInterface
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param $value
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         $this->_redis->$name = $value;
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->_redis->$name;
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getType()
     {
@@ -69,11 +69,11 @@ class Redis implements DBInterface
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param callable|null $call
      * @return mixed
      */
-    public function execute($name, callable $call = null)
+    public function execute(string $name, ?callable $call = null)
     {
         if ($call != null) {
             return $call();

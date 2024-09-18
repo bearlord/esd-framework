@@ -116,7 +116,7 @@ class Config extends \ESD\Core\Pool\Config
     /**
      * @param int $port
      */
-    public function setPort($port): void
+    public function setPort(int $port): void
     {
         $this->port = $port;
     }

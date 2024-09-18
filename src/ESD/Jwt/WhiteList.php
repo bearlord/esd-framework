@@ -103,17 +103,19 @@ class WhiteList
      * @param string $type
      * @return bool
      */
-    public function add(string $uid,string $version, $type = Jwt::SCOPE_TOKEN): bool
+    public function add(string $uid, string $version, ?string $type = Jwt::SCOPE_TOKEN): bool
     {
         return $this->redis()->set($this->cachePrefix . $type . ":" . $uid, $version);
     }
 
     /**
      * @param string $uid
-     * @param string $type
+     * @param string|null $type
      * @return bool
+     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws \RedisException
      */
-    public function remove(string $uid, string $type = Jwt::SCOPE_TOKEN): bool
+    public function remove(string $uid, ?string $type = Jwt::SCOPE_TOKEN): bool
     {
         return $this->redis()->set($this->cachePrefix . $type . ":" . $uid, 0, 7200);
     }

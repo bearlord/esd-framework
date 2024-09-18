@@ -88,7 +88,7 @@ class JwtBuilder implements \ArrayAccess
      * @param $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->container[$offset]);
     }
@@ -108,7 +108,7 @@ class JwtBuilder implements \ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
+        return $this->container[$offset] ?? null;
     }
 
     /**
@@ -146,7 +146,7 @@ class JwtBuilder implements \ArrayAccess
     }
 
     /**
-     * @param mixed $issuer
+     * @param $scope
      */
     public function setScope($scope): void
     {
