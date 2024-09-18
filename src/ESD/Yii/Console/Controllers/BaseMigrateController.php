@@ -97,7 +97,7 @@ abstract class BaseMigrateController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function options($actionID)
+    public function options(string $actionID)
     {
         return array_merge(
             parent::options($actionID),

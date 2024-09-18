@@ -78,7 +78,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param resource $stream the stream to check.
      * @return bool Whether to enable ANSI style in output.
      */
-    public function isColorEnabled($stream = \STDOUT)
+    public function isColorEnabled($stream = \STDOUT): bool
     {
         return $this->color === null ? Console::streamSupportsAnsiColors($stream) : $this->color;
     }
@@ -87,13 +87,17 @@ class Controller extends \ESD\Yii\Base\Controller
      * Runs an action with the specified action ID and parameters.
      * If the action ID is empty, the method will use [[defaultAction]].
      * @param string $id the ID of the action to be executed.
-     * @param array $params the parameters (name-value pairs) to be passed to the action.
+     * @param array|null $params the parameters (name-value pairs) to be passed to the action.
      * @return int the status of the action execution. 0 means normal, other values mean abnormal.
-     * @throws InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
-     * @throws Exception if there are unknown options or missing arguments
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
+     * @throws \ESD\Yii\Console\Exception if there are unknown options or missing arguments
+     * @throws \ESD\Yii\Console\UnknownCommandException
+     * @throws \ReflectionException
      * @see createAction
      */
-    public function runAction(string $id, array $params = [])
+    public function runAction(string $id, ?array $params = []): int
     {
         if (!empty($params)) {
             // populate options here so that they are available in beforeAction().
@@ -174,11 +178,12 @@ class Controller extends \ESD\Yii\Base\Controller
      * This method will first bind the parameters with the [[options()|options]]
      * available to the action. It then validates the given arguments.
      * @param Action $action the action to be bound with parameters
-     * @param array $params the parameters to be bound to the action
+     * @param array|null $params the parameters to be bound to the action
      * @return array the valid parameters that the action can run with.
-     * @throws Exception if there are unknown options or missing arguments
+     * @throws \ESD\Yii\Console\Exception if there are unknown options or missing arguments
+     * @throws \ReflectionException
      */
-    public function bindActionParams(Action $action, array $params)
+    public function bindActionParams(Action $action, ?array $params = null): array
     {
         if ($action instanceof InlineAction) {
             $method = new \ReflectionMethod($this, $action->actionMethod);
@@ -262,7 +267,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param string $string the string to be formatted
      * @return string
      */
-    public function ansiFormat($string)
+    public function ansiFormat($string): string
     {
         if ($this->isColorEnabled()) {
             $args = func_get_args();
@@ -289,7 +294,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param int ...$args additional parameters to decorate the output
      * @return int|bool Number of bytes printed or false on error
      */
-    public function stdout($string)
+    public function stdout(string $string)
     {
         if ($this->isColorEnabled()) {
             $args = func_get_args();
@@ -315,7 +320,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param string $string the string to print
      * @return int|bool Number of bytes printed or false on error
      */
-    public function stderr($string)
+    public function stderr(string $string)
     {
         if ($this->isColorEnabled(\STDERR)) {
             $args = func_get_args();
@@ -353,13 +358,13 @@ class Controller extends \ESD\Yii\Base\Controller
      *
      * @return string the user input
      */
-    public function prompt($text, $options = [])
+    public function prompt(string $text, ?array $options = []): string
     {
         if ($this->interactive) {
             return Console::prompt($text, $options);
         }
 
-        return isset($options['default']) ? $options['default'] : '';
+        return $options['default'] ?? '';
     }
 
     /**
@@ -380,7 +385,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @return bool whether user confirmed.
      * Will return true if [[interactive]] is false.
      */
-    public function confirm($message, $default = false)
+    public function confirm(string $message, ?bool $default = false): bool
     {
         if ($this->interactive) {
             return Console::confirm($message, $default);
@@ -394,11 +399,11 @@ class Controller extends \ESD\Yii\Base\Controller
      * a list of options to choose from and their explanations.
      *
      * @param string $prompt the prompt message
-     * @param array $options Key-value array of options to choose from
+     * @param array|null $options Key-value array of options to choose from
      *
      * @return string An option character the user chose
      */
-    public function select($prompt, $options = [])
+    public function select(string $prompt, ?array $options = []): string
     {
         return Console::select($prompt, $options);
     }
@@ -415,7 +420,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param string $actionID the action id of the current request
      * @return string[] the names of the options valid for the action
      */
-    public function options($actionID)
+    public function options(string $actionID): array
     {
         // $actionId might be used in subclasses to provide options specific to action id
         return ['color', 'interactive', 'help', 'silentExitOnException', 'command', 'route'];
@@ -431,7 +436,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @since 2.0.8
      * @see options()
      */
-    public function optionAliases()
+    public function optionAliases(): array
     {
         return [
             'h' => 'help',
@@ -445,7 +450,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param string $actionID the action id of the current request
      * @return array properties corresponding to the options for the action
      */
-    public function getOptionValues($actionID)
+    public function getOptionValues(string $actionID): array
     {
         // $actionId might be used in subclasses to provide properties specific to action id
         $properties = [];
@@ -471,7 +476,7 @@ class Controller extends \ESD\Yii\Base\Controller
      *
      * @return array the properties corresponding to the passed options
      */
-    public function getPassedOptionValues()
+    public function getPassedOptionValues(): array
     {
         $properties = [];
         foreach ($this->_passedOptions as $property) {
@@ -489,7 +494,7 @@ class Controller extends \ESD\Yii\Base\Controller
      *
      * @return string
      */
-    public function getHelpSummary()
+    public function getHelpSummary(): string
     {
         return $this->parseDocCommentSummary(new \ReflectionClass($this));
     }
@@ -501,7 +506,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * The default implementation returns help information retrieved from the PHPDoc comment.
      * @return string
      */
-    public function getHelp()
+    public function getHelp(): string
     {
         return $this->parseDocCommentDetail(new \ReflectionClass($this));
     }
@@ -511,7 +516,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param Action $action action to get summary for
      * @return string a one-line short summary describing the specified action.
      */
-    public function getActionHelpSummary($action)
+    public function getActionHelpSummary($action): string
     {
         if ($action === null) {
             return $this->ansiFormat(Yii::t('yii', 'Action not found.'), Console::FG_RED);
@@ -525,7 +530,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param Action $action action to get help for
      * @return string the detailed help information for the specified action.
      */
-    public function getActionHelp($action)
+    public function getActionHelp(Action $action): string
     {
         return $this->parseDocCommentDetail($this->getActionMethodReflection($action));
     }
@@ -547,7 +552,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param Action $action
      * @return array the help information of the action arguments
      */
-    public function getActionArgsHelp($action)
+    public function getActionArgsHelp(Action $action): array
     {
         $method = $this->getActionMethodReflection($action);
         $tags = $this->parseDocCommentTags($method);
@@ -605,7 +610,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param Action $action
      * @return array the help information of the action options
      */
-    public function getActionOptionsHelp($action)
+    public function getActionOptionsHelp(Action $action): array
     {
         $optionNames = $this->options($action->id);
         if (empty($optionNames)) {
@@ -659,8 +664,9 @@ class Controller extends \ESD\Yii\Base\Controller
     /**
      * @param Action $action
      * @return \ReflectionMethod
+     * @throws \ReflectionException
      */
-    protected function getActionMethodReflection($action)
+    protected function getActionMethodReflection(Action $action): \ReflectionMethod
     {
         if (!isset($this->_reflections[$action->id])) {
             if ($action instanceof InlineAction) {
@@ -678,7 +684,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param \Reflector $reflection the comment block
      * @return array the parsed tags
      */
-    protected function parseDocCommentTags($reflection)
+    protected function parseDocCommentTags(\Reflector $reflection): array
     {
         $comment = $reflection->getDocComment();
         $comment = "@description \n" . strtr(trim(preg_replace('/^\s*\**( |\t)?/m', '', trim($comment, '/'))), "\r", '');
@@ -706,7 +712,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param \Reflector $reflection
      * @return string
      */
-    protected function parseDocCommentSummary($reflection)
+    protected function parseDocCommentSummary(\Reflector $reflection): string
     {
         $docLines = preg_split('~\R~u', $reflection->getDocComment());
         if (isset($docLines[1])) {
@@ -722,7 +728,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @param \Reflector $reflection
      * @return string
      */
-    protected function parseDocCommentDetail($reflection)
+    protected function parseDocCommentDetail(\Reflector $reflection): string
     {
         $comment = strtr(trim(preg_replace('/^\s*\**( |\t)?/m', '', trim($reflection->getDocComment(), '/'))), "\r", '');
         if (preg_match('/^\s*@\w+/m', $comment, $matches, PREG_OFFSET_CAPTURE)) {
