@@ -260,12 +260,12 @@ abstract class Generator extends Model
      * Saves the generated code into files.
      * @param CodeFile[] $files the code files to be saved
      * @param array $answers
-     * @param string $results this parameter receives a value from this method indicating the log messages
+     * @param string|null $results this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
      * @return bool whether files are successfully saved without any error.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function save(array $files, array $answers, string &$results): bool
+    public function save(array $files, array $answers, ?string &$results = null): bool
     {
         $lines = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
         $hasError = false;
