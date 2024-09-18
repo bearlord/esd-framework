@@ -88,7 +88,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * If the action ID is empty, the method will use [[defaultAction]].
      * @param string $id the ID of the action to be executed.
      * @param array|null $params the parameters (name-value pairs) to be passed to the action.
-     * @return int the status of the action execution. 0 means normal, other values mean abnormal.
+     * @return int|null the status of the action execution. 0 means normal, other values mean abnormal.
      * @throws \ESD\Yii\Base\Exception
      * @throws \ESD\Yii\Base\InvalidConfigException
      * @throws \ESD\Yii\Base\InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
@@ -97,7 +97,7 @@ class Controller extends \ESD\Yii\Base\Controller
      * @throws \ReflectionException
      * @see createAction
      */
-    public function runAction(string $id, ?array $params = []): int
+    public function runAction(string $id, ?array $params = []): ?int
     {
         if (!empty($params)) {
             // populate options here so that they are available in beforeAction().

@@ -3,7 +3,6 @@
 namespace ESD\Yii\Gii\Console;
 
 use ESD\Yii\Console\Controller;
-use ESD\Yii\Gii\Generator;
 use ESD\Yii\Helpers\Console;
 use ESD\Yii\Yii;
 
@@ -23,11 +22,11 @@ class GenerateController extends Controller
 
     /**
      * @param string $id
-     * @param array $params
-     * @return int|void
+     * @param array|null $params
+     * @return int|null
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function runAction(string $id, ?array $params = []): int
+    public function runAction(string $id, ?array $params = []): ?int
     {
         $generator = $this->getGenerator($id);
         /** @var \ESD\Yii\Gii\Generator | \ESD\Yii\Gii\Generators\Model\Generator $generatorObject */
@@ -38,8 +37,13 @@ class GenerateController extends Controller
         } else {
             $this->displayValidationErrors();
         }
+
+        return 0;
     }
 
+    /**
+     * @return void
+     */
     protected function displayValidationErrors()
     {
         $this->stdout("Code not generated. Please fix the following errors:\n\n", Console::FG_RED);
@@ -49,6 +53,10 @@ class GenerateController extends Controller
         echo "\n";
     }
 
+    /**
+     * @return void
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     */
     public function generateCode()
     {
         $files = $this->generator->generate();
@@ -124,6 +132,7 @@ class GenerateController extends Controller
         if (!empty($coreGenerators[$type])) {
             return $coreGenerators[$type];
         }
+        return null;
     }
 
     /**
