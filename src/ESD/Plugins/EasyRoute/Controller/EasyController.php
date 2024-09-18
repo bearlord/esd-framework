@@ -13,6 +13,7 @@ use ESD\Core\Server\Beans\Response;
 use ESD\Plugins\EasyRoute\MethodNotAllowedException;
 use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\Pack\ClientData;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Base\ActionEvent;
 use ESD\Yii\Base\Controller;
 use Psr\Log\LoggerInterface;
@@ -74,7 +75,7 @@ abstract class EasyController extends Controller implements IController
         }
         try {
             $action = $this->createAction($methodName);
-            
+
             $result = null;
             if ($this->beforeAction($action)) {
                 // run the action
@@ -83,6 +84,8 @@ abstract class EasyController extends Controller implements IController
             }
             return $result;
         } catch (\Throwable $exception) {
+            Server::$instance->getLog()->error($exception);
+
             setContextValue("lastException", $exception);
             return $this->onExceptionHandle($exception);
         }
