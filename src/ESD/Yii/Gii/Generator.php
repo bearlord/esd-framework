@@ -265,7 +265,7 @@ abstract class Generator extends Model
      * @return bool whether files are successfully saved without any error.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function save(array $files, array $answers, string &$results)
+    public function save(array $files, array $answers, string &$results): bool
     {
         $lines = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
         $hasError = false;
@@ -495,7 +495,7 @@ abstract class Generator extends Model
      * @param array|null $placeholders the placeholders to use by `Yii::t()`
      * @return string
      */
-    public function generateString(?string $string = '', ?array $placeholders = [])
+    public function generateString(?string $string = '', ?array $placeholders = []): string
     {
         $string = addslashes($string);
         if ($this->enableI18N) {
