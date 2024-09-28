@@ -359,24 +359,24 @@ class DataFilter extends Model
         if ($validator instanceof BooleanValidator) {
             return self::TYPE_BOOLEAN;
         }
-        
+
         if ($validator instanceof NumberValidator) {
             return $validator->integerOnly ? self::TYPE_INTEGER : self::TYPE_FLOAT;
         }
-        
+
         if ($validator instanceof StringValidator) {
             return self::TYPE_STRING;
         }
-        
+
         if ($validator instanceof EachValidator) {
             return self::TYPE_ARRAY;
         }
-        
+
         if ($validator instanceof DateValidator) {
             if ($validator->type == DateValidator::TYPE_DATETIME) {
                 return self::TYPE_DATETIME;
             }
-            
+
             if ($validator->type == DateValidator::TYPE_TIME) {
                 return self::TYPE_TIME;
             }
@@ -462,7 +462,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function attributes()
+    public function attributes(): array
     {
         return [
             $this->filterAttributeName,
@@ -472,7 +472,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function formName()
+    public function formName(): string
     {
         return '';
     }
@@ -480,7 +480,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [$this->filterAttributeName, 'validateFilter', 'skipOnEmpty' => false],
@@ -490,7 +490,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             $this->filterAttributeName => $this->filterAttributeLabel,
@@ -765,7 +765,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function canGetProperty($name, $checkVars = true, $checkBehaviors = true)
+    public function canGetProperty(string $name, ?bool $checkVars = true, ?bool $checkBehaviors = true): bool
     {
         if ($name === $this->filterAttributeName) {
             return true;
@@ -776,7 +776,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function canSetProperty($name, $checkVars = true, $checkBehaviors = true)
+    public function canSetProperty(string $name, ?bool $checkVars = true, ?bool $checkBehaviors = true): bool
     {
         if ($name === $this->filterAttributeName) {
             return true;
@@ -787,7 +787,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         if ($name === $this->filterAttributeName) {
             return $this->getFilter();
@@ -799,7 +799,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         if ($name === $this->filterAttributeName) {
             $this->setFilter($value);
@@ -811,7 +811,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function __isset($name)
+    public function __isset(string $name)
     {
         if ($name === $this->filterAttributeName) {
             return $this->getFilter() !== null;
@@ -823,7 +823,7 @@ class DataFilter extends Model
     /**
      * {@inheritdoc}
      */
-    public function __unset($name)
+    public function __unset(string $name)
     {
         if ($name === $this->filterAttributeName) {
             $this->setFilter(null);

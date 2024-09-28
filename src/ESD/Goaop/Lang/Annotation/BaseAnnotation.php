@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,8 +10,6 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Lang\Annotation;
 
-use BadMethodCallException;
-
 /**
  * @Annotation
  */
@@ -21,8 +17,10 @@ abstract class BaseAnnotation
 {
     /**
      * Value property. Common among all derived classes.
+     *
+     * @var string
      */
-    public string $value;
+    public $value;
 
     /**
      * Constructor
@@ -38,23 +36,26 @@ abstract class BaseAnnotation
 
     /**
      * Error handler for unknown property accessor in Annotation class.
+     *
+     * @param string $name Unknown property name
      */
-    public function __get(string $name)
+    public function __get($name)
     {
-        throw new BadMethodCallException(
-            sprintf("Unknown property '%s' on annotation '%s'.", $name, static::class)
+        throw new \BadMethodCallException(
+            sprintf("Unknown property '%s' on annotation '%s'.", $name, get_class($this))
         );
     }
 
     /**
      * Error handler for unknown property mutator in Annotation class.
      *
+     * @param string $name Unknown property name
      * @param mixed $value Property value
      */
-    public function __set(string $name, $value)
+    public function __set($name, $value)
     {
-        throw new BadMethodCallException(
-            sprintf("Unknown property '%s' on annotation '%s'.", $name, static::class)
+        throw new \BadMethodCallException(
+            sprintf("Unknown property '%s' on annotation '%s'.", $name, get_class($this))
         );
     }
 }

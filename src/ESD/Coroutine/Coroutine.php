@@ -103,7 +103,7 @@ class Coroutine
      *
      * @return Context|null
      */
-    public static function getParentContext(): ?Context
+    public static function getParentContext()
     {
         return self::getContext()->getParentContext();
     }
@@ -112,7 +112,7 @@ class Coroutine
      * Iterate through all coroutines in the current process.
      * @return \Iterator
      */
-    public static function getListCoroutines(): \Iterator
+    public static function getListCoroutines()
     {
         return \Swoole\Coroutine::getListCoroutines();
     }
@@ -133,7 +133,7 @@ class Coroutine
     /**
      * Give up the right to execute the current coroutine.
      */
-    public static function yield(): void
+    public static function yield()
     {
         \Swoole\Coroutine::yield();
     }
@@ -143,7 +143,7 @@ class Coroutine
      *
      * @param float $se
      */
-    public static function sleep(float $se): void
+    public static function sleep(float $se)
     {
         \Swoole\Coroutine::sleep($se);
     }
@@ -154,7 +154,7 @@ class Coroutine
      *
      * @param int $coroutineId
      */
-    public static function resume(int $coroutineId): void
+    public static function resume(int $coroutineId)
     {
         \Swoole\Coroutine::resume($coroutineId);
     }
@@ -163,9 +163,9 @@ class Coroutine
      * Run task
      *
      * @param $runnable
-     * @return int
+     * @return int|bool
      */
-    public static function runTask($runnable): int
+    public static function runTask($runnable)
     {
         $cid = goWithContext(function () use ($runnable) {
             if ($runnable != null) {
@@ -178,7 +178,6 @@ class Coroutine
                 }
             }
         });
-
         return $cid;
     }
 

@@ -1,4 +1,11 @@
-<?php
+<?php /** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+/** @noinspection PhpUndefinedClassConstantInspection */
+
 /**
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -192,8 +199,8 @@ class Schema extends \ESD\Yii\Db\Schema implements ConstraintFinderInterface
                 'columnNames' => ArrayHelper::getColumn($foreignKey, 'FKCOLUMN_NAME'),
                 'foreignTableName' => $foreignKey[0]['PKTABLE_NAME'],
                 'foreignColumnNames' => ArrayHelper::getColumn($foreignKey, 'PKCOLUMN_NAME'),
-                'onDelete' => isset($actionTypes[$foreignKey[0]['DELETE_RULE']]) ? $actionTypes[$foreignKey[0]['DELETE_RULE']] : null,
-                'onUpdate' => isset($actionTypes[$foreignKey[0]['UPDATE_RULE']]) ? $actionTypes[$foreignKey[0]['UPDATE_RULE']] : null,
+                'onDelete' => $actionTypes[$foreignKey[0]['DELETE_RULE']] ?? null,
+                'onUpdate' => $actionTypes[$foreignKey[0]['UPDATE_RULE']] ?? null,
             ]);
         }
 
@@ -340,7 +347,7 @@ class Schema extends \ESD\Yii\Db\Schema implements ConstraintFinderInterface
         ];
         $type = gettype($data);
 
-        return isset($typeMap[$type]) ? $typeMap[$type] : \PDO::PARAM_STR;
+        return $typeMap[$type] ?? \PDO::PARAM_STR;
     }
 
     /**

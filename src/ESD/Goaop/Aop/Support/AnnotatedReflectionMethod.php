@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -19,35 +17,44 @@ use ReflectionMethod;
 /**
  * Extended version of ReflectionMethod with annotation support
  */
-class AnnotatedReflectionMethod extends ReflectionMethod implements AnnotationAccess
+class AnnotatedReflectionMethod extends ReflectionMethod
 {
     /**
      * Annotation reader
+     *
+     * @var Reader
      */
-    private static ?Reader $annotationReader = null;
+    private static $annotationReader;
 
     /**
-     * Gets concrete annotation by name or null if the requested annotation does not exist.
+     * Gets a method annotation.
+     *
+     * @param string $annotationName The name of the annotation.
+     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
      */
-    public function getAnnotation(string $annotationName): ?object
+    public function getAnnotation($annotationName)
     {
         return self::getReader()->getMethodAnnotation($this, $annotationName);
     }
 
     /**
-     * Gets all annotations applied to the current item.
+     * Gets the annotations applied to a method.
+     *
+     * @return array An array of Annotations.
      */
-    public function getAnnotations(): array
+    public function getAnnotations()
     {
         return self::getReader()->getMethodAnnotations($this);
     }
 
     /**
      * Returns an annotation reader
+     *
+     * @return Reader $reader
      */
-    private static function getReader(): Reader
+    private static function getReader()
     {
-        if (self::$annotationReader === null) {
+        if (!self::$annotationReader) {
             self::$annotationReader = AspectKernel::getInstance()->getContainer()->get('aspect.annotation.reader');
         }
 

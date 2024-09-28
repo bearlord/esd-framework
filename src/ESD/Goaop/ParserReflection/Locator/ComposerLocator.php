@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -27,21 +25,21 @@ class ComposerLocator implements LocatorInterface
      */
     private $loader;
 
-    public function __construct(ClassLoader $composerLoader = null)
+    public function __construct(ClassLoader $loader = null)
     {
-        if ($composerLoader === null) {
+        if (!$loader) {
             $loaders = spl_autoload_functions();
             foreach ($loaders as $loader) {
                 if (is_array($loader) && $loader[0] instanceof ClassLoader) {
-                    $composerLoader = $loader[0];
+                    $loader = $loader[0];
                     break;
                 }
             }
-            if ($composerLoader === null) {
-                throw new ReflectionException('Can not found a correct composer loader');
+            if (!$loader) {
+                throw new ReflectionException("Can not found a correct composer loader");
             }
         }
-        $this->loader = $composerLoader;
+        $this->loader = $loader;
     }
 
     /**
@@ -51,7 +49,7 @@ class ComposerLocator implements LocatorInterface
      *
      * @return string|false Path to the file with given class or false if not found
      */
-    public function locateClass(string $className)
+    public function locateClass($className)
     {
         $filePath = $this->loader->findFile(ltrim($className, '\\'));
         if (!empty($filePath)) {

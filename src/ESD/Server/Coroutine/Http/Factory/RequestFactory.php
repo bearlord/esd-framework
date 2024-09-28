@@ -16,7 +16,7 @@ use ESD\Server\Coroutine\Http\SwooleRequest;
 class RequestFactory implements Factory
 {
 
-    public function create(?array $params)
+    public function create($params)
     {
         return new SwooleRequest();
     }

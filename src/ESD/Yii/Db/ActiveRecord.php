@@ -325,7 +325,7 @@ class ActiveRecord extends BaseActiveRecord
      * @param array $params the parameters (name => value) to be bound to the query.
      * @return int the number of rows updated
      */
-    public static function updateAll($attributes, $condition = '', $params = [])
+    public static function updateAll($attributes, $condition = '', $params = []): int
     {
         $command = static::getDb()->createCommand();
         $command->update(static::tableName(), $attributes, $condition, $params);
@@ -348,11 +348,12 @@ class ActiveRecord extends BaseActiveRecord
      * Use negative values if you want to decrement the counters.
      * @param string|array $condition the conditions that will be put in the WHERE part of the UPDATE SQL.
      * Please refer to [[Query::where()]] on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * Do not name the parameters as `:bp0`, `:bp1`, etc., because they are used internally by this method.
      * @return int the number of rows updated
+     * @throws \ESD\Yii\Db\Exception
      */
-    public static function updateAllCounters($counters, $condition = '', $params = [])
+    public static function updateAllCounters($counters, $condition = '', ?array $params = []): int
     {
         $n = 0;
         foreach ($counters as $name => $value) {
@@ -389,12 +390,13 @@ class ActiveRecord extends BaseActiveRecord
      *
      * For a large set of models you might consider using [[ActiveQuery::each()]] to keep memory usage within limits.
      *
-     * @param string|array $condition the conditions that will be put in the WHERE part of the DELETE SQL.
+     * @param null $condition the conditions that will be put in the WHERE part of the DELETE SQL.
      * Please refer to [[Query::where()]] on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return int the number of rows deleted
+     * @throws \ESD\Yii\Db\Exception
      */
-    public static function deleteAll($condition = null, $params = [])
+    public static function deleteAll($condition = null, ?array $params = []): int
     {
         $command = static::getDb()->createCommand();
         $command->delete(static::tableName(), $condition, $params);
@@ -405,10 +407,11 @@ class ActiveRecord extends BaseActiveRecord
     /**
      * {@inheritdoc}
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public static function find()
+    public static function find(): ActiveQuery
     {
-        return Yii::createObject(ActiveQuery::className(), [get_called_class()]);
+        return Yii::createObject(ActiveQuery::class, [get_called_class()]);
     }
 
     /**
@@ -419,7 +422,7 @@ class ActiveRecord extends BaseActiveRecord
      * if the table is not named after this convention.
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%' . Inflector::camel2id(StringHelper::basename(get_called_class()), '_') . '}}';
     }
@@ -429,7 +432,7 @@ class ActiveRecord extends BaseActiveRecord
      * @return TableSchema the schema information of the DB table associated with this AR class.
      * @throws InvalidConfigException if the table for the AR class does not exist.
      */
-    public static function getTableSchema()
+    public static function getTableSchema(): TableSchema
     {
         $tableSchema = static::getDb()
             ->getSchema()
@@ -455,7 +458,7 @@ class ActiveRecord extends BaseActiveRecord
      *
      * @return string[] the primary keys of the associated database table.
      */
-    public static function primaryKey()
+    public static function primaryKey(): ?array
     {
         return static::getTableSchema()->primaryKey;
     }
@@ -465,7 +468,7 @@ class ActiveRecord extends BaseActiveRecord
      * The default implementation will return all column names of the table associated with this AR class.
      * @return array list of attribute names.
      */
-    public function attributes()
+    public function attributes(): array
     {
         return array_keys(static::getTableSchema()->columns);
     }
@@ -497,7 +500,7 @@ class ActiveRecord extends BaseActiveRecord
      * @return array the declarations of transactional operations. The array keys are scenarios names,
      * and the array values are the corresponding transaction operations.
      */
-    public function transactions()
+    public function transactions(): array
     {
         return [];
     }
@@ -551,12 +554,12 @@ class ActiveRecord extends BaseActiveRecord
      * @param bool $runValidation whether to perform validation (calling [[validate()]])
      * before saving the record. Defaults to `true`. If the validation fails, the record
      * will not be saved to the database and this method will return `false`.
-     * @param array $attributes list of attributes that need to be saved. Defaults to `null`,
+     * @param array|null $attributes list of attributes that need to be saved. Defaults to `null`,
      * meaning all attributes that are loaded from DB will be saved.
      * @return bool whether the attributes are valid and the record is inserted successfully.
      * @throws \Exception|\Throwable in case insert failed.
      */
-    public function insert($runValidation = true, $attributes = null)
+    public function insert(?bool $runValidation = true, ?array $attributes = null): bool
     {
         if ($runValidation && !$this->validate($attributes)) {
             Yii::info('Model not inserted due to validation error.', __METHOD__);
@@ -577,10 +580,7 @@ class ActiveRecord extends BaseActiveRecord
             }
 
             return $result;
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             $transaction->rollBack();
             throw $e;
         }
@@ -658,7 +658,7 @@ class ActiveRecord extends BaseActiveRecord
      * @param bool $runValidation whether to perform validation (calling [[validate()]])
      * before saving the record. Defaults to `true`. If the validation fails, the record
      * will not be saved to the database and this method will return `false`.
-     * @param array $attributeNames list of attributes that need to be saved. Defaults to `null`,
+     * @param array|null $attributeNames list of attributes that need to be saved. Defaults to `null`,
      * meaning all attributes that are loaded from DB will be saved.
      * @return int|false the number of rows affected, or false if validation fails
      * or [[beforeSave()]] stops the updating process.
@@ -666,7 +666,7 @@ class ActiveRecord extends BaseActiveRecord
      * being updated is outdated.
      * @throws \Exception|\Throwable in case update failed.
      */
-    public function update($runValidation = true, $attributeNames = null)
+    public function update(?bool $runValidation = true, array $attributeNames = null)
     {
         if ($runValidation && !$this->validate($attributeNames)) {
             Yii::info('Model not updated due to validation error.', __METHOD__);
@@ -687,10 +687,7 @@ class ActiveRecord extends BaseActiveRecord
             }
 
             return $result;
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             $transaction->rollBack();
             throw $e;
         }
@@ -731,10 +728,7 @@ class ActiveRecord extends BaseActiveRecord
             }
 
             return $result;
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             $transaction->rollBack();
             throw $e;
         }
@@ -776,7 +770,7 @@ class ActiveRecord extends BaseActiveRecord
      * @param ActiveRecord $record record to compare to
      * @return bool whether the two active records refer to the same row in the same database table.
      */
-    public function equals($record)
+    public function equals($record): bool
     {
         if ($this->isNewRecord || $record->isNewRecord) {
             return false;

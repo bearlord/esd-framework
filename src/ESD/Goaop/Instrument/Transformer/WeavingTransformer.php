@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -14,10 +12,8 @@ namespace ESD\Goaop\Instrument\Transformer;
 
 use ESD\Goaop\Aop\Advisor;
 use ESD\Goaop\Aop\Aspect;
-use ESD\Goaop\Aop\Features;
 use ESD\Goaop\Aop\Framework\AbstractJoinpoint;
 use ESD\Goaop\Core\AdviceMatcher;
-use ESD\Goaop\Core\AdviceMatcherInterface;
 use ESD\Goaop\Core\AspectContainer;
 use ESD\Goaop\Core\AspectKernel;
 use ESD\Goaop\Core\AspectLoader;
@@ -26,41 +22,44 @@ use ESD\Goaop\ParserReflection\ReflectionClass;
 use ESD\Goaop\ParserReflection\ReflectionFile;
 use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
 use ESD\Goaop\ParserReflection\ReflectionMethod;
-use ESD\Goaop\Proxy\ClassProxyGenerator;
-use ESD\Goaop\Proxy\FunctionProxyGenerator;
-use ESD\Goaop\Proxy\TraitProxyGenerator;
+use ESD\Goaop\Proxy\ClassProxy;
+use ESD\Goaop\Proxy\FunctionProxy;
+use ESD\Goaop\Proxy\TraitProxy;
 
 /**
  * Main transformer that performs weaving of aspects into the source code
  */
 class WeavingTransformer extends BaseSourceTransformer
 {
-    /**
-     * Advice matcher for class
-     */
-    protected AdviceMatcherInterface $adviceMatcher;
 
     /**
-     * Should we use parameter widening for our decorators
+     * @var AdviceMatcher
      */
-    protected bool $useParameterWidening = false;
+    protected $adviceMatcher;
 
     /**
-     * Cache manager
+     * @var CachePathManager
      */
-    private CachePathManager $cachePathManager;
+    private $cachePathManager;
 
     /**
-     * Loader for aspects
+     * Instance of aspect loader
+     *
+     * @var AspectLoader
      */
-    protected AspectLoader $aspectLoader;
+    protected $aspectLoader;
 
     /**
      * Constructs a weaving transformer
+     *
+     * @param AspectKernel $kernel Instance of aspect kernel
+     * @param AdviceMatcher $adviceMatcher Advice matcher for class
+     * @param CachePathManager $cachePathManager Cache manager
+     * @param AspectLoader $loader Loader for aspects
      */
     public function __construct(
         AspectKernel $kernel,
-        AdviceMatcherInterface $adviceMatcher,
+        AdviceMatcher $adviceMatcher,
         CachePathManager $cachePathManager,
         AspectLoader $loader
     ) {
@@ -68,17 +67,15 @@ class WeavingTransformer extends BaseSourceTransformer
         $this->adviceMatcher    = $adviceMatcher;
         $this->cachePathManager = $cachePathManager;
         $this->aspectLoader     = $loader;
-
-        $this->useParameterWidening = $kernel->hasFeature(Features::PARAMETER_WIDENING);
     }
 
     /**
      * This method may transform the supplied source and return a new replacement for it
      *
-     * @param StreamMetaData $metadata
+     * @param StreamMetaData $metadata Metadata for source
      * @return string See RESULT_XXX constants in the interface
      */
-    public function transform(StreamMetaData $metadata): string
+    public function transform(StreamMetaData $metadata)
     {
         $totalTransformations = 0;
         $parsedSource         = new ReflectionFile($metadata->uri, $metadata->syntaxTree);
@@ -96,15 +93,10 @@ class WeavingTransformer extends BaseSourceTransformer
             $classes = $namespace->getClasses();
             foreach ($classes as $class) {
                 // Skip interfaces and aspects
-                if ($class->isInterface() || in_array(Aspect::class, $class->getInterfaceNames(), true)) {
+                if ($class->isInterface() || in_array(Aspect::class, $class->getInterfaceNames())) {
                     continue;
                 }
-                $wasClassProcessed = $this->processSingleClass(
-                    $advisors,
-                    $metadata,
-                    $class,
-                    $parsedSource->isStrictMode()
-                );
+                $wasClassProcessed = $this->processSingleClass($advisors, $metadata, $class);
                 $totalTransformations += (integer) $wasClassProcessed;
             }
             $wasFunctionsProcessed = $this->processFunctions($advisors, $metadata, $namespace);
@@ -117,20 +109,16 @@ class WeavingTransformer extends BaseSourceTransformer
     }
 
     /**
-     * Performs weaving of single class if needed, returns true if the class was processed
+     * Performs weaving of single class if needed
      *
-     * @param Advisor[]       $advisors List of advisors
-     * @param StreamMetaData  $metadata
-     * @param ReflectionClass $class
-     * @param bool            $useStrictMode If the source file used strict mode, the proxy should too
-     * @return bool
+     * @param array|Advisor[] $advisors
+     * @param StreamMetaData $metadata Source stream information
+     * @param ReflectionClass $class Instance of class to analyze
+     *
+     * @return bool True if was class processed, false otherwise
      */
-    private function processSingleClass(
-        array $advisors,
-        StreamMetaData $metadata,
-        ReflectionClass $class,
-        bool $useStrictMode
-    ): bool {
+    private function processSingleClass(array $advisors, StreamMetaData $metadata, ReflectionClass $class)
+    {
         $advices = $this->adviceMatcher->getAdvicesForClass($class, $advisors);
 
         if (empty($advices)) {
@@ -138,38 +126,29 @@ class WeavingTransformer extends BaseSourceTransformer
             return false;
         }
 
-        // Sort advices in advance to keep the correct order in cache, and leave only keys for the cache
-        $advices = AbstractJoinpoint::flatAndSortAdvices($advices);
+        // Sort advices in advance to keep the correct order in cache
+        foreach ($advices as &$typeAdvices) {
+            foreach ($typeAdvices as &$joinpointAdvices) {
+                if (is_array($joinpointAdvices)) {
+                    $joinpointAdvices = AbstractJoinpoint::sortAdvices($joinpointAdvices);
+                }
+            }
+        }
 
         // Prepare new class name
         $newClassName = $class->getShortName() . AspectContainer::AOP_PROXIED_SUFFIX;
 
         // Replace original class name with new
         $this->adjustOriginalClass($class, $advices, $metadata, $newClassName);
-        $newParentName = $class->getNamespaceName() . '\\' . $newClassName;
 
         // Prepare child Aop proxy
-        $childProxyGenerator = $class->isTrait()
-            ? new TraitProxyGenerator($class, $newParentName, $advices, $this->useParameterWidening)
-            : new ClassProxyGenerator($class, $newParentName, $advices, $this->useParameterWidening);
+        $child = $class->isTrait()
+            ? new TraitProxy($class, $advices)
+            : new ClassProxy($class, $advices);
 
-        $refNamespace = new ReflectionFileNamespace($class->getFileName(), $class->getNamespaceName());
-        foreach ($refNamespace->getNamespaceAliases() as $fqdn => $alias) {
-            // Either we have a string or Identifier node
-            if ($alias !== null) {
-                $childProxyGenerator->addUse($fqdn, (string) $alias);
-            } else {
-                $childProxyGenerator->addUse($fqdn);
-            }
-        }
-
-        $childCode = $childProxyGenerator->generate();
-
-        if ($useStrictMode) {
-            $childCode = 'declare(strict_types=1);' . PHP_EOL . $childCode;
-        }
-
-        $contentToInclude = $this->saveProxyToCache($class, $childCode);
+        // Set new parent name instead of original
+        $child->setParentName($newClassName);
+        $contentToInclude = $this->saveProxyToCache($class, $child);
 
         // Get last token for this class
         $lastClassToken = $class->getNode()->getAttribute('endTokenPos');
@@ -182,14 +161,17 @@ class WeavingTransformer extends BaseSourceTransformer
     /**
      * Adjust definition of original class source to enable extending
      *
+     * @param ReflectionClass $class Instance of class reflection
      * @param array $advices List of class advices (used to check for final methods and make them non-final)
+     * @param StreamMetaData $streamMetaData Source code metadata
+     * @param string $newClassName New name for the class
      */
     private function adjustOriginalClass(
         ReflectionClass $class,
         array $advices,
         StreamMetaData $streamMetaData,
-        string $newClassName
-    ): void {
+        $newClassName
+    ) {
         $classNode = $class->getNode();
         $position  = $classNode->getAttribute('startTokenPos');
         do {
@@ -235,15 +217,16 @@ class WeavingTransformer extends BaseSourceTransformer
     }
 
     /**
-     * Performs weaving of functions in the current namespace, returns true if functions were processed, false otherwise
+     * Performs weaving of functions in the current namespace
      *
-     * @param Advisor[] $advisors List of advisors
+     * @param array|Advisor[] $advisors List of advisors
+     * @param StreamMetaData $metadata Source stream information
+     * @param ReflectionFileNamespace $namespace Current namespace for file
+     *
+     * @return boolean True if functions were processed, false otherwise
      */
-    private function processFunctions(
-        array $advisors,
-        StreamMetaData $metadata,
-        ReflectionFileNamespace $namespace
-    ): bool {
+    private function processFunctions(array $advisors, StreamMetaData $metadata, ReflectionFileNamespace $namespace)
+    {
         static $cacheDirSuffix = '/_functions/';
 
         $wasProcessedFunctions = false;
@@ -255,13 +238,12 @@ class WeavingTransformer extends BaseSourceTransformer
 
             $functionFileName = $cacheDir . $fileName;
             if (!file_exists($functionFileName) || !$this->container->isFresh(filemtime($functionFileName))) {
-                $functionAdvices = AbstractJoinpoint::flatAndSortAdvices($functionAdvices);
-                $dirname         = dirname($functionFileName);
+                $dirname = dirname($functionFileName);
                 if (!file_exists($dirname)) {
                     mkdir($dirname, $this->options['cacheFileMode'], true);
                 }
-                $generator = new FunctionProxyGenerator($namespace, $functionAdvices, $this->useParameterWidening);
-                file_put_contents($functionFileName, $generator->generate(), LOCK_EX);
+                $source = new FunctionProxy($namespace, $functionAdvices);
+                file_put_contents($functionFileName, $source, LOCK_EX);
                 // For cache files we don't want executable bits by default
                 chmod($functionFileName, $this->options['cacheFileMode'] & (~0111));
             }
@@ -277,8 +259,13 @@ class WeavingTransformer extends BaseSourceTransformer
 
     /**
      * Save AOP proxy to the separate file anr returns the php source code for inclusion
+     *
+     * @param ReflectionClass $class Original class reflection
+     * @param string|ClassProxy $child
+     *
+     * @return string
      */
-    private function saveProxyToCache(ReflectionClass $class, string $childCode): string
+    private function saveProxyToCache($class, $child)
     {
         static $cacheDirSuffix = '/_proxies/';
 
@@ -291,8 +278,19 @@ class WeavingTransformer extends BaseSourceTransformer
             mkdir($dirname, $this->options['cacheFileMode'], true);
         }
 
-        $body = '<?php' . PHP_EOL . $childCode;
+        $body       = '<?php' . PHP_EOL;
+        $namespace  = $class->getNamespaceName();
+        if (!empty($namespace)) {
+            $body .= "namespace {$namespace};" . PHP_EOL . PHP_EOL;
+        }
 
+        $refNamespace = new ReflectionFileNamespace($class->getFileName(), $namespace);
+        foreach ($refNamespace->getNamespaceAliases() as $fqdn => $alias) {
+            $aliasSuffix = ($alias !== null) ? " as {$alias}" : '';
+            $body .= "use {$fqdn}{$aliasSuffix};" . PHP_EOL;
+        }
+
+        $body .= $child;
         $isVirtualSystem = strpos($proxyFileName, 'vfs') === 0;
         file_put_contents($proxyFileName, $body, $isVirtualSystem ? 0 : LOCK_EX);
         // For cache files we don't want executable bits by default
@@ -306,7 +304,7 @@ class WeavingTransformer extends BaseSourceTransformer
      *
      * @param array $unloadedAspects List of unloaded aspects
      */
-    private function loadAndRegisterAspects(array $unloadedAspects): void
+    private function loadAndRegisterAspects(array $unloadedAspects)
     {
         foreach ($unloadedAspects as $unloadedAspect) {
             $this->aspectLoader->loadAndRegister($unloadedAspect);

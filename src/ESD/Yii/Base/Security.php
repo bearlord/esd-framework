@@ -7,7 +7,6 @@
 
 namespace ESD\Yii\Base;
 
-use ESD\Yii\Yii;
 use ESD\Yii\Helpers\StringHelper;
 
 /**
@@ -105,10 +104,12 @@ class Security extends Component
      * @param string $data the data to encrypt
      * @param string $password the password to use for encryption
      * @return string the encrypted data as byte string
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException|\Random\RandomException
      * @see decryptByPassword()
      * @see encryptByKey()
      */
-    public function encryptByPassword($data, $password)
+    public function encryptByPassword(string $data, string $password): string
     {
         return $this->encrypt($data, true, $password, null);
     }
@@ -122,12 +123,14 @@ class Security extends Component
      * to hash input or output data.
      * @param string $data the data to encrypt
      * @param string $inputKey the input to use for encryption and authentication
-     * @param string $info optional context and application specific information, see [[hkdf()]]
+     * @param null $info optional context and application specific information, see [[hkdf()]]
      * @return string the encrypted data as byte string
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException|\Random\RandomException
      * @see decryptByKey()
      * @see encryptByPassword()
      */
-    public function encryptByKey($data, $inputKey, $info = null)
+    public function encryptByKey(string $data, string $inputKey, $info = null): string
     {
         return $this->encrypt($data, false, $inputKey, $info);
     }
@@ -137,9 +140,11 @@ class Security extends Component
      * @param string $data the encrypted data to decrypt
      * @param string $password the password to use for decryption
      * @return bool|string the decrypted data or false on authentication failure
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @see encryptByPassword()
      */
-    public function decryptByPassword($data, $password)
+    public function decryptByPassword(string $data, string $password)
     {
         return $this->decrypt($data, true, $password, null);
     }
@@ -148,11 +153,13 @@ class Security extends Component
      * Verifies and decrypts data encrypted with [[encryptByKey()]].
      * @param string $data the encrypted data to decrypt
      * @param string $inputKey the input to use for encryption and authentication
-     * @param string $info optional context and application specific information, see [[hkdf()]]
+     * @param null $info optional context and application specific information, see [[hkdf()]]
      * @return bool|string the decrypted data or false on authentication failure
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @see encryptByKey()
      */
-    public function decryptByKey($data, $inputKey, $info = null)
+    public function decryptByKey(string $data, string $inputKey, $info = null)
     {
         return $this->decrypt($data, false, $inputKey, $info);
     }
@@ -168,10 +175,10 @@ class Security extends Component
      *
      * @return string the encrypted data as byte string
      * @throws InvalidConfigException on OpenSSL not loaded
-     * @throws Exception on OpenSSL error
+     * @throws Exception|\Random\RandomException on OpenSSL error
      * @see decrypt()
      */
-    protected function encrypt($data, $passwordBased, $secret, $info)
+    protected function encrypt(string $data, bool $passwordBased, string $secret, ?string $info): string
     {
         if (!extension_loaded('openssl')) {
             throw new InvalidConfigException('Encryption requires the OpenSSL PHP extension');
@@ -193,7 +200,7 @@ class Security extends Component
 
         $encrypted = openssl_encrypt($data, $this->cipher, $key, OPENSSL_RAW_DATA, $iv);
         if ($encrypted === false) {
-            throw new \ESD\Yii\Base\Exception('OpenSSL failure on encryption: ' . openssl_error_string());
+            throw new Exception('OpenSSL failure on encryption: ' . openssl_error_string());
         }
 
         $authKey = $this->hkdf($this->kdfHash, $key, null, $this->authKeyInfo, $keySize);
@@ -221,7 +228,7 @@ class Security extends Component
      * @throws Exception on OpenSSL error
      * @see encrypt()
      */
-    protected function decrypt($data, $passwordBased, $secret, $info)
+    protected function decrypt(string $data, bool $passwordBased, string $secret, ?string $info)
     {
         if (!extension_loaded('openssl')) {
             throw new InvalidConfigException('Encryption requires the OpenSSL PHP extension');
@@ -250,7 +257,7 @@ class Security extends Component
 
         $decrypted = openssl_decrypt($encrypted, $this->cipher, $key, OPENSSL_RAW_DATA, $iv);
         if ($decrypted === false) {
-            throw new \ESD\Yii\Base\Exception('OpenSSL failure on decryption: ' . openssl_error_string());
+            throw new Exception('OpenSSL failure on decryption: ' . openssl_error_string());
         }
 
         return $decrypted;
@@ -262,16 +269,15 @@ class Security extends Component
      * Recommend use one of the SHA-2 hash algorithms: sha224, sha256, sha384 or sha512.
      * @param string $algo a hash algorithm supported by `hash_hmac()`, e.g. 'SHA-256'
      * @param string $inputKey the source key
-     * @param string $salt the random salt
-     * @param string $info optional info to bind the derived key material to application-
+     * @param string|null $salt the random salt
+     * @param string|null $info optional info to bind the derived key material to application-
      * and context-specific information, e.g. a user ID or API version, see
      * [RFC 5869](https://tools.ietf.org/html/rfc5869)
-     * @param int $length length of the output key in bytes. If 0, the output key is
+     * @param int|null $length length of the output key in bytes. If 0, the output key is
      * the length of the hash algorithm output.
-     * @throws InvalidArgumentException when HMAC generation fails.
      * @return string the derived key
      */
-    public function hkdf($algo, $inputKey, $salt = null, $info = null, $length = 0)
+    public function hkdf(string $algo, string $inputKey, ?string $salt = null, ?string $info = null, ?int $length = 0): string
     {
         if (function_exists('hash_hkdf')) {
             $outputKey = hash_hkdf($algo, $inputKey, $length, $info, $salt);
@@ -323,12 +329,11 @@ class Security extends Component
      * @param string $salt the random salt
      * @param int $iterations the number of iterations of the hash algorithm. Set as high as
      * possible to hinder dictionary password attacks.
-     * @param int $length length of the output key in bytes. If 0, the output key is
+     * @param int|null $length length of the output key in bytes. If 0, the output key is
      * the length of the hash algorithm output.
      * @return string the derived key
-     * @throws InvalidArgumentException when hash generation fails due to invalid params given.
      */
-    public function pbkdf2($algo, $password, $salt, $iterations, $length = 0)
+    public function pbkdf2(string $algo, string $password, string $salt, int $iterations, ?int $length = 0): string
     {
         if (function_exists('hash_pbkdf2') && PHP_VERSION_ID >= 50500) {
             $outputKey = hash_pbkdf2($algo, $password, $salt, $iterations, $length, true);
@@ -347,7 +352,7 @@ class Security extends Component
         if (is_string($iterations) && preg_match('{^\d{1,16}$}', $iterations)) {
             $iterations = (int) $iterations;
         }
-        if (!is_int($iterations) || $iterations < 1) {
+        if ($iterations < 1) {
             throw new InvalidArgumentException('Invalid iterations');
         }
         if (is_string($length) && preg_match('{^\d{1,16}$}', $length)) {
@@ -393,7 +398,7 @@ class Security extends Component
      * @see hkdf()
      * @see pbkdf2()
      */
-    public function hashData($data, $key, $rawHash = false)
+    public function hashData(string $data, string $key, ?bool $rawHash = false): string
     {
         $hash = hash_hmac($this->macHash, $data, $key, $rawHash);
         if (!$hash) {
@@ -418,7 +423,7 @@ class Security extends Component
      * @throws InvalidConfigException when HMAC generation fails.
      * @see hashData()
      */
-    public function validateData($data, $key, $rawHash = false)
+    public function validateData(string $data, string $key, ?bool $rawHash = false)
     {
         $test = @hash_hmac($this->macHash, '', '', $rawHash);
         if (!$test) {
@@ -445,14 +450,13 @@ class Security extends Component
     /**
      * Generates specified number of random bytes.
      * Note that output may not be ASCII.
-     * @see generateRandomString() if you need a string.
-     *
-     * @param int $length the number of bytes to generate
+     * @param int|null $length the number of bytes to generate
      * @return string the generated random bytes
-     * @throws InvalidArgumentException if wrong length is specified
-     * @throws Exception on failure.
+     * @throws \ESD\Yii\Base\Exception on failure.
+     * @throws \Random\RandomException
+     * @see generateRandomString() if you need a string.
      */
-    public function generateRandomKey($length = 32)
+    public function generateRandomKey(?int $length = 32): string
     {
         if (!is_int($length)) {
             throw new InvalidArgumentException('First parameter ($length) must be an integer');
@@ -492,15 +496,6 @@ class Security extends Component
                 );
             }
             if ($key !== false && StringHelper::byteLength($key) === $length) {
-                return $key;
-            }
-        }
-
-        // mcrypt_create_iv() does not use libmcrypt. Since PHP 5.3.7 it directly reads
-        // CryptGenRandom on Windows. Elsewhere it directly reads /dev/urandom.
-        if (function_exists('mcrypt_create_iv')) {
-            $key = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
-            if (StringHelper::byteLength($key) === $length) {
                 return $key;
             }
         }
@@ -558,11 +553,12 @@ class Security extends Component
      * Generates a random string of specified length.
      * The string generated matches [A-Za-z0-9_-]+ and is transparent to URL-encoding.
      *
-     * @param int $length the length of the key in characters
+     * @param int|null $length the length of the key in characters
      * @return string the generated random key
-     * @throws Exception on failure.
+     * @throws \ESD\Yii\Base\Exception on failure.
+     * @throws \Random\RandomException
      */
-    public function generateRandomString($length = 32)
+    public function generateRandomString(?int $length = 32): string
     {
         if (!is_int($length)) {
             throw new InvalidArgumentException('First parameter ($length) must be an integer');
@@ -585,11 +581,11 @@ class Security extends Component
      *
      * ```php
      * // generates the hash (usually done during user registration or when the password is changed)
-     * $hash = Yii::$app->getSecurity()->generatePasswordHash($password);
+     * $hash = \ESD\Yii\Yii::$app->getSecurity()->generatePasswordHash($password);
      * // ...save $hash in database...
      *
      * // during login, validate if the password entered is correct using $hash fetched from database
-     * if (Yii::$app->getSecurity()->validatePassword($password, $hash)) {
+     * if (\ESD\Yii\Yii::$app->getSecurity()->validatePassword($password, $hash)) {
      *     // password is good
      * } else {
      *     // password is bad
@@ -597,7 +593,7 @@ class Security extends Component
      * ```
      *
      * @param string $password The password to be hashed.
-     * @param int $cost Cost parameter used by the Blowfish hash algorithm.
+     * @param int|null $cost Cost parameter used by the Blowfish hash algorithm.
      * The higher the value of cost,
      * the longer it takes to generate the hash and to verify a password against it. Higher cost
      * therefore slows down a brute-force attack. For best protection against brute-force attacks,
@@ -606,17 +602,16 @@ class Security extends Component
      * @return string The password hash string. When [[passwordHashStrategy]] is set to 'crypt',
      * the output is always 60 ASCII characters, when set to 'password_hash' the output length
      * might increase in future versions of PHP (https://secure.php.net/manual/en/function.password-hash.php)
-     * @throws Exception on bad password parameter or cost parameter.
+     * @throws Exception|\Random\RandomException on bad password parameter or cost parameter.
      * @see validatePassword()
      */
-    public function generatePasswordHash($password, $cost = null)
+    public function generatePasswordHash(string $password, ?int $cost = null): string
     {
         if ($cost === null) {
             $cost = $this->passwordHashCost;
         }
 
         if (function_exists('password_hash')) {
-            /* @noinspection PhpUndefinedConstantInspection */
             return password_hash($password, PASSWORD_DEFAULT, ['cost' => $cost]);
         }
 
@@ -638,9 +633,9 @@ class Security extends Component
      * @throws InvalidArgumentException on bad password/hash parameters or if crypt() with Blowfish hash is not available.
      * @see generatePasswordHash()
      */
-    public function validatePassword($password, $hash)
+    public function validatePassword(string $password, string $hash): bool
     {
-        if (!is_string($password) || $password === '') {
+        if ($password === '') {
             throw new InvalidArgumentException('Password must be a string and cannot be empty.');
         }
 
@@ -672,11 +667,12 @@ class Security extends Component
      * "$2a$", "$2x$" or "$2y$", a two digit cost parameter, "$", and 22 characters
      * from the alphabet "./0-9A-Za-z".
      *
-     * @param int $cost the cost parameter
+     * @param int|null $cost the cost parameter
      * @return string the random salt value.
-     * @throws InvalidArgumentException if the cost parameter is out of the range of 4 to 31.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \Random\RandomException
      */
-    protected function generateSalt($cost = 13)
+    protected function generateSalt(?int $cost = 13): string
     {
         $cost = (int) $cost;
         if ($cost < 4 || $cost > 31) {
@@ -700,16 +696,8 @@ class Security extends Component
      * @param string $actual user-supplied string.
      * @return bool whether strings are equal.
      */
-    public function compareString($expected, $actual)
+    public function compareString(string $expected, string $actual): bool
     {
-        if (!is_string($expected)) {
-            throw new InvalidArgumentException('Expected expected value to be a string, ' . gettype($expected) . ' given.');
-        }
-
-        if (!is_string($actual)) {
-            throw new InvalidArgumentException('Expected actual value to be a string, ' . gettype($actual) . ' given.');
-        }
-
         if (function_exists('hash_equals')) {
             return hash_equals($expected, $actual);
         }
@@ -732,9 +720,11 @@ class Security extends Component
      * Used to mitigate BREACH attack by randomizing how token is outputted on each request.
      * @param string $token An unmasked token.
      * @return string A masked token.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \Random\RandomException
      * @since 2.0.12
      */
-    public function maskToken($token)
+    public function maskToken(string $token): string
     {
         // The number of bytes in a mask is always equal to the number of bytes in a token.
         $mask = $this->generateRandomKey(StringHelper::byteLength($token));
@@ -747,7 +737,7 @@ class Security extends Component
      * @return string An unmasked token, or an empty string in case of token format is invalid.
      * @since 2.0.12
      */
-    public function unmaskToken($maskedToken)
+    public function unmaskToken(string $maskedToken): string
     {
         $decoded = StringHelper::base64UrlDecode($maskedToken);
         $length = StringHelper::byteLength($decoded) / 2;

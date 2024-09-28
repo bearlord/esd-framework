@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,10 +10,10 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Aop\Pointcut;
 
+use ReflectionClass;
 use ESD\Goaop\Aop\Pointcut;
 use ESD\Goaop\Aop\PointFilter;
-use InvalidArgumentException;
-use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Flow pointcut is a dynamic checker that verifies stack trace to understand is it matches or not
@@ -26,40 +24,47 @@ class CFlowBelowMethodPointcut implements PointFilter, Pointcut
 
     /**
      * Filter for the class
+     *
+     * @var null|PointFilter
      */
-    protected PointFilter $internalClassFilter;
+    protected $internalClassFilter;
 
     /**
      * Filter for the points
+     *
+     * @var null|PointFilter
      */
-    protected Pointcut $internalPointFilter;
+    protected $internalPointFilter;
 
     /**
      * Control flow below constructor
      *
-     * @throws InvalidArgumentException if filter doesn't support methods
+     * @param Pointcut $pointcut Instance of pointcut, that will be used for matching
+     * @throws \InvalidArgumentException if filter doesn't support methods
      */
     public function __construct(Pointcut $pointcut)
     {
         $this->internalClassFilter = $pointcut->getClassFilter();
         $this->internalPointFilter = $pointcut;
-        if (($this->internalPointFilter->getKind() & PointFilter::KIND_METHOD) === 0) {
-            throw new InvalidArgumentException('Only method filters are valid for control flow');
+        if (!($this->internalPointFilter->getKind() & PointFilter::KIND_METHOD)) {
+            throw new \InvalidArgumentException('Only method filters are valid for control flow');
         }
     }
 
     /**
      * Performs matching of point of code
      *
-     * @param mixed              $point     Specific part of code, can be any Reflection class
-     * @param null|mixed         $context   Related context, can be class or namespace
-     * @param null|string|object $instance  Invocation instance or string for static calls
-     * @param null|array         $arguments Dynamic arguments for method
+     * @param mixed $point Specific part of code, can be any Reflection class
+     * @param null|mixed $context Related context, can be class or namespace
+     * @param null|string|object $instance Invocation instance or string for static calls
+     * @param null|array $arguments Dynamic arguments for method
+     *
+     * @return bool
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
+    public function matches($point, $context = null, $instance = null, array $arguments = null)
     {
         // With single parameter (statically) always matches
-        if ($instance === null) {
+        if (!$instance) {
             return true;
         }
 
@@ -72,7 +77,7 @@ class CFlowBelowMethodPointcut implements PointFilter, Pointcut
             if (!$this->internalClassFilter->matches($refClass)) {
                 continue;
             }
-            $refMethod = $refClass->getMethod($stackFrame['function']);
+            $refMethod = new ReflectionMethod($stackFrame['class'], $stackFrame['function']);
             if ($this->internalPointFilter->matches($refMethod)) {
                 return true;
             }
@@ -83,8 +88,10 @@ class CFlowBelowMethodPointcut implements PointFilter, Pointcut
 
     /**
      * Returns the kind of point filter
+     *
+     * @return integer
      */
-    public function getKind(): int
+    public function getKind()
     {
         return PointFilter::KIND_METHOD | PointFilter::KIND_DYNAMIC;
     }

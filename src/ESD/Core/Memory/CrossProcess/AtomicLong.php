@@ -23,7 +23,7 @@ class AtomicLong
      *
      * @param int $initValue
      */
-    public function __construct(?int $initValue = 0)
+    public function __construct(int $initValue = 0)
     {
         $this->swooleAtomicLong = new \Swoole\Atomic\Long($initValue);
     }
@@ -34,7 +34,7 @@ class AtomicLong
      * @param int $addValue
      * @return int
      */
-    public function add(?int $addValue = 1): int
+    public function add(int $addValue = 1): int
     {
         return $this->swooleAtomicLong->add($addValue);
     }
@@ -45,17 +45,17 @@ class AtomicLong
      * @param int $subValue
      * @return int
      */
-    public function sub(?int $subValue = 1): int
+    public function sub(int $subValue = 1): int
     {
         return $this->swooleAtomicLong->sub($subValue);
     }
 
     /**
      * Get
-     * 
+     *
      * @return int
      */
-    public function get(): int
+    public function get()
     {
         return $this->swooleAtomicLong->get();
     }

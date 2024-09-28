@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,7 +10,6 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Core;
 
-use RuntimeException;
 use ESD\Goaop\Aop\Advisor;
 use ESD\Goaop\Aop\Aspect;
 use ESD\Goaop\Aop\Pointcut;
@@ -21,33 +18,42 @@ use ReflectionClass;
 /**
  * Cached loader is responsible for faster initialization of pointcuts/advisors for concrete aspect
  *
- * @property AspectLoader $loader
+ * @property AspectLoader loader
  */
 class CachedAspectLoader extends AspectLoader
 {
+
     /**
      * Path to the cache directory
+     *
+     * @var null|string
      */
-    protected ?string $cacheDir = null;
+    protected $cacheDir;
 
     /**
      * File mode for the cache files
+     *
+     * @var integer
      */
-    protected int $cacheFileMode;
+    protected $cacheFileMode;
 
     /**
      * Identifier of original loader
+     *
+     * @var string
      */
-    protected string $loaderId;
+    protected $loaderId;
 
     /**
      * Cached loader constructor
      *
+     * @param AspectContainer $container Instance of container
+     * @param string $loaderId Original loader identifier
      * @param array $options List of kernel options
      */
-    public function __construct(AspectContainer $container, string $loaderId, array $options = [])
+    public function __construct(AspectContainer $container, $loaderId, array $options = [])
     {
-        $this->cacheDir      = $options['cacheDir'] ?? null;
+        $this->cacheDir      = isset($options['cacheDir']) ? $options['cacheDir'] : null;
         $this->cacheFileMode = $options['cacheFileMode'];
         $this->loaderId      = $loaderId;
         $this->container     = $container;
@@ -56,7 +62,7 @@ class CachedAspectLoader extends AspectLoader
     /**
      * {@inheritdoc}
      */
-    public function load(Aspect $aspect): array
+    public function load(Aspect $aspect)
     {
         $refAspect = new ReflectionClass($aspect);
         $fileName  = $this->cacheDir . '/_aspect/' . sha1($refAspect->getName());
@@ -75,7 +81,7 @@ class CachedAspectLoader extends AspectLoader
     /**
      * {@inheritdoc}
      */
-    public function registerLoaderExtension(AspectLoaderExtension $loader): void
+    public function registerLoaderExtension(AspectLoaderExtension $loader)
     {
         $this->loader->registerLoaderExtension($loader);
     }
@@ -90,16 +96,18 @@ class CachedAspectLoader extends AspectLoader
 
             return $this->loader;
         }
-        throw new RuntimeException('Not implemented');
+        throw new \RuntimeException('Not implemented');
     }
 
 
     /**
      * Loads pointcuts and advisors from the file
      *
-     * @return Pointcut[]|Advisor[]
+     * @param string $fileName Name of the file with cache
+     *
+     * @return array|Pointcut[]|Advisor[]
      */
-    protected function loadFromCache(string $fileName): array
+    protected function loadFromCache($fileName)
     {
         $content     = file_get_contents($fileName);
         $loadedItems = unserialize($content);
@@ -110,9 +118,10 @@ class CachedAspectLoader extends AspectLoader
     /**
      * Save pointcuts and advisors to the file
      *
-     * @param Pointcut[]|Advisor[] $items List of items to store
+     * @param array|Pointcut[]|Advisor[] $items List of items to store
+     * @param string $fileName Name of the file with cache
      */
-    protected function saveToCache(array $items, string $fileName): void
+    protected function saveToCache($items, $fileName)
     {
         $content       = serialize($items);
         $directoryName = dirname($fileName);

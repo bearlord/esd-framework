@@ -81,7 +81,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function defaultConditionClasses()
+    protected function defaultConditionClasses(): array
     {
         return array_merge(parent::defaultConditionClasses(), [
             'ILIKE' => 'ESD\Yii\Db\conditions\LikeCondition',
@@ -94,7 +94,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function defaultExpressionBuilders()
+    protected function defaultExpressionBuilders(): array
     {
         return array_merge(parent::defaultExpressionBuilders(), [
             'ESD\Yii\Db\ArrayExpression' => 'ESD\Yii\Db\Pgsql\ArrayExpressionBuilder',
@@ -109,13 +109,13 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string|array $columns the column(s) that should be included in the index. If there are multiple columns,
      * separate them with commas or use an array to represent them. Each column name will be properly quoted
      * by the method, unless a parenthesis is found in the name.
-     * @param bool|string $unique whether to make this a UNIQUE index constraint. You can pass `true` or [[INDEX_UNIQUE]] to create
+     * @param bool $unique whether to make this a UNIQUE index constraint. You can pass `true` or [[INDEX_UNIQUE]] to create
      * a unique index, `false` to make a non-unique index using the default index type, or one of the following constants to specify
      * the index method to use: [[INDEX_B_TREE]], [[INDEX_HASH]], [[INDEX_GIST]], [[INDEX_GIN]].
      * @return string the SQL statement for creating a new index.
      * @see http://www.postgresql.org/docs/8.2/static/sql-createindex.html
      */
-    public function createIndex($name, $table, $columns, $unique = false)
+    public function createIndex(string $name, string $table, $columns, bool $unique = false): string
     {
         if ($unique === self::INDEX_UNIQUE || $unique === true) {
             $index = false;
@@ -138,7 +138,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table whose index is to be dropped. The name will be properly quoted by the method.
      * @return string the SQL statement for dropping an index.
      */
-    public function dropIndex($name, $table)
+    public function dropIndex(string $name, string $table): string
     {
         if (strpos($table, '.') !== false && strpos($name, '.') === false) {
             if (strpos($table, '{{') !== false) {
@@ -162,7 +162,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $newName the new table name. The name will be properly quoted by the method.
      * @return string the SQL statement for renaming a DB table.
      */
-    public function renameTable($oldName, $newName)
+    public function renameTable(string $oldName, string $newName): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($oldName) . ' RENAME TO ' . $this->db->quoteTableName($newName);
     }
@@ -171,32 +171,32 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * Creates a SQL statement for resetting the sequence value of a table's primary key.
      * The sequence will be reset such that the primary key of the next new row inserted
      * will have the specified value or 1.
-     * @param string $tableName the name of the table whose primary key sequence will be reset
+     * @param string $table the name of the table whose primary key sequence will be reset
      * @param mixed $value the value for the primary key of the next new row inserted. If this is not set,
      * the next new row's primary key will have a value 1.
      * @return string the SQL statement for resetting sequence
      * @throws InvalidArgumentException if the table does not exist or there is no sequence associated with the table.
      */
-    public function resetSequence($tableName, $value = null)
+    public function resetSequence(string $table, $value = null): string
     {
-        $table = $this->db->getTableSchema($tableName);
+        $table = $this->db->getTableSchema($table);
         if ($table !== null && $table->sequenceName !== null) {
             // c.f. http://www.postgresql.org/docs/8.1/static/functions-sequence.html
             $sequence = $this->db->quoteTableName($table->sequenceName);
-            $tableName = $this->db->quoteTableName($tableName);
+            $table = $this->db->quoteTableName($table);
             if ($value === null) {
                 $key = $this->db->quoteColumnName(reset($table->primaryKey));
-                $value = "(SELECT COALESCE(MAX({$key}),0) FROM {$tableName})+1";
+                $value = "(SELECT COALESCE(MAX({$key}),0) FROM {$table})+1";
             } else {
                 $value = (int) $value;
             }
 
             return "SELECT SETVAL('$sequence',$value,false)";
         } elseif ($table === null) {
-            throw new InvalidArgumentException("Table not found: $tableName");
+            throw new InvalidArgumentException("Table not found: $table");
         }
 
-        throw new InvalidArgumentException("There is not sequence associated with table '$tableName'.");
+        throw new InvalidArgumentException("There is not sequence associated with table '$table'.");
     }
 
     /**
@@ -206,7 +206,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table name.
      * @return string the SQL statement for checking integrity
      */
-    public function checkIntegrity($check = true, $schema = '', $table = '')
+    public function checkIntegrity(bool $check = true, ?string $schema = '', ?string $table = ''): string
     {
         $enable = $check ? 'ENABLE' : 'DISABLE';
         $schema = $schema ?: $this->db->getSchema()->defaultSchema;
@@ -232,7 +232,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table to be truncated. The name will be properly quoted by the method.
      * @return string the SQL statement for truncating a DB table.
      */
-    public function truncateTable($table)
+    public function truncateTable(string $table): string
     {
         return 'TRUNCATE TABLE ' . $this->db->quoteTableName($table) . ' RESTART IDENTITY';
     }
@@ -247,7 +247,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * will become 'varchar(255) not null'. You can also use PostgreSQL-specific syntax such as `SET NOT NULL`.
      * @return string the SQL statement for changing the definition of a column.
      */
-    public function alterColumn($table, $column, $type)
+    public function alterColumn(string $table, string $column, string $type): string
     {
         $columnName = $this->db->quoteColumnName($column);
         $tableName = $this->db->quoteTableName($table);
@@ -300,7 +300,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function insert($table, $columns, &$params)
+    public function insert(string $table, $columns, array &$params): string
     {
         return parent::insert($table, $this->normalizeTableRowData($table, $columns), $params);
     }
@@ -310,7 +310,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @see https://www.postgresql.org/docs/9.5/static/sql-insert.html#SQL-ON-CONFLICT
      * @see https://stackoverflow.com/questions/1109061/insert-on-duplicate-update-in-postgresql/8702291#8702291
      */
-    public function upsert($table, $insertColumns, $updateColumns, &$params)
+    public function upsert(string $table, $insertColumns, $updateColumns, array &$params): string
     {
         $insertColumns = $this->normalizeTableRowData($table, $insertColumns);
         if (!is_bool($updateColumns)) {
@@ -451,7 +451,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function update($table, $columns, $condition, &$params)
+    public function update(string $table, array $columns, $condition, array &$params): string
     {
         return parent::update($table, $this->normalizeTableRowData($table, $columns), $condition, $params);
     }
@@ -487,7 +487,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function batchInsert($table, $columns, $rows, &$params = [])
+    public function batchInsert(string $table, array $columns, $rows, ?array &$params = []): string
     {
         if (empty($rows)) {
             return '';

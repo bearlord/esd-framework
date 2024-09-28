@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -18,24 +16,31 @@ use ReflectionFunctionAbstract;
 /**
  * Return type filter matcher methods and function with specific return type
  *
- * Type name can contain wildcards '*', '**' and '?'
+ * Namespace name can contain wildcards '*', '**' and '?'
  */
 class ReturnTypeFilter implements PointFilter
 {
+
     /**
-     * Return type name to match, can contain wildcards *,?
+     * Namespace name to match, can contain wildcards *,?
+     *
+     * @var string
      */
-    protected string $typeName;
+    protected $typeName;
 
     /**
      * Pattern for regular expression matching
+     *
+     * @var string
      */
-    protected string $regexp;
+    protected $regexp;
 
     /**
-     * Return type name matcher constructor accepts name or glob pattern of the type to match
+     * Namespace name matcher constructor
+     *
+     * @param string $returnTypeName Name of the return type to match or glob pattern
      */
-    public function __construct(string $returnTypeName)
+    public function __construct($returnTypeName)
     {
         $returnTypeName = trim($returnTypeName, '\\');
         $this->typeName = $returnTypeName;
@@ -49,14 +54,15 @@ class ReturnTypeFilter implements PointFilter
 
     /**
      * {@inheritdoc}
+     * @param ReflectionFunctionAbstract
      */
-    public function matches($functionLike, $context = null, $instance = null, array $arguments = null): bool
+    public function matches($functionLike, $context = null, $instance = null, array $arguments = null)
     {
         if (!$functionLike instanceof ReflectionFunctionAbstract) {
             return false;
         }
 
-        if (!$functionLike->hasReturnType()) {
+        if (PHP_VERSION_ID < 70000 || !$functionLike->hasReturnType()) {
             return false;
         }
 
@@ -68,7 +74,7 @@ class ReturnTypeFilter implements PointFilter
     /**
      * Returns the kind of point filter
      */
-    public function getKind(): int
+    public function getKind()
     {
         return self::KIND_METHOD | self::KIND_FUNCTION;
     }

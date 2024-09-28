@@ -30,26 +30,26 @@ class Catalog implements CatalogInterface
 
     /**
      * register
-     * @param string $node
+     * @param $node
      * @return ConsulResponse
      */
-    public function register(string $node)
+    public function register($node)
     {
         $params = [
-            'body' => $node,
+            'body' => (string)$node,
         ];
 
         return $this->client->put('/v1/catalog/register', $params);
     }
 
     /**
-     * @param string $node
+     * @param $node
      * @return ConsulResponse
      */
-    public function deregister(string $node)
+    public function deregister($node)
     {
         $params = [
-            'body' => $node,
+            'body' => (string)$node,
         ];
 
         return $this->client->put('/v1/catalog/deregister', $params);
@@ -65,11 +65,12 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Nodes
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function nodes(array $options = [], int $timeout = 5)
+    public function nodes(array $options = [], $timeout = 5)
     {
         $params = [
             'timeout' => $timeout,
@@ -80,11 +81,12 @@ class Catalog implements CatalogInterface
     }
 
     /**
-     * @param string $node
+     * Node
+     * @param $node
      * @param array $options
      * @return ConsulResponse
      */
-    public function node(string $node, array $options = [])
+    public function node($node, array $options = [])
     {
         $params = [
             'query' => OptionsResolver::resolve($options, ['dc', 'filter']),
@@ -94,11 +96,12 @@ class Catalog implements CatalogInterface
     }
 
     /**
+     * Services
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function services(array $options = [], int $timeout = 5)
+    public function services(array $options = [], $timeout = 5)
     {
         $params = [
             'timeout' => $timeout,
@@ -109,12 +112,13 @@ class Catalog implements CatalogInterface
     }
 
     /**
-     * @param string $service
+     * Service
+     * @param $service
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function service(string $service, array $options = [], int $timeout = 5)
+    public function service($service, array $options = [], $timeout = 5)
     {
         $params = [
             'timeout' => $timeout,
@@ -125,12 +129,13 @@ class Catalog implements CatalogInterface
     }
 
     /**
-     * @param string $service
+     * Connect
+     * @param $service
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function connect(string $service, array $options = [], int $timeout = 5)
+    public function connect($service, array $options = [], $timeout = 5)
     {
         $params = [
             'timeout' => $timeout,

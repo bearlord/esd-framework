@@ -55,7 +55,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function defaultExpressionBuilders()
+    protected function defaultExpressionBuilders(): array
     {
         return array_merge(parent::defaultExpressionBuilders(), [
             'ESD\Yii\Db\Conditions\InCondition' => 'ESD\Yii\Db\Oci\Conditions\InConditionBuilder',
@@ -66,7 +66,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildOrderByAndLimit($sql, $orderBy, $limit, $offset)
+    public function buildOrderByAndLimit(string $sql, array $orderBy, int $limit, int $offset): string
     {
         $orderBy = $this->buildOrderBy($orderBy);
         if ($orderBy !== '') {
@@ -97,13 +97,13 @@ EOD;
     /**
      * Builds a SQL statement for renaming a DB table.
      *
-     * @param string $table the table to be renamed. The name will be properly quoted by the method.
+     * @param string $oldName the table to be renamed. The name will be properly quoted by the method.
      * @param string $newName the new table name. The name will be properly quoted by the method.
      * @return string the SQL statement for renaming a DB table.
      */
-    public function renameTable($table, $newName)
+    public function renameTable(string $oldName, string $newName): string
     {
-        return 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' RENAME TO ' . $this->db->quoteTableName($newName);
+        return 'ALTER TABLE ' . $this->db->quoteTableName($oldName) . ' RENAME TO ' . $this->db->quoteTableName($newName);
     }
 
     /**
@@ -116,7 +116,7 @@ EOD;
      * For example, 'string' will be turned into 'varchar(255)', while 'string not null' will become 'varchar(255) not null'.
      * @return string the SQL statement for changing the definition of a column.
      */
-    public function alterColumn($table, $column, $type)
+    public function alterColumn(string $table, string $column, string $type): string
     {
         $type = $this->getColumnType($type);
 
@@ -130,7 +130,7 @@ EOD;
      * @param string $table the table whose index is to be dropped. The name will be properly quoted by the method.
      * @return string the SQL statement for dropping an index.
      */
-    public function dropIndex($name, $table)
+    public function dropIndex(string $name, string $table): string
     {
         return 'DROP INDEX ' . $this->db->quoteTableName($name);
     }
@@ -138,7 +138,7 @@ EOD;
     /**
      * {@inheritdoc}
      */
-    public function executeResetSequence($table, $value = null)
+    public function executeResetSequence(string $table, $value = null)
     {
         $tableSchema = $this->db->getTableSchema($table);
         if ($tableSchema === null) {
@@ -171,7 +171,7 @@ EOD;
     /**
      * {@inheritdoc}
      */
-    public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = null, $update = null)
+    public function addForeignKey(string $name, string $table, $columns, string $refTable, $refColumns, string $delete = null, string $update = null): string
     {
         $sql = 'ALTER TABLE ' . $this->db->quoteTableName($table)
             . ' ADD CONSTRAINT ' . $this->db->quoteColumnName($name)
@@ -191,7 +191,7 @@ EOD;
     /**
      * {@inheritdoc}
      */
-    protected function prepareInsertValues($table, $columns, $params = [])
+    protected function prepareInsertValues(string $table, $columns, ?array $params = []): array
     {
         list($names, $placeholders, $values, $params) = parent::prepareInsertValues($table, $columns, $params);
         if (!$columns instanceof Query && empty($names)) {
@@ -211,7 +211,7 @@ EOD;
      * {@inheritdoc}
      * @see https://docs.oracle.com/cd/B28359_01/server.111/b28286/statements_9016.htm#SQLRF01606
      */
-    public function upsert($table, $insertColumns, $updateColumns, &$params)
+    public function upsert(string $table, $insertColumns, $updateColumns, array &$params): string
     {
         /** @var Constraint[] $constraints */
         list($uniqueNames, $insertNames, $updateNames) = $this->prepareUpsertColumns($table, $insertColumns, $updateColumns, $constraints);
@@ -242,7 +242,7 @@ EOD;
             list($usingValues, $params) = $this->build($usingSubQuery, $params);
         }
         $mergeSql = 'MERGE INTO ' . $this->db->quoteTableName($table) . ' '
-            . 'USING (' . (isset($usingValues) ? $usingValues : ltrim($values, ' ')) . ') "EXCLUDED" '
+            . 'USING (' . ($usingValues ?? ltrim($values, ' ')) . ') "EXCLUDED" '
             . "ON ($on)";
         $insertValues = [];
         foreach ($insertNames as $name) {
@@ -293,7 +293,7 @@ EOD;
      * @param array|\Generator $rows the rows to be batch inserted into the table
      * @return string the batch INSERT SQL statement
      */
-    public function batchInsert($table, $columns, $rows, &$params = [])
+    public function batchInsert(string $table, array $columns, $rows, ?array &$params = []): string
     {
         if (empty($rows)) {
             return '';
@@ -347,7 +347,7 @@ EOD;
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function selectExists($rawSql)
+    public function selectExists(string $rawSql): string
     {
         return 'SELECT CASE WHEN EXISTS(' . $rawSql . ') THEN 1 ELSE 0 END FROM DUAL';
     }
@@ -356,7 +356,7 @@ EOD;
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromColumn($table, $column)
+    public function dropCommentFromColumn(string $table, string $column): string
     {
         return 'COMMENT ON COLUMN ' . $this->db->quoteTableName($table) . '.' . $this->db->quoteColumnName($column) . " IS ''";
     }
@@ -365,7 +365,7 @@ EOD;
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromTable($table)
+    public function dropCommentFromTable(string $table): string
     {
         return 'COMMENT ON TABLE ' . $this->db->quoteTableName($table) . " IS ''";
     }

@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Cloud\Gateway\Filter;
 
 use ESD\Core\Server\Beans\Http\HttpStream;
+use ESD\Plugins\Cloud\Gateway\Annotation\ResponseBody;
 use ESD\Plugins\Pack\ClientData;
 
 /**
@@ -29,15 +30,27 @@ class JsonResponseFilter extends AbstractFilter
      */
     public function filter(ClientData $clientData): int
     {
-        $data = $clientData->getResponseRaw();
-        if (!is_string($data)) {
-            if ($data instanceof HttpStream) {
-                $data = $data->__toString();
-            } else {
-                $data = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $annotations = $clientData->getAnnotations();
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof ResponseBody && strpos($annotation->value, "application/json") !== false) {
+                $data = $clientData->getResponseRaw();
+
+                if (!is_string($data)) {
+                    if ($data instanceof HttpStream) {
+                        $data = $data->__toString();
+                    } else {
+                        $data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    }
+                    $clientData->setResponseRaw($data);
+                }
+
+                $clientData->getResponse()->withHeader("Content-type", $annotation->value);
+                return AbstractFilter::RETURN_NEXT;
             }
-            $clientData->setResponseRaw($data);
+
         }
+
         return AbstractFilter::RETURN_NEXT;
     }
 

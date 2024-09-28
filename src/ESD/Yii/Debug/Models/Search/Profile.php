@@ -32,7 +32,7 @@ class Profile extends Base
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['category', 'info'], 'safe'],
@@ -42,7 +42,7 @@ class Profile extends Base
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'category' => 'Category',

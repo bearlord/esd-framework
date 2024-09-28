@@ -2,7 +2,7 @@
 
 namespace ESD\Nikic\PhpParser\Node\Name;
 
-class FullyQualified extends  \ESD\Nikic\PhpParser\Node\Name
+class FullyQualified extends \ESD\Nikic\PhpParser\Node\Name
 {
     /**
      * Checks whether the name is unqualified. (E.g. Name)

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,41 +10,45 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Aop\Intercept\ClassJoinpoint;
 use ESD\Goaop\Core\AspectContainer;
 use ReflectionClass;
-
-use function strlen;
 
 /**
  * Static initialization joinpoint is invoked after class is loaded into memory
  */
-class StaticInitializationJoinpoint extends AbstractJoinpoint implements ClassJoinpoint
+class StaticInitializationJoinpoint extends AbstractJoinpoint
 {
 
-    protected ReflectionClass $reflectionClass;
+    /**
+     * @var ReflectionClass
+     */
+    protected $reflectionClass;
 
     /**
-     * Constructor for the class static initialization joinpoint
+     * Constructor for static initialization joinpoint
      *
-     * @param array $advices List of advices for this invocation
+     * @param string $className Name of the class
+     * @param string $type Type of joinpoint
+     * @param $advices array List of advices for this invocation
+     *
+     * @internal param ReflectionClass $reflectionClass Reflection of class
      */
-    public function __construct(array $advices, string $className)
+    public function __construct($className, $type, array $advices)
     {
         $originalClass = $className;
         if (strpos($originalClass, AspectContainer::AOP_PROXIED_SUFFIX)) {
             $originalClass = substr($originalClass, 0, -strlen(AspectContainer::AOP_PROXIED_SUFFIX));
         }
-        $this->reflectionClass = new ReflectionClass($originalClass);
+        $this->reflectionClass = new \ReflectionClass($originalClass);
         parent::__construct($advices);
     }
 
     /**
      * Proceeds to the next interceptor in the chain.
      *
-     * @return void Covariant, as static initializtion could not return anything
+     * @return mixed see the children interfaces' proceed definition.
      */
-    public function proceed(): void
+    public function proceed()
     {
         if (isset($this->advices[$this->current])) {
             $currentInterceptor = $this->advices[$this->current++];
@@ -56,51 +58,48 @@ class StaticInitializationJoinpoint extends AbstractJoinpoint implements ClassJo
 
     /**
      * Invokes current joinpoint with all interceptors
+     *
+     * @return mixed
      */
-    final public function __invoke(): void
+    final public function __invoke()
     {
         $this->current = 0;
-        $this->proceed();
+
+        return $this->proceed();
     }
 
     /**
-     * Returns the object for which current joinpoint is invoked
+     * Returns the object that holds the current joinpoint's static
+     * part.
      *
-     * @return object|null Instance of object or null for static call/unavailable context
+     * @return object|null the object (can be null if the accessible object is
+     * static).
      */
-    public function getThis(): ?object
+    public function getThis()
     {
         return null;
     }
 
     /**
-     * Checks if the current joinpoint is dynamic or static
+     * Returns the static part of this joinpoint.
      *
-     * Dynamic joinpoint contains a reference to an object that can be received via getThis() method call
-     *
-     * @see ClassJoinpoint::getThis()
+     * @return ReflectionClass
      */
-    public function isDynamic(): bool
+    public function getStaticPart()
     {
-        return false;
-    }
-
-    /**
-     * Returns the static scope name (class name) of this joinpoint.
-     */
-    public function getScope(): string
-    {
-        return $this->reflectionClass->getName();
+        return $this->reflectionClass;
     }
 
     /**
      * Returns a friendly description of current joinpoint
+     *
+     * @return string
      */
-    final public function __toString(): string
+    final public function __toString()
     {
         return sprintf(
             'staticinitialization(%s)',
-            $this->getScope()
+            $this->reflectionClass->getName()
         );
     }
 }

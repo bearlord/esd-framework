@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -21,25 +19,28 @@ abstract class AbstractInvocation extends AbstractJoinpoint implements Invocatio
 {
     /**
      * Arguments for invocation
+     *
+     * @var array
      */
-    protected array $arguments = [];
+    protected $arguments = [];
 
     /**
-     * Gets arguments for current invocation
+     * Get the arguments as an array object.
+     * It is possible to change element values within this array to change the arguments
      *
-     * @api
+     * @return array the arguments of the invocation
      */
-    public function getArguments(): array
+    public function getArguments()
     {
         return $this->arguments;
     }
 
     /**
-     * Sets arguments for current invocation
+     * Sets the arguments for current invocation
      *
-     * @api
+     * @param array $arguments New list of arguments
      */
-    public function setArguments(array $arguments): void
+    public function setArguments(array $arguments)
     {
         $this->arguments = $arguments;
     }

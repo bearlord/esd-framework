@@ -36,7 +36,7 @@ interface EventCall
      * @param int $timeout
      * @return mixed
      */
-    public function wait(int $timeout = 5);
+    public function wait($timeout = 5);
     /**
      * @return mixed
      */

@@ -18,6 +18,7 @@ use ESD\Core\Runtime;
 class ServerConfig extends BaseConfig
 {
     const key = "esd.server";
+
     /**
      * Server name
      * @var string
@@ -41,6 +42,7 @@ class ServerConfig extends BaseConfig
      * @var int
      */
     protected $workerNum;
+
     /**
      * Data packet distribution strategy. 7 types can be selected, default is 2
      * 1, round-robin mode, will receive round-robin allocation to each Worker process
@@ -301,7 +303,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getWorkerNum()
+    public function getWorkerNum(): int
     {
         return $this->workerNum ?? 1;
     }
@@ -317,7 +319,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getDispatchMode()
+    public function getDispatchMode(): int
     {
         return $this->dispatchMode ?? 2;
     }
@@ -349,7 +351,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getMaxConn()
+    public function getMaxConn(): int
     {
         return $this->maxConn ?? 100000;
     }
@@ -365,7 +367,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isDaemonize()
+    public function isDaemonize(): bool
     {
         return $this->daemonize ?? false;
     }
@@ -381,7 +383,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isReloadAsync()
+    public function isReloadAsync(): bool
     {
         return $this->reloadAsync ?? false;
     }
@@ -397,7 +399,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getMaxWaitTime()
+    public function getMaxWaitTime(): int
     {
         return $this->maxWaitTime ?? 30;
     }
@@ -413,7 +415,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenCpuAffinity()
+    public function isOpenCpuAffinity(): bool
     {
         return $this->openCpuAffinity ?? true;
     }
@@ -429,7 +431,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return array
      */
-    public function getCpuAffinityIgnore()
+    public function getCpuAffinityIgnore(): ?array
     {
         return $this->cpuAffinityIgnore;
     }
@@ -443,9 +445,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLogFile()
+    public function getLogFile(): ?string
     {
         return $this->logFile;
     }
@@ -477,7 +479,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getHeartbeatCheckInterval()
+    public function getHeartbeatCheckInterval(): int
     {
         return $this->heartbeatCheckInterval;
     }
@@ -493,7 +495,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getHeartbeatIdleTime()
+    public function getHeartbeatIdleTime(): int
     {
         return $this->heartbeatIdleTime;
     }
@@ -508,9 +510,9 @@ class ServerConfig extends BaseConfig
 
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUser()
+    public function getUser(): ?string
     {
         return $this->user;
     }
@@ -524,9 +526,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getGroup()
+    public function getGroup(): ?string
     {
         return $this->group;
     }
@@ -540,9 +542,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getChroot()
+    public function getChroot(): ?string
     {
         return $this->chroot;
     }
@@ -556,9 +558,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPidFile()
+    public function getPidFile(): ?string
     {
         return $this->pidFile;
     }
@@ -588,9 +590,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSocketBufferSize()
+    public function getSocketBufferSize(): ?int
     {
         return $this->socketBufferSize;
     }
@@ -606,7 +608,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getMaxCoroutine()
+    public function getMaxCoroutine(): int
     {
         return $this->maxCoroutine ?? 3000;
     }
@@ -620,9 +622,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUploadTmpDir()
+    public function getUploadTmpDir(): ?string
     {
         return $this->uploadTmpDir;
     }
@@ -638,7 +640,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isHttpParsePost()
+    public function isHttpParsePost(): bool
     {
         return $this->httpParsePost;
     }
@@ -652,9 +654,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDocumentRoot()
+    public function getDocumentRoot(): ?string
     {
         return $this->documentRoot;
     }
@@ -670,7 +672,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isEnableStaticHandler()
+    public function isEnableStaticHandler(): bool
     {
         return $this->enableStaticHandler;
     }
@@ -686,7 +688,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isHttpCompression()
+    public function isHttpCompression(): bool
     {
         return $this->httpCompression;
     }
@@ -700,9 +702,9 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getWebsocketSubprotocol()
+    public function getWebsocketSubprotocol(): ?string
     {
         return $this->websocketSubprotocol;
     }
@@ -718,7 +720,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenWebsocketCloseFrame()
+    public function isOpenWebsocketCloseFrame(): bool
     {
         return $this->openWebsocketCloseFrame;
     }
@@ -844,7 +846,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getBanner(): string
+    public function getBanner(): ?string
     {
         return $this->banner;
     }
@@ -893,7 +895,7 @@ class ServerConfig extends BaseConfig
      * @return string
      * @throws Exception
      */
-    public function getRootDir()
+    public function getRootDir(): string
     {
         if (empty($this->rootDir) && !defined("ROOT_DIR")) {
             throw new Exception("ROOT_DIR constant is not set, please define");
@@ -925,7 +927,7 @@ class ServerConfig extends BaseConfig
      * @return string
      * @throws Exception
      */
-    public function getBinDir()
+    public function getBinDir(): string
     {
         return realpath($this->getRootDir()) . DIRECTORY_SEPARATOR . "bin";
     }
@@ -936,7 +938,7 @@ class ServerConfig extends BaseConfig
      * @return string
      * @throws Exception
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->getBinDir() . DIRECTORY_SEPARATOR . "cache";
     }
@@ -947,7 +949,7 @@ class ServerConfig extends BaseConfig
      * @return string
      * @throws Exception
      */
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return $this->getBinDir() . DIRECTORY_SEPARATOR . "logs";
     }
@@ -958,7 +960,7 @@ class ServerConfig extends BaseConfig
      * @return string
      * @throws Exception
      */
-    public function getSrcDir()
+    public function getSrcDir(): string
     {
         return realpath($this->getRootDir()) . DIRECTORY_SEPARATOR . "src";
     }
@@ -969,7 +971,7 @@ class ServerConfig extends BaseConfig
      * @return string
      * @throws Exception
      */
-    public function getVendorDir()
+    public function getVendorDir(): string
     {
         return realpath($this->getRootDir()) . DIRECTORY_SEPARATOR . "vendor";
     }

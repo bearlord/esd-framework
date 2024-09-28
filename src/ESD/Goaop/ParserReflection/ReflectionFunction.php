@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -11,7 +10,6 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\ParserReflection;
 
-use Closure;
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\Traits\ReflectionFunctionLikeTrait;
 use ESD\Nikic\PhpParser\Node\Stmt\Function_;
@@ -22,21 +20,20 @@ use ReflectionFunction as BaseReflectionFunction;
  */
 class ReflectionFunction extends BaseReflectionFunction
 {
-    use InternalPropertiesEmulationTrait;
-    use ReflectionFunctionLikeTrait;
+    use ReflectionFunctionLikeTrait, InternalPropertiesEmulationTrait;
 
     /**
      * Initializes reflection instance for given AST-node
      *
-     * @param string|Closure $functionName The name of the function to reflect or a closure.
-     * @param Function_ $functionNode Function node AST
+     * @param string|\Closure $functionName The name of the function to reflect or a closure.
+     * @param Function_|null  $functionNode Function node AST
      */
     public function __construct($functionName, Function_ $functionNode)
     {
         $namespaceParts = explode('\\', $functionName);
         // Remove the last one part with function name
         array_pop($namespaceParts);
-        $this->namespaceName = implode('\\', $namespaceParts);
+        $this->namespaceName = join('\\', $namespaceParts);
 
         $this->functionLikeNode = $functionNode;
         unset($this->name);
@@ -45,7 +42,7 @@ class ReflectionFunction extends BaseReflectionFunction
     /**
      * Emulating original behaviour of reflection
      */
-    public function __debugInfo(): array
+    public function ___debugInfo()
     {
         $nodeName = 'unknown';
 
@@ -58,8 +55,10 @@ class ReflectionFunction extends BaseReflectionFunction
 
     /**
      * Returns an AST-node for function
+     *
+     * @return Function_
      */
-    public function getNode(): Function_
+    public function getNode()
     {
         return $this->functionLikeNode;
     }
@@ -81,7 +80,7 @@ class ReflectionFunction extends BaseReflectionFunction
     {
         $this->initializeInternalReflection();
 
-        return parent::invoke(...func_get_args());
+        return call_user_func_array('parent::invoke', func_get_args());
     }
 
     /**
@@ -100,7 +99,7 @@ class ReflectionFunction extends BaseReflectionFunction
      * Only internal functions can be disabled using disable_functions directive.
      * User-defined functions are unaffected.
      */
-    public function isDisabled(): bool
+    public function isDisabled()
     {
         return false;
     }
@@ -123,7 +122,7 @@ class ReflectionFunction extends BaseReflectionFunction
             $this->getStartLine(),
             $this->getEndLine(),
             count($this->getParameters()),
-            array_reduce($this->getParameters(), static function ($str, ReflectionParameter $param) {
+            array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
                 return $str . "\n    " . $param;
             }, '')
         );
@@ -132,8 +131,10 @@ class ReflectionFunction extends BaseReflectionFunction
 
     /**
      * Implementation of internal reflection initialization
+     *
+     * @return void
      */
-    protected function __initialize(): void
+    protected function __initialize()
     {
         parent::__construct($this->getName());
     }

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -19,27 +17,34 @@ use ESD\Goaop\Aop\PointFilter;
  */
 class ModifierMatcherFilter implements PointFilter
 {
+
     /**
      * Bit mask, that should be always match
+     *
+     * @var int
      */
-    protected int $andMask = 0;
+    protected $andMask = 0;
 
     /**
      * Bit mask, that can be used for additional check
+     *
+     * @var int
      */
-    protected int $orMask = 0;
+    protected $orMask = 0;
 
     /**
      * Bit mask to exclude specific value from matching, for example, !public
+     *
+     * @var int
      */
-    protected int $notMask = 0;
+    protected $notMask = 0;
 
     /**
      * Initialize default filter with "and" mask
      *
      * @param int $initialMask Default mask for "and"
      */
-    public function __construct(int $initialMask = 0)
+    public function __construct($initialMask = 0)
     {
         $this->andMask = $initialMask;
     }
@@ -51,8 +56,10 @@ class ModifierMatcherFilter implements PointFilter
      * @param null|mixed $context Related context, can be class or namespace
      * @param null|string|object $instance Invocation instance or string for static calls
      * @param null|array $arguments Dynamic arguments for method
+     *
+     * @return bool
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
+    public function matches($point, $context = null, $instance = null, array $arguments = null)
     {
         $modifiers = $point->getModifiers();
 
@@ -61,9 +68,12 @@ class ModifierMatcherFilter implements PointFilter
     }
 
     /**
-     * Add "and" mask
+     * Add "and" or mask
+     *
+     * @param integer $bitMask
+     * @return $this
      */
-    public function andMatch(int $bitMask): self
+    public function andMatch($bitMask)
     {
         $this->andMask |= $bitMask;
 
@@ -72,8 +82,11 @@ class ModifierMatcherFilter implements PointFilter
 
     /**
      * Add "or" mask
+     *
+     * @param integer $bitMask
+     * @return $this
      */
-    public function orMatch(int $bitMask): self
+    public function orMatch($bitMask)
     {
         $this->orMask |= $bitMask;
 
@@ -82,8 +95,11 @@ class ModifierMatcherFilter implements PointFilter
 
     /**
      * Add "not" mask
+     *
+     * @param integer $bitMask
+     * @return $this
      */
-    public function notMatch(int $bitMask): self
+    public function notMatch($bitMask)
     {
         $this->notMask |= $bitMask;
 
@@ -92,8 +108,10 @@ class ModifierMatcherFilter implements PointFilter
 
     /**
      * Returns the kind of point filter
+     *
+     * @return integer
      */
-    public function getKind(): int
+    public function getKind()
     {
         return self::KIND_ALL;
     }

@@ -348,12 +348,12 @@ class Query extends Component implements QueryInterface
 
     /**
      * Executes the query and returns a single row of result.
-     * @param Connection $db the Mongo connection used to execute the query.
+     * @param Connection|null $db the Mongo connection used to execute the query.
      * If this parameter is not given, the `mongodb` application component will be used.
      * @return array|false the first row (in terms of an array) of the query result. `false` is returned if the query
      * results in nothing.
      */
-    public function one($db = null)
+    public function one(\ESD\Yii\Db\Connection $db = null)
     {
         if (!empty($this->emulateExecution)) {
             return false;

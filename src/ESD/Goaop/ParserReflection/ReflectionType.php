@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -23,7 +21,7 @@ class ReflectionType extends BaseReflectionType
     /**
      * If type allows null or not
      *
-     * @var bool
+     * @var boolean
      */
     private $allowsNull;
 
@@ -60,7 +58,7 @@ class ReflectionType extends BaseReflectionType
     /**
      * @inheritDoc
      */
-    public function isBuiltin(): bool
+    public function isBuiltin()
     {
         return $this->isBuiltin;
     }
@@ -78,16 +76,26 @@ class ReflectionType extends BaseReflectionType
      *
      * @see https://3v4l.org/nZFiT
      *
-     * @param BaseReflectionType $type Type to display
+     * @param ReflectionType $type Type to display
      *
      * @return string
      */
-    public static function convertToDisplayType(BaseReflectionType $type)
+    public static function convertToDisplayType(\ReflectionType $type)
     {
+        static $typeMap = [
+            'int'    => 'integer',
+            'bool'   => 'boolean',
+            'double' => 'float',
+        ];
+
         if ($type instanceof ReflectionNamedType) {
             $displayType = $type->getName();
         } else {
-            $displayType = (string)$type;
+            $displayType = (string) $type;
+        };
+
+        if (PHP_VERSION_ID < 70300 && isset($typeMap[$displayType])) {
+            $displayType = $typeMap[$displayType];
         }
 
         $displayType = ltrim($displayType, '\\');

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,34 +10,34 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Core;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache as DoctrineCache;
-use ESD\Goaop\Aop\Advisor;
-use ESD\Goaop\Aop\Aspect;
-use ESD\Goaop\Aop\Pointcut;
-use ESD\Goaop\Aop\Pointcut\PointcutGrammar;
+use ReflectionClass;
+use ESD\Goaop\Aop;
 use ESD\Goaop\Aop\Pointcut\PointcutLexer;
+use ESD\Goaop\Aop\Pointcut\PointcutGrammar;
 use ESD\Goaop\Aop\Pointcut\PointcutParser;
 use ESD\Goaop\Instrument\ClassLoading\CachePathManager;
-use ReflectionClass;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * Aspect container contains list of all pointcuts and advisors
  */
-class GoAspectContainer extends Container
+class GoAspectContainer extends Container implements AspectContainer
 {
     /**
      * List of resources for application
      *
-     * @var string[]
+     * @var array
      */
-    protected array $resources = [];
+    protected $resources = [];
 
     /**
      * Cached timestamp for resources
+     *
+     * @var integer
      */
-    protected int $maxTimestamp = 0;
+    protected $maxTimestamp = 0;
 
     /**
      * Constructor for container
@@ -48,14 +46,16 @@ class GoAspectContainer extends Container
     {
         // Register all services in the container
         $this->share('aspect.loader', function (Container $container) {
-            $annotReader  = $container->get('aspect.annotation.reader');
-            $aspectLoader = new AspectLoader($container);
-            $lexer        = $container->get('aspect.pointcut.lexer');
-            $parser       = $container->get('aspect.pointcut.parser');
+            $aspectLoader = new AspectLoader(
+                $container,
+                $container->get('aspect.annotation.reader')
+            );
+            $lexer  = $container->get('aspect.pointcut.lexer');
+            $parser = $container->get('aspect.pointcut.parser');
 
             // Register general aspect loader extension
-            $aspectLoader->registerLoaderExtension(new GeneralAspectLoaderExtension($lexer, $parser, $annotReader));
-            $aspectLoader->registerLoaderExtension(new IntroductionAspectExtension($lexer, $parser, $annotReader));
+            $aspectLoader->registerLoaderExtension(new GeneralAspectLoaderExtension($lexer, $parser));
+            $aspectLoader->registerLoaderExtension(new IntroductionAspectExtension($lexer, $parser));
 
             return $aspectLoader;
         });
@@ -75,14 +75,19 @@ class GoAspectContainer extends Container
             return $loader;
         });
 
-        $this->share('aspect.advisor.accessor', fn(Container $container) => new LazyAdvisorAccessor(
-            $container,
-            $container->get('aspect.cached.loader')
-        ));
+        $this->share('aspect.advisor.accessor', function (Container $container) {
+            return new LazyAdvisorAccessor(
+                $container,
+                $container->get('aspect.cached.loader')
+            );
+        });
 
-        $this->share('aspect.advice_matcher', fn(Container $container) => new AdviceMatcher(
-            $container->get('kernel.interceptFunctions')
-        ));
+        $this->share('aspect.advice_matcher', function (Container $container) {
+            return new AdviceMatcher(
+                $container->get('aspect.loader'),
+                $container->get('kernel.interceptFunctions')
+            );
+        });
 
         $this->share('aspect.annotation.cache', function (Container $container) {
             $options = $container->get('kernel.options');
@@ -95,7 +100,7 @@ class GoAspectContainer extends Container
                 return new DoctrineCache\FilesystemCache(
                     $options['cacheDir'] . DIRECTORY_SEPARATOR . '_annotations' . DIRECTORY_SEPARATOR,
                     '.annotations.cache',
-                    0777 & (~(int)$options['cacheFileMode'])
+                    0777 & (~$options['cacheFileMode'])
                 );
             }
 
@@ -104,70 +109,97 @@ class GoAspectContainer extends Container
 
         $this->share('aspect.annotation.reader', function (Container $container) {
             $options = $container->get('kernel.options');
+            $options['debug'] = isset($options['debug']) ? $options['debug'] : false;
 
             return new CachedReader(
                 new AnnotationReader(),
                 $container->get('aspect.annotation.cache'),
-                $options['debug'] ?? false
+                $options['debug']
             );
         });
 
-        $this->share('aspect.cache.path.manager', fn(Container $container) => new CachePathManager($container->get('kernel')));
+        $this->share('aspect.cache.path.manager', function (Container $container) {
+            return new CachePathManager($container->get('kernel'));
+        });
 
         // Pointcut services
-        $this->share('aspect.pointcut.lexer', fn() => new PointcutLexer());
-        $this->share('aspect.pointcut.parser', fn(Container $container) => new PointcutParser(
-            new PointcutGrammar(
-                $container,
-                $container->get('aspect.annotation.reader')
-            )
-        ));
+        $this->share('aspect.pointcut.lexer', function () {
+            return new PointcutLexer();
+        });
+        $this->share('aspect.pointcut.parser', function (Container $container) {
+            return new PointcutParser(
+                new PointcutGrammar(
+                    $container,
+                    $container->get('aspect.annotation.reader')
+                )
+            );
+        });
     }
 
     /**
      * Returns a pointcut by identifier
+     *
+     * @param string $id Pointcut identifier
+     *
+     * @return Aop\Pointcut
      */
-    public function getPointcut(string $id): Pointcut
+    public function getPointcut($id)
     {
         return $this->get("pointcut.{$id}");
     }
 
     /**
      * Store the pointcut in the container
+     *
+     * @param Aop\Pointcut $pointcut Instance
+     * @param string $id Key for pointcut
      */
-    public function registerPointcut(Pointcut $pointcut, string $id): void
+    public function registerPointcut(Aop\Pointcut $pointcut, $id)
     {
         $this->set("pointcut.{$id}", $pointcut, ['pointcut']);
     }
 
     /**
      * Returns an advisor by identifier
+     *
+     * @param string $id Advisor identifier
+     *
+     * @return Aop\Advisor
      */
-    public function getAdvisor(string $id): Advisor
+    public function getAdvisor($id)
     {
         return $this->get("advisor.{$id}");
     }
 
     /**
      * Store the advisor in the container
+     *
+     * @param Aop\Advisor $advisor Instance
+     * @param string $id Key for advisor
      */
-    public function registerAdvisor(Advisor $advisor, string $id): void
+    public function registerAdvisor(Aop\Advisor $advisor, $id)
     {
         $this->set("advisor.{$id}", $advisor, ['advisor']);
     }
 
     /**
      * Returns an aspect by id or class name
+     *
+     * @param string $aspectName Aspect name
+     *
+     * @return Aop\Aspect
      */
-    public function getAspect(string $aspectName): Aspect
+    public function getAspect($aspectName)
     {
         return $this->get("aspect.{$aspectName}");
     }
 
     /**
      * Register an aspect in the container
+     *
+     * @param Aop\Aspect $aspect Instance of concrete aspect
      */
-    public function registerAspect(Aspect $aspect): void
+    public function registerAspect(Aop\Aspect $aspect)
     {
         $refAspect = new ReflectionClass($aspect);
         $this->set("aspect.{$refAspect->name}", $aspect, ['aspect']);
@@ -176,11 +208,10 @@ class GoAspectContainer extends Container
 
     /**
      * Add an AOP resource to the container
-     * Resources is used to check the freshness of AOP cache
      *
-     * @param string $resource Path to the resource
+     * Resources is used to check the freshness of AOP cache
      */
-    public function addResource(string $resource): void
+    public function addResource($resource)
     {
         $this->resources[]  = $resource;
         $this->maxTimestamp = 0;
@@ -188,8 +219,10 @@ class GoAspectContainer extends Container
 
     /**
      * Returns list of AOP resources
+     *
+     * @return array
      */
-    public function getResources(): array
+    public function getResources()
     {
         return $this->resources;
     }
@@ -197,9 +230,11 @@ class GoAspectContainer extends Container
     /**
      * Checks the freshness of AOP cache
      *
+     * @param integer $timestamp
+     *
      * @return bool Whether or not concrete file is fresh
      */
-    public function isFresh(int $timestamp): bool
+    public function isFresh($timestamp)
     {
         if (!$this->maxTimestamp && !empty($this->resources)) {
             $this->maxTimestamp = max(array_map('filemtime', $this->resources));

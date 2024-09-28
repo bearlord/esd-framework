@@ -36,7 +36,7 @@ trait ActiveQueryTrait
      * @param bool $value whether to return the query results in terms of arrays instead of Active Records.
      * @return $this the query object itself
      */
-    public function asArray($value = true)
+    public function asArray(bool $value = true)
     {
         $this->asArray = $value;
         return $this;

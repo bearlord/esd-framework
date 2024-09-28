@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,10 +10,7 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Core;
 
-use OutOfBoundsException;
-use ESD\Goaop\Aop\Advisor;
-use ESD\Goaop\Aop\Aspect;
-use ESD\Goaop\Aop\Pointcut;
+use ESD\Goaop\Aop;
 
 /**
  * Aspect container interface
@@ -25,120 +20,122 @@ interface AspectContainer
     /**
      * Prefix for function interceptor
      */
-    public const FUNCTION_PREFIX = 'func';
+    const FUNCTION_PREFIX = 'func';
 
     /**
      * Prefix for properties interceptor
      */
-    public const PROPERTY_PREFIX = 'prop';
+    const PROPERTY_PREFIX = 'prop';
 
     /**
      * Prefix for method interceptor
      */
-    public const METHOD_PREFIX = 'method';
+    const METHOD_PREFIX = 'method';
 
     /**
      * Prefix for static method interceptor
      */
-    public const STATIC_METHOD_PREFIX = 'static';
+    const STATIC_METHOD_PREFIX = 'static';
 
     /**
      * Trait introduction prefix
      */
-    public const INTRODUCTION_TRAIT_PREFIX = 'trait';
-
-    /**
-     * Interface introduction prefix
-     */
-    public const INTRODUCTION_INTERFACE_PREFIX = 'interface';
+    const INTRODUCTION_TRAIT_PREFIX = 'introduction';
 
     /**
      * Initialization prefix, is used for initialization pointcuts
      */
-    public const INIT_PREFIX = 'init';
+    const INIT_PREFIX = 'init';
 
     /**
      * Initialization prefix, is used for initialization pointcuts
      */
-    public const STATIC_INIT_PREFIX = 'staticinit';
+    const STATIC_INIT_PREFIX = 'staticinit';
 
     /**
      * Suffix, that will be added to all proxied class names
      */
-    public const AOP_PROXIED_SUFFIX = '__AopProxied';
-
-    /**
-     * Return a service or value from the container
-     *
-     * @return mixed
-     * @throws OutOfBoundsException if service was not found
-     */
-    public function get(string $id);
+    const AOP_PROXIED_SUFFIX = '__AopProxied';
 
     /**
      * Return list of service tagged with marker
+     *
+     * @param string $tag Tag to select
+     * @return array
      */
-    public function getByTag(string $tag): array;
+    public function getByTag($tag);
 
     /**
      * Returns a pointcut by identifier
+     *
+     * @param string $id Pointcut identifier
+     *
+     * @return Aop\Pointcut
      */
-    public function getPointcut(string $id): Pointcut;
-
-    /**
-     * Checks if item with specified id is present in the container
-     */
-    public function has(string $id): bool;
+    public function getPointcut($id);
 
     /**
      * Store the pointcut in the container
+     *
+     * @param Aop\Pointcut $pointcut Instance
+     * @param string $id Key for pointcut
      */
-    public function registerPointcut(Pointcut $pointcut, string $id): void;
+    public function registerPointcut(Aop\Pointcut $pointcut, $id);
 
     /**
      * Returns an advisor by identifier
+     *
+     * @param string $id Advisor identifier
+     *
+     * @return Aop\Advisor
      */
-    public function getAdvisor(string $id): Advisor;
+    public function getAdvisor($id);
 
     /**
      * Store the advisor in the container
+     *
+     * @param Aop\Advisor $advisor Instance
+     * @param string $id Key for advisor
      */
-    public function registerAdvisor(Advisor $advisor, string $id): void;
+    public function registerAdvisor(Aop\Advisor $advisor, $id);
 
     /**
      * Register an aspect in the container
+     *
+     * @param Aop\Aspect $aspect Instance of concrete aspect
      */
-    public function registerAspect(Aspect $aspect): void;
+    public function registerAspect(Aop\Aspect $aspect);
 
     /**
      * Returns an aspect by id or class name
+     *
+     * @param string $aspectName Aspect name
+     *
+     * @return Aop\Aspect
      */
-    public function getAspect(string $aspectName): Aspect;
+    public function getAspect($aspectName);
 
     /**
      * Add an AOP resource to the container
-     * Resources is used to check the freshness of AOP cache
      *
      * @param string $resource Path to the resource
+     * Resources is used to check the freshness of AOP cache
      */
-    public function addResource(string $resource);
+    public function addResource($resource);
 
     /**
      * Returns the list of AOP resources
+     *
+     * @return array
      */
-    public function getResources(): array;
+    public function getResources();
 
     /**
      * Checks the freshness of AOP cache
      *
+     * @param integer $timestamp
+     *
      * @return bool Whether or not concrete file is fresh
      */
-    public function isFresh(int $timestamp): bool;
-
-    /**
-     * Set a service into the container
-     *
-     * @param mixed $value Value to store
-     */
-    public function set(string $id, $value, array $tags = []): void;
+    public function isFresh($timestamp);
 }

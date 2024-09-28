@@ -50,7 +50,7 @@ class EventDispatcher
      * @return EventCall
      * @throws \Exception
      */
-    public function listen($type, ?EventCall $eventCall = null, ?bool $once = false): EventCall
+    public function listen($type, ?EventCall $eventCall = null, $once = false): EventCall
     {
         if (!array_key_exists($type, $this->eventCalls)) {
             $this->eventCalls[$type] = [];
@@ -58,7 +58,7 @@ class EventDispatcher
         if ($eventCall == null) {
             $eventCall = DIGet(EventCall::class, [$this, $type, $once]);
         }
-        $this->eventCalls[$type][] = $eventCall;
+        array_push($this->eventCalls[$type], $eventCall);
         return $eventCall;
     }
 
@@ -68,7 +68,7 @@ class EventDispatcher
      * @param string $type
      * @param EventCall $eventCall
      */
-    public function remove(string $type, EventCall $eventCall)
+    public function remove($type, EventCall $eventCall)
     {
         if ($eventCall != null) {
             $eventCall->destroy();
@@ -89,9 +89,9 @@ class EventDispatcher
      * Removes all event listeners with a certain type, or all of them if type is null.
      * Be careful when removing all event listeners: you never know who else was listening.
      *
-     * @param string|null $type
+     * @param string $type
      */
-    public function removeAll(?string $type = null)
+    public function removeAll($type = null)
     {
         if ($type) {
             unset ($this->eventCalls[$type]);

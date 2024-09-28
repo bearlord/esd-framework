@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Base;
 
-use Yii;
+use ESD\Yii\Yii;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Web\Link;
 use ESD\Yii\Web\Linkable;
@@ -68,7 +68,7 @@ trait ArrayableTrait
      * @return array the list of field names or field definitions.
      * @see toArray()
      */
-    public function fields()
+    public function fields(): array
     {
         $fields = array_keys(Yii::getObjectVars($this));
         return array_combine($fields, $fields);
@@ -92,7 +92,7 @@ trait ArrayableTrait
      * @see toArray()
      * @see fields()
      */
-    public function extraFields()
+    public function extraFields(): array
     {
         return [];
     }
@@ -119,7 +119,7 @@ trait ArrayableTrait
      * @param bool $recursive whether to recursively return array representation of embedded objects.
      * @return array the array representation of the object
      */
-    public function toArray(array $fields = [], array $expand = [], $recursive = true)
+    public function toArray(array $fields = [], array $expand = [], ?bool $recursive = true): array
     {
         $data = [];
         foreach ($this->resolveFields($fields, $expand) as $field => $definition) {
@@ -161,7 +161,7 @@ trait ArrayableTrait
      * @return array root fields extracted from the given nested fields
      * @since 2.0.14
      */
-    protected function extractRootFields(array $fields)
+    protected function extractRootFields(array $fields): array
     {
         $result = [];
 
@@ -186,7 +186,7 @@ trait ArrayableTrait
      * @return array nested fields extracted for the given field
      * @since 2.0.14
      */
-    protected function extractFieldsFor(array $fields, $rootField)
+    protected function extractFieldsFor(array $fields, string $rootField): array
     {
         $result = [];
 
@@ -209,7 +209,7 @@ trait ArrayableTrait
      * @return array the list of fields to be exported. The array keys are the field names, and the array values
      * are the corresponding object property names or PHP callables returning the field values.
      */
-    protected function resolveFields(array $fields, array $expand)
+    protected function resolveFields(array $fields, array $expand): array
     {
         $fields = $this->extractRootFields($fields);
         $expand = $this->extractRootFields($expand);

@@ -61,7 +61,7 @@ function serverUnSerialize(string $data)
  * @param array $params
  * @return int
  */
-function addTimerTick(int $msec, callable $callback, ...$params): int
+function addTimerTick(int $msec, callable $callback, ... $params): int
 {
     return \Swoole\Timer::tick($msec, $callback, ...$params);
 }
@@ -85,15 +85,16 @@ function clearTimerTick(int $timerId): bool
  * @param array $params
  * @return int
  */
-function addTimerAfter(int $msec, callable $callback, ...$params): int
+function addTimerAfter(int $msec, callable $callback, ... $params): int
 {
     return \Swoole\Timer::after($msec, $callback, ...$params);
 }
 
 /**
  * Extent parent's context
+ *
  * @param callable $run
- * @return mixed|void
+ * @return false|int|void
  */
 function goWithContext(callable $run)
 {
@@ -117,9 +118,9 @@ function goWithContext(callable $run)
 /**
  * Get context
  *
- * @return \ESD\Core\Context\Context
+ * @return \ESD\Core\Context\Context|null
  */
-function getContext(): \ESD\Core\Context\Context
+function getContext(): ?\ESD\Core\Context\Context
 {
     return ContextManager::getInstance()->getContext();
 }
@@ -151,7 +152,7 @@ function getContextValue(string $key)
  * @param string $key
  * @return bool
  */
-function deleteContextValue(string $key)
+function deleteContextValue(string $key): bool
 {
     return getContext()->delete($key);
 }
@@ -172,10 +173,10 @@ function setContextValueWithClass(string $key, $value, string $class)
 /**
  * Get context value by class name
  *
- * @param string $key
+ * @param $key
  * @return mixed
  */
-function getContextValueByClassName(string $key)
+function getContextValueByClassName($key)
 {
     return getContext()->getByClassName($key);
 }
@@ -183,30 +184,30 @@ function getContextValueByClassName(string $key)
 /**
  * Get deep context value
  *
- * @param string $key
+ * @param $key
  * @return mixed
  */
-function getDeepContextValue(string $key)
+function getDeepContextValue($key)
 {
     return getContext()->getDeep($key);
 }
 
 /**
  * Get deep context value by class name
- * @param string $key
+ * @param $key
  * @return mixed
  */
-function getDeepContextValueByClassName(string $key)
+function getDeepContextValueByClassName($key)
 {
     return getContext()->getDeepByClassName($key);
 }
 
 /**
  * Clear directory
- * @param string $path
- * @return void
+ *
+ * @param string|null $path
  */
-function clearDir(string $path)
+function clearDir(?string $path = null)
 {
     if (is_dir($path)) {
         $p = scandir($path);
@@ -231,7 +232,7 @@ function clearDir(string $path)
  * @return mixed
  * @throws \Exception
  */
-function DIGet($name, ?array $params = [])
+function DIGet(string $name, ?array $params = [])
 {
     return DI::getInstance()->get($name, $params);
 }
@@ -241,8 +242,8 @@ function DIGet($name, ?array $params = [])
  *
  * @param string $name
  * @param $value
- * @return mixed
- * @throws Exception
+ * @return void
+ * @throws \Exception
  */
 function DISet(string $name, $value)
 {

@@ -113,7 +113,7 @@ class HttpCache extends ActionFilter
      * @param Action $action the action to be executed.
      * @return bool whether the action should continue to be executed.
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if (!$this->enabled) {
             return true;

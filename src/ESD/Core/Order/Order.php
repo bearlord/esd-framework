@@ -9,7 +9,8 @@ namespace ESD\Core\Order;
 use ESD\Core\Exception;
 
 /**
- * Class Order provides a base class that implements the [[OrderInterface]].
+ * Class Order
+ * Order provides a base class that implements the [[OrderInterface]].
  *
  * @package ESD\Core\Order
  */

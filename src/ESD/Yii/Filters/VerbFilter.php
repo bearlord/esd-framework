@@ -75,7 +75,7 @@ class VerbFilter extends Behavior
      * Declares event handlers for the [[owner]]'s events.
      * @return array events (array keys) and the corresponding event handler methods (array values).
      */
-    public function events()
+    public function events(): array
     {
         return [Controller::EVENT_BEFORE_ACTION => 'beforeAction'];
     }

@@ -38,7 +38,7 @@ class Exception extends \ESD\Yii\Base\Exception
     /**
      * @return string the user-friendly name of this exception
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Database Exception';
     }

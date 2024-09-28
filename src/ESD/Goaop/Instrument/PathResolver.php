@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -11,8 +9,6 @@ declare(strict_types = 1);
  */
 
 namespace ESD\Goaop\Instrument;
-
-use function is_array;
 
 /**
  * Special class for resolving path for different file systems, wrappers, etc
@@ -31,7 +27,7 @@ class PathResolver
      *
      * @return array|bool|string
      */
-    public static function realpath($somePath, bool $shouldCheckExistence = false)
+    public static function realpath($somePath, $shouldCheckExistence = false)
     {
         // Do not resolve empty string/false/arrays into the current path
         if (!$somePath) {
@@ -39,11 +35,11 @@ class PathResolver
         }
 
         if (is_array($somePath)) {
-            return array_map([self::class, __FUNCTION__], $somePath);
+            return array_map([__CLASS__, __FUNCTION__], $somePath);
         }
         // Trick to get scheme name and path in one action. If no scheme, then there will be only one part
         $components = explode('://', $somePath, 2);
-        [$pathScheme, $path] = isset($components[1]) ? $components : [null, $components[0]];
+        list ($pathScheme, $path) = isset($components[1]) ? $components : [null, $components[0]];
 
         // Optimization to bypass complex logic for simple paths (eg. not in phar archives)
         if (!$pathScheme && ($fastPath = stream_resolve_include_path($somePath))) {

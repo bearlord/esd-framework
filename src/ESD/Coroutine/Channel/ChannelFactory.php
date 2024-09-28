@@ -15,10 +15,10 @@ use ESD\Core\DI\Factory;
 class ChannelFactory implements Factory
 {
     /**
-     * @param array $params
+     * @param $params
      * @return ChannelImpl|mixed
      */
-    public function create(?array $params)
+    public function create($params)
     {
         return new ChannelImpl($params[0] ?? 1);
     }

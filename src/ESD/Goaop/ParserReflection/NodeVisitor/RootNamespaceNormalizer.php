@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -12,6 +10,7 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
+use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
 use ESD\Nikic\PhpParser\Node\Stmt\Declare_;
 use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
 use ESD\Nikic\PhpParser\NodeVisitorAbstract;

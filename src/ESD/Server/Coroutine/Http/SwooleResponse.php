@@ -92,7 +92,7 @@ class SwooleResponse extends Response
      * Is end
      * @return bool
      */
-    public function isEnd(): bool
+    public function isEnd()
     {
         return $this->isEnd;
     }
@@ -112,7 +112,7 @@ class SwooleResponse extends Response
      * Create a new object and use it with detach
      * @param $fd
      * @return static
-     * @throws Exception
+     * @throws \ESD\Core\Exception
      */
     public static function create($fd)
     {

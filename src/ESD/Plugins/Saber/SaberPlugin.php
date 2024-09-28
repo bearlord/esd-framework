@@ -23,12 +23,9 @@ class SaberPlugin extends AbstractPlugin
 
     /**
      * SaberPlugin constructor.
-     * @param null $saberConfig
-     * @throws \DI\DependencyException
-     * @throws \ReflectionException
-     * @throws \DI\NotFoundException
+     * @param \ESD\Plugins\Saber\SaberConfig|null $saberConfig
      */
-    public function __construct($saberConfig = null)
+    public function __construct(?SaberConfig $saberConfig = null)
     {
         parent::__construct();
         $this->saberConfig = $saberConfig;

@@ -68,7 +68,7 @@ class KeepaliveIO extends AbstractIO
      * @var string
      */
     private $buffer = '';
-    
+
     /** @var AbstractConnection */
     protected $connContext;
 
@@ -119,7 +119,7 @@ class KeepaliveIO extends AbstractIO
     {
         $this->connContext = $connContext;
     }
-    
+
 
     /**
      * Sets up the stream connection.
@@ -210,8 +210,7 @@ class KeepaliveIO extends AbstractIO
                 $this->sock->close();
             }
         } catch (Exception $exception) {
-            printf("code: %d, message: 5%\n", $exception->getCode(), $exception->getMessage());
-//            throw $exception;
+            throw $exception;
         }
 
     }
@@ -231,7 +230,7 @@ class KeepaliveIO extends AbstractIO
      * @param int $usec
      * @return int
      */
-    public function select(?int $sec, int $usec = 0)
+    public function select($sec, $usec)
     {
         return 1;
     }

@@ -518,23 +518,23 @@ abstract class Cache extends Component implements CacheInterface
     /**
      * Returns whether there is a cache entry with a specified key.
      * This method is required by the interface [[\ArrayAccess]].
-     * @param string $key a key identifying the cached value
+     * @param string $offset a key identifying the cached value
      * @return bool
      */
-    public function offsetExists($key)
+    public function offsetExists($offset): bool
     {
-        return $this->get($key) !== false;
+        return $this->get($offset) !== false;
     }
 
     /**
      * Retrieves the value from cache with a specified key.
      * This method is required by the interface [[\ArrayAccess]].
-     * @param string $key a key identifying the cached value
+     * @param string $offset a key identifying the cached value
      * @return mixed the value stored in cache, false if the value is not in the cache or expired.
      */
-    public function offsetGet($key)
+    public function offsetGet($offset)
     {
-        return $this->get($key);
+        return $this->get($offset);
     }
 
     /**
@@ -542,22 +542,22 @@ abstract class Cache extends Component implements CacheInterface
      * If the cache already contains such a key, the existing value will be
      * replaced with the new ones. To add expiration and dependencies, use the [[set()]] method.
      * This method is required by the interface [[\ArrayAccess]].
-     * @param string $key the key identifying the value to be cached
+     * @param string $offset the key identifying the value to be cached
      * @param mixed $value the value to be cached
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($offset, $value)
     {
-        $this->set($key, $value);
+        $this->set($offset, $value);
     }
 
     /**
      * Deletes the value with the specified key from cache
      * This method is required by the interface [[\ArrayAccess]].
-     * @param string $key the key of the value to be deleted
+     * @param string $offset the key of the value to be deleted
      */
-    public function offsetUnset($key)
+    public function offsetUnset($offset)
     {
-        $this->delete($key);
+        $this->delete($offset);
     }
 
     /**

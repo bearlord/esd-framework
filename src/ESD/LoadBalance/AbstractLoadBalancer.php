@@ -23,7 +23,7 @@ abstract class AbstractLoadBalancer implements LoadBalancerInterface
      * AbstractLoadBalancer constructor.
      * @param Node[] $nodes
      */
-    public function __construct(array $nodes = [])
+    public function __construct(?array $nodes = [])
     {
         $this->nodes = $nodes;
     }
@@ -32,7 +32,7 @@ abstract class AbstractLoadBalancer implements LoadBalancerInterface
      * @param Node[] $nodes
      * @return $this
      */
-    public function setNodes(array $nodes)
+    public function setNodes(array $nodes): self
     {
         $this->nodes = $nodes;
         return $this;

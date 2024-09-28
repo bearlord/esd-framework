@@ -99,7 +99,7 @@ class SqlToken extends BaseObject implements \ArrayAccess
     public function offsetGet($offset)
     {
         $offset = $this->calculateOffset($offset);
-        return isset($this->_children[$offset]) ? $this->_children[$offset] : null;
+        return $this->_children[$offset] ?? null;
     }
 
     /**

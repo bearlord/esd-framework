@@ -15,9 +15,6 @@ class Method extends FunctionLike
     /** @var array|null */
     protected $stmts = [];
 
-    /** @var Node\AttributeGroup[] */
-    protected $attributeGroups = [];
-
     /**
      * Creates a method builder.
      *
@@ -116,19 +113,6 @@ class Method extends FunctionLike
     }
 
     /**
-     * Adds an attribute group.
-     *
-     * @param Node\Attribute|Node\AttributeGroup $attribute
-     *
-     * @return $this The builder instance (for fluid interface)
-     */
-    public function addAttribute($attribute) {
-        $this->attributeGroups[] = BuilderHelpers::normalizeAttribute($attribute);
-
-        return $this;
-    }
-
-    /**
      * Returns the built method node.
      *
      * @return Stmt\ClassMethod The built method node
@@ -140,7 +124,6 @@ class Method extends FunctionLike
             'params'     => $this->params,
             'returnType' => $this->returnType,
             'stmts'      => $this->stmts,
-            'attrGroups' => $this->attributeGroups,
         ], $this->attributes);
     }
 }

@@ -41,11 +41,13 @@ class Node
 
     /**
      * Node constructor.
+     * @param string $schema
      * @param string $host
      * @param int $port
-     * @param int $weight
+     * @param string|null $path
+     * @param int|null $weight
      */
-    public function __construct(string $schema, string $host = '127.0.0.1', int $port, ?string $path = null, int $weight = 0)
+    public function __construct(string $schema, string $host = '127.0.0.1', int $port, ?string $path = null, ?int $weight = 0)
     {
         $this->setSchema($schema);
         $this->setHost($host);
@@ -137,7 +139,7 @@ class Node
     /**
      * @return string
      */
-    public function normalizeSchema()
+    public function normalizeSchema(): string
     {
         $defaultSchema = 'http';
 

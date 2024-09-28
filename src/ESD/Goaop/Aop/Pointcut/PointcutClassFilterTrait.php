@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -16,31 +14,38 @@ use ESD\Goaop\Aop\PointFilter;
 use ESD\Goaop\Aop\Support\TruePointFilter;
 
 /**
- * Convenient trait for pointcuts with class filter.
+ * Convenient trait for pointcuts.
  *
  * The "classFilter" property can be set to customize ClassFilter behavior.
  */
 trait PointcutClassFilterTrait
 {
+
     /**
      * Filter for class
+     *
+     * @var null|PointFilter
      */
-    protected ?PointFilter $classFilter = null;
+    protected $classFilter;
 
     /**
      * Set the ClassFilter to use for this pointcut.
+     *
+     * @param PointFilter $classFilter
      */
-    public function setClassFilter(PointFilter $classFilter): void
+    public function setClassFilter(PointFilter $classFilter)
     {
         $this->classFilter = $classFilter;
     }
 
     /**
      * Return the class filter for this pointcut.
+     *
+     * @return PointFilter
      */
-    public function getClassFilter(): PointFilter
+    public function getClassFilter()
     {
-        if ($this->classFilter === null) {
+        if (!$this->classFilter) {
             $this->classFilter = TruePointFilter::getInstance();
         }
 

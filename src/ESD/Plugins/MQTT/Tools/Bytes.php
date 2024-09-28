@@ -10,7 +10,7 @@ namespace ESD\Plugins\MQTT\Tools;
 class Bytes
 {
 
-    public static function getBytes($string)
+    public static function getBytes(string $string): array
     {
         $bytes = array();
         for ($i = 0; $i < strlen($string); $i++) {
@@ -19,8 +19,7 @@ class Bytes
         return $bytes;
     }
 
-
-    public static function toStr($bytes)
+    public static function toStr(array $bytes): string
     {
         $str = '';
         foreach ($bytes as $ch) {
@@ -30,7 +29,7 @@ class Bytes
         return $str;
     }
 
-    public static function integerToBytes($val)
+    public static function integerToBytes(int $val): array
     {
         $byt = array();
         $byt[0] = ($val & 0xff);
@@ -40,8 +39,7 @@ class Bytes
         return $byt;
     }
 
-
-    public static function bytesToInteger($bytes, $position)
+    public static function bytesToInteger(array $bytes, int $position): int
     {
         $val = 0;
         $val = $bytes[$position + 3] & 0xff;
@@ -54,8 +52,7 @@ class Bytes
         return $val;
     }
 
-
-    public static function shortToBytes($val)
+    public static function shortToBytes(int $val): array
     {
         $byt = array();
         $byt[0] = ($val & 0xff);
@@ -63,8 +60,7 @@ class Bytes
         return $byt;
     }
 
-
-    public static function bytesToShort($bytes, $position)
+    public static function bytesToShort(array $bytes, int $position): int
     {
         $val = 0;
         $val = $bytes[$position + 1] & 0xFF;

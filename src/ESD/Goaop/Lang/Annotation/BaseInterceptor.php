@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -19,6 +17,8 @@ class BaseInterceptor extends BaseAnnotation implements Interceptor
 {
     /**
      * Order for advice
+     *
+     * @var integer
      */
-    public int $order = 0;
+    public $order = 0;
 }

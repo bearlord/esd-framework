@@ -20,7 +20,7 @@ class AndCondition extends ConjunctionCondition
      *
      * @return string
      */
-    public function getOperator()
+    public function getOperator(): string
     {
         return 'AND';
     }

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -15,14 +13,19 @@ namespace ESD\Goaop\Aop\Intercept;
 use ReflectionMethod;
 
 /**
- * Description of an invocation to a constructor, given to an interceptor upon constructor-call.
+ * Description of an invocation to a constructor, given to an
+ * interceptor upon constructor-call.
  *
- * A constructor invocation is a joinpoint and can be intercepted by a constructor interceptor.
+ * A constructor invocation is a joinpoint and can be intercepted
+ * by a constructor interceptor.
  */
-interface ConstructorInvocation extends Invocation, ClassJoinpoint
+interface ConstructorInvocation extends Invocation
 {
+
     /**
-     * Gets the constructor being called or null if it is absent.
+     * Gets the constructor being called.
+     *
+     * @return ReflectionMethod|null the constructor being called or null if it is absent.
      */
-    public function getConstructor(): ?ReflectionMethod;
+    public function getConstructor();
 }

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -14,12 +12,10 @@ namespace ESD\Goaop\Aop\Framework;
 
 use ESD\Goaop\Aop\Advice;
 use ESD\Goaop\Aop\AdviceAfter;
-use ESD\Goaop\Aop\AdviceAround;
 use ESD\Goaop\Aop\AdviceBefore;
+use ESD\Goaop\Aop\AdviceAround;
 use ESD\Goaop\Aop\Intercept\Interceptor;
 use ESD\Goaop\Aop\Intercept\Joinpoint;
-
-use function is_array;
 
 /**
  *  Abstract joinpoint for framework
@@ -34,34 +30,37 @@ use function is_array;
 abstract class AbstractJoinpoint implements Joinpoint
 {
     /**
-     * List of advices (interceptors)
+     * List of advices
      *
-     * NB: All current children assume that each advice is Interceptor now.
-     * Whereas, it isn't correct logically, this can be used to satisfy PHPStan check now.
-     *
-     * @var array<Interceptor>
+     * @var array|Advice[]|Interceptor[]
      */
-    protected array $advices = [];
+    protected $advices = [];
 
     /**
      * Current advice index
+     *
+     * @var int
      */
-    protected int $current = 0;
+    protected $current = 0;
 
     /**
      * Stack frames to work with recursive calls or with cross-calls inside object
+     *
+     * @var array
      */
-    protected array $stackFrames = [];
+    protected $stackFrames = [];
 
     /**
      * Recursion level for invocation
+     *
+     * @var int
      */
-    protected int $level = 0;
+    protected $level = 0;
 
     /**
      * Initializes list of advices for current joinpoint
      *
-     * @param array<Interceptor> $advices List of advices (interceptors)
+     * @param array $advices List of advices
      */
     public function __construct(array $advices)
     {
@@ -71,52 +70,31 @@ abstract class AbstractJoinpoint implements Joinpoint
     /**
      * Sorts advices by priority
      *
-     * @param array<Advice|Interceptor> $advices
-     *
-     * @return array<Advice|Interceptor> Sorted list of advices
+     * @param array|Advice[] $advices
+     * @return array|Advice[] Sorted list of advices
      */
-    public static function sortAdvices(array $advices): array
+    public static function sortAdvices(array $advices)
     {
         $sortedAdvices = $advices;
-        uasort(
-            $sortedAdvices,
-            function (Advice $first, Advice $second) {
-                switch (true) {
-                    case $first instanceof AdviceBefore && !($second instanceof AdviceBefore):
-                        return -1;
+        uasort($sortedAdvices, function (Advice $first, Advice $second) {
+            switch (true) {
+                case $first instanceof AdviceBefore && !($second instanceof AdviceBefore):
+                    return -1;
 
-                    case $first instanceof AdviceAround && !($second instanceof AdviceAround):
-                        return 1;
+                case $first instanceof AdviceAround && !($second instanceof AdviceAround):
+                    return 1;
 
-                    case $first instanceof AdviceAfter && !($second instanceof AdviceAfter):
-                        return $second instanceof AdviceBefore ? 1 : -1;
+                case $first instanceof AdviceAfter && !($second instanceof AdviceAfter):
+                    return $second instanceof AdviceBefore ? 1 : -1;
 
-                    case ($first instanceof OrderedAdvice && $second instanceof OrderedAdvice):
-                        return $first->getAdviceOrder() - $second->getAdviceOrder();
+                case ($first instanceof OrderedAdvice && $second instanceof OrderedAdvice):
+                    return $first->getAdviceOrder() - $second->getAdviceOrder();
 
-                    default:
-                        return 0;
-                }
+                default:
+                    return 0;
             }
-        );
+        });
 
         return $sortedAdvices;
-    }
-
-    /**
-     * Replace concrete advices with list of ids
-     *
-     * @param Advice[][][] $advices List of advices
-     */
-    public static function flatAndSortAdvices(array $advices): array
-    {
-        $flattenAdvices = [];
-        foreach ($advices as $type => $typedAdvices) {
-            foreach ($typedAdvices as $name => $concreteAdvices) {
-                $flattenAdvices[$type][$name] = array_keys(self::sortAdvices($concreteAdvices));
-            }
-        }
-
-        return $flattenAdvices;
     }
 }

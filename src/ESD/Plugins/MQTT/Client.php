@@ -212,6 +212,9 @@ class Client
         return $this->send(['type' => Protocol\Types::AUTH, 'code' => $code, 'properties' => $properties]);
     }
 
+    /**
+     * @return void
+     */
     private function reConnect()
     {
         $result = false;
@@ -230,6 +233,9 @@ class Client
         }
     }
 
+    /**
+     * @return mixed
+     */
     private function handleException()
     {
         if ($this->isCoroutineClientType()) {
@@ -245,6 +251,7 @@ class Client
      * @param array $data
      * @param bool $response
      * @return bool
+     * @throws \Throwable
      */
     public function send(array $data, bool $response = true)
     {

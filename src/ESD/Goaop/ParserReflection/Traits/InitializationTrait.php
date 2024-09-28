@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -18,14 +16,14 @@ trait InitializationTrait
     /**
      * Is internal reflection is initialized or not
      *
-     * @var bool
+     * @var boolean
      */
     private $isInitialized = false;
 
     /**
      * Initializes internal reflection for calling misc runtime methods
      */
-    public function initializeInternalReflection(): void
+    public function initializeInternalReflection()
     {
         if (!$this->isInitialized) {
             $this->__initialize();
@@ -35,8 +33,10 @@ trait InitializationTrait
 
     /**
      * Returns the status of initialization status for internal object
+     *
+     * @return bool
      */
-    public function __isInitialized(): bool
+    public function __isInitialized()
     {
         return $this->isInitialized;
     }
@@ -46,5 +46,5 @@ trait InitializationTrait
      *
      * @return void
      */
-    abstract protected function __initialize(): void;
+    abstract protected function __initialize();
 }

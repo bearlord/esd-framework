@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,8 +10,6 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Aop\Framework;
 
-use Closure;
-
 /**
  * Static closure method invocation is responsible to call static methods via closure
  */
@@ -21,21 +17,22 @@ final class StaticClosureMethodInvocation extends AbstractMethodInvocation
 {
     /**
      * Closure to use
+     *
+     * @var \Closure
      */
-    protected ?Closure $closureToCall = null;
+    protected $closureToCall;
 
     /**
      * Previous scope of invocation
+     *
+     * @var null|object|string
      */
-    protected ?string $previousScope = null;
+    protected $previousScope;
 
     /**
-     * For static calls we store given argument as 'scope' property
-     */
-    protected static string $propertyName = 'scope';
-
-    /**
-     * Proceeds all registered advices for the static method and returns an invocation result
+     * Invokes original method and return result from it
+     *
+     * @return mixed
      */
     public function proceed()
     {
@@ -46,56 +43,32 @@ final class StaticClosureMethodInvocation extends AbstractMethodInvocation
         }
 
         // Rebind the closure if scope (class name) was changed since last time
-        if ($this->previousScope !== $this->scope) {
+        if ($this->previousScope !== $this->instance) {
             if ($this->closureToCall === null) {
-                $this->closureToCall = self::getStaticInvoker(
-                    $this->reflectionMethod->class,
-                    $this->reflectionMethod->name
-                );
+                $this->closureToCall = static::getStaticInvoker($this->className, $this->reflectionMethod->name);
             }
-            $this->closureToCall = $this->closureToCall->bindTo(null, $this->scope);
-            $this->previousScope = $this->scope;
+            $this->closureToCall = $this->closureToCall->bindTo(null, $this->instance);
+            $this->previousScope = $this->instance;
         }
 
-        return ($this->closureToCall)($this->arguments);
+        $closureToCall = $this->closureToCall;
+
+        return $closureToCall($this->arguments);
+
     }
 
     /**
-     * Returns static method invoker for the concrete method in the class
-     */
-    protected static function getStaticInvoker(string $className, string $methodName): Closure
-    {
-        return fn(array $args) => forward_static_call_array([$className, $methodName], $args);
-    }
-
-    /**
-     * Checks if the current joinpoint is dynamic or static
+     * Returns static method invoker
      *
-     * Dynamic joinpoint contains a reference to an object that can be received via getThis() method call
+     * @param string $className Class name to forward request
+     * @param string $method Method name to call
      *
-     * @see ClassJoinpoint::getThis()
+     * @return \Closure
      */
-    final public function isDynamic(): bool
+    protected static function getStaticInvoker($className, $method)
     {
-        return false;
-    }
-
-    /**
-     * Returns the object for which current joinpoint is invoked
-     *
-     * @return object Instance of object or null for static call/unavailable context
-     */
-    final public function getThis(): ?object
-    {
-        return null;
-    }
-
-    /**
-     * Returns the static scope name (class name) of this joinpoint.
-     */
-    final public function getScope(): string
-    {
-        // $this->scope contains the current class scope that was received via static::class
-        return $this->scope;
+        return function (array $args) use ($className, $method) {
+            return forward_static_call_array([$className, $method], $args);
+        };
     }
 }

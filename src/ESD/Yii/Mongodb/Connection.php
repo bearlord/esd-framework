@@ -284,8 +284,7 @@ class Connection extends Component
     /**
      * Selects the database with given name.
      * @param string $name database name.
-     * @return Database|object database instance.
-     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @return Database database instance.
      */
     protected function selectDatabase($name)
     {

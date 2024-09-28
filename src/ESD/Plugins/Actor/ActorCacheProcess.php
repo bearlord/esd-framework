@@ -27,7 +27,7 @@ class ActorCacheProcess extends Process
     const KEY_PREFIX = "actor-single-";
 
     /**
-     * @var float|int auto save time
+     * @var int auto save time
      */
     protected $autoSaveTime = 5000;
 
@@ -63,25 +63,25 @@ class ActorCacheProcess extends Process
     }
 
     /**
-     * @return float|int
+     * @return int
      */
-    public function getAutoSaveTime()
+    public function getAutoSaveTime(): int
     {
         return $this->autoSaveTime;
     }
 
     /**
-     * @param float|int $autoSaveTime
+     * @param int $autoSaveTime
      */
-    public function setAutoSaveTime($autoSaveTime): void
+    public function setAutoSaveTime(int $autoSaveTime): void
     {
         $this->autoSaveTime = $autoSaveTime;
     }
 
     /**
-     * @return float|int
+     * @return int
      */
-    public function getDelayedRecoveryWaitTime()
+    public function getDelayedRecoveryWaitTime(): int
     {
         return $this->delayedRecoveryWaitTime;
     }
@@ -241,7 +241,12 @@ class ActorCacheProcess extends Process
             foreach ($actorKeys as $k => $v) {
                 $value = $this->redis()->get($v);
                 $valueArray = json_decode($value, true);
-                Actor::create($valueArray[0], $valueArray[1], $valueArray[2], false, 30);
+
+                try {
+                    Actor::create($valueArray[0], $valueArray[1], $valueArray[2], false, 30);
+                } catch (\Exception $exception) {
+                    Server::$instance->getLog()->critical($exception);
+                }
 
                 Coroutine::sleep(0.001);
             }

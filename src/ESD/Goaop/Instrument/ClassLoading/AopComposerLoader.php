@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,7 +10,6 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Instrument\ClassLoading;
 
-use SplFileInfo;
 use ESD\Goaop\Core\AspectContainer;
 use ESD\Goaop\Instrument\FileSystem\Enumerator;
 use ESD\Goaop\Instrument\PathResolver;
@@ -25,34 +22,47 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
  */
 class AopComposerLoader
 {
+
     /**
      * Instance of original autoloader
+     *
+     * @var ClassLoader
      */
-    protected ClassLoader $original;
+    protected $original;
 
     /**
      * AOP kernel options
+     *
+     * @var array
      */
-    protected array $options = [];
+    protected $options = [];
 
     /**
      * File enumerator
+     *
+     * @var Enumerator
      */
-    protected Enumerator $fileEnumerator;
+    protected $fileEnumerator;
 
     /**
      * Cache state
+     *
+     * @var array
      */
-    private array $cacheState;
+    private $cacheState;
 
     /**
      * Was initialization successful or not
+     *
+     * @var bool
      */
-    private static bool $wasInitialized = false;
+    private static $wasInitialized = false;
 
     /**
      * Constructs an wrapper for the composer loader
      *
+     * @param ClassLoader $original Instance of current loader
+     * @param AspectContainer $container Instance of the container
      * @param array $options Configuration options
      */
     public function __construct(ClassLoader $original, AspectContainer $container, array $options = [])
@@ -79,13 +89,16 @@ class AopComposerLoader
     }
 
     /**
-     * Initialize aspect autoloader and returns status whether initialization was successful or not
+     * Initialize aspect autoloader
      *
      * Replaces original composer autoloader with wrapper
      *
      * @param array $options Aspect kernel options
+     * @param AspectContainer $container
+     *
+     * @return bool was initialization sucessful or not
      */
-    public static function init(array $options, AspectContainer $container): bool
+    public static function init(array $options, AspectContainer $container)
     {
         $loaders = spl_autoload_functions();
 
@@ -115,8 +128,10 @@ class AopComposerLoader
 
     /**
      * Autoload a class by it's name
+     *
+     * @param string $class Name of the class to load
      */
-    public function loadClass(string $class): void
+    public function loadClass($class)
     {
         $file = $this->findFile($class);
 
@@ -129,9 +144,10 @@ class AopComposerLoader
      * Finds either the path to the file where the class is defined,
      * or gets the appropriate php://filter stream for the given class.
      *
+     * @param string $class
      * @return string|false The path/resource if found, false otherwise.
      */
-    public function findFile(string $class)
+    public function findFile($class)
     {
         static $isAllowedFilter = null, $isProduction = false;
         if (!$isAllowedFilter) {
@@ -143,10 +159,10 @@ class AopComposerLoader
 
         if ($file !== false) {
             $file = PathResolver::realpath($file)?:$file;
-            $cacheState = $this->cacheState[$file] ?? null;
+            $cacheState = isset($this->cacheState[$file]) ? $this->cacheState[$file] : null;
             if ($cacheState && $isProduction) {
                 $file = $cacheState['cacheUri'] ?: $file;
-            } elseif ($isAllowedFilter(new SplFileInfo($file))) {
+            } elseif ($isAllowedFilter(new \SplFileInfo($file))) {
                 // can be optimized here with $cacheState even for debug mode, but no needed right now
                 $file = FilterInjectorTransformer::rewrite($file);
             }
@@ -157,8 +173,10 @@ class AopComposerLoader
 
     /**
      * Whether or not loader was initialized
+     *
+     * @return bool
      */
-    public static function wasInitialized(): bool
+    public static function wasInitialized()
     {
         return self::$wasInitialized;
     }

@@ -46,7 +46,7 @@ abstract class Server
     /**
      * @var float Version
      */
-    public static $version = "1.7.12";
+    public static $version = "2.0.1";
 
     /**
      * @var Server
@@ -373,18 +373,18 @@ abstract class Server
      * On worker error
      *
      * @param $serv
-     * @param int $worker_id
-     * @param int $worker_pid
-     * @param int $exit_code
+     * @param int $workerId
+     * @param int $workerPid
+     * @param int $exitCode
      * @param int $signal
      * @throws \Exception
      */
-    public function _onWorkerError($serv, int $worker_id, int $worker_pid, int $exit_code, int $signal)
+    public function _onWorkerError($serv, int $workerId, int $workerPid, int $exitCode, int $signal)
     {
-        $process = $this->processManager->getProcessFromId($worker_id);
-        $this->getLog()->alert("workerId:$worker_id exitCode:$exit_code signal:$signal");
+        $process = $this->processManager->getProcessFromId($workerId);
+        $this->getLog()->alert("workerId:$workerId exitCode:$exitCode signal:$signal");
         try {
-            $this->onWorkerError($process, $exit_code, $signal);
+            $this->onWorkerError($process, $exitCode, $signal);
         } catch (\Throwable $e) {
             $this->getLog()->error($e);
         }
@@ -394,10 +394,10 @@ abstract class Server
      * On worker exit
      *
      * @param $serv
-     * @param int $worker_id
+     * @param int $workerId
      * @return bool
      */
-    public function _onWorkerExit($serv, int $worker_id)
+    public function _onWorkerExit($serv, int $workerId)
     {
         //\Swoole\Timer::clearAll();
         return true;
@@ -438,12 +438,12 @@ abstract class Server
      * On worker start
      *
      * @param $server
-     * @param int $worker_id
+     * @param int $workerId
      */
-    public function _onWorkerStart($server, int $worker_id)
+    public function _onWorkerStart($server, int $workerId)
     {
         Server::$isStart = true;
-        $process = $this->processManager->getProcessFromId($worker_id);
+        $process = $this->processManager->getProcessFromId($workerId);
         $process->_onProcessStart();
     }
 
@@ -476,7 +476,7 @@ abstract class Server
 
     public abstract function onShutdown();
 
-    public abstract function onWorkerError(Process $process, int $exit_code, int $signal);
+    public abstract function onWorkerError(Process $process, int $exitCode, int $signal);
 
     public abstract function onManagerStart();
 
@@ -745,7 +745,7 @@ abstract class Server
 
     /**
      * Close websocket client connection
-     * 
+     *
      * @param int $fd
      * @param int $code
      * @param string $reason

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,30 +10,33 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Core;
 
-use Closure;
-use OutOfBoundsException;
-
 /**
  * DI-container
  */
-abstract class Container implements AspectContainer
+class Container
 {
     /**
      * List of services in the container
+     *
+     * @var array
      */
-    protected array $values = [];
+    protected $values = [];
 
     /**
      * Store identifiers os services by tags
+     *
+     * @var array
      */
-    protected array $tags = [];
+    protected $tags = [];
 
     /**
      * Set a service into the container
      *
+     * @param string $id Identifier
      * @param mixed $value Value to store
+     * @param array $tags Additional tags
      */
-    public function set(string $id, $value, array $tags = []): void
+    public function set($id, $value, array $tags = [])
     {
         $this->values[$id] = $value;
         foreach ($tags as $tag) {
@@ -45,13 +46,22 @@ abstract class Container implements AspectContainer
 
     /**
      * Set a shared value in the container
+     *
+     * @param string $id Identifier
+     * @param callable $value Value to store
+     * @param array $tags Additional tags
+     *
+     * @throws \InvalidArgumentException if value is not callable
      */
-    public function share(string $id, Closure $value, array $tags = []): void
+    public function share($id, $value, array $tags = [])
     {
+        if (!is_callable($value)) {
+            throw new \InvalidArgumentException('Only callable values can be shared in the container');
+        }
         $value = function ($container) use ($value) {
             static $sharedValue;
 
-            if ($sharedValue === null) {
+            if (null === $sharedValue) {
                 $sharedValue = $value($container);
             }
 
@@ -63,15 +73,17 @@ abstract class Container implements AspectContainer
     /**
      * Return a service or value from the container
      *
+     * @param string $id Identifier
+     *
      * @return mixed
-     * @throws OutOfBoundsException if service was not found
+     * @throws \OutOfBoundsException if service was not found
      */
-    public function get(string $id)
+    public function get($id)
     {
         if (!isset($this->values[$id])) {
-            throw new OutOfBoundsException("Value {$id} is not defined in the container");
+            throw new \OutOfBoundsException("Value {$id} is not defined in the container");
         }
-        if ($this->values[$id] instanceof Closure) {
+        if (is_callable($this->values[$id])) {
             return $this->values[$id]($this);
         }
 
@@ -80,16 +92,23 @@ abstract class Container implements AspectContainer
 
     /**
      * Checks if item with specified id is present in the container
+     *
+     * @param string $id Identifier
+     *
+     * @return bool
      */
-    public function has(string $id): bool
+    public function has($id)
     {
         return isset($this->values[$id]);
     }
 
     /**
      * Return list of service tagged with marker
+     *
+     * @param string $tag Tag to select
+     * @return array
      */
-    public function getByTag(string $tag): array
+    public function getByTag($tag)
     {
         $result = [];
         if (isset($this->tags[$tag])) {

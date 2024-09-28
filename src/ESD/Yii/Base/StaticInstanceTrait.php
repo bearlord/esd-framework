@@ -7,6 +7,8 @@
 
 namespace ESD\Yii\Base;
 
+use ESD\Yii\Yii;
+
 /**
  * StaticInstanceTrait provides methods to satisfy [[StaticInstanceInterface]] interface.
  *
@@ -26,9 +28,10 @@ trait StaticInstanceTrait
     /**
      * Returns static class instance, which can be used to obtain meta information.
      * @param bool $refresh whether to re-create static instance even, if it is already cached.
-     * @return static class instance.
+     * @return \ESD\Yii\Base\StaticInstanceTrait|\ESD\Yii\Base\Model class instance.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public static function instance($refresh = false)
+    public static function instance(?bool $refresh = false): self
     {
         $className = get_called_class();
         if ($refresh || !isset(self::$_instances[$className])) {

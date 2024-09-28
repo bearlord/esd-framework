@@ -85,12 +85,12 @@ trait QueryTrait
      *
      * See [[QueryInterface::where()]] for detailed documentation.
      *
-     * @param string|array|ExpressionInterface $condition the conditions that should be put in the WHERE part.
+     * @param array $condition the conditions that should be put in the WHERE part.
      * @return $this the query object itself
      * @see andWhere()
      * @see orWhere()
      */
-    public function where($condition)
+    public function where(array $condition)
     {
         $this->where = $condition;
         return $this;
@@ -99,13 +99,13 @@ trait QueryTrait
     /**
      * Adds an additional WHERE condition to the existing one.
      * The new condition and the existing one will be joined using the 'AND' operator.
-     * @param string|array|ExpressionInterface $condition the new WHERE condition. Please refer to [[where()]]
+     * @param array $condition the new WHERE condition. Please refer to [[where()]]
      * on how to specify this parameter.
      * @return $this the query object itself
      * @see where()
      * @see orWhere()
      */
-    public function andWhere($condition)
+    public function andWhere(array $condition)
     {
         if ($this->where === null) {
             $this->where = $condition;
@@ -119,13 +119,13 @@ trait QueryTrait
     /**
      * Adds an additional WHERE condition to the existing one.
      * The new condition and the existing one will be joined using the 'OR' operator.
-     * @param string|array|ExpressionInterface $condition the new WHERE condition. Please refer to [[where()]]
+     * @param array $condition the new WHERE condition. Please refer to [[where()]]
      * on how to specify this parameter.
      * @return $this the query object itself
      * @see where()
      * @see andWhere()
      */
-    public function orWhere($condition)
+    public function orWhere(array $condition)
     {
         if ($this->where === null) {
             $this->where = $condition;

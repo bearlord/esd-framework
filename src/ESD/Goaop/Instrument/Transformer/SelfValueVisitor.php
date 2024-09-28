@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -13,24 +11,11 @@ declare(strict_types=1);
 namespace ESD\Goaop\Instrument\Transformer;
 
 use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\Node\Expr\ClassConstFetch;
-use ESD\Nikic\PhpParser\Node\Expr\Closure;
-use ESD\Nikic\PhpParser\Node\Expr\Instanceof_;
-use ESD\Nikic\PhpParser\Node\Expr\New_;
-use ESD\Nikic\PhpParser\Node\Expr\StaticCall;
-use ESD\Nikic\PhpParser\Node\Identifier;
-use ESD\Nikic\PhpParser\Node\UnionType;
 use ESD\Nikic\PhpParser\Node\Name;
 use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
-use ESD\Nikic\PhpParser\Node\NullableType;
-use ESD\Nikic\PhpParser\Node\Param;
-use ESD\Nikic\PhpParser\Node\Stmt\Catch_;
-use ESD\Nikic\PhpParser\Node\Stmt\Class_;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
-use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
-use ESD\Nikic\PhpParser\Node\Stmt\Property;
+use ESD\Nikic\PhpParser\Node\Stmt;
+use ESD\Nikic\PhpParser\Node\Expr;
 use ESD\Nikic\PhpParser\NodeVisitorAbstract;
-use UnexpectedValueException;
 
 /**
  * Node visitor that resolves class name for `self` nodes with FQN
@@ -42,24 +27,28 @@ final class SelfValueVisitor extends NodeVisitorAbstract
      *
      * @var Node[]
      */
-    protected array $replacedNodes = [];
+    protected $replacedNodes = [];
 
     /**
      * Current namespace
+     *
+     * @var null|Name|string
      */
-    protected ?string $namespace = null;
+    protected $namespace;
 
     /**
      * Current class name
+     *
+     * @var null|Name
      */
-    protected ?Name $className = null;
+    protected $className;
 
     /**
      * Returns list of changed `self` nodes
      *
      * @return Node[]
      */
-    public function getReplacedNodes(): array
+    public function getReplacedNodes()
     {
         return $this->replacedNodes;
     }
@@ -72,8 +61,6 @@ final class SelfValueVisitor extends NodeVisitorAbstract
         $this->namespace     = null;
         $this->className     = null;
         $this->replacedNodes = [];
-
-        return null;
     }
 
     /**
@@ -81,36 +68,30 @@ final class SelfValueVisitor extends NodeVisitorAbstract
      */
     public function enterNode(Node $node)
     {
-        if ($node instanceof Namespace_) {
+        if ($node instanceof Stmt\Namespace_) {
             $this->namespace = $node->name->toString();
-        } elseif ($node instanceof Class_) {
+        } elseif ($node instanceof Stmt\Class_) {
             if ($node->name !== null) {
                 $this->className = new Name($node->name->toString());
             }
-        } elseif ($node instanceof ClassMethod || $node instanceof Closure) {
-            if (isset($node->returnType)) {
-                $node->returnType = $this->resolveType($node->returnType);
-            }
-        } elseif (($node instanceof Property) && (isset($node->type))) {
-            $node->type = $this->resolveType($node->type);
-        } elseif (($node instanceof Param) && (isset($node->type))) {
+        } elseif ($node instanceof Stmt\ClassMethod || $node instanceof Expr\Closure) {
+            $node->returnType = $this->resolveType($node->returnType);
+        } elseif ($node instanceof Node\Param) {
             $node->type = $this->resolveType($node->type);
         } elseif (
-            $node instanceof StaticCall
-            || $node instanceof ClassConstFetch
-            || $node instanceof New_
-            || $node instanceof Instanceof_
+            $node instanceof Expr\StaticCall
+            || $node instanceof Expr\ClassConstFetch
+            || $node instanceof Expr\New_
+            || $node instanceof Expr\Instanceof_
         ) {
             if ($node->class instanceof Name) {
                 $node->class = $this->resolveClassName($node->class);
             }
-        } elseif ($node instanceof Catch_) {
+        } elseif ($node instanceof Stmt\Catch_) {
             foreach ($node->types as &$type) {
                 $type = $this->resolveClassName($type);
             }
         }
-
-        return null;
     }
 
     /**
@@ -120,7 +101,7 @@ final class SelfValueVisitor extends NodeVisitorAbstract
      *
      * @return Name|FullyQualified
      */
-    protected function resolveClassName(Name $name): Name
+    protected function resolveClassName(Name $name)
     {
         // Skip all names except special `self`
         if (strtolower($name->toString()) !== 'self') {
@@ -143,24 +124,20 @@ final class SelfValueVisitor extends NodeVisitorAbstract
     /**
      * Helper method for resolving type nodes
      *
-     * @return NullableType|Name|FullyQualified|Identifier
+     * @param Node|string|null $node Instance of node
+     *
+     * @return Node|Name|FullyQualified
      */
-    private function resolveType(Node $node)
+    private function resolveType($node)
     {
-        if ($node instanceof NullableType) {
+        if ($node instanceof Node\NullableType) {
             $node->type = $this->resolveType($node->type);
             return $node;
         }
         if ($node instanceof Name) {
             return $this->resolveClassName($node);
         }
-        if ($node instanceof Identifier) {
-            return $node;
-        }
-        if ($node instanceof UnionType) {
-            return $node;
-        }
 
-        throw new UnexpectedValueException('Unknown node type: ' . get_class($node));
+        return $node;
     }
 }

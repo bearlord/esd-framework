@@ -39,7 +39,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '<?= $generator->generateTableName($tableName) ?>';
     }
@@ -48,7 +48,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     /**
      * @return \ESD\Yii\Db\Connection the database connection used by this AR class.
      */
-    public static function getDb()
+    public static function getDb(): \ESD\Yii\Db\Connection
     {
         return Yii::$app->get('<?= $generator->db ?>');
     }
@@ -57,7 +57,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [<?= empty($rules) ? '' : ("\n            " . implode(",\n            ", $rules) . ",\n        ") ?>];
     }
@@ -65,7 +65,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
 <?php foreach ($labels as $name => $label): ?>
@@ -78,7 +78,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     /**
      * @return \ESD\Yii\Db\ActiveQuery
      */
-    public function get<?= $name ?>()
+    public function get<?= $name ?>(): \ESD\Yii\Db\ActiveQuery
     {
         <?= $relation[0] . "\n" ?>
     }
@@ -92,7 +92,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      * {@inheritdoc}
      * @return <?= $queryClassFullName ?> the active query used by this AR class.
      */
-    public static function find()
+    public static function find(): <?= $queryClassFullName ?>
     {
         return new <?= $queryClassFullName ?>(get_called_class());
     }

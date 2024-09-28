@@ -32,7 +32,7 @@ class Db extends Base
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['type', 'query'], 'safe'],
@@ -42,7 +42,7 @@ class Db extends Base
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'type' => 'Type',

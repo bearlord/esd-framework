@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -15,8 +13,8 @@ namespace ESD\Goaop\ParserReflection\Traits;
 
 use ESD\Goaop\ParserReflection\NodeVisitor\GeneratorDetector;
 use ESD\Goaop\ParserReflection\NodeVisitor\StaticVariablesCollector;
-use ESD\Goaop\ParserReflection\ReflectionNamedType;
 use ESD\Goaop\ParserReflection\ReflectionParameter;
+use ESD\Goaop\ParserReflection\ReflectionType;
 use ESD\Nikic\PhpParser\Node\Expr\Closure;
 use ESD\Nikic\PhpParser\Node\FunctionLike;
 use ESD\Nikic\PhpParser\Node\Identifier;
@@ -52,7 +50,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function getClosureScopeClass(): null|\ReflectionClass
+    public function getClosureScopeClass()
     {
         $this->initializeInternalReflection();
 
@@ -62,36 +60,36 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function getClosureThis(): null|object
+    public function getClosureThis()
     {
         $this->initializeInternalReflection();
 
         return parent::getClosureThis();
     }
 
-    public function getDocComment(): string|false
+    public function getDocComment()
     {
         $docComment = $this->functionLikeNode->getDocComment();
 
         return $docComment ? $docComment->getText() : false;
     }
 
-    public function getEndLine(): int|false
+    public function getEndLine()
     {
         return $this->functionLikeNode->getAttribute('endLine');
     }
 
-    public function getExtension(): null|\ReflectionExtension
+    public function getExtension()
     {
         return null;
     }
 
-    public function getExtensionName(): string|false
+    public function getExtensionName()
     {
         return false;
     }
 
-    public function getFileName(): string|false
+    public function getFileName()
     {
         return $this->functionLikeNode->getAttribute('fileName');
     }
@@ -99,7 +97,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function getName(): string
+    public function getName()
     {
         if ($this->functionLikeNode instanceof Function_ || $this->functionLikeNode instanceof ClassMethod) {
             $functionName = $this->functionLikeNode->name->toString();
@@ -107,13 +105,13 @@ trait ReflectionFunctionLikeTrait
             return $this->namespaceName ? $this->namespaceName . '\\' . $functionName : $functionName;
         }
 
-        return '';
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getNamespaceName(): string
+    public function getNamespaceName()
     {
         return $this->namespaceName;
     }
@@ -125,7 +123,7 @@ trait ReflectionFunctionLikeTrait
      *
      * @return int
      */
-    public function getNumberOfParameters(): int
+    public function getNumberOfParameters()
     {
         return count($this->functionLikeNode->getParams());
     }
@@ -137,7 +135,7 @@ trait ReflectionFunctionLikeTrait
      *
      * @return int
      */
-    public function getNumberOfRequiredParameters(): int
+    public function getNumberOfRequiredParameters()
     {
         $requiredParameters = 0;
         foreach ($this->getParameters() as $parameter) {
@@ -152,7 +150,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function getParameters(): array
+    public function getParameters()
     {
         if (!isset($this->parameters)) {
             $parameters = [];
@@ -165,7 +163,6 @@ trait ReflectionFunctionLikeTrait
                     $parameterIndex,
                     $this
                 );
-
                 $parameters[] = $reflectionParameter;
             }
 
@@ -182,9 +179,9 @@ trait ReflectionFunctionLikeTrait
      *
      * @link http://php.net/manual/en/reflectionfunctionabstract.getreturntype.php
      */
-    public function getReturnType(): null|ReflectionNamedType
+    public function getReturnType()
     {
-        $isBuiltin = false;
+        $isBuiltin  = false;
         $returnType = $this->functionLikeNode->getReturnType();
         $isNullable = $returnType instanceof NullableType;
 
@@ -202,22 +199,22 @@ trait ReflectionFunctionLikeTrait
             return null;
         }
 
-        return new ReflectionNamedType($returnType, $isNullable, $isBuiltin);
+        return new ReflectionType($returnType, $isNullable, $isBuiltin);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getShortName(): string
+    public function getShortName()
     {
         if ($this->functionLikeNode instanceof Function_ || $this->functionLikeNode instanceof ClassMethod) {
             return $this->functionLikeNode->name->toString();
         }
 
-        return '';
+        return false;
     }
 
-    public function getStartLine(): int|false
+    public function getStartLine()
     {
         return $this->functionLikeNode->getAttribute('startLine');
     }
@@ -225,14 +222,23 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function getStaticVariables(): array
+    public function getStaticVariables()
     {
-        $nodeTraverser = new NodeTraverser();
+        // In nikic/PHP-Parser < 2.0.0 the default behavior is cloning
+        //     nodes when traversing them. Passing FALSE to the constructor
+        //     prevents this.
+        // In nikic/PHP-Parser >= 2.0.0 and < 3.0.0 the default behavior was
+        //     changed to not clone nodes, but the parameter was retained as
+        //     an option.
+        // In nikic/PHP-Parser >= 3.0.0 the option to clone nodes was removed
+        //     as a constructor parameter, so Scrutinizer will pick this up as
+        //     an issue. It is retained for legacy compatibility.
+        $nodeTraverser      = new NodeTraverser(false);
         $variablesCollector = new StaticVariablesCollector($this);
         $nodeTraverser->addVisitor($variablesCollector);
 
         /* @see https://github.com/nikic/PHP-Parser/issues/235 */
-        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: []);
+        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: array());
 
         return $variablesCollector->getStaticVariables();
     }
@@ -244,7 +250,7 @@ trait ReflectionFunctionLikeTrait
      *
      * @link http://php.net/manual/en/reflectionfunctionabstract.hasreturntype.php
      */
-    public function hasReturnType(): bool
+    public function hasReturnType()
     {
         $returnType = $this->functionLikeNode->getReturnType();
 
@@ -254,7 +260,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function inNamespace(): bool
+    public function inNamespace()
     {
         return !empty($this->namespaceName);
     }
@@ -262,7 +268,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function isClosure(): bool
+    public function isClosure()
     {
         return $this->functionLikeNode instanceof Closure;
     }
@@ -270,23 +276,32 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function isDeprecated(): bool
+    public function isDeprecated()
     {
-        // user-land method/function/closure can not be deprecated
+        // userland method/function/closure can not be deprecated
         return false;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function isGenerator(): bool
+    public function isGenerator()
     {
-        $nodeTraverser = new NodeTraverser();
-        $nodeDetector = new GeneratorDetector();
+        // In nikic/PHP-Parser < 2.0.0 the default behavior is cloning
+        //     nodes when traversing them. Passing FALSE to the constructor
+        //     prevents this.
+        // In nikic/PHP-Parser >= 2.0.0 and < 3.0.0 the default behavior was
+        //     changed to not clone nodes, but the parameter was retained as
+        //     an option.
+        // In nikic/PHP-Parser >= 3.0.0 the option to clone nodes was removed
+        //     as a constructor parameter, so Scrutinizer will pick this up as
+        //     an issue. It is retained for legacy compatibility.
+        $nodeTraverser = new NodeTraverser(false);
+        $nodeDetector  = new GeneratorDetector();
         $nodeTraverser->addVisitor($nodeDetector);
 
         /* @see https://github.com/nikic/PHP-Parser/issues/235 */
-        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: []);
+        $nodeTraverser->traverse($this->functionLikeNode->getStmts() ?: array());
 
         return $nodeDetector->isGenerator();
     }
@@ -294,7 +309,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function isInternal(): bool
+    public function isInternal()
     {
         // never can be an internal method
         return false;
@@ -303,7 +318,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function isUserDefined(): bool
+    public function isUserDefined()
     {
         // always defined by user, because we parse the source code
         return true;
@@ -312,7 +327,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function isVariadic(): bool
+    public function isVariadic()
     {
         foreach ($this->getParameters() as $parameter) {
             if ($parameter->isVariadic()) {
@@ -326,7 +341,7 @@ trait ReflectionFunctionLikeTrait
     /**
      * {@inheritDoc}
      */
-    public function returnsReference(): bool
+    public function returnsReference()
     {
         return $this->functionLikeNode->returnsByRef();
     }

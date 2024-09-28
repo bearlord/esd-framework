@@ -58,9 +58,9 @@ class CodeFile extends BaseObject
      * Constructor.
      * @param string $path the file path that the new code should be saved to.
      * @param string $content the newly generated code content.
-     * @param array $config name-value pairs that will be used to initialize the object properties
+     * @param array|null $config name-value pairs that will be used to initialize the object properties
      */
-    public function __construct($path, $content, $config = [])
+    public function __construct($path, string $content, ?array $config = [])
     {
         parent::__construct($config);
 
@@ -112,7 +112,7 @@ class CodeFile extends BaseObject
     /**
      * @return string the code file path relative to the application base path.
      */
-    public function getRelativePath()
+    public function getRelativePath(): string
     {
         if (strpos($this->path, Yii::$app->basePath) === 0) {
             return substr($this->path, strlen(Yii::$app->basePath) + 1);
@@ -124,7 +124,7 @@ class CodeFile extends BaseObject
     /**
      * @return string the code file extension (e.g. php, txt)
      */
-    public function getType()
+    public function getType(): string
     {
         if (($pos = strrpos($this->path, '.')) !== false) {
             return substr($this->path, $pos + 1);

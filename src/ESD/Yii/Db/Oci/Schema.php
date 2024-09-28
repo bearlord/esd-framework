@@ -57,7 +57,7 @@ class Schema extends \ESD\Yii\Db\Schema implements ConstraintFinderInterface
         if ($this->defaultSchema === null) {
             $username = $this->db->username;
             if (empty($username)) {
-                $username = isset($this->db->masters[0]['username']) ? $this->db->masters[0]['username'] : '';
+                $username = $this->db->masters[0]['username'] ?? '';
             }
             $this->defaultSchema = strtoupper($username);
         }
@@ -621,7 +621,7 @@ SQL;
                 } else {
                     $returnParams[$phName]['dataType'] = \PDO::PARAM_INT;
                 }
-                $returnParams[$phName]['size'] = isset($columnSchemas[$name]->size) ? $columnSchemas[$name]->size : -1;
+                $returnParams[$phName]['size'] = $columnSchemas[$name]->size ?? -1;
                 $returning[] = $this->quoteColumnName($name);
             }
             $sql .= ' RETURNING ' . implode(', ', $returning) . ' INTO ' . implode(', ', array_keys($returnParams));

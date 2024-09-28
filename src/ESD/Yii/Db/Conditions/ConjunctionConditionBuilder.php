@@ -26,13 +26,13 @@ class ConjunctionConditionBuilder implements ExpressionBuilderInterface
      * Method builds the raw SQL from the $expression that will not be additionally
      * escaped or quoted.
      *
-     * @param ExpressionInterface|ConjunctionCondition $condition the expression to be built.
+     * @param ExpressionInterface|ConjunctionCondition $expression the expression to be built.
      * @param array $params the binding parameters.
      * @return string the raw SQL that will not be additionally escaped or quoted.
      */
-    public function build(ExpressionInterface $condition, array &$params = [])
+    public function build(ExpressionInterface $expression, array &$params = [])
     {
-        $parts = $this->buildExpressionsFrom($condition, $params);
+        $parts = $this->buildExpressionsFrom($expression, $params);
 
         if (empty($parts)) {
             return '';
@@ -42,7 +42,7 @@ class ConjunctionConditionBuilder implements ExpressionBuilderInterface
             return reset($parts);
         }
 
-        return '(' . implode(") {$condition->getOperator()} (", $parts) . ')';
+        return '(' . implode(") {$expression->getOperator()} (", $parts) . ')';
     }
 
     /**

@@ -17,13 +17,11 @@ class ArrowFunction extends Expr implements FunctionLike
     /** @var Node\Param[] */
     public $params = [];
 
-    /** @var null|Node\Identifier|Node\Name|Node\ComplexType */
+    /** @var null|Node\Identifier|Node\Name|Node\NullableType|Node\UnionType */
     public $returnType;
 
     /** @var Expr */
     public $expr;
-    /** @var Node\AttributeGroup[] */
-    public $attrGroups;
 
     /**
      * @param array $subNodes   Array of the following optional subnodes:
@@ -32,7 +30,6 @@ class ArrowFunction extends Expr implements FunctionLike
      *                          'params'     => array() : Parameters
      *                          'returnType' => null    : Return type
      *                          'expr'       => Expr    : Expression body
-     *                          'attrGroups' => array() : PHP attribute groups
      * @param array $attributes Additional attributes
      */
     public function __construct(array $subNodes = [], array $attributes = []) {
@@ -42,12 +39,11 @@ class ArrowFunction extends Expr implements FunctionLike
         $this->params = $subNodes['params'] ?? [];
         $returnType = $subNodes['returnType'] ?? null;
         $this->returnType = \is_string($returnType) ? new Node\Identifier($returnType) : $returnType;
-        $this->expr = $subNodes['expr'];
-        $this->attrGroups = $subNodes['attrGroups'] ?? [];
+        $this->expr = $subNodes['expr'] ?? null;
     }
 
     public function getSubNodeNames() : array {
-        return ['attrGroups', 'static', 'byRef', 'params', 'returnType', 'expr'];
+        return ['static', 'byRef', 'params', 'returnType', 'expr'];
     }
 
     public function returnsByRef() : bool {
@@ -60,10 +56,6 @@ class ArrowFunction extends Expr implements FunctionLike
 
     public function getReturnType() {
         return $this->returnType;
-    }
-
-    public function getAttrGroups() : array {
-        return $this->attrGroups;
     }
 
     /**

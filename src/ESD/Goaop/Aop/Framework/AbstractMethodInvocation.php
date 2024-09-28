@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -14,47 +12,47 @@ namespace ESD\Goaop\Aop\Framework;
 
 use ESD\Goaop\Aop\Intercept\MethodInvocation;
 use ESD\Goaop\Aop\Support\AnnotatedReflectionMethod;
-
-use function array_merge;
-use function array_pop;
-use function count;
+use ReflectionMethod;
 
 /**
  * Abstract method invocation implementation
  */
 abstract class AbstractMethodInvocation extends AbstractInvocation implements MethodInvocation
 {
-    /**
-     * Instance of object for invoking
-     */
-    protected ?object $instance;
 
     /**
-     * Instance of reflection method for invocation
-     */
-    protected AnnotatedReflectionMethod $reflectionMethod;
-
-    /**
-     * Class name scope for static invocation
-     */
-    protected string $scope = '';
-
-    /**
-     * This static string variable holds the name of field to use to avoid extra "if" section in the __invoke method
+     * Instance of object for invoking or class name for static call
      *
-     * Overridden in children classes and initialized via LSB
+     * @var object|string
      */
-    protected static string $propertyName;
+    protected $instance;
+
+    /**
+     * Instance of reflection method for class
+     *
+     * @var ReflectionMethod
+     */
+    protected $reflectionMethod;
+
+    /**
+     * Name of the invocation class
+     *
+     * @var string
+     */
+    protected $className = '';
 
     /**
      * Constructor for method invocation
      *
-     * @param array $advices List of advices for this invocation
+     * @param string $className Class name
+     * @param string $methodName Method to invoke
+     * @param $advices array List of advices for this invocation
      */
-    public function __construct(array $advices, string $className, string $methodName)
+    public function __construct($className, $methodName, array $advices)
     {
         parent::__construct($advices);
-        $this->reflectionMethod = $method = new AnnotatedReflectionMethod($className, $methodName);
+        $this->className        = $className;
+        $this->reflectionMethod = $method = new AnnotatedReflectionMethod($this->className, $methodName);
 
         // Give an access to call protected method
         if ($method->isProtected()) {
@@ -65,36 +63,35 @@ abstract class AbstractMethodInvocation extends AbstractInvocation implements Me
     /**
      * Invokes current method invocation with all interceptors
      *
-     * @param null|object|string $instance          Invocation instance (class name for static methods)
-     * @param array              $arguments         List of arguments for method invocation
-     * @param array              $variadicArguments Additional list of variadic arguments
+     * @param null|object|string $instance Invocation instance (class name for static methods)
+     * @param array $arguments List of arguments for method invocation
+     * @param array $variadicArguments Additional list of variadic arguments
      *
      * @return mixed Result of invocation
      */
     final public function __invoke($instance = null, array $arguments = [], array $variadicArguments = [])
     {
-        if ($this->level > 0) {
-            $this->stackFrames[] = [$this->arguments, $this->scope, $this->instance, $this->current];
+        if ($this->level) {
+            $this->stackFrames[] = [$this->arguments, $this->instance, $this->current];
         }
 
-        if (count($variadicArguments) > 0) {
-            $arguments = array_merge($arguments, $variadicArguments);
+        if (!empty($variadicArguments)) {
+            $arguments = \array_merge($arguments, $variadicArguments);
         }
 
         try {
             ++$this->level;
 
             $this->current   = 0;
+            $this->instance  = $instance;
             $this->arguments = $arguments;
-
-            $this->{static::$propertyName} = $instance;
 
             return $this->proceed();
         } finally {
             --$this->level;
 
             if ($this->level > 0) {
-                [$this->arguments, $this->scope, $this->instance, $this->current] = array_pop($this->stackFrames);
+                list($this->arguments, $this->instance, $this->current) = \array_pop($this->stackFrames);
             } else {
                 $this->instance  = null;
                 $this->arguments = [];
@@ -105,21 +102,44 @@ abstract class AbstractMethodInvocation extends AbstractInvocation implements Me
     /**
      * Gets the method being called.
      *
-     * @return AnnotatedReflectionMethod Covariant, the method being called.
+     * @return AnnotatedReflectionMethod the method being called.
      */
-    public function getMethod(): AnnotatedReflectionMethod
+    public function getMethod()
     {
         return $this->reflectionMethod;
     }
 
     /**
-     * Returns friendly description of this joinpoint
+     * Returns the object that holds the current joinpoint's static
+     * part.
+     *
+     * @return object|string the object for dynamic call or string with name of scope
      */
-    final public function __toString(): string
+    public function getThis()
+    {
+        return $this->instance;
+    }
+
+    /**
+     * Returns the static part of this joinpoint.
+     *
+     * @return object
+     */
+    public function getStaticPart()
+    {
+        return $this->getMethod();
+    }
+
+    /**
+     * Returns friendly description of this joinpoint
+     *
+     * @return string
+     */
+    final public function __toString()
     {
         return sprintf(
             'execution(%s%s%s())',
-            $this->getScope(),
+            is_object($this->instance) ? get_class($this->instance) : $this->instance,
             $this->reflectionMethod->isStatic() ? '::' : '->',
             $this->reflectionMethod->name
         );

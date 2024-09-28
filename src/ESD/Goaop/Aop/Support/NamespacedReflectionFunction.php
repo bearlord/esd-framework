@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -21,26 +19,29 @@ class NamespacedReflectionFunction extends ReflectionFunction
 {
     /**
      * Custom namespace name
+     *
+     * @var string
      */
-    private string $namespace;
+    private $namespace;
 
     /**
      * Extends the logic with passing the namespace name
      *
+     * @param string $namespace Name of the namespace
      * {@inheritDoc}
      */
-    public function __construct(string $functionName, string $namespaceName = '')
+    public function __construct($name, $namespace = '')
     {
-        $this->namespace = $namespaceName;
-        parent::__construct($functionName);
+        $this->namespace = $namespace;
+        parent::__construct($name);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getNamespaceName(): string
+    public function getNamespaceName()
     {
-        if (!empty($this->namespace)) {
+        if ($this->namespace) {
             return $this->namespace;
         }
 

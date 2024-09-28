@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -24,5 +23,5 @@ interface LocatorInterface
      *
      * @return string|false Path to the file with given class or false if not found
      */
-    public function locateClass(string $className);
+    public function locateClass($className);
 }

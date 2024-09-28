@@ -28,8 +28,11 @@ class ArrayExpressionBuilder implements ExpressionBuilderInterface
     /**
      * {@inheritdoc}
      * @param ArrayExpression|ExpressionInterface $expression the expression to be built
+     * @param array $params
+     * @return string
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function build(ExpressionInterface $expression, array &$params = [])
+    public function build(ExpressionInterface $expression, array &$params = []): string
     {
         $value = $expression->getValue();
         if ($value === null) {
@@ -52,7 +55,7 @@ class ArrayExpressionBuilder implements ExpressionBuilderInterface
      * @param array $params the binding parameters.
      * @return array
      */
-    protected function buildPlaceholders(ExpressionInterface $expression, &$params)
+    protected function buildPlaceholders(ExpressionInterface $expression, array &$params): array
     {
         $value = $expression->getValue();
 

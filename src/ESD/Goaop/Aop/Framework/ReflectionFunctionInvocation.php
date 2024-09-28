@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -13,30 +11,28 @@ declare(strict_types=1);
 namespace ESD\Goaop\Aop\Framework;
 
 use ESD\Goaop\Aop\Intercept\FunctionInvocation;
-use ReflectionException;
 use ReflectionFunction;
-
-use function array_merge;
-use function array_pop;
 
 /**
  * Function invocation implementation
  */
 class ReflectionFunctionInvocation extends AbstractInvocation implements FunctionInvocation
 {
+
     /**
      * Instance of reflection function
+     *
+     * @var null|ReflectionFunction
      */
-    protected ReflectionFunction $reflectionFunction;
+    protected $reflectionFunction;
 
     /**
      * Constructor for function invocation
      *
-     * @param array $advices List of advices for this invocation
-     *
-     * @throws ReflectionException
+     * @param string $functionName Function to invoke
+     * @param $advices array List of advices for this invocation
      */
-    public function __construct(array $advices, string $functionName)
+    public function __construct($functionName, array $advices)
     {
         parent::__construct($advices);
         $this->reflectionFunction = new ReflectionFunction($functionName);
@@ -60,8 +56,32 @@ class ReflectionFunctionInvocation extends AbstractInvocation implements Functio
 
     /**
      * Gets the function being called.
+     *
+     * @return ReflectionFunction the method being called.
      */
-    public function getFunction(): ReflectionFunction
+    public function getFunction()
+    {
+        return $this->reflectionFunction;
+    }
+
+    /**
+     * Returns the object that holds the current joinpoint's static
+     * part.
+     *
+     * @return object|null the object (can be null if the accessible object is
+     * static).
+     */
+    public function getThis()
+    {
+        return null;
+    }
+
+    /**
+     * Returns the static part of this joinpoint.
+     *
+     * @return object
+     */
+    public function getStaticPart()
     {
         return $this->reflectionFunction;
     }
@@ -69,14 +89,14 @@ class ReflectionFunctionInvocation extends AbstractInvocation implements Functio
     /**
      * Invokes current function invocation with all interceptors
      *
-     * @param array $arguments         List of arguments for function invocation
+     * @param array $arguments List of arguments for function invocation
      * @param array $variadicArguments Additional list of variadic arguments
      *
      * @return mixed Result of invocation
      */
     final public function __invoke(array $arguments = [], array $variadicArguments = [])
     {
-        if ($this->level > 0) {
+        if ($this->level) {
             $this->stackFrames[] = [$this->arguments, $this->current];
         }
 
@@ -84,19 +104,17 @@ class ReflectionFunctionInvocation extends AbstractInvocation implements Functio
             $arguments = array_merge($arguments, $variadicArguments);
         }
 
-        try {
-            ++$this->level;
+        ++$this->level;
 
-            $this->current   = 0;
-            $this->arguments = $arguments;
+        $this->current   = 0;
+        $this->arguments = $arguments;
 
-            $result = $this->proceed();
-        } finally {
-            --$this->level;
+        $result = $this->proceed();
 
-            if ($this->level > 0) {
-                [$this->arguments, $this->current] = array_pop($this->stackFrames);
-            }
+        --$this->level;
+
+        if ($this->level) {
+            list($this->arguments, $this->current) = array_pop($this->stackFrames);
         }
 
         return $result;
@@ -104,8 +122,10 @@ class ReflectionFunctionInvocation extends AbstractInvocation implements Functio
 
     /**
      * Returns a friendly description of current joinpoint
+     *
+     * @return string
      */
-    final public function __toString(): string
+    final public function __toString()
     {
         return sprintf(
             'execution(%s())',

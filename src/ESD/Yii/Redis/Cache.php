@@ -174,30 +174,30 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function setValue($key, $value, $expire)
+    protected function setValue($key, $value, $duration)
     {
-        if ($expire == 0) {
+        if ($duration == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
         }
 
-        return (bool) $this->redis->executeCommand('SET', [$key, $value, ['EX' => $expire]]);
+        return (bool) $this->redis->executeCommand('SET', [$key, $value, ['EX' => $duration]]);
     }
 
     /**
      * @inheritdoc
      */
-    protected function setValues($data, $expire)
+    protected function setValues($data, $duration)
     {
         $failedKeys = [];
-        if ($expire == 0) {
+        if ($duration == 0) {
             $this->redis->executeCommand('MSET', [$data]);
         } else {
-            $expire = (int) ($expire * 1000);
+            $duration = (int) ($duration * 1000);
             $this->redis->executeCommand('MULTI');
             $this->redis->executeCommand('MSET', [$args]);
             $index = [];
             foreach ($data as $key => $value) {
-                $this->redis->executeCommand('PEXPIRE', [$key, $expire]);
+                $this->redis->executeCommand('PEXPIRE', [$key, $duration]);
                 $index[] = $key;
             }
             $result = $this->redis->executeCommand('EXEC');
@@ -215,12 +215,12 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function addValue($key, $value, $expire)
+    protected function addValue($key, $value, $duration)
     {
-        if ($expire == 0) {
+        if ($duration == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
         } else {
-            return (bool) $this->redis->executeCommand('SET', [$key, $value, ['NX', 'EX' => $expire]]);
+            return (bool) $this->redis->executeCommand('SET', [$key, $value, ['NX', 'EX' => $duration]]);
         }
     }
 

@@ -11,9 +11,6 @@ namespace ESD\Rpc\IdGenerator;
  */
 class RequestIdGenerator implements IdGeneratorInterface
 {
-    /**
-     * @return string
-     */
     public function generate(): string
     {
         $us = strstr(microtime(), ' ', true);

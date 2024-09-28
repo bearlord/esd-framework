@@ -21,11 +21,11 @@ class Exception extends \Exception
     /**
      * Exception constructor.
      *
-     * @param string|null $message
-     * @param int|null $code
+     * @param string $message
+     * @param int $code
      * @param Throwable|null $previous
      */
-    public function __construct(?string $message = '', ?int $code = null, ?Throwable $previous = null)
+    public function __construct(string $message = null, int $code = null, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->time = (int)(microtime(true) * 1000 * 1000);

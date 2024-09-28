@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -20,7 +18,9 @@ namespace ESD\Goaop\Aop;
 interface PointcutAdvisor extends Advisor
 {
     /**
-     * Gets the Pointcut that drives this advisor.
+     * Get the Pointcut that drives this advisor.
+     *
+     * @return Pointcut The pointcut
      */
-    public function getPointcut(): Pointcut;
+    public function getPointcut();
 }

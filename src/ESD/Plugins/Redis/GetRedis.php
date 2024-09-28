@@ -17,14 +17,16 @@ use ESD\Yii\Yii;
 trait GetRedis
 {
     /**
-     * @param string $name
+     * @param string|null $name
      * @return mixed|\Redis
-     * @throws RedisException
+     * @throws \ESD\Core\Exception
+     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws \RedisException
      */
-    public function redis($name = "default")
+    public function redis(?string $name = "default")
     {
         $db = getContextValue("Redis:$name");
-        
+
         //Default database number
         $defaultDbNum = Server::$instance->getConfigContext()->get("redis.{$name}.database");
 

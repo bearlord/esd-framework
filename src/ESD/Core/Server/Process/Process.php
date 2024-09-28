@@ -117,8 +117,9 @@ abstract class Process
      * Process constructor.
      * @param Server $server
      * @param int $processId
-     * @param string $name
+     * @param string|null $name
      * @param string $groupName
+     * @throws \Exception
      */
     public function __construct(Server $server, int $processId, string $name = null, string $groupName = self::DEFAULT_GROUP)
     {
@@ -246,10 +247,10 @@ abstract class Process
     /**
      * Execute external command.
      *
-     * @param $path
-     * @param $params
+     * @param string $path
+     * @param array $params
      */
-    protected function exec($path, $params)
+    protected function exec(string $path, array $params)
     {
         $this->swooleProcess->exec($path, $params);
     }
@@ -257,9 +258,9 @@ abstract class Process
     /**
      * Set process name
      *
-     * @param $name
+     * @param string $name
      */
-    protected function setName($name)
+    protected function setName(string $name)
     {
         $this->processName = $name;
         self::setProcessTitle(Server::$instance->getServerConfig()->getName() . "-" . $name);
@@ -467,7 +468,7 @@ abstract class Process
      * @param string $title
      * @return void
      */
-    public static function setProcessTitle($title)
+    public static function setProcessTitle(string $title)
     {
         if (self::isDarwin()) {
             return;

@@ -20,7 +20,7 @@ interface PluginInterface
      *
      * @return Channel
      */
-    public function getReadyChannel(): Channel;
+    public function getReadyChannel();
 
     /**
      * Get name

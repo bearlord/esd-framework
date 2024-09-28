@@ -50,7 +50,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function defaultExpressionBuilders()
+    protected function defaultExpressionBuilders(): array
     {
         return array_merge(parent::defaultExpressionBuilders(), [
             'ESD\Yii\Db\Conditions\InCondition' => 'ESD\Yii\Db\Mssql\Conditions\InConditionBuilder',
@@ -61,7 +61,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildOrderByAndLimit($sql, $orderBy, $limit, $offset)
+    public function buildOrderByAndLimit(string $sql, array $orderBy, int $limit, int $offset): string
     {
         if (!$this->hasOffset($offset) && !$this->hasLimit($limit)) {
             $orderBy = $this->buildOrderBy($orderBy);
@@ -138,7 +138,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $newName the new table name. The name will be properly quoted by the method.
      * @return string the SQL statement for renaming a DB table.
      */
-    public function renameTable($oldName, $newName)
+    public function renameTable(string $oldName, string $newName): string
     {
         return 'sp_rename ' . $this->db->quoteTableName($oldName) . ', ' . $this->db->quoteTableName($newName);
     }
@@ -150,7 +150,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $newName the new name of the column. The name will be properly quoted by the method.
      * @return string the SQL statement for renaming a DB column.
      */
-    public function renameColumn($table, $oldName, $newName)
+    public function renameColumn(string $table, string $oldName, string $newName): string
     {
         $table = $this->db->quoteTableName($table);
         $oldName = $this->db->quoteColumnName($oldName);
@@ -167,7 +167,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * For example, 'string' will be turned into 'varchar(255)', while 'string not null' will become 'varchar(255) not null'.
      * @return string the SQL statement for changing the definition of a column.
      */
-    public function alterColumn($table, $column, $type)
+    public function alterColumn(string $table, string $column, string $type): string
     {
         $type = $this->getColumnType($type);
         $sql = 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' ALTER COLUMN '
@@ -180,7 +180,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function addDefaultValue($name, $table, $column, $value)
+    public function addDefaultValue(string $name, string $table, string $column, $value): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' ADD CONSTRAINT '
             . $this->db->quoteColumnName($name) . ' DEFAULT ' . $this->db->quoteValue($value) . ' FOR '
@@ -190,7 +190,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function dropDefaultValue($name, $table)
+    public function dropDefaultValue(string $name, string $table): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($table)
             . ' DROP CONSTRAINT ' . $this->db->quoteColumnName($name);
@@ -200,40 +200,40 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * Creates a SQL statement for resetting the sequence value of a table's primary key.
      * The sequence will be reset such that the primary key of the next new row inserted
      * will have the specified value or 1.
-     * @param string $tableName the name of the table whose primary key sequence will be reset
+     * @param string $table the name of the table whose primary key sequence will be reset
      * @param mixed $value the value for the primary key of the next new row inserted. If this is not set,
      * the next new row's primary key will have a value 1.
      * @return string the SQL statement for resetting sequence
      * @throws InvalidArgumentException if the table does not exist or there is no sequence associated with the table.
      */
-    public function resetSequence($tableName, $value = null)
+    public function resetSequence(string $table, $value = null): string
     {
-        $table = $this->db->getTableSchema($tableName);
+        $table = $this->db->getTableSchema($table);
         if ($table !== null && $table->sequenceName !== null) {
-            $tableName = $this->db->quoteTableName($tableName);
+            $table = $this->db->quoteTableName($table);
             if ($value === null) {
                 $key = $this->db->quoteColumnName(reset($table->primaryKey));
-                $value = "(SELECT COALESCE(MAX({$key}),0) FROM {$tableName})+1";
+                $value = "(SELECT COALESCE(MAX({$key}),0) FROM {$table})+1";
             } else {
                 $value = (int) $value;
             }
 
-            return "DBCC CHECKIDENT ('{$tableName}', RESEED, {$value})";
+            return "DBCC CHECKIDENT ('{$table}', RESEED, {$value})";
         } elseif ($table === null) {
-            throw new InvalidArgumentException("Table not found: $tableName");
+            throw new InvalidArgumentException("Table not found: $table");
         }
 
-        throw new InvalidArgumentException("There is not sequence associated with table '$tableName'.");
+        throw new InvalidArgumentException("There is not sequence associated with table '$table'.");
     }
 
     /**
      * Builds a SQL statement for enabling or disabling integrity check.
      * @param bool $check whether to turn on or off the integrity check.
-     * @param string $schema the schema of the tables.
-     * @param string $table the table name.
+     * @param string|null $schema the schema of the tables.
+     * @param string|null $table the table name.
      * @return string the SQL statement for checking integrity
      */
-    public function checkIntegrity($check = true, $schema = '', $table = '')
+    public function checkIntegrity(bool $check = true, ?string $schema = '', ?string $table = ''): string
     {
         $enable = $check ? 'CHECK' : 'NOCHECK';
         $schema = $schema ?: $this->db->getSchema()->defaultSchema;
@@ -254,7 +254,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function addCommentOnColumn($table, $column, $comment)
+    public function addCommentOnColumn(string $table, string $column, string $comment): string
     {
         return "sp_updateextendedproperty @name = N'MS_Description', @value = {$this->db->quoteValue($comment)}, @level1type = N'Table',  @level1name = {$this->db->quoteTableName($table)}, @level2type = N'Column', @level2name = {$this->db->quoteColumnName($column)}";
     }
@@ -263,7 +263,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function addCommentOnTable($table, $comment)
+    public function addCommentOnTable(string $table, string $comment): string
     {
         return "sp_updateextendedproperty @name = N'MS_Description', @value = {$this->db->quoteValue($comment)}, @level1type = N'Table',  @level1name = {$this->db->quoteTableName($table)}";
     }
@@ -272,7 +272,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromColumn($table, $column)
+    public function dropCommentFromColumn(string $table, string $column): string
     {
         return "sp_dropextendedproperty @name = N'MS_Description', @level1type = N'Table',  @level1name = {$this->db->quoteTableName($table)}, @level2type = N'Column', @level2name = {$this->db->quoteColumnName($column)}";
     }
@@ -281,7 +281,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function dropCommentFromTable($table)
+    public function dropCommentFromTable(string $table): string
     {
         return "sp_dropextendedproperty @name = N'MS_Description', @level1type = N'Table',  @level1name = {$this->db->quoteTableName($table)}";
     }
@@ -317,7 +317,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @since 2.0.8
      */
-    public function selectExists($rawSql)
+    public function selectExists(string $rawSql): string
     {
         return 'SELECT CASE WHEN EXISTS(' . $rawSql . ') THEN 1 ELSE 0 END';
     }
@@ -347,7 +347,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function insert($table, $columns, &$params)
+    public function insert(string $table, $columns, array &$params): string
     {
         return parent::insert($table, $this->normalizeTableRowData($table, $columns, $params), $params);
     }
@@ -357,7 +357,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @see https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql
      * @see http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
      */
-    public function upsert($table, $insertColumns, $updateColumns, &$params)
+    public function upsert(string $table, $insertColumns, $updateColumns, array &$params): string
     {
         /** @var Constraint[] $constraints */
         list($uniqueNames, $insertNames, $updateNames) = $this->prepareUpsertColumns($table, $insertColumns, $updateColumns, $constraints);
@@ -412,7 +412,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function update($table, $columns, $condition, &$params)
+    public function update(string $table, array $columns, $condition, array &$params): string
     {
         return parent::update($table, $this->normalizeTableRowData($table, $columns, $params), $condition, $params);
     }

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -16,62 +14,75 @@ use ESD\Goaop\Aop\Features;
 use ESD\Goaop\Instrument\ClassLoading\AopComposerLoader;
 use ESD\Goaop\Instrument\ClassLoading\SourceTransformingLoader;
 use ESD\Goaop\Instrument\PathResolver;
-use ESD\Goaop\Instrument\Transformer\CachingTransformer;
 use ESD\Goaop\Instrument\Transformer\ConstructorExecutionTransformer;
-use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
-use ESD\Goaop\Instrument\Transformer\MagicConstantTransformer;
 use ESD\Goaop\Instrument\Transformer\SelfValueTransformer;
 use ESD\Goaop\Instrument\Transformer\SourceTransformer;
 use ESD\Goaop\Instrument\Transformer\WeavingTransformer;
-use ReflectionObject;
-use RuntimeException;
-
-use function define;
+use ESD\Goaop\Instrument\Transformer\CachingTransformer;
+use ESD\Goaop\Instrument\Transformer\FilterInjectorTransformer;
+use ESD\Goaop\Instrument\Transformer\MagicConstantTransformer;
 
 /**
  * Abstract aspect kernel is used to prepare an application to work with aspects.
  */
 abstract class AspectKernel
 {
+
+    /**
+     * Version of kernel
+     */
+    const VERSION = '2.1.0';
+
     /**
      * Kernel options
+     *
+     * @var array
      */
-    protected array $options = [
+    protected $options = [
         'features' => 0
     ];
 
     /**
      * Single instance of kernel
+     *
+     * @var null|static
      */
-    protected static ?self $instance = null;
+    protected static $instance;
 
     /**
      * Default class name for container, can be redefined in children
+     *
+     * @var string
      */
-    protected static string $containerClass = GoAspectContainer::class;
+    protected static $containerClass = GoAspectContainer::class;
 
     /**
      * Flag to determine if kernel was already initialized or not
+     *
+     * @var bool
      */
-    protected bool $wasInitialized = false;
+    protected $wasInitialized = false;
 
     /**
      * Aspect container instance
+     *
+     * @var null|AspectContainer
      */
-    protected AspectContainer $container;
+    protected $container;
 
     /**
      * Protected constructor is used to prevent direct creation, but allows customization if needed
      */
-    final protected function __construct() {}
+    protected function __construct() {}
 
     /**
      * Returns the single instance of kernel
+     *
+     * @return static
      */
-    public static function getInstance(): self
+    public static function getInstance()
     {
-        if (self::$instance === null) {
-            // PhpStan complains about LSB and args for constructor, so constructor should be final
+        if (!self::$instance) {
             self::$instance = new static();
         }
 
@@ -83,7 +94,7 @@ abstract class AspectKernel
      *
      * @param array $options Associative array of options for kernel
      */
-    public function init(array $options = []): void
+    public function init(array $options = [])
     {
         if ($this->wasInitialized) {
             return;
@@ -93,7 +104,7 @@ abstract class AspectKernel
         define('AOP_ROOT_DIR', $this->options['appDir']);
         define('AOP_CACHE_DIR', $this->options['cacheDir']);
 
-        /** @var AspectContainer $container */
+        /** @var $container AspectContainer */
         $container = $this->container = new $this->options['containerClass'];
         $container->set('kernel', $this);
         $container->set('kernel.interceptFunctions', $this->hasFeature(Features::INTERCEPT_FUNCTIONS));
@@ -120,8 +131,10 @@ abstract class AspectKernel
 
     /**
      * Returns an aspect container
+     *
+     * @return null|AspectContainer
      */
-    public function getContainer(): AspectContainer
+    public function getContainer()
     {
         return $this->container;
     }
@@ -129,17 +142,21 @@ abstract class AspectKernel
     /**
      * Checks if kernel configuration has enabled specific feature
      *
-     * @see \Go\Aop\Features enumeration class for features
+     * @param integer $featureToCheck See Go\Aop\Features enumeration class for features
+     *
+     * @return bool Whether specific feature enabled or not
      */
-    public function hasFeature(int $featureToCheck): bool
+    public function hasFeature($featureToCheck)
     {
         return ($this->options['features'] & $featureToCheck) !== 0;
     }
 
     /**
      * Returns list of kernel options
+     *
+     * @return array
      */
-    public function getOptions(): array
+    public function getOptions()
     {
         return $this->options;
     }
@@ -155,19 +172,21 @@ abstract class AspectKernel
      *   features - integer Binary mask of features
      *   includePaths - array Whitelist of directories where aspects should be applied. Empty for everywhere.
      *   excludePaths - array Blacklist of directories or files where aspects shouldn't be applied.
+     *
+     * @return array
      */
-    protected function getDefaultOptions(): array
+    protected function getDefaultOptions()
     {
         return [
-            'debug'           => false,
-            'appDir'          => __DIR__ . '/../../../../../',
-            'cacheDir'        => null,
-            'cacheFileMode'   => 0770 & ~umask(), // Respect user umask() policy
-            'features'        => 0,
-            'annotationCache' => null,
-            'includePaths'    => [],
-            'excludePaths'    => [],
-            'containerClass'  => static::$containerClass,
+            'debug'                  => false,
+            'appDir'                 => __DIR__ . '/../../../../../',
+            'cacheDir'               => null,
+            'cacheFileMode'          => 0770 & ~umask(), // Respect user umask() policy
+            'features'               => 0,
+            'annotationCache'        => null,
+            'includePaths'           => [],
+            'excludePaths'           => [],
+            'containerClass'         => static::$containerClass,
         ];
     }
 
@@ -176,15 +195,17 @@ abstract class AspectKernel
      * Normalizes options for the kernel
      *
      * @param array $options List of options
+     *
+     * @return array
      */
-    protected function normalizeOptions(array $options): array
+    protected function normalizeOptions(array $options)
     {
         $options = array_replace($this->getDefaultOptions(), $options);
 
         $options['cacheDir'] = PathResolver::realpath($options['cacheDir']);
 
-        if ($options['cacheDir'] === []) {
-            throw new RuntimeException('You need to provide valid cache directory for Go! AOP framework.');
+        if (!$options['cacheDir']) {
+            throw new \RuntimeException('You need to provide valid cache directory for Go! AOP framework.');
         }
 
         $options['excludePaths'][] = $options['cacheDir'];
@@ -198,36 +219,41 @@ abstract class AspectKernel
     }
 
     /**
-     * Configures an AspectContainer with advisors, aspects and pointcuts
+     * Configure an AspectContainer with advisors, aspects and pointcuts
+     *
+     * @param AspectContainer $container
+     *
+     * @return void
      */
     abstract protected function configureAop(AspectContainer $container);
 
     /**
      * Returns list of source transformers, that will be applied to the PHP source
      *
-     * @return SourceTransformer[]
-     * @internal This method is internal and should not be used outside this project
+     * @return array|SourceTransformer[]
      */
-    protected function registerTransformers(): array
+    protected function registerTransformers()
     {
         $cacheManager     = $this->getContainer()->get('aspect.cache.path.manager');
         $filterInjector   = new FilterInjectorTransformer($this, SourceTransformingLoader::getId(), $cacheManager);
         $magicTransformer = new MagicConstantTransformer($this);
+        $aspectKernel     = $this;
 
-        $sourceTransformers = function () use ($filterInjector, $magicTransformer, $cacheManager) {
+        $sourceTransformers = function () use ($filterInjector, $magicTransformer, $aspectKernel, $cacheManager) {
             $transformers = [];
-            if ($this->hasFeature(Features::INTERCEPT_INITIALIZATIONS)) {
+            if ($aspectKernel->hasFeature(Features::INTERCEPT_INITIALIZATIONS)) {
                 $transformers[] = new ConstructorExecutionTransformer();
             }
-            if ($this->hasFeature(Features::INTERCEPT_INCLUDES)) {
+            if ($aspectKernel->hasFeature(Features::INTERCEPT_INCLUDES)) {
                 $transformers[] = $filterInjector;
             }
-            $transformers[]  = new SelfValueTransformer($this);
+            $aspectContainer = $aspectKernel->getContainer();
+            $transformers[]  = new SelfValueTransformer($aspectKernel);
             $transformers[]  = new WeavingTransformer(
-                $this,
-                $this->container->get('aspect.advice_matcher'),
+                $aspectKernel,
+                $aspectContainer->get('aspect.advice_matcher'),
                 $cacheManager,
-                $this->container->get('aspect.cached.loader')
+                $aspectContainer->get('aspect.cached.loader')
             );
             $transformers[] = $magicTransformer;
 
@@ -240,12 +266,14 @@ abstract class AspectKernel
     }
 
     /**
-     * Add resources of kernel to the container
+     * Add resources for kernel
+     *
+     * @param AspectContainer $container
      */
-    protected function addKernelResourcesToContainer(AspectContainer $container): void
+    protected function addKernelResourcesToContainer(AspectContainer $container)
     {
         $trace    = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-        $refClass = new ReflectionObject($this);
+        $refClass = new \ReflectionObject($this);
 
         $container->addResource($trace[1]['file']);
         $container->addResource($refClass->getFileName());

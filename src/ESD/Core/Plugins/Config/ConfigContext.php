@@ -27,9 +27,9 @@ class ConfigContext
      * Add a layer of configuration, sort in reverse order of depth
      *
      * @param array $config
-     * @param $deep
+     * @param int $deep
      */
-    public function addDeepConfig(array $config, $deep)
+    public function addDeepConfig(array $config, int $deep)
     {
         $this->contain[$deep] = $config;
         krsort($this->contain);
@@ -52,9 +52,9 @@ class ConfigContext
      * Append the same layer configuration, sort in reverse order of depth
      *
      * @param array $config
-     * @param $deep
+     * @param int $deep
      */
-    public function appendDeepConfig(array $config, $deep)
+    public function appendDeepConfig(array $config, int $deep)
     {
         $oldConfig = $this->contain[$deep] ?? null;
         if ($oldConfig != null) {
@@ -121,12 +121,12 @@ class ConfigContext
     /**
      * Get the value of a.b.v, the default separator is "."
      *
-     * @param $key
+     * @param string $key
      * @param null $default
-     * @param string $separator
+     * @param string|null $separator
      * @return array|mixed|null
      */
-    public function get($key, $default = null, $separator = ".")
+    public function get(string $key, $default = null, ?string $separator = ".")
     {
         $arr = explode($separator, $key);
         $result = $this->cacheContain;

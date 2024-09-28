@@ -43,15 +43,15 @@ class ReflectionNamedType extends BaseReflectionNamedType
      */
     public function __construct($type, $allowsNull, $isBuiltin)
     {
-        $this->type = $type;
+        $this->type       = $type;
         $this->allowsNull = $allowsNull;
-        $this->isBuiltin = $isBuiltin;
+        $this->isBuiltin  = $isBuiltin;
     }
 
     /**
      * @inheritDoc
      */
-    public function allowsNull(): bool
+    public function allowsNull()
     {
         return $this->allowsNull;
     }
@@ -59,7 +59,7 @@ class ReflectionNamedType extends BaseReflectionNamedType
     /**
      * @inheritDoc
      */
-    public function isBuiltin(): bool
+    public function isBuiltin()
     {
         return $this->isBuiltin;
     }
@@ -75,7 +75,7 @@ class ReflectionNamedType extends BaseReflectionNamedType
     /**
      * @inheritDoc
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->type;
     }

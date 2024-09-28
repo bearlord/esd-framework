@@ -22,7 +22,7 @@ class RedisPools
      * @param $name
      * @return RedisPool|null
      */
-    public function getPool($name = "default")
+    public function getPool(string $name = "default")
     {
         return $this->poolList[$name] ?? null;
     }

@@ -18,7 +18,7 @@ class EventCallFactory implements Factory
      * @param $params
      * @return EventCallImpl|mixed
      */
-    public function create(?array $params)
+    public function create($params)
     {
         return new EventCallImpl($params[0], $params[1], $params[2] ?? false);
     }

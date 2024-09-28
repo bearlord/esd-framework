@@ -155,7 +155,7 @@ class PageCache extends ActionFilter implements DynamicContentAwareInterface
      * @param Action $action the action to be executed.
      * @return bool whether the action should continue to be executed.
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if (!$this->enabled) {
             return true;
@@ -307,7 +307,7 @@ class PageCache extends ActionFilter implements DynamicContentAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function getView()
+    public function getView(): \ESD\Yii\Web\View
     {
         return $this->view;
     }

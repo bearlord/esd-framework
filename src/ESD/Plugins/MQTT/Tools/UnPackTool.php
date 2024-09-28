@@ -21,17 +21,17 @@ class UnPackTool extends Common
     }
 
     /**
-     * @param $data
+     * @param string $data
      * @return int
      */
-    public static function getProtocolLevel($data): int
+    public static function getProtocolLevel(string $data): int
     {
-        $remaining = UnPackTool::getRemaining($data);
+        $remaining = self::getRemaining($data);
 
-        $protocolName = UnPackTool::string($remaining);
+        $protocolName = self::string($remaining);
         $protocolLevel = ord($remaining[0]);
 
-        $clientId = UnPackTool::getRemaining($remaining);
+        $clientId = self::getRemaining($remaining);
 
         unset($remaining);
         return $protocolLevel;
@@ -39,10 +39,10 @@ class UnPackTool extends Common
     }
 
     /**
-     * @param $data
+     * @param string $data
      * @return int
      */
-    public static function getLevel($data): int
+    public static function getLevel(string $data): int
     {
         $remaining = static::getRemaining($data);
         $length = unpack('n', $remaining)[1];

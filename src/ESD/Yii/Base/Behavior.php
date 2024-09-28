@@ -61,7 +61,7 @@ class Behavior extends BaseObject
      *
      * @return array events (array keys) and the corresponding event handler methods (array values).
      */
-    public function events()
+    public function events(): array
     {
         return [];
     }
@@ -73,7 +73,7 @@ class Behavior extends BaseObject
      * Make sure you call the parent implementation if you override this method.
      * @param Component $owner the component that this behavior is to be attached to.
      */
-    public function attach($owner)
+    public function attach(Component $owner)
     {
         $this->owner = $owner;
         foreach ($this->events() as $event => $handler) {

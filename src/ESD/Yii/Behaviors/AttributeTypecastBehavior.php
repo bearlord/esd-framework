@@ -8,6 +8,7 @@
 namespace ESD\Yii\Behaviors;
 
 use ESD\Yii\Base\Behavior;
+use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidParamException;
 use ESD\Yii\Base\Model;
 use ESD\Yii\Db\BaseActiveRecord;
@@ -189,7 +190,7 @@ class AttributeTypecastBehavior extends Behavior
     /**
      * @inheritdoc
      */
-    public function attach($owner)
+    public function attach(Component $owner)
     {
         parent::attach($owner);
 
@@ -291,7 +292,7 @@ class AttributeTypecastBehavior extends Behavior
     /**
      * @inheritdoc
      */
-    public function events()
+    public function events(): array
     {
         $events = [];
 

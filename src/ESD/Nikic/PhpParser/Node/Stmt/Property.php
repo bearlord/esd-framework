@@ -3,9 +3,10 @@
 namespace ESD\Nikic\PhpParser\Node\Stmt;
 
 use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\Node\ComplexType;
 use ESD\Nikic\PhpParser\Node\Identifier;
 use ESD\Nikic\PhpParser\Node\Name;
+use ESD\Nikic\PhpParser\Node\NullableType;
+use ESD\Nikic\PhpParser\Node\UnionType;
 
 class Property extends Node\Stmt
 {
@@ -13,30 +14,26 @@ class Property extends Node\Stmt
     public $flags;
     /** @var PropertyProperty[] Properties */
     public $props;
-    /** @var null|Identifier|Name|ComplexType Type declaration */
+    /** @var null|Identifier|Name|NullableType|UnionType Type declaration */
     public $type;
-    /** @var Node\AttributeGroup[] PHP attribute groups */
-    public $attrGroups;
 
     /**
      * Constructs a class property list node.
      *
-     * @param int                                     $flags      Modifiers
-     * @param PropertyProperty[]                      $props      Properties
-     * @param array                                   $attributes Additional attributes
-     * @param null|string|Identifier|Name|ComplexType $type       Type declaration
-     * @param Node\AttributeGroup[]                   $attrGroups PHP attribute groups
+     * @param int                                                $flags      Modifiers
+     * @param PropertyProperty[]                                 $props      Properties
+     * @param array                                              $attributes Additional attributes
+     * @param null|string|Identifier|Name|NullableType|UnionType $type       Type declaration
      */
-    public function __construct(int $flags, array $props, array $attributes = [], $type = null, array $attrGroups = []) {
+    public function __construct(int $flags, array $props, array $attributes = [], $type = null) {
         $this->attributes = $attributes;
         $this->flags = $flags;
         $this->props = $props;
         $this->type = \is_string($type) ? new Identifier($type) : $type;
-        $this->attrGroups = $attrGroups;
     }
 
     public function getSubNodeNames() : array {
-        return ['attrGroups', 'flags', 'type', 'props'];
+        return ['flags', 'type', 'props'];
     }
 
     /**
@@ -74,15 +71,6 @@ class Property extends Node\Stmt
      */
     public function isStatic() : bool {
         return (bool) ($this->flags & Class_::MODIFIER_STATIC);
-    }
-
-    /**
-     * Whether the property is readonly.
-     *
-     * @return bool
-     */
-    public function isReadonly() : bool {
-        return (bool) ($this->flags & Class_::MODIFIER_READONLY);
     }
 
     public function getType() : string {

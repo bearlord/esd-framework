@@ -257,7 +257,7 @@ class PortConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getBacklog()
+    public function getBacklog(): int
     {
         return $this->backlog ?? 128;
     }
@@ -273,7 +273,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenTcpNodelay()
+    public function isOpenTcpNodelay(): bool
     {
         return $this->openTcpNodelay ?? true;
     }
@@ -289,7 +289,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isTcpFastopen()
+    public function isTcpFastopen(): bool
     {
         return $this->tcpFastopen ?? true;
     }
@@ -305,7 +305,7 @@ class PortConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getTcpDeferAccept()
+    public function getTcpDeferAccept(): ?int
     {
         return $this->tcpDeferAccept ?? null;
     }
@@ -321,7 +321,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenEofCheck()
+    public function isOpenEofCheck(): bool
     {
         return $this->openEofCheck ?? false;
     }
@@ -481,7 +481,7 @@ class PortConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getSslCiphers()
+    public function getSslCiphers(): ?string
     {
         return $this->sslCiphers;
     }
@@ -497,7 +497,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenHttpProtocol()
+    public function isOpenHttpProtocol(): bool
     {
         return $this->openHttpProtocol ?? false;
     }
@@ -513,7 +513,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenWebsocketProtocol()
+    public function isOpenWebsocketProtocol(): bool
     {
         return $this->openWebsocketProtocol ?? false;
     }
@@ -529,7 +529,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenMqttProtocol()
+    public function isOpenMqttProtocol(): bool
     {
         return $this->openMqttProtocol ?? false;
     }
@@ -545,7 +545,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isOpenWebsocketCloseFrame()
+    public function isOpenWebsocketCloseFrame(): bool
     {
         return $this->openWebsocketCloseFrame ?? false;
     }
@@ -561,7 +561,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isSslVerifyPeer()
+    public function isSslVerifyPeer(): bool
     {
         return $this->sslVerifyPeer ?? false;
     }
@@ -577,7 +577,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isEnableReusePort()
+    public function isEnableReusePort(): bool
     {
         return $this->enableReusePort ?? false;
     }
@@ -593,7 +593,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isEnableDelayReceive()
+    public function isEnableDelayReceive(): bool
     {
         return $this->enableDelayReceive ?? false;
     }
@@ -609,7 +609,7 @@ class PortConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getPort()
+    public function getPort(): int
     {
         return $this->port;
     }
@@ -625,7 +625,7 @@ class PortConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
@@ -641,7 +641,7 @@ class PortConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getSockType()
+    public function getSockType(): int
     {
         return $this->sockType;
     }
@@ -657,7 +657,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isEnableSsl()
+    public function isEnableSsl(): bool
     {
         return $this->enableSsl ?? false;
     }
@@ -674,9 +674,9 @@ class PortConfig extends BaseConfig
     /**
      * Get ssl method
      *
-     * @return string
+     * @return string|null
      */
-    public function getSslMethod()
+    public function getSslMethod(): ?string
     {
         return $this->sslMethod;
     }
@@ -694,7 +694,7 @@ class PortConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getSslClientCertFile()
+    public function getSslClientCertFile(): string
     {
         return $this->sslClientCertFile;
     }
@@ -715,7 +715,7 @@ class PortConfig extends BaseConfig
      * @return int
      * @throws ConfigException
      */
-    public function getSwooleSockType()
+    public function getSwooleSockType(): int
     {
         ConfigException::AssertNull($this, "sockType", $this->getSockType());
         if ($this->isEnableSsl()) {
@@ -728,7 +728,7 @@ class PortConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isCustomHandShake()
+    public function isCustomHandShake(): bool
     {
         return $this->customHandShake;
     }
@@ -833,7 +833,7 @@ class PortConfig extends BaseConfig
     /**
      * Get type name
      */
-    public function getTypeName()
+    public function getTypeName(): string
     {
         if ($this->isOpenWebsocketProtocol()) {
             return "WebSocket";
@@ -858,9 +858,9 @@ class PortConfig extends BaseConfig
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -876,7 +876,7 @@ class PortConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getPortClass()
+    public function getPortClass(): ?string
     {
         return $this->portClass;
     }
@@ -930,12 +930,15 @@ class PortConfig extends BaseConfig
         return "unknown";
     }
 
-    protected $autoSendReturnValue;
+    /**
+     * @var bool auto send function's return value to remote port
+     */
+    protected $autoSendReturnValue = false;
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getAutoSendReturnValue()
+    public function getAutoSendReturnValue(): ?bool
     {
         return $this->autoSendReturnValue;
     }
@@ -943,9 +946,9 @@ class PortConfig extends BaseConfig
     /**
      * @param mixed $autoSendReturnValue
      */
-    public function setAutoSendReturnValue($autoSendReturnValue): void
+    public function setAutoSendReturnValue(?bool $autoSendReturnValue = null): void
     {
-        $this->autoSendReturnValue = $autoSendReturnValue;
+        $this->autoSendReturnValue = (bool)$autoSendReturnValue;
     }
 
 

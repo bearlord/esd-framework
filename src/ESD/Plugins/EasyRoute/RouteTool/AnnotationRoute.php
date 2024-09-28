@@ -25,6 +25,7 @@ use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\JsonRpc\Annotation\ResponeJsonRpc;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Validate\Annotation\ValidatedFilter;
+use ESD\Utils\ArrayToXml;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Yii;
 use ESD\Nikic\FastRoute\Dispatcher;

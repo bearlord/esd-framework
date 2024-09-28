@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,11 +10,11 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Aop\Framework;
 
-use ESD\Goaop\Aop\Intercept\Interceptor;
-use ESD\Goaop\Aop\Intercept\Joinpoint;
-use ESD\Goaop\Aop\Intercept\MethodInvocation;
 use ESD\Goaop\Aop\PointFilter;
-use ReflectionClass;
+use ESD\Goaop\Aop\Intercept\Interceptor;
+use ESD\Goaop\Aop\Intercept\Invocation;
+use ESD\Goaop\Aop\Intercept\Joinpoint;
+use Serializable;
 
 /**
  * Dynamic invocation matcher combines a pointcut and interceptor.
@@ -24,20 +22,27 @@ use ReflectionClass;
  * For each invocation interceptor asks the pointcut if it matches the invocation.
  * Matcher will receive reflection point, object instance and invocation arguments to make a decision
  */
-class DynamicInvocationMatcherInterceptor implements Interceptor
+class DynamicInvocationMatcherInterceptor implements Interceptor, Serializable
 {
     /**
      * Instance of pointcut to dynamically match joinpoints with args
+     *
+     * @var PointFilter
      */
-    protected PointFilter $pointFilter;
+    protected $pointFilter;
 
     /**
-     * Instance of interceptor to invoke
+     * Overloaded property for storing instance of Interceptor
+     *
+     * @var Interceptor
      */
-    protected Interceptor $interceptor;
+    protected $interceptor;
 
     /**
      * Dynamic matcher constructor
+     *
+     * @param PointFilter $pointFilter Instance of dynamic matcher
+     * @param Interceptor $interceptor Instance of interceptor to invoke
      */
     public function __construct(PointFilter $pointFilter, Interceptor $interceptor)
     {
@@ -46,15 +51,40 @@ class DynamicInvocationMatcherInterceptor implements Interceptor
     }
 
     /**
-     * @inheritdoc
+     * Serializes an interceptor into string representation
+     *
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize([$this->pointFilter, $this->interceptor]);
+    }
+
+    /**
+     * Unserialize an interceptor from the string
+     *
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        list($this->pointFilter, $this->interceptor) = unserialize($serialized);
+    }
+
+    /**
+     * Method invoker
+     *
+     * @param Joinpoint $joinpoint the method invocation joinpoint
+     *
+     * @return mixed the result of the call to {@see Joinpoint->proceed()}
      */
     final public function invoke(Joinpoint $joinpoint)
     {
-        if ($joinpoint instanceof MethodInvocation) {
-            $method       = $joinpoint->getMethod();
-            $context      = $joinpoint->getThis() ?? $joinpoint->getScope();
-            $contextClass = new ReflectionClass($context);
-            if ($this->pointFilter->matches($method, $contextClass, $context, $joinpoint->getArguments())) {
+        if ($joinpoint instanceof Invocation) {
+            $point    = $joinpoint->getStaticPart();
+            $instance = $joinpoint->getThis();
+            $context  = new \ReflectionClass($instance);
+            if ($this->pointFilter->matches($point, $context, $instance, $joinpoint->getArguments())) {
                 return $this->interceptor->invoke($joinpoint);
             }
         }

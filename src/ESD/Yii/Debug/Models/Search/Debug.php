@@ -60,7 +60,7 @@ class Debug extends Base
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['tag', 'ip', 'method', 'ajax', 'url', 'statusCode', 'sqlCount', 'mailCount'], 'safe'],
@@ -70,7 +70,7 @@ class Debug extends Base
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'tag' => 'Tag',
@@ -92,7 +92,7 @@ class Debug extends Base
      * @param array $models data to return provider for
      * @return \ESD\Yii\Data\ArrayDataProvider
      */
-    public function search($params, $models)
+    public function search(array $params, array $models): ArrayDataProvider
     {
         $dataProvider = new ArrayDataProvider([
             'allModels' => $models,

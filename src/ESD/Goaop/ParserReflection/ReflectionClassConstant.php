@@ -16,8 +16,7 @@ use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
 use ESD\Nikic\PhpParser\Node\Const_;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
-use Reflection;
-use ReflectionClassConstant as BaseReflectionClassConstant;
+use \ReflectionClassConstant as BaseReflectionClassConstant;
 
 class ReflectionClassConstant extends BaseReflectionClassConstant
 {
@@ -76,16 +75,15 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
      *
      * @param string $className Name of the class
      * @param string $classConstantName Name of the class constant to reflect
-     * @param ?ClassConst $classConstNode ClassConstant definition node
+     * @param ClassConst $classConstNode ClassConstant definition node
      * @param Const_|null $constNode Concrete const definition node
      */
     public function __construct(
-        string     $className,
-        string     $classConstantName,
+        string $className,
+        string $classConstantName,
         ClassConst $classConstNode = null,
-        Const_     $constNode = null
-    )
-    {
+        Const_ $constNode = null
+    ) {
         $this->className = ltrim($className, '\\');
 
         if (!$classConstNode || !$constNode) {
@@ -101,7 +99,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * Emulating original behaviour of reflection
      */
-    public function __debugInfo(): array
+    public function ___debugInfo()
     {
         return [
             'name' => $this->getName(),
@@ -112,7 +110,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getDeclaringClass(): \ReflectionClass
+    public function getDeclaringClass()
     {
         return new ReflectionClass($this->className);
     }
@@ -120,7 +118,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getDocComment(): string|false
+    public function getDocComment()
     {
         $docBlock = $this->classConstantNode->getDocComment();
 
@@ -130,7 +128,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getModifiers(): int
+    public function getModifiers()
     {
         $modifiers = 0;
         if ($this->isPublic()) {
@@ -149,7 +147,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->constNode->name->toString();
     }
@@ -157,7 +155,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getValue(): mixed
+    public function getValue()
     {
         $solver = new NodeExpressionResolver($this->getDeclaringClass());
         $solver->process($this->constNode->value);
@@ -167,7 +165,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isPrivate(): bool
+    public function isPrivate()
     {
         return $this->classConstantNode->isPrivate();
     }
@@ -175,7 +173,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isProtected(): bool
+    public function isProtected()
     {
         return $this->classConstantNode->isProtected();
     }
@@ -183,7 +181,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isPublic(): bool
+    public function isPublic()
     {
         return $this->classConstantNode->isPublic();
     }
@@ -197,10 +195,10 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
         static $typeMap = [
             'integer' => 'int',
             'boolean' => 'bool',
-            'double' => 'float',
+            'double'  => 'float',
         ];
         $value = $this->getValue();
-        $type = gettype($value);
+        $type  = gettype($value);
         if (PHP_VERSION_ID >= 70300 && isset($typeMap[$type])) {
             $type = $typeMap[$type];
         }
@@ -208,10 +206,10 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
 
         return sprintf(
             "Constant [ %s %s %s ] { %s }\n",
-            implode(' ', Reflection::getModifierNames($this->getModifiers())),
-            strtolower((string)ReflectionType::convertToDisplayType($valueType)),
+            implode(' ', \Reflection::getModifierNames($this->getModifiers())),
+            strtolower((string) ReflectionType::convertToDisplayType($valueType)),
             $this->getName(),
-            (string)$value
+            (string) $value
         );
     }
 }

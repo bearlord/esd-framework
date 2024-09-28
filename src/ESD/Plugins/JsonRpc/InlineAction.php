@@ -5,6 +5,7 @@
  */
 namespace ESD\Plugins\JsonRpc;
 
+use ESD\Yii\Base\Controller;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\Action;
 
@@ -36,9 +37,9 @@ class InlineAction extends \ESD\Yii\Base\InlineAction
      * @param string $id the ID of this action
      * @param Controller $controller the controller that owns this action
      * @param string $actionMethod the controller method that this inline action is associated with
-     * @param array $config name-value pairs that will be used to initialize the object properties
+     * @param array|null $config name-value pairs that will be used to initialize the object properties
      */
-    public function __construct($id, $controller, $actionMethod, $config = [])
+    public function __construct($id, Controller $controller, $actionMethod, ?array $config = [])
     {
         $this->actionMethod = $actionMethod;
         parent::__construct($id, $controller, $actionMethod, $config);
@@ -47,15 +48,16 @@ class InlineAction extends \ESD\Yii\Base\InlineAction
     /**
      * Runs this action with the specified parameters.
      * This method is mainly invoked by the controller.
-     * @param array $params action parameters
+     * @param array|null $params action parameters
      * @return mixed the result of the action
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ReflectionException
      */
-    public function runWithParams($params)
+    public function runWithParams(?array $params = null)
     {
         $args = $this->controller->bindActionParams($this, $params);
         Yii::debug('Running action: ' . get_class($this->controller) . '::' . $this->actionMethod . '()', __METHOD__);
 
-        $result = call_user_func_array([$this->controller, $this->actionMethod], $args);
-        return $result;
+        return call_user_func_array([$this->controller, $this->actionMethod], $args);
     }
 }

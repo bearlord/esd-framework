@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -19,4 +17,5 @@ use RuntimeException;
  */
 class AspectException extends RuntimeException
 {
+
 }

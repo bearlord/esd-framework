@@ -8,6 +8,7 @@
 namespace ESD\Yii\Queue\Cli;
 
 use ESD\Core\Plugins\Logger\GetLogger;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
 
@@ -75,6 +76,8 @@ abstract class Queue extends BaseQueue
                 $this->trigger(self::EVENT_WORKER_LOOP, $event);
                 return $event->exitCode === null;
             });
+        } catch (\Exception $exception) {
+            Server::$instance->getLog()->error($exception->getMessage());
         } finally {
             $this->trigger(self::EVENT_WORKER_STOP, $event);
         }

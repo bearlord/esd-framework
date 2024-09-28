@@ -19,7 +19,7 @@ trait GetPdo
      * @return mixed
      * @throws \Exception
      */
-    public function pdo($name = "default")
+    public function pdo(string $name = "default")
     {
         if ($name === "default") {
             $poolKey = "default";
@@ -52,8 +52,9 @@ trait GetPdo
         $db = getContextValue($contextKey);
 
         if ($db == null) {
-            /** @var PdoPools $pdoPools * */
+            /** @var \ESD\Yii\Plugin\Pdo\PdoPools $pdoPools * */
             $pdoPools = getDeepContextValueByClassName(PdoPools::class);
+            /** @var \ESD\Yii\Plugin\Pdo\PdoPool $pool */
             $pool = $pdoPools->getPool($poolKey);
             if ($pool == null) {
                 throw new \PDOException("No Pdo connection pool named {$poolKey} was found");

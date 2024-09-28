@@ -25,12 +25,12 @@ trait DynamicContentAwareTrait
      * Returns the view object that can be used to render views or view files using dynamic contents.
      * @return View the view object that can be used to render views or view files.
      */
-    abstract protected function getView();
+    abstract protected function getView(): View;
 
     /**
      * {@inheritdoc}
      */
-    public function getDynamicPlaceholders()
+    public function getDynamicPlaceholders(): array
     {
         return $this->_dynamicPlaceholders;
     }
@@ -38,7 +38,7 @@ trait DynamicContentAwareTrait
     /**
      * {@inheritdoc}
      */
-    public function setDynamicPlaceholders($placeholders)
+    public function setDynamicPlaceholders(array $placeholders)
     {
         $this->_dynamicPlaceholders = $placeholders;
     }
@@ -46,7 +46,7 @@ trait DynamicContentAwareTrait
     /**
      * {@inheritdoc}
      */
-    public function addDynamicPlaceholder($name, $statements)
+    public function addDynamicPlaceholder(string $name, string $statements)
     {
         $this->_dynamicPlaceholders[$name] = $statements;
     }

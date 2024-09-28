@@ -27,15 +27,16 @@ trait  GetCache
         return DIGet(CacheStorage::class);
     }
 
+
     /**
-     * @param string $key
+     * @param $key
      * @param callable $callable
-     * @param int|null $timeout
-     * @param string|null $namespace
+     * @param int $timeout
+     * @param null $namespace
      * @return mixed
      * @throws \Exception
      */
-    public function cacheable(string $key, callable $callable, ?int $timeout = 0, ?string $namespace = null)
+    public function cacheable($key, callable $callable, $timeout = 0, $namespace = null)
     {
         $data = $this->getCache($key, $namespace);
         if ($data != null) {
@@ -49,14 +50,14 @@ trait  GetCache
     }
 
     /**
-     * @param string $key
+     * @param $key
      * @param callable $callable
-     * @param int|null $timeout
-     * @param string|null $namespace
+     * @param int $timeout
+     * @param null $namespace
      * @return mixed
      * @throws CacheException
      */
-    public function cacheableWithLock(string $key, callable $callable, ?int $timeout = 0, ?string $namespace = null)
+    public function cacheableWithLock($key, callable $callable, $timeout = 0, $namespace = null)
     {
         $config = DIget(CacheConfig::class);
         $data = $this->getCache($key, $namespace);
@@ -108,13 +109,14 @@ trait  GetCache
         return $result;
     }
 
+
     /**
-     * @param string $key
-     * @param string|null $namespace
+     * @param $key
+     * @param null $namespace
      * @return mixed
      * @throws \Exception
      */
-    public function getCache(string $key, ?string $namespace = null)
+    public function getCache($key, $namespace = null)
     {
         if (is_null($namespace)) {
             $data = $this->Cache()->get($key);
@@ -125,15 +127,15 @@ trait  GetCache
     }
 
     /**
-     * @param string $key
-     * @param string $data
-     * @param int|null $timeout
-     * @param string|null $namespace
-     * @return void
+     * @param $key
+     * @param $data
+     * @param int $timeout
+     * @param null $namespace
      * @throws \Exception
      */
-    public function setCache(string $key, string $data, ?int $timeout = 0, ?string $namespace = null): void
+    public function setCache($key, $data, $timeout = 0, $namespace = null): void
     {
+
         if (is_null($namespace)) {
             $ret = $this->Cache()->set($key, $data, $timeout);
         } else {

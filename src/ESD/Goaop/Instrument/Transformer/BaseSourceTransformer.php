@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -12,31 +10,37 @@ declare(strict_types = 1);
 
 namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Goaop\Core\AspectContainer;
 use ESD\Goaop\Core\AspectKernel;
+use ESD\Goaop\Core\AspectContainer;
 
 /**
  * Base source transformer class definition
  */
 abstract class BaseSourceTransformer implements SourceTransformer
 {
+
     /**
      * Transformer options
+     *
+     * @var array
      */
-    protected array $options = [];
+    protected $options = [];
 
     /**
-     * Aspect kernel instance
+     * @var AspectKernel|null
      */
-    protected AspectKernel $kernel;
+    protected $kernel;
 
     /**
-     * Aspect container instance
+     * @var AspectContainer|null
      */
-    protected AspectContainer $container;
+    protected $container;
 
     /**
      * Default constructor for transformer
+     *
+     * @param AspectKernel $kernel Instance of aspect kernel
+     * @param array $options Custom options or kernel options
      */
     public function __construct(AspectKernel $kernel, array $options = [])
     {

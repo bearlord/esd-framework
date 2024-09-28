@@ -36,7 +36,7 @@ class Log extends Base
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['level', 'message', 'category'], 'safe'],
@@ -46,7 +46,7 @@ class Log extends Base
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'level' => 'Level',

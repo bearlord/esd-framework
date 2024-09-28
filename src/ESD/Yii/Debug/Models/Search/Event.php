@@ -30,7 +30,7 @@ class Event extends Base
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'class', 'senderClass'], 'string'],
@@ -43,7 +43,7 @@ class Event extends Base
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'name' => 'Name',

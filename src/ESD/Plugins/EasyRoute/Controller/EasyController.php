@@ -8,13 +8,18 @@ namespace ESD\Plugins\EasyRoute\Controller;
 
 use DI\Annotation\Inject;
 use ESD\Core\ParamException;
+use ESD\Core\Server\Beans\Http\HttpStream;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
+use ESD\Plugins\EasyRoute\Annotation\ResponseBody;
+use ESD\Plugins\EasyRoute\Filter\AbstractFilter;
 use ESD\Plugins\EasyRoute\MethodNotAllowedException;
 use ESD\Plugins\EasyRoute\RouteException;
 use ESD\Plugins\Pack\ClientData;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Base\ActionEvent;
 use ESD\Yii\Base\Controller;
+use ESD\Yii\Base\InvalidRouteException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -73,8 +78,11 @@ abstract class EasyController extends Controller implements IController
             $callMethodName = $methodName;
         }
         try {
-            $action = $this->createAction($methodName);
-            
+            $action = $this->createAction($callMethodName);
+            if ($action === null) {
+                throw new InvalidRouteException('Unable to create Action: ' . $controllerName . '::' . $methodName);
+            }
+
             $result = null;
             if ($this->beforeAction($action)) {
                 // run the action
@@ -83,6 +91,24 @@ abstract class EasyController extends Controller implements IController
             }
             return $result;
         } catch (\Throwable $exception) {
+            Server::$instance->getLog()->error($exception);
+
+            /** @var ClientData $clientData */
+            $clientData = getContextValueByClassName(ClientData::class);
+            $annotations = $clientData->getAnnotations();
+            foreach ($annotations as $annotation) {
+                if ($annotation instanceof ResponseBody) {
+                    $data = [
+                        "code" => $exception->getCode(),
+                        "message" => $exception->getMessage(),
+                        "file" => $exception->getFile(),
+                        "line" => $exception->getLine(),
+                        "trace" => $exception->getTrace()
+                    ];
+                    return $data;
+                }
+            }
+
             setContextValue("lastException", $exception);
             return $this->onExceptionHandle($exception);
         }

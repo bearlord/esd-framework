@@ -4,20 +4,50 @@ namespace ESD\Nikic\PhpParser\Lexer\TokenEmulator;
 
 use ESD\Nikic\PhpParser\Lexer\Emulative;
 
-final class FnTokenEmulator extends KeywordEmulator
+final class FnTokenEmulator implements TokenEmulatorInterface
 {
-    public function getPhpVersion(): string
+    public function isEmulationNeeded(string $code) : bool
     {
-        return Emulative::PHP_7_4;
+        // skip version where this is supported
+        if (version_compare(\PHP_VERSION, Emulative::PHP_7_4, '>=')) {
+            return false;
+        }
+
+        return strpos($code, 'fn') !== false;
     }
 
-    public function getKeywordString(): string
+    public function emulate(string $code, array $tokens): array
     {
-        return 'fn';
+        // We need to manually iterate and manage a count because we'll change
+        // the tokens array on the way
+        foreach ($tokens as $i => $token) {
+            if ($token[0] === T_STRING && $token[1] === 'fn') {
+                $previousNonSpaceToken = $this->getPreviousNonSpaceToken($tokens, $i);
+                if ($previousNonSpaceToken !== null && $previousNonSpaceToken[0] === T_OBJECT_OPERATOR) {
+                    continue;
+                }
+
+                $tokens[$i][0] = Emulative::T_FN;
+            }
+        }
+
+        return $tokens;
     }
 
-    public function getKeywordToken(): int
+    /**
+     * @param mixed[] $tokens
+     * @return mixed[]|null
+     */
+    private function getPreviousNonSpaceToken(array $tokens, int $start)
     {
-        return \T_FN;
+        for ($i = $start - 1; $i >= 0; --$i) {
+            if ($tokens[$i][0] === T_WHITESPACE) {
+                continue;
+            }
+
+            return $tokens[$i];
+        }
+
+        return null;
     }
 }

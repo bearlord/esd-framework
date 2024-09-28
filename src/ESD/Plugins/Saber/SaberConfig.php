@@ -120,7 +120,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return array
      */
-    public function getInterceptors()
+    public function getInterceptors(): array
     {
         return $this->interceptors;
     }
@@ -128,7 +128,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return string|null
      */
-    public function getBaseUri()
+    public function getBaseUri(): ?string
     {
         return $this->baseUri;
     }
@@ -136,7 +136,7 @@ class SaberConfig extends BaseConfig
     /**
      * @param string|null $baseUri
      */
-    public function setBaseUri($baseUri)
+    public function setBaseUri(?string $baseUri = null)
     {
         $this->baseUri = $baseUri;
     }
@@ -144,7 +144,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return string|null
      */
-    public function getUseragent()
+    public function getUseragent(): ?string
     {
         return $this->useragent;
     }
@@ -152,7 +152,7 @@ class SaberConfig extends BaseConfig
     /**
      * @param string|null $useragent
      */
-    public function setUseragent($useragent)
+    public function setUseragent(?string $useragent = null)
     {
         $this->useragent = $useragent;
     }
@@ -160,7 +160,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return string|null
      */
-    public function getReferer()
+    public function getReferer(): ?string
     {
         return $this->referer;
     }
@@ -168,7 +168,7 @@ class SaberConfig extends BaseConfig
     /**
      * @param string|null $referer
      */
-    public function setReferer($referer)
+    public function setReferer(?string $referer = null)
     {
         $this->referer = $referer;
     }
@@ -176,7 +176,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getRedirect()
+    public function getRedirect(): int
     {
         return $this->redirect;
     }
@@ -192,7 +192,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getContentType()
+    public function getContentType(): string
     {
         return $this->contentType;
     }
@@ -200,7 +200,7 @@ class SaberConfig extends BaseConfig
     /**
      * @param string $contentType
      */
-    public function setContentType($contentType)
+    public function setContentType(string $contentType)
     {
         $this->contentType = $contentType;
     }
@@ -208,7 +208,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isKeepAlive()
+    public function isKeepAlive(): bool
     {
         return $this->keepAlive;
     }
@@ -240,7 +240,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getProxy()
+    public function getProxy(): string
     {
         return $this->proxy;
     }
@@ -248,7 +248,7 @@ class SaberConfig extends BaseConfig
     /**
      * @param string $proxy
      */
-    public function setProxy($proxy)
+    public function setProxy(string $proxy)
     {
         $this->proxy = $proxy;
     }
@@ -256,7 +256,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isSslVerifyPeer()
+    public function isSslVerifyPeer(): bool
     {
         return $this->sslVerifyPeer;
     }
@@ -272,7 +272,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isSslAllowSelfSigned()
+    public function isSslAllowSelfSigned(): bool
     {
         return $this->sslAllowSelfSigned;
     }
@@ -288,7 +288,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getExceptionReport()
+    public function getExceptionReport(): int
     {
         return $this->exceptionReport;
     }
@@ -320,7 +320,7 @@ class SaberConfig extends BaseConfig
     /**
      * @return bool
      */
-    public function isUsePool()
+    public function isUsePool(): bool
     {
         return $this->usePool;
     }
@@ -334,12 +334,11 @@ class SaberConfig extends BaseConfig
     }
 
     /**
-     * 异常处理回调
      * @param \Throwable $e
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @return bool
+     * @throws \Exception
      */
-    public function exceptionHandle(\Throwable $e)
+    public function exceptionHandle(\Throwable $e): bool
     {
         Server::$instance->getLog()->error($e);
         return true;
@@ -349,7 +348,7 @@ class SaberConfig extends BaseConfig
      * 构建配置
      * @return array
      */
-    public function buildConfig()
+    public function buildConfig(): array
     {
         $map = [];
         foreach ($this->interceptors as $interceptorClass) {

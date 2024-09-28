@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Bootstrap4;
 
+use ESD\Yii\Base\Model;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
 
@@ -132,7 +133,7 @@ class ActiveForm extends \ESD\Yii\Widgets\ActiveForm
      * {@inheritdoc}
      * @return \ESD\Yii\Bootstrap4\ActiveField
      */
-    public function field($model, $attribute, $options = [])
+    public function field(Model $model, string $attribute, array $options = [])
     {
         return parent::field($model, $attribute, $options);
     }

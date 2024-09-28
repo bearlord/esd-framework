@@ -56,7 +56,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * @inheritdoc
      */
-    public function delete($table, $condition, &$params)
+    public function delete(string $table, $condition, array &$params): string
     {
         $sql = 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' DELETE';
         $where = $this->buildWhere($condition, $params);
@@ -67,13 +67,14 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * Generates a SELECT SQL statement from a [[Query]] object.
      * @param Query $query the [[Query]] object from which the SQL statement will be generated.
-     * @param array $params the parameters to be bound to the generated SQL statement. These parameters will
+     * @param array|null $params the parameters to be bound to the generated SQL statement. These parameters will
      * be included in the result with the additional parameters generated during the query building process.
      * @return array the generated SQL statement (the first array element) and the corresponding
      * parameters to be bound to the SQL statement (the second array element). The parameters returned
      * include those provided in `$params`.
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function build($query, $params = [])
+    public function build(\ESD\Yii\Db\Query $query, ?array $params = []): array
     {
         $query = $query->prepare($this);
 
@@ -135,7 +136,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string|array $condition
      * @return string the WITH TOTALS
      */
-    public function buildWithTotals($condition)
+    public function buildWithTotals($condition): string
     {
         return $condition === true ? ' WITH TOTALS ' : '';
     }
@@ -145,7 +146,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param array $params the binding parameters to be populated
      * @return string the PREWHERE clause built from [[Query::$preWhere]].
      */
-    public function buildPreWhere($condition, &$params)
+    public function buildPreWhere($condition, array &$params): string
     {
         $where = $this->buildCondition($condition, $params);
         return $where === '' ? '' : 'PREWHERE ' . $where;
@@ -155,7 +156,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string|array $condition
      * @return string the SAMPLE clause built from [[Query::$sample]].
      */
-    public function buildSample($condition)
+    public function buildSample($condition): string
     {
         return $condition !== null ? ' SAMPLE ' . $condition : '';
     }
@@ -163,12 +164,13 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * Set default engine option if don't set
      *
-     * @param $table
-     * @param $columns
-     * @param null $options
+     * @param string $table
+     * @param array $columns
+     * @param string|null $options
      * @return mixed
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function createTable($table, $columns, $options = null)
+    public function createTable(string $table, array $columns, ?string $options = null): string
     {
         if ($options === null) {
             throw new \ESD\Yii\Db\Exception('Need set specific settings for engine table');
@@ -206,7 +208,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param integer $offset
      * @return string the LIMIT and OFFSET clauses
      */
-    public function buildLimit($limit, $offset)
+    public function buildLimit(int $limit, int $offset): string
     {
         $sql = '';
         if ($this->hasOffset($offset)) {
@@ -219,7 +221,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     }
 
 
-    public function buildLimitBy($limitBy)
+    public function buildLimitBy($limitBy): string
     {
         if (empty($limitBy)) {
             return '';
@@ -234,8 +236,9 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param array $unions
      * @param array $params the binding parameters to be populated
      * @return string the UNION clause built from [[Query::$union]].
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function buildUnion($unions, &$params)
+    public function buildUnion(array $unions, array &$params): string
     {
         if (empty($unions)) {
             return '';
@@ -261,7 +264,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SELECT EXISTS() SQL statement.
      * @since 2.0.8
      */
-    public function selectExists($rawSql)
+    public function selectExists(string $rawSql): string
     {
         return 'SELECT count(*) FROM (' . $rawSql . ')';
     }
@@ -269,7 +272,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * @inheritdoc
      */
-    public function addColumn($table, $column, $type)
+    public function addColumn(string $table, string $column, string $type): string
     {
         return 'ALTER TABLE ' . $this->db->quoteTableName($table)
             . ' ADD COLUMN ' . $this->db->quoteColumnName($column) . ' '
@@ -277,7 +280,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     }
 
 
-    protected function prepareInsertValues($table, $columns, $params = [])
+    protected function prepareInsertValues(string $table, $columns, ?array $params = []): array
     {
         $schema = $this->db->getSchema();
         $tableSchema = $schema->getTableSchema($table);
@@ -315,11 +318,11 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table
      * @param array $columns
      * @param array|\Generator $rows
-     * @param array $params
+     * @param array|null $params
      * @return string
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function batchInsert($table, $columns, $rows, &$params = [])
+    public function batchInsert(string $table, array $columns, $rows, ?array &$params = []): string
     {
         if (empty($rows)) {
             return '';

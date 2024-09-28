@@ -66,10 +66,10 @@ class AccessRule extends Component
      * @see $roleParams
      */
     public $roles;
-    /** 
+    /**
      * @var array list of RBAC (Role-Based Access Control) permissions that this rules applies to.
      * [[User::can()]] will be called to check access.
-     * 
+     *
      * If this property is not set or empty, it means this rule applies regardless of permissions.
      * @since 2.0.12
      * @see $roles
@@ -163,6 +163,7 @@ class AccessRule extends Component
      * @param User|false $user the user object or `false` in case of detached User component
      * @param Request $request
      * @return bool|null `true` if the user is allowed, `false` if the user is denied, `null` if the rule does not apply to the user
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
     public function allows($action, $user, $request)
     {

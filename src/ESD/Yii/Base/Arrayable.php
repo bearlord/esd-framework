@@ -61,7 +61,7 @@ interface Arrayable
      * @return array the list of field names or field definitions.
      * @see toArray()
      */
-    public function fields();
+    public function fields(): array;
 
     /**
      * Returns the list of additional fields that can be returned by [[toArray()]] in addition to those listed in [[fields()]].
@@ -75,7 +75,7 @@ interface Arrayable
      * @see toArray()
      * @see fields()
      */
-    public function extraFields();
+    public function extraFields(): array;
 
     /**
      * Converts the object into an array.
@@ -88,5 +88,5 @@ interface Arrayable
      * @param bool $recursive whether to recursively return array representation of embedded objects.
      * @return array the array representation of the object
      */
-    public function toArray(array $fields = [], array $expand = [], $recursive = true);
+    public function toArray(array $fields = [], array $expand = [], ?bool $recursive = true): array;
 }

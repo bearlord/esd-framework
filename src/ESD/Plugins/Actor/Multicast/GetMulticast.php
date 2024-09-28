@@ -20,7 +20,7 @@ trait GetMulticast
      * @return bool
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function hasChannel(string $channel, string $actor)
+    public function hasChannel(string $channel, string $actor): bool
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -117,11 +117,12 @@ trait GetMulticast
      * Publish subscription
      *
      * @param string $channel
-     * @param $message
-     * @param array $excludeActorList
+     * @param string|null $message
+     * @param array|null $excludeActorList
+     * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publish(string $channel, $message, $excludeActorList = [])
+    public function publish(string $channel, ?string $message, ?array $excludeActorList = [])
     {
         /** @var Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);

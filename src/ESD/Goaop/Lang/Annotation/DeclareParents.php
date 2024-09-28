@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -28,11 +26,15 @@ class DeclareParents extends BaseAnnotation
 {
     /**
      * Default implementation (trait name)
+     *
+     * @var string
      */
-    public string $defaultImpl;
+    public $defaultImpl;
 
     /**
      * Interface name to add
+     *
+     * @var string
      */
-    public string $interface;
+    public $interface;
 }

@@ -100,7 +100,7 @@ class Event extends BaseObject
      * handler list.
      * @see off()
      */
-    public static function on($class, $name, $handler, $data = null, $append = true)
+    public static function on(string $class, string $name, callable $handler, $data = null, ?bool $append = true)
     {
         $class = ltrim($class, '\\');
 
@@ -130,12 +130,12 @@ class Event extends BaseObject
      *
      * @param string $class the fully qualified class name from which the event handler needs to be detached.
      * @param string $name the event name.
-     * @param callable $handler the event handler to be removed.
+     * @param callable|null $handler the event handler to be removed.
      * If it is `null`, all handlers attached to the named event will be removed.
      * @return bool whether a handler is found and detached.
      * @see on()
      */
-    public static function off($class, $name, $handler = null)
+    public static function off(string $class, string $name, ?callable $handler = null)
     {
         $class = ltrim($class, '\\');
         if (empty(self::$_events[$name][$class]) && empty(self::$_eventWildcards[$name][$class])) {
@@ -206,7 +206,7 @@ class Event extends BaseObject
      * @param string $name the event name.
      * @return bool whether there is any handler attached to the event.
      */
-    public static function hasHandlers($class, $name)
+    public static function hasHandlers($class, string $name): bool
     {
         if (empty(self::$_eventWildcards) && empty(self::$_events[$name])) {
             return false;
@@ -257,9 +257,9 @@ class Event extends BaseObject
      * for the specified class and all its parent classes.
      * @param string|object $class the object or the fully qualified class name specifying the class-level event.
      * @param string $name the event name.
-     * @param Event $event the event parameter. If not set, a default [[Event]] object will be created.
+     * @param Event|null $event the event parameter. If not set, a default [[Event]] object will be created.
      */
-    public static function trigger($class, $name, $event = null)
+    public static function trigger($class, string $name, ?Event $event = null)
     {
         $wildcardEventHandlers = [];
         foreach (self::$_eventWildcards as $nameWildcard => $classHandlers) {

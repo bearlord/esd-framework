@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -19,6 +17,7 @@ use Dissect\Lexer\SimpleLexer;
  */
 class PointcutLexer extends SimpleLexer
 {
+
     /**
      * Lexer token definitions
      */

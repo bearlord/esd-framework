@@ -76,7 +76,7 @@ class ServiceController extends GoController
             return $this->onExceptionHandle($exception);
         }
     }
-    
+
     /**
      * @param object $jsonObject
      * @return array
@@ -164,7 +164,7 @@ class ServiceController extends GoController
      * @param string $id the action ID.
      * @return Action|null the newly created action instance. Null if the ID doesn't resolve into any action.
      */
-    public function createAction($id)
+    public function createAction(string $id)
     {
         if (strpos($id, '/') === false) {
             return null;

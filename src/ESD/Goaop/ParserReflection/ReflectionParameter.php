@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * Parser Reflection API
  *
@@ -17,7 +16,6 @@ use ESD\Nikic\PhpParser\Node\Identifier;
 use ESD\Nikic\PhpParser\Node\Name;
 use ESD\Nikic\PhpParser\Node\NullableType;
 use ESD\Nikic\PhpParser\Node\Param;
-use ReflectionFunctionAbstract;
 use ReflectionParameter as BaseReflectionParameter;
 
 /**
@@ -30,7 +28,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * Reflection function or method
      *
-     * @var ReflectionFunctionAbstract
+     * @var \ReflectionFunctionAbstract
      */
     private $declaringFunction;
 
@@ -39,7 +37,7 @@ class ReflectionParameter extends BaseReflectionParameter
      *
      * @var mixed
      */
-    private $defaultValue;
+    private $defaultValue = null;
 
     /**
      * Whether or not default value is constant
@@ -60,7 +58,7 @@ class ReflectionParameter extends BaseReflectionParameter
      *
      * @var int
      */
-    private $parameterIndex;
+    private $parameterIndex = 0;
 
     /**
      * Concrete parameter node
@@ -74,23 +72,22 @@ class ReflectionParameter extends BaseReflectionParameter
      *
      * @param string|array $unusedFunctionName Name of the function/method
      * @param string $parameterName Name of the parameter to reflect
-     * @param ?Param $parameterNode Parameter definition node
+     * @param Param $parameterNode Parameter definition node
      * @param int $parameterIndex Index of parameter
-     * @param ?ReflectionFunctionAbstract $declaringFunction
+     * @param \ReflectionFunctionAbstract $declaringFunction
      */
     public function __construct(
         $unusedFunctionName,
         $parameterName,
         Param $parameterNode = null,
         $parameterIndex = 0,
-        ReflectionFunctionAbstract $declaringFunction = null
-    )
-    {
+        \ReflectionFunctionAbstract $declaringFunction = null
+    ) {
         // Let's unset original read-only property to have a control over it via __get
         unset($this->name);
 
-        $this->parameterNode = $parameterNode;
-        $this->parameterIndex = $parameterIndex;
+        $this->parameterNode     = $parameterNode;
+        $this->parameterIndex    = $parameterIndex;
         $this->declaringFunction = $declaringFunction;
 
         if ($this->isDefaultValueAvailable()) {
@@ -98,12 +95,12 @@ class ReflectionParameter extends BaseReflectionParameter
                 $context = $declaringFunction->getDeclaringClass();
             } else {
                 $context = $declaringFunction;
-            }
+            };
 
             $expressionSolver = new NodeExpressionResolver($context);
             $expressionSolver->process($this->parameterNode->default);
-            $this->defaultValue = $expressionSolver->getValue();
-            $this->isDefaultValueConstant = $expressionSolver->isConstant();
+            $this->defaultValue             = $expressionSolver->getValue();
+            $this->isDefaultValueConstant   = $expressionSolver->isConstant();
             $this->defaultValueConstantName = $expressionSolver->getConstantName();
         }
     }
@@ -113,7 +110,7 @@ class ReflectionParameter extends BaseReflectionParameter
      *
      * @return Param
      */
-    public function getNode(): null|Param
+    public function getNode()
     {
         return $this->parameterNode;
     }
@@ -121,11 +118,11 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * Emulating original behaviour of reflection
      */
-    public function __debugInfo(): array
+    public function ___debugInfo()
     {
-        return [
+        return array(
             'name' => (string)$this->parameterNode->var->name,
-        ];
+        );
     }
 
     /**
@@ -135,17 +132,17 @@ class ReflectionParameter extends BaseReflectionParameter
      */
     public function __toString()
     {
-        $parameterType = $this->getType();
-        $isOptional = $this->isOptional();
+        $parameterType   = $this->getType();
+        $isOptional      = $this->isOptional();
         $hasDefaultValue = $this->isDefaultValueAvailable();
-        $defaultValue = '';
+        $defaultValue    = '';
         if ($hasDefaultValue) {
             $defaultValue = $this->getDefaultValue();
             if (is_string($defaultValue) && strlen($defaultValue) > 15) {
                 $defaultValue = substr($defaultValue, 0, 15) . '...';
             }
             /* @see https://3v4l.org/DJOEb for behaviour changes */
-            if (is_float($defaultValue) && fmod($defaultValue, 1.0) === 0.0) {
+            if (is_double($defaultValue) && fmod($defaultValue, 1.0) === 0.0) {
                 $defaultValue = (int)$defaultValue;
             }
 
@@ -167,7 +164,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function allowsNull(): bool
+    public function allowsNull()
     {
         // Enable 7.1 nullable types support
         if ($this->parameterNode->type instanceof NullableType) {
@@ -185,7 +182,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function canBePassedByValue(): bool
+    public function canBePassedByValue()
     {
         return !$this->isPassedByReference();
     }
@@ -193,7 +190,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * @inheritDoc
      */
-    public function getClass(): null|\ReflectionClass
+    public function getClass()
     {
         $parameterType = $this->parameterNode->type;
         if ($parameterType instanceof Name) {
@@ -210,8 +207,7 @@ class ReflectionParameter extends BaseReflectionParameter
 
                 throw new ReflectionException("Can not resolve a class name for parameter");
             }
-            $className = $parameterType->toString();
-
+            $className   = $parameterType->toString();
             $classOrInterfaceExists = class_exists($className, false) || interface_exists($className, false);
 
             return $classOrInterfaceExists ? new \ReflectionClass($className) : new ReflectionClass($className);
@@ -223,11 +219,11 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function getDeclaringClass(): null|\ReflectionClass
+    public function getDeclaringClass()
     {
         if ($this->declaringFunction instanceof \ReflectionMethod) {
             return $this->declaringFunction->getDeclaringClass();
-        }
+        };
 
         return null;
     }
@@ -235,7 +231,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function getDeclaringFunction(): ReflectionFunctionAbstract
+    public function getDeclaringFunction()
     {
         return $this->declaringFunction;
     }
@@ -243,7 +239,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function getDefaultValue(): mixed
+    public function getDefaultValue()
     {
         if (!$this->isDefaultValueAvailable()) {
             throw new ReflectionException('Internal error: Failed to retrieve the default value');
@@ -255,7 +251,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function getDefaultValueConstantName(): null|string
+    public function getDefaultValueConstantName()
     {
         if (!$this->isDefaultValueAvailable()) {
             throw new ReflectionException('Internal error: Failed to retrieve the default value');
@@ -267,7 +263,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * @inheritDoc
      */
-    public function getName(): string
+    public function getName()
     {
         return (string)$this->parameterNode->var->name;
     }
@@ -275,7 +271,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function getPosition(): int
+    public function getPosition()
     {
         return $this->parameterIndex;
     }
@@ -283,9 +279,9 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * @inheritDoc
      */
-    public function getType(): null|ReflectionNamedType
+    public function getType()
     {
-        $isBuiltin = false;
+        $isBuiltin     = false;
         $parameterType = $this->parameterNode->type;
         if ($parameterType instanceof NullableType) {
             $parameterType = $parameterType->type;
@@ -303,13 +299,13 @@ class ReflectionParameter extends BaseReflectionParameter
             return null;
         }
 
-        return new ReflectionNamedType($parameterType, $allowsNull, $isBuiltin);
+        return new ReflectionType($parameterType, $allowsNull, $isBuiltin);
     }
 
     /**
      * @inheritDoc
      */
-    public function hasType(): bool
+    public function hasType()
     {
         $hasType = isset($this->parameterNode->type);
 
@@ -319,7 +315,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * @inheritDoc
      */
-    public function isArray(): bool
+    public function isArray()
     {
         $type = $this->parameterNode->type;
 
@@ -329,7 +325,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * @inheritDoc
      */
-    public function isCallable(): bool
+    public function isCallable()
     {
         $type = $this->parameterNode->type;
 
@@ -339,7 +335,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * @inheritDoc
      */
-    public function isDefaultValueAvailable(): bool
+    public function isDefaultValueAvailable()
     {
         return isset($this->parameterNode->default);
     }
@@ -347,7 +343,7 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function isDefaultValueConstant(): bool
+    public function isDefaultValueConstant()
     {
         return $this->isDefaultValueConstant;
     }
@@ -355,25 +351,25 @@ class ReflectionParameter extends BaseReflectionParameter
     /**
      * {@inheritDoc}
      */
-    public function isOptional(): bool
+    public function isOptional()
     {
-        return $this->isVariadic() || ($this->isDefaultValueAvailable() && $this->haveSiblingsDefaultValues());
+        return $this->isVariadic() || ($this->isDefaultValueAvailable() && $this->haveSiblingsDefalutValues());
     }
 
     /**
      * @inheritDoc
      */
-    public function isPassedByReference(): bool
+    public function isPassedByReference()
     {
-        return (bool)$this->parameterNode->byRef;
+        return (bool) $this->parameterNode->byRef;
     }
 
     /**
      * @inheritDoc
      */
-    public function isVariadic(): bool
+    public function isVariadic()
     {
-        return (bool)$this->parameterNode->variadic;
+        return (bool) $this->parameterNode->variadic;
     }
 
     /**
@@ -382,14 +378,14 @@ class ReflectionParameter extends BaseReflectionParameter
      * @return bool
      * @throws ReflectionException If could not fetch declaring function reflection
      */
-    protected function haveSiblingsDefaultValues()
+    protected function haveSiblingsDefalutValues()
     {
         $function = $this->getDeclaringFunction();
         if (null === $function) {
             throw new ReflectionException('Could not get the declaring function reflection.');
         }
 
-        /** @var BaseReflectionParameter[] $remainingParameters */
+        /** @var \ReflectionParameter[] $remainingParameters */
         $remainingParameters = array_slice($function->getParameters(), $this->parameterIndex + 1);
         foreach ($remainingParameters as $reflectionParameter) {
             if (!$reflectionParameter->isDefaultValueAvailable()) {

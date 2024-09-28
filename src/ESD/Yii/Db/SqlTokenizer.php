@@ -69,9 +69,9 @@ abstract class SqlTokenizer extends Component
     /**
      * Constructor.
      * @param string $sql SQL code to be tokenized.
-     * @param array $config name-value pairs that will be used to initialize the object properties
+     * @param array|null $config name-value pairs that will be used to initialize the object properties
      */
-    public function __construct($sql, $config = [])
+    public function __construct($sql, ?array $config = [])
     {
         $this->sql = $sql;
         parent::__construct($config);

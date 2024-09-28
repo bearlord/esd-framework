@@ -30,7 +30,7 @@ class ManagerProcess extends Process
 
     /**
      * @inheritDoc
-     * @return mixed|void
+     * @return void
      */
     public function onProcessStart()
     {

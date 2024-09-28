@@ -55,7 +55,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    protected function defaultExpressionBuilders()
+    protected function defaultExpressionBuilders(): array
     {
         return array_merge(parent::defaultExpressionBuilders(), [
             'ESD\Yii\Db\Conditions\LikeCondition' => 'ESD\Yii\Db\Sqlite\Conditions\LikeConditionBuilder',
@@ -67,7 +67,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @see https://stackoverflow.com/questions/15277373/sqlite-upsert-update-or-insert/15277374#15277374
      */
-    public function upsert($table, $insertColumns, $updateColumns, &$params)
+    public function upsert(string $table, $insertColumns, $updateColumns, array &$params): string
     {
         /** @var Constraint[] $constraints */
         list($uniqueNames, $insertNames, $updateNames) = $this->prepareUpsertColumns($table, $insertColumns, $updateColumns, $constraints);
@@ -129,7 +129,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param array|\Generator $rows the rows to be batch inserted into the table
      * @return string the batch INSERT SQL statement
      */
-    public function batchInsert($table, $columns, $rows, &$params = [])
+    public function batchInsert(string $table, array $columns, $rows, ?array &$params = []): string
     {
         if (empty($rows)) {
             return '';
@@ -188,22 +188,22 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * Creates a SQL statement for resetting the sequence value of a table's primary key.
      * The sequence will be reset such that the primary key of the next new row inserted
      * will have the specified value or 1.
-     * @param string $tableName the name of the table whose primary key sequence will be reset
+     * @param string $table the name of the table whose primary key sequence will be reset
      * @param mixed $value the value for the primary key of the next new row inserted. If this is not set,
      * the next new row's primary key will have a value 1.
      * @return string the SQL statement for resetting sequence
      * @throws InvalidArgumentException if the table does not exist or there is no sequence associated with the table.
      */
-    public function resetSequence($tableName, $value = null)
+    public function resetSequence(string $table, $value = null): string
     {
         $db = $this->db;
-        $table = $db->getTableSchema($tableName);
+        $table = $db->getTableSchema($table);
         if ($table !== null && $table->sequenceName !== null) {
-            $tableName = $db->quoteTableName($tableName);
+            $table = $db->quoteTableName($table);
             if ($value === null) {
                 $key = $this->db->quoteColumnName(reset($table->primaryKey));
-                $value = $this->db->useMaster(function (Connection $db) use ($key, $tableName) {
-                    return $db->createCommand("SELECT MAX($key) FROM $tableName")->queryScalar();
+                $value = $this->db->useMaster(function (Connection $db) use ($key, $table) {
+                    return $db->createCommand("SELECT MAX($key) FROM $table")->queryScalar();
                 });
             } else {
                 $value = (int) $value - 1;
@@ -211,21 +211,20 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
 
             return "UPDATE sqlite_sequence SET seq='$value' WHERE name='{$table->name}'";
         } elseif ($table === null) {
-            throw new InvalidArgumentException("Table not found: $tableName");
+            throw new InvalidArgumentException("Table not found: $table");
         }
 
-        throw new InvalidArgumentException("There is not sequence associated with table '$tableName'.'");
+        throw new InvalidArgumentException("There is not sequence associated with table '$table'.'");
     }
 
     /**
      * Enables or disables integrity check.
      * @param bool $check whether to turn on or off the integrity check.
-     * @param string $schema the schema of the tables. Meaningless for SQLite.
-     * @param string $table the table name. Meaningless for SQLite.
+     * @param string|null $schema the schema of the tables. Meaningless for SQLite.
+     * @param string|null $table the table name. Meaningless for SQLite.
      * @return string the SQL statement for checking integrity
-     * @throws NotSupportedException this is not supported by SQLite
      */
-    public function checkIntegrity($check = true, $schema = '', $table = '')
+    public function checkIntegrity(bool $check = true, ?string $schema = '', ?string $table = ''): string
     {
         return 'PRAGMA foreign_keys=' . (int) $check;
     }
@@ -235,7 +234,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table to be truncated. The name will be properly quoted by the method.
      * @return string the SQL statement for truncating a DB table.
      */
-    public function truncateTable($table)
+    public function truncateTable(string $table): string
     {
         return 'DELETE FROM ' . $this->db->quoteTableName($table);
     }
@@ -246,7 +245,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $table the table whose index is to be dropped. The name will be properly quoted by the method.
      * @return string the SQL statement for dropping an index.
      */
-    public function dropIndex($name, $table)
+    public function dropIndex(string $name, string $table): string
     {
         return 'DROP INDEX ' . $this->db->quoteTableName($name);
     }
@@ -258,7 +257,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SQL statement for dropping a DB column.
      * @throws NotSupportedException this is not supported by SQLite
      */
-    public function dropColumn($table, $column)
+    public function dropColumn(string $table, string $column): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -271,7 +270,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SQL statement for renaming a DB column.
      * @throws NotSupportedException this is not supported by SQLite
      */
-    public function renameColumn($table, $oldName, $newName)
+    public function renameColumn(string $table, string $oldName, string $newName): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -286,12 +285,12 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @param string $refTable the table that the foreign key references to.
      * @param string|array $refColumns the name of the column that the foreign key references to.
      * If there are multiple columns, separate them with commas or use an array to represent them.
-     * @param string $delete the ON DELETE option. Most DBMS support these options: RESTRICT, CASCADE, NO ACTION, SET DEFAULT, SET NULL
-     * @param string $update the ON UPDATE option. Most DBMS support these options: RESTRICT, CASCADE, NO ACTION, SET DEFAULT, SET NULL
+     * @param string|null $delete the ON DELETE option. Most DBMS support these options: RESTRICT, CASCADE, NO ACTION, SET DEFAULT, SET NULL
+     * @param string|null $update the ON UPDATE option. Most DBMS support these options: RESTRICT, CASCADE, NO ACTION, SET DEFAULT, SET NULL
      * @return string the SQL statement for adding a foreign key constraint to an existing table.
      * @throws NotSupportedException this is not supported by SQLite
      */
-    public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = null, $update = null)
+    public function addForeignKey(string $name, string $table, $columns, string $refTable, $refColumns, string $delete = null, string $update = null): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -303,7 +302,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SQL statement for dropping a foreign key constraint.
      * @throws NotSupportedException this is not supported by SQLite
      */
-    public function dropForeignKey($name, $table)
+    public function dropForeignKey(string $name, string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -311,13 +310,13 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * Builds a SQL statement for renaming a DB table.
      *
-     * @param string $table the table to be renamed. The name will be properly quoted by the method.
+     * @param string $oldName the table to be renamed. The name will be properly quoted by the method.
      * @param string $newName the new table name. The name will be properly quoted by the method.
      * @return string the SQL statement for renaming a DB table.
      */
-    public function renameTable($table, $newName)
+    public function renameTable(string $oldName, string $newName): string
     {
-        return 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' RENAME TO ' . $this->db->quoteTableName($newName);
+        return 'ALTER TABLE ' . $this->db->quoteTableName($oldName) . ' RENAME TO ' . $this->db->quoteTableName($newName);
     }
 
     /**
@@ -331,7 +330,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SQL statement for changing the definition of a column.
      * @throws NotSupportedException this is not supported by SQLite
      */
-    public function alterColumn($table, $column, $type)
+    public function alterColumn(string $table, string $column, string $type): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -344,7 +343,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SQL statement for adding a primary key constraint to an existing table.
      * @throws NotSupportedException this is not supported by SQLite
      */
-    public function addPrimaryKey($name, $table, $columns)
+    public function addPrimaryKey(string $name, string $table, $columns): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -356,7 +355,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return string the SQL statement for removing a primary key constraint from an existing table.
      * @throws NotSupportedException this is not supported by SQLite
      */
-    public function dropPrimaryKey($name, $table)
+    public function dropPrimaryKey(string $name, string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -365,7 +364,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by SQLite.
      */
-    public function addUnique($name, $table, $columns)
+    public function addUnique(string $name, string $table, $columns): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -374,7 +373,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by SQLite.
      */
-    public function dropUnique($name, $table)
+    public function dropUnique(string $name, string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -383,7 +382,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by SQLite.
      */
-    public function addCheck($name, $table, $expression)
+    public function addCheck(string $name, string $table, string $expression): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -392,7 +391,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by SQLite.
      */
-    public function dropCheck($name, $table)
+    public function dropCheck(string $name, string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -401,7 +400,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by SQLite.
      */
-    public function addDefaultValue($name, $table, $column, $value)
+    public function addDefaultValue(string $name, string $table, string $column, $value): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -410,7 +409,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * {@inheritdoc}
      * @throws NotSupportedException this is not supported by SQLite.
      */
-    public function dropDefaultValue($name, $table)
+    public function dropDefaultValue(string $name, string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -420,7 +419,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @throws NotSupportedException
      * @since 2.0.8
      */
-    public function addCommentOnColumn($table, $column, $comment)
+    public function addCommentOnColumn(string $table, string $column, string $comment): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -430,7 +429,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @throws NotSupportedException
      * @since 2.0.8
      */
-    public function addCommentOnTable($table, $comment)
+    public function addCommentOnTable(string $table, string $comment): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -440,7 +439,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @throws NotSupportedException
      * @since 2.0.8
      */
-    public function dropCommentFromColumn($table, $column)
+    public function dropCommentFromColumn(string $table, string $column): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -450,7 +449,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @throws NotSupportedException
      * @since 2.0.8
      */
-    public function dropCommentFromTable($table)
+    public function dropCommentFromTable(string $table): string
     {
         throw new NotSupportedException(__METHOD__ . ' is not supported by SQLite.');
     }
@@ -458,7 +457,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildLimit($limit, $offset)
+    public function buildLimit(int $limit, int $offset): string
     {
         $sql = '';
         if ($this->hasLimit($limit)) {
@@ -478,7 +477,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function build($query, $params = [])
+    public function build(Query $query, ?array $params = []): array
     {
         $query = $query->prepare($this);
 
@@ -522,7 +521,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildUnion($unions, &$params)
+    public function buildUnion(array $unions, array &$params): string
     {
         if (empty($unions)) {
             return '';

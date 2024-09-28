@@ -50,7 +50,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return array_merge(parent::rules(), [
             [['db', 'ns', 'collectionName', 'databaseName', 'attributeList', 'modelClass', 'baseClass'], 'filter', 'filter' => 'trim'],
@@ -75,7 +75,7 @@ class Generator extends \ESD\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return array_merge(parent::attributeLabels(), [
             'ns' => 'Namespace',

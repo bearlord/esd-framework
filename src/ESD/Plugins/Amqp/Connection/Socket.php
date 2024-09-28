@@ -10,8 +10,6 @@ namespace ESD\Plugins\Amqp\Connection;
 
 use ESD\Core\Exception;
 use ESD\Server\Coroutine\Server;
-use Hyperf\Contract\StdoutLoggerInterface;
-use Hyperf\Utils\ApplicationContext;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 use PhpAmqpLib\Wire\AMQPWriter;
 use Psr\Log\LoggerInterface;
@@ -101,7 +99,7 @@ class Socket
     {
         $this->lastHeartbeatTime = $lastHeartbeatTime;
     }
-    
+
 
     /**
      * @inheritDoc

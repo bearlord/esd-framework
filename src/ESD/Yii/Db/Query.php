@@ -263,12 +263,12 @@ class Query extends Component implements QueryInterface, ExpressionInterface
 
     /**
      * Executes the query and returns a single row of result.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return array|bool the first row (in terms of an array) of the query result. False is returned if the query
      * results in nothing.
      */
-    public function one($db = null)
+    public function one(Connection $db = null)
     {
         if ($this->emulateExecution) {
             return false;
@@ -342,14 +342,14 @@ class Query extends Component implements QueryInterface, ExpressionInterface
 
     /**
      * Returns the number of records.
-     * @param string $q the COUNT expression. Defaults to '*'.
+     * @param string|null $q the COUNT expression. Defaults to '*'.
      * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param null $db the database connection used to generate the SQL statement.
      * If this parameter is not given (or null), the `db` application component will be used.
      * @return int|string number of records. The result may be a string depending on the
      * underlying database engine and to support integer values higher than a 32bit PHP integer can handle.
      */
-    public function count($q = '*', $db = null)
+    public function count(?string $q = '*', $db = null)
     {
         if ($this->emulateExecution) {
             return 0;
@@ -779,14 +779,13 @@ PATTERN;
      *
      * {@inheritdoc}
      *
-     * @param string|array|ExpressionInterface $condition the conditions that should be put in the WHERE part.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array $condition the conditions that should be put in the WHERE part.
      * @return $this the query object itself
      * @see andWhere()
      * @see orWhere()
      * @see QueryInterface::where()
      */
-    public function where($condition, $params = [])
+    public function where(array $condition)
     {
         $this->where = $condition;
         $this->addParams($params);
@@ -796,14 +795,13 @@ PATTERN;
     /**
      * Adds an additional WHERE condition to the existing one.
      * The new condition and the existing one will be joined using the `AND` operator.
-     * @param string|array|ExpressionInterface $condition the new WHERE condition. Please refer to [[where()]]
+     * @param array $condition the new WHERE condition. Please refer to [[where()]]
      * on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see where()
      * @see orWhere()
      */
-    public function andWhere($condition, $params = [])
+    public function andWhere(array $condition)
     {
         if ($this->where === null) {
             $this->where = $condition;
@@ -819,14 +817,13 @@ PATTERN;
     /**
      * Adds an additional WHERE condition to the existing one.
      * The new condition and the existing one will be joined using the `OR` operator.
-     * @param string|array|ExpressionInterface $condition the new WHERE condition. Please refer to [[where()]]
+     * @param array $condition the new WHERE condition. Please refer to [[where()]]
      * on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see where()
      * @see andWhere()
      */
-    public function orWhere($condition, $params = [])
+    public function orWhere(array $condition)
     {
         if ($this->where === null) {
             $this->where = $condition;

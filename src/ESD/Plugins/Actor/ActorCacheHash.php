@@ -44,7 +44,7 @@ class ActorCacheHash implements \ArrayAccess
      * @param $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists($offset)
     {
         $path = explode($this->delimiter, $offset);
         $deep = &$this->container;
@@ -67,7 +67,7 @@ class ActorCacheHash implements \ArrayAccess
      * @param $offset
      * @return array|mixed|null
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet($offset)
     {
         $path = explode($this->delimiter, $offset);
         $deep = &$this->container;
@@ -91,7 +91,7 @@ class ActorCacheHash implements \ArrayAccess
      * @param $value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
             $this->container[] = $value;
@@ -118,7 +118,7 @@ class ActorCacheHash implements \ArrayAccess
      * @param $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset($offset)
     {
         $path = explode($this->delimiter, $offset);
         $deep = &$this->container;

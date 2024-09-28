@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,12 +10,8 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Instrument\Transformer;
 
-use Closure;
 use ESD\Goaop\Core\AspectKernel;
 use ESD\Goaop\Instrument\ClassLoading\CachePathManager;
-use ESD\Goaop\ParserReflection\ReflectionEngine;
-
-use function dirname;
 
 /**
  * Caching transformer that is able to take the transformed source from a cache
@@ -27,23 +21,27 @@ class CachingTransformer extends BaseSourceTransformer
     /**
      * Mask of permission bits for cache files.
      * By default, permissions are affected by the umask system setting
+     *
+     * @var integer|null
      */
-    protected int $cacheFileMode = 0770;
+    protected $cacheFileMode;
 
     /**
-     * @var array|Closure|SourceTransformer[]
+     * @var array|callable|SourceTransformer[]
      */
     protected $transformers = [];
 
     /**
-     * Cache manager
+     * @var CachePathManager|null
      */
-    protected CachePathManager $cacheManager;
+    protected $cacheManager;
 
     /**
      * Class constructor
      *
+     * @param AspectKernel $kernel Instance of aspect kernel
      * @param array|callable $transformers Source transformers or callable that should return transformers
+     * @param CachePathManager $cacheManager Cache manager
      */
     public function __construct(AspectKernel $kernel, $transformers, CachePathManager $cacheManager)
     {
@@ -56,9 +54,10 @@ class CachingTransformer extends BaseSourceTransformer
     /**
      * This method may transform the supplied source and return a new replacement for it
      *
+     * @param StreamMetaData $metadata Metadata for source
      * @return string See RESULT_XXX constants in the interface
      */
-    public function transform(StreamMetaData $metadata): string
+    public function transform(StreamMetaData $metadata)
     {
         $originalUri      = $metadata->uri;
         $processingResult = self::RESULT_ABSTAIN;
@@ -86,13 +85,10 @@ class CachingTransformer extends BaseSourceTransformer
                 // For cache files we don't want executable bits by default
                 chmod($cacheUri, $this->cacheFileMode & (~0111));
             }
-            $this->cacheManager->setCacheState(
-                $originalUri,
-                [
-                    'filemtime' => $_SERVER['REQUEST_TIME'] ?? time(),
-                    'cacheUri'  => ($processingResult === self::RESULT_TRANSFORMED) ? $cacheUri : null
-                ]
-            );
+            $this->cacheManager->setCacheState($originalUri, [
+                'filemtime' => isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : time(),
+                'cacheUri'  => ($processingResult === self::RESULT_TRANSFORMED) ? $cacheUri : null
+            ]);
 
             return $processingResult;
         }
@@ -102,11 +98,7 @@ class CachingTransformer extends BaseSourceTransformer
         }
         if ($processingResult === self::RESULT_TRANSFORMED) {
             // Just replace all tokens in the stream
-            ReflectionEngine::parseFile($cacheUri);
-            $metadata->setTokenStreamFromRawTokens(
-                ReflectionEngine::getLexer()
-                                ->getTokens()
-            );
+            $metadata->tokenStream = token_get_all(file_get_contents($cacheUri));
         }
 
         return $processingResult;
@@ -115,12 +107,13 @@ class CachingTransformer extends BaseSourceTransformer
     /**
      * Iterates over transformers
      *
+     * @param StreamMetaData $metadata Metadata for source code
      * @return string See RESULT_XXX constants in the interface
      */
-    private function processTransformers(StreamMetaData $metadata): string
+    private function processTransformers(StreamMetaData $metadata)
     {
         $overallResult = self::RESULT_ABSTAIN;
-        if ($this->transformers instanceof Closure) {
+        if (is_callable($this->transformers)) {
             $delayedTransformers = $this->transformers;
             $this->transformers  = $delayedTransformers();
         }

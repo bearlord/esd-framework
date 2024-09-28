@@ -29,12 +29,13 @@ class Health implements HealthInterface
     }
 
     /**
-     * @param string $node
+     * Node
+     * @param $node
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function node(string $node, array $options = [], int $timeout = 5)
+    public function node($node, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -45,12 +46,13 @@ class Health implements HealthInterface
     }
 
     /**
-     * @param string $service
+     * Checks
+     * @param $service
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function checks(string $service, array $options = [], int $timeout = 5)
+    public function checks($service, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -61,12 +63,13 @@ class Health implements HealthInterface
     }
 
     /**
-     * @param string $service
+     * Service
+     * @param $service
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function service(string $service, array $options = [], int $timeout = 5)
+    public function service($service, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -77,12 +80,13 @@ class Health implements HealthInterface
     }
 
     /**
-     * @param string $connect
+     * Connect
+     * @param $connect
      * @param array $options
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function connect(string $connect, array $options = [], int $timeout = 5)
+    public function connect($connect, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -99,7 +103,7 @@ class Health implements HealthInterface
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function state(string $state, array $options = [], int $timeout = 5)
+    public function state($state, array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,

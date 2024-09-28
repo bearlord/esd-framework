@@ -10,7 +10,7 @@ class Throw_ extends Node\Stmt
     public $expr;
 
     /**
-     * Constructs a legacy throw statement node.
+     * Constructs a throw node.
      *
      * @param Node\Expr $expr       Expression
      * @param array     $attributes Additional attributes

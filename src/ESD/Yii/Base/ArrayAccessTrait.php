@@ -26,7 +26,7 @@ trait ArrayAccessTrait
      * It will be implicitly called when you use `foreach` to traverse the collection.
      * @return \ArrayIterator an iterator for traversing the cookies in the collection.
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->data);
     }
@@ -36,7 +36,7 @@ trait ArrayAccessTrait
      * This method is required by Countable interface.
      * @return int number of data elements.
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -46,7 +46,7 @@ trait ArrayAccessTrait
      * @param mixed $offset the offset to check on
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->data[$offset]);
     }
@@ -58,7 +58,7 @@ trait ArrayAccessTrait
      */
     public function offsetGet($offset)
     {
-        return isset($this->data[$offset]) ? $this->data[$offset] : null;
+        return $this->data[$offset] ?? null;
     }
 
     /**

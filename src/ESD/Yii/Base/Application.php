@@ -7,21 +7,19 @@
 namespace ESD\Yii\Base;
 
 use DI\Container;
+use ESD\Core\DI\DI;
 use ESD\Core\Server\Server;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
+use ESD\Nikic\FastRoute\Dispatcher;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\Session\HttpSession;
-use ESD\Yii\Caching\Cache;
-use ESD\Yii\Db\Connection;
 use ESD\Yii\Di\ServiceLocator;
-use ESD\Yii\I18n\Formatter;
-use ESD\Yii\I18n\I18N;
 use ESD\Yii\Plugin\Mongodb\MongodbPools;
-use ESD\Yii\Web\AssetManager;
 use ESD\Yii\Yii;
+use ESD\Yii\Db\Connection;
 use ESD\Yii\Plugin\Pdo\PdoPools;
-use FastRoute\Dispatcher;
+use ESD\Yii\Plugin\Pdo\PdoPool;
 
 /**
  * Class Application
@@ -87,13 +85,11 @@ class Application extends ServiceLocator
      * Returns static class instance, which can be used to obtain meta information.
      * @param bool $refresh whether to re-create static instance even, if it is already cached.
      * @return static class instance.
-     * @throws InvalidConfigException
      */
-    public static function instance(bool $refresh = false): Application
+    public static function instance(?bool $refresh = false): self
     {
         $className = get_called_class();
         if ($refresh || !isset(self::$_instances[$className])) {
-            /** @var Application $instance */
             $instance = new self();
             self::$_instances[$className] = $instance;
         }
@@ -255,11 +251,12 @@ class Application extends ServiceLocator
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      * @return mixed
-     * @throws \Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function getDb(string $name = "default")
+    public function getDb(?string $name = "default")
     {
         $subname = "";
         if (strpos($name, ".") > 0) {
@@ -294,11 +291,10 @@ class Application extends ServiceLocator
             /** @var PdoPools $pdoPools */
             $pdoPools = getDeepContextValueByClassName(PdoPools::class);
             if (!empty($pdoPools)) {
+                /** @var PdoPool $pool */
                 $pool = $pdoPools->getPool($poolKey);
                 if ($pool == null) {
-                    $_message = "No Pdo connection pool named {$poolKey} was found";
-                    Server::$instance->getLog()->error($_message);
-                    throw new \PDOException($_message);
+                    throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
                 }
                 return $pool->db();
             } else {
@@ -312,11 +308,10 @@ class Application extends ServiceLocator
 
     /**
      * Get db once
-     * @param $name
-     * @return \ESD\Yii\Db\Connection
-     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @return Connection|object|null
+     * @throws \ESD\Yii\Db\Exception|\ESD\Yii\Base\InvalidConfigException
      */
-    public function getDbOnce($name): Connection
+    public function getDbOnce($name): ?Connection
     {
         $contextKey = sprintf("Pdo:%s", $name);
         $db = getContextValue($contextKey);
@@ -326,8 +321,6 @@ class Application extends ServiceLocator
 
         $_configKey = sprintf("yii.db.%s", $name);
         $_config = Server::$instance->getConfigContext()->get($_configKey);
-
-        /** @var \ESD\Yii\Db\Connection $db */
         $db = Yii::createObject([
             'class' => Connection::class,
             'poolName' => $name,
@@ -348,78 +341,80 @@ class Application extends ServiceLocator
 
     /**
      * Returns the log dispatcher component.
-     * @return \ESD\Yii\Log\Dispatcher|object the log dispatcher application component.
+     * @return \ESD\Yii\Log\Dispatcher the log dispatcher application component.
      * @throws InvalidConfigException
      */
-    public function getLog()
+    public function getLog(): \ESD\Yii\Log\Dispatcher
     {
         return $this->get('log');
     }
 
     /**
      * Returns the error handler component.
-     * @return \ESD\Yii\Base\ErrorHandler|object|null the error handler application component.
+     * @return ErrorHandler the error handler application component.
      * @throws InvalidConfigException
      */
-    public function getErrorHandler(): ?ErrorHandler
+    public function getErrorHandler(): ErrorHandler
     {
         return $this->get('errorHandler');
     }
 
     /**
      * Returns the request component.
-     * @return \ESD\Core\Server\Beans\Request|object|null the request component.
+     * @return \ESD\Core\Server\Beans\Request the request component.
      */
-    public function getRequest(): ?Request
+    public function getRequest()
     {
-        return getDeepContextValueByClassName(Request::class);
+        $request = getDeepContextValueByClassName(Request::class);
+        return $request;
     }
 
     /**
      * Returns the response component.
-     * @return \ESD\Core\Server\Beans\Response|object|null the response component.
+     * @return \ESD\Core\Server\Beans\Response the response component.
      */
-    public function getResponse(): ?Response
+    public function getResponse()
     {
-        return getDeepContextValueByClassName(Response::class);
+        $response = getDeepContextValueByClassName(Response::class);
+        return $response;
     }
 
     /**
      * Returns the formatter component.
-     * @return \ESD\Yii\I18n\Formatter|object|null the formatter application component.
+     * @return \ESD\Yii\I18n\Formatter the formatter application component.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getFormatter(): ?Formatter
+    public function getFormatter(): \ESD\Yii\I18n\Formatter
     {
         return $this->get('formatter');
     }
 
     /**
      * Returns the internationalization (i18n) component
-     * @return \ESD\Yii\I18n\I18N|object|null the internationalization application component.
+     * @return \ESD\Yii\I18n\I18N the internationalization application component.
      * @throws InvalidConfigException
      */
-    public function getI18n(): ?I18N
+    public function getI18n(): \ESD\Yii\I18n\I18N
     {
         return $this->get('i18n');
     }
 
     /**
      * Returns the cache component.
-     * @return \ESD\Yii\Caching\Cache|object|null the cache application component. Null if the component is not enabled.
+     * @return \ESD\Yii\Caching\Cache the cache application component. Null if the component is not enabled.
      * @throws InvalidConfigException
      */
-    public function getCache(): ?Cache
+    public function getCache(): \ESD\Yii\Caching\Cache
     {
         return $this->get('cache');
     }
 
     /**
      * Returns the URL manager for this application.
-     * @return \ESD\Yii\Web\UrlManager|object the URL manager for this application.
+     * @return \ESD\Yii\Web\UrlManager the URL manager for this application.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getUrlManager()
+    public function getUrlManager(): \ESD\Yii\Web\UrlManager
     {
         return $this->get('urlManager');
     }
@@ -427,39 +422,39 @@ class Application extends ServiceLocator
 
     /**
      * Returns the asset manager.
-     * @return \ESD\Yii\Web\AssetManager|object|null the asset manager application component.
+     * @return \ESD\Yii\Web\AssetManager the asset manager application component.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getAssetManager(): ?AssetManager
+    public function getAssetManager(): \ESD\Yii\Web\AssetManager
     {
         return $this->get('assetManager');
     }
 
     /**
      * Returns the security component.
-     * @return \ESD\Yii\Base\Security|object|null the security application component.
+     * @return \ESD\Yii\Base\Security the security application component.
      * @throws InvalidConfigException
      */
-    public function getSecurity(): ?Security
+    public function getSecurity(): \ESD\Yii\Base\Security
     {
         return $this->get('security');
     }
 
     /**
      * Returns the view object.
-     * @return View|\ESD\Yii\Web\View|object|null the view application component that is used to render various view files.
+     * @return View|\ESD\Yii\Web\View the view application component that is used to render various view files.
      * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public function getView(): ?View
+    public function getView()
     {
         return $this->get('view');
     }
 
     /**
      * Returns the session component.
-     * @return HttpSession|null the session component.
+     * @return HttpSession the session component.
      */
-    public function getSession(): ?HttpSession
+    public function getSession(): HttpSession
     {
         $session = getDeepContextValueByClassName(HttpSession::class);
         if ($session == null) {
@@ -506,12 +501,11 @@ class Application extends ServiceLocator
 
 
     /**
-     * Get Mongodb
-     *
-     * @return \ESD\Yii\Mongodb\Connection|null
-     * @throws \ESD\Yii\Db\Exception|\ESD\Yii\Mongodb\Exception
+     * @return \ESD\Yii\Mongodb\Connection|mixed
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function getMongodb(): ?\ESD\Yii\Mongodb\Connection
+    public function getMongodb()
     {
         $poolKey = "default";
         $contextKey = "Mongodb:default";
@@ -528,7 +522,7 @@ class Application extends ServiceLocator
                 }
                 return $pool->db();
             } else {
-                return $this->getMongodbOnce();
+                return $this->getDbOnce();
             }
 
         } else {
@@ -537,34 +531,35 @@ class Application extends ServiceLocator
     }
 
     /**
-     * Get Mongodb once
-     * @return \ESD\Yii\Mongodb\Connection
-     * @throws \ESD\Yii\Mongodb\Exception
+     * Get db once
+     * @return \ESD\Yii\Mongodb\Connection|object|null
+     * @throws \ESD\Yii\Mongodb\Exception|\ESD\Yii\Base\InvalidConfigException
      */
-    public function getMongodbOnce(): \ESD\Yii\Mongodb\Connection
+    public function getMongodbOnce(): ?\ESD\Yii\Mongodb\Connection
     {
         $config = Server::$instance->getConfigContext()->get("yii.db.mongodb");
+        $db = Yii::createObject([
+            'class' => \ESD\Yii\Mongodb\Connection::class,
+            'dsn' => $config['dsn'],
+            'username' => $config['username'],
+            'password' => $config['password'],
+            'options' => $config['options'],
+            'tablePrefix' => $config['tablePrefix'],
+            'enableSchemaCache' => $config['enableSchemaCache'],
+            'schemaCacheDuration' => $config['schemaCacheDuration'],
+            'schemaCache' => $config['schemaCache'],
+        ]);
 
-        $db = new \ESD\Yii\Mongodb\Connection();
-        $db->dsn = $config['dsn'];
-        $db->username = $config['username'];
-        $db->password = $config['password'];
-        $db->options = $config['options'] ?? [];
-        $db->tablePrefix = $config['tablePrefix'];
-        $db->enableSchemaCache = $config['enableSchemaCache'];
-        $db->schemaCacheDuration = $config['schemaCacheDuration'];
-        $db->schemaCache = $config['schemaCache'];
         $db->open();
-
         return $db;
     }
 
     /**
-     * @param string $route
-     * @return array|false
-     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @param $route
+     * @return array
+     * @throws InvalidConfigException
      */
-    public function createController(string $route)
+    public function createController($route): array
     {
         $route = "/" . trim($route, "/");
         if (strpos($route, '/') !== false) {
@@ -588,25 +583,24 @@ class Application extends ServiceLocator
                     'class' => $controllerName
                 ], [$id, $this]);
                 return [$controller, $actionName];
-
-            default:
-                return false;
         }
+        return [];
     }
 
     /**
      * Run route
      *
-     * @param string $route
+     * @param $route
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function runRoute(string $route)
+    public function runRoute($route)
     {
         $controller = $this->createController($route);
         if (!empty($controller)) {
             return call_user_func([$controller[0], $controller[1]]);
         }
+        return null;
     }
 
     /**
@@ -615,9 +609,11 @@ class Application extends ServiceLocator
      * instances. It then calls [[Controller::runAction()]] to run the action with the given parameters.
      * If the route is empty, the method will use [[defaultRoute]].
      * @param string $route the route that specifies the action.
-     * @param array $params the parameters to be passed to the action
+     * @param array|null $params the parameters to be passed to the action
      * @return mixed the result of the action.
-     * @throws InvalidRouteException if the requested route cannot be resolved into an action successfully.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \ESD\Yii\Base\InvalidRouteException if the requested route cannot be resolved into an action successfully.
      */
     public function runAction(string $route, ?array $params = [])
     {
@@ -625,14 +621,15 @@ class Application extends ServiceLocator
         if (is_array($parts)) {
             /* @var $controller Controller */
             list($controller, $actionID) = $parts;
-            $result = $controller->runAction($actionID, $params);
-
-            return $result;
+            return $controller->runAction($actionID, $params);
         }
+
+        return null;
     }
 
     /**
      * Returns the configuration of core application components.
+     * @return array
      * @see set()
      */
     public function coreComponents(): array
@@ -642,6 +639,7 @@ class Application extends ServiceLocator
             'i18n' => ['class' => 'ESD\Yii\I18n\I18N'],
             'log' => ['class' => 'ESD\Yii\Log\Dispatcher'],
             'security' => ['class' => 'ESD\Yii\Base\Security'],
+            'errorHandler' => ['class' => 'ESD\Yii\Base\ErrorHandler'],
             'view' => ['class' => 'ESD\Yii\Web\View'],
             'urlManager' => ['class' => 'ESD\Yii\Web\UrlManager'],
             'assetManager' => ['class' => 'ESD\Yii\Web\AssetManager']

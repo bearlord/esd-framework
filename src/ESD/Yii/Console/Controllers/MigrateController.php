@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Console\Controllers;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Db\Query;
@@ -143,7 +144,7 @@ class MigrateController extends BaseMigrateController
     /**
      * {@inheritdoc}
      */
-    public function options($actionID)
+    public function options(string $actionID)
     {
         return array_merge(
             parent::options($actionID),
@@ -174,10 +175,10 @@ class MigrateController extends BaseMigrateController
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
      * It checks the existence of the [[migrationPath]].
-     * @param \ESD\Yii\Base\Action $action the action to be executed.
+     * @param \ESD\Yii\Console\Controllers\Action $action the action to be executed.
      * @return bool whether the action should continue to be executed.
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if (parent::beforeAction($action)) {
             $this->db = Instance::ensure($this->db, Connection::className());

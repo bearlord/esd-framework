@@ -218,10 +218,10 @@ class Jwt
      * Create token
      *
      * @param array|JwtBuilder $payload
-     * @param string $type
+     * @param string|null $type
      * @return JwtBuilder
      */
-    public function createToken($payload, $type = null)
+    public function createToken($payload, ?string $type = null): JwtBuilder
     {
         if ($payload instanceof JwtBuilder) {
             $jwtObj = $payload;
@@ -318,7 +318,7 @@ class Jwt
      * @return JwtBuilder
      * @throws TokenValidException
      */
-    public function verifyToken(string $token)
+    public function verifyToken(string $token): JwtBuilder
     {
         $tokenArray = explode(".", $token);
         if (3 != count($tokenArray)) {
@@ -367,7 +367,7 @@ class Jwt
      * @param string $token
      * @return JwtBuilder
      */
-    public function verifyRefreshToken(string $token)
+    public function verifyRefreshToken(string $token): JwtBuilder
     {
         $tokenArray = explode(".", $token);
         if (3 != count($tokenArray)){
@@ -390,7 +390,7 @@ class Jwt
         } catch (\Throwable $e) {
             throw new TokenValidException("Token parse invalid", 500);
         }
-        
+
         switch (true) {
             case isset($payload["scope"]) && $payload["scope"] != Jwt::SCOPE_REFRESH;
                 throw new TokenValidException("Token type is invalid", 401);
@@ -415,7 +415,7 @@ class Jwt
      * @param string $input
      * @return string
      */
-    private static function base64UrlEncode(string $input)
+    private static function base64UrlEncode(string $input): string
     {
         return str_replace("=", "", strtr(base64_encode($input), "+/", "-_"));
     }
@@ -442,10 +442,10 @@ class Jwt
      *
      * @param string $input
      * @param string $key
-     * @param string $alg
+     * @param string|null $alg
      * @return mixed
      */
-    private static function signature(string $input, string $key, string $alg = "HS256")
+    private static function signature(string $input, string $key, ?string $alg = "HS256")
     {
         $alg_config = array(
             "HS256" => "sha256",

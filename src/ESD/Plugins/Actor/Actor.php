@@ -67,7 +67,6 @@ abstract class Actor
     /**
      * Actor constructor.
      * @param string $name
-     * @param bool $isCreated
      * @throws \DI\DependencyException
      * @throws ActorException
      */
@@ -79,8 +78,6 @@ abstract class Actor
             ActorManager::getInstance()->addActor($this);
         }
 
-        $this->init();
-
         $this->channel = DIGet(Channel::class, [$this->actorConfig->getActorMailboxCapacity()]);
 
         //Loop process the information in the mailbox
@@ -90,15 +87,6 @@ abstract class Actor
                 $this->handleMessage($message);
             }
         });
-    }
-
-    /**
-     * Init
-     * @return void
-     */
-    public function init()
-    {
-
     }
 
     /**
@@ -160,7 +148,7 @@ abstract class Actor
      * @return static
      * @throws ActorException
      */
-    public static function getProxy(string $actorName, $oneway = false, $timeOut = 5)
+    public static function getProxy(string $actorName, ?bool $oneway = false, ?float $timeOut = 5)
     {
         try {
             return new ActorRPCProxy($actorName, $oneway, $timeOut);
@@ -178,7 +166,7 @@ abstract class Actor
      * @return static
      * @throws ActorException
      */
-    public static function create(string $actionClass, string $actorName, $data = null, $waitCreate = true, $timeOut = 5)
+    public static function create(string $actionClass, string $actorName, $data = null, ?bool $waitCreate = true, ?float $timeOut = 5)
     {
         if ($waitCreate && ActorManager::getInstance()->hasActor($actorName)) {
             return new ActorRPCProxy($actorName, false, $timeOut);
@@ -325,7 +313,7 @@ abstract class Actor
      * @param string $channel
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function subscribe($channel)
+    public function subscribe(string $channel)
     {
         $actor = $this->getName();
 
@@ -337,10 +325,10 @@ abstract class Actor
     /**
      * Unsubscribe
      *
-     * @param $channel
+     * @param string $channel
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function unsubscribe($channel)
+    public function unsubscribe(string $channel)
     {
         $actor = $this->getName();
 

@@ -4,7 +4,6 @@ namespace ESD\Nikic\PhpParser\Builder;
 
 use ESD\Nikic\PhpParser;
 use ESD\Nikic\PhpParser\BuilderHelpers;
-use ESD\Nikic\PhpParser\Node;
 use ESD\Nikic\PhpParser\Node\Stmt;
 
 class Trait_ extends Declaration
@@ -13,9 +12,6 @@ class Trait_ extends Declaration
     protected $uses = [];
     protected $properties = [];
     protected $methods = [];
-
-    /** @var Node\AttributeGroup[] */
-    protected $attributeGroups = [];
 
     /**
      * Creates an interface builder.
@@ -50,19 +46,6 @@ class Trait_ extends Declaration
     }
 
     /**
-     * Adds an attribute group.
-     *
-     * @param Node\Attribute|Node\AttributeGroup $attribute
-     *
-     * @return $this The builder instance (for fluid interface)
-     */
-    public function addAttribute($attribute) {
-        $this->attributeGroups[] = BuilderHelpers::normalizeAttribute($attribute);
-
-        return $this;
-    }
-
-    /**
      * Returns the built trait node.
      *
      * @return Stmt\Trait_ The built interface node
@@ -70,8 +53,7 @@ class Trait_ extends Declaration
     public function getNode() : PhpParser\Node {
         return new Stmt\Trait_(
             $this->name, [
-                'stmts' => array_merge($this->uses, $this->properties, $this->methods),
-                'attrGroups' => $this->attributeGroups,
+                'stmts' => array_merge($this->uses, $this->properties, $this->methods)
             ], $this->attributes
         );
     }

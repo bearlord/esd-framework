@@ -7,6 +7,8 @@
 
 namespace ESD\Yii\Filters;
 
+use ESD\Yii\Base\Action;
+use ESD\Yii\Base\Application;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\ActionFilter;
 use ESD\Yii\Base\BootstrapInterface;
@@ -132,7 +134,7 @@ class ContentNegotiator extends ActionFilter implements BootstrapInterface
     /**
      * {@inheritdoc}
      */
-    public function bootstrap($app)
+    public function bootstrap(Application $app)
     {
         $this->negotiate();
     }
@@ -140,7 +142,7 @@ class ContentNegotiator extends ActionFilter implements BootstrapInterface
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         $this->negotiate();
         return true;

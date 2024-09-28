@@ -16,12 +16,8 @@ use ESD\Nikic\PhpParser\Node\Scalar\String_;
 use ESD\Nikic\PhpParser\Node\Stmt\Class_;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;
 use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
-use ESD\Nikic\PhpParser\Node\Stmt\Else_;
-use ESD\Nikic\PhpParser\Node\Stmt\ElseIf_;
-use ESD\Nikic\PhpParser\Node\Stmt\Enum_;
 use ESD\Nikic\PhpParser\Node\Stmt\Interface_;
 use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
-use ESD\Nikic\PhpParser\Node\Stmt\Nop;
 use ESD\Nikic\PhpParser\Node\Stmt\Property;
 use ESD\Nikic\PhpParser\Node\Stmt\TryCatch;
 use ESD\Nikic\PhpParser\Node\Stmt\UseUse;
@@ -64,7 +60,7 @@ abstract class ParserAbstract implements Parser
 
     /** @var int[] Map of states to a displacement into the $action table. The corresponding action for this
      *             state/symbol pair is $action[$actionBase[$state] + $symbol]. If $actionBase[$state] is 0, the
-     *             action is defaulted, i.e. $actionDefault[$state] should be used instead. */
+                   action is defaulted, i.e. $actionDefault[$state] should be used instead. */
     protected $actionBase;
     /** @var int[] Table of actions. Indexed according to $actionBase comment. */
     protected $action;
@@ -223,7 +219,10 @@ abstract class ParserAbstract implements Parser
                         ));
                     }
 
-                    // Allow productions to access the start attributes of the lookahead token.
+                    // This is necessary to assign some meaningful attributes to /* empty */ productions. They'll get
+                    // the attributes of the next token, even though they don't contain it themselves.
+                    $this->startAttributeStack[$stackPos+1] = $startAttributes;
+                    $this->endAttributeStack[$stackPos+1] = $endAttributes;
                     $this->lookaheadStartAttributes = $startAttributes;
 
                     //$this->traceRead($symbol);
@@ -295,8 +294,7 @@ abstract class ParserAbstract implements Parser
 
                     /* Goto - shift nonterminal */
                     $lastEndAttributes = $this->endAttributeStack[$stackPos];
-                    $ruleLength = $this->ruleToLength[$rule];
-                    $stackPos -= $ruleLength;
+                    $stackPos -= $this->ruleToLength[$rule];
                     $nonTerminal = $this->ruleToNonTerminal[$rule];
                     $idx = $this->gotoBase[$nonTerminal] + $stateStack[$stackPos];
                     if ($idx >= 0 && $idx < $this->gotoTableSize && $this->gotoCheck[$idx] === $nonTerminal) {
@@ -309,10 +307,6 @@ abstract class ParserAbstract implements Parser
                     $stateStack[$stackPos]     = $state;
                     $this->semStack[$stackPos] = $this->semValue;
                     $this->endAttributeStack[$stackPos] = $lastEndAttributes;
-                    if ($ruleLength === 0) {
-                        // Empty productions use the start attributes of the lookahead token.
-                        $this->startAttributeStack[$stackPos] = $this->lookaheadStartAttributes;
-                    }
                 } else {
                     /* error */
                     switch ($this->errorState) {
@@ -346,7 +340,6 @@ abstract class ParserAbstract implements Parser
 
                             // We treat the error symbol as being empty, so we reset the end attributes
                             // to the end attributes of the last non-error symbol
-                            $this->startAttributeStack[$stackPos] = $this->lookaheadStartAttributes;
                             $this->endAttributeStack[$stackPos] = $this->endAttributeStack[$stackPos - 1];
                             $this->endAttributes = $this->endAttributeStack[$stackPos - 1];
                             break;
@@ -666,8 +659,6 @@ abstract class ParserAbstract implements Parser
             'null'     => true,
             'false'    => true,
             'mixed'    => true,
-            'never'    => true,
-            'true'     => true,
         ];
 
         if (!$name->isUnqualified()) {
@@ -879,33 +870,6 @@ abstract class ParserAbstract implements Parser
         return $attributes;
     }
 
-    /** @param ElseIf_|Else_ $node */
-    protected function fixupAlternativeElse($node) {
-        // Make sure a trailing nop statement carrying comments is part of the node.
-        $numStmts = \count($node->stmts);
-        if ($numStmts !== 0 && $node->stmts[$numStmts - 1] instanceof Nop) {
-            $nopAttrs = $node->stmts[$numStmts - 1]->getAttributes();
-            if (isset($nopAttrs['endLine'])) {
-                $node->setAttribute('endLine', $nopAttrs['endLine']);
-            }
-            if (isset($nopAttrs['endFilePos'])) {
-                $node->setAttribute('endFilePos', $nopAttrs['endFilePos']);
-            }
-            if (isset($nopAttrs['endTokenPos'])) {
-                $node->setAttribute('endTokenPos', $nopAttrs['endTokenPos']);
-            }
-        }
-    }
-
-    protected function checkClassModifier($a, $b, $modifierPos) {
-        try {
-            Class_::verifyClassModifier($a, $b);
-        } catch (Error $error) {
-            $error->setAttributes($this->getAttributesAt($modifierPos));
-            $this->emitError($error);
-        }
-    }
-
     protected function checkModifier($a, $b, $modifierPos) {
         // Jumping through some hoops here because verifyModifier() is also used elsewhere
         try {
@@ -934,6 +898,13 @@ abstract class ParserAbstract implements Parser
     }
 
     protected function checkNamespace(Namespace_ $node) {
+        if ($node->name && $node->name->isSpecialClassName()) {
+            $this->emitError(new Error(
+                sprintf('Cannot use \'%s\' as namespace name', $node->name),
+                $node->name->getAttributes()
+            ));
+        }
+
         if (null !== $node->stmts) {
             foreach ($node->stmts as $stmt) {
                 if ($stmt instanceof Namespace_) {
@@ -945,17 +916,22 @@ abstract class ParserAbstract implements Parser
         }
     }
 
-    private function checkClassName($name, $namePos) {
-        if (null !== $name && $name->isSpecialClassName()) {
+    protected function checkClass(Class_ $node, $namePos) {
+        if (null !== $node->name && $node->name->isSpecialClassName()) {
             $this->emitError(new Error(
-                sprintf('Cannot use \'%s\' as class name as it is reserved', $name),
+                sprintf('Cannot use \'%s\' as class name as it is reserved', $node->name),
                 $this->getAttributesAt($namePos)
             ));
         }
-    }
 
-    private function checkImplementedInterfaces(array $interfaces) {
-        foreach ($interfaces as $interface) {
+        if ($node->extends && $node->extends->isSpecialClassName()) {
+            $this->emitError(new Error(
+                sprintf('Cannot use \'%s\' as class name as it is reserved', $node->extends),
+                $node->extends->getAttributes()
+            ));
+        }
+
+        foreach ($node->implements as $interface) {
             if ($interface->isSpecialClassName()) {
                 $this->emitError(new Error(
                     sprintf('Cannot use \'%s\' as interface name as it is reserved', $interface),
@@ -965,27 +941,22 @@ abstract class ParserAbstract implements Parser
         }
     }
 
-    protected function checkClass(Class_ $node, $namePos) {
-        $this->checkClassName($node->name, $namePos);
-
-        if ($node->extends && $node->extends->isSpecialClassName()) {
+    protected function checkInterface(Interface_ $node, $namePos) {
+        if (null !== $node->name && $node->name->isSpecialClassName()) {
             $this->emitError(new Error(
-                sprintf('Cannot use \'%s\' as class name as it is reserved', $node->extends),
-                $node->extends->getAttributes()
+                sprintf('Cannot use \'%s\' as class name as it is reserved', $node->name),
+                $this->getAttributesAt($namePos)
             ));
         }
 
-        $this->checkImplementedInterfaces($node->implements);
-    }
-
-    protected function checkInterface(Interface_ $node, $namePos) {
-        $this->checkClassName($node->name, $namePos);
-        $this->checkImplementedInterfaces($node->extends);
-    }
-
-    protected function checkEnum(Enum_ $node, $namePos) {
-        $this->checkClassName($node->name, $namePos);
-        $this->checkImplementedInterfaces($node->implements);
+        foreach ($node->extends as $interface) {
+            if ($interface->isSpecialClassName()) {
+                $this->emitError(new Error(
+                    sprintf('Cannot use \'%s\' as interface name as it is reserved', $interface),
+                    $interface->getAttributes()
+                ));
+            }
+        }
     }
 
     protected function checkClassMethod(ClassMethod $node, $modifierPos) {
@@ -1008,12 +979,6 @@ abstract class ParserAbstract implements Parser
                     break;
             }
         }
-
-        if ($node->flags & Class_::MODIFIER_READONLY) {
-            $this->emitError(new Error(
-                sprintf('Method %s() cannot be readonly', $node->name),
-                $this->getAttributesAt($modifierPos)));
-        }
     }
 
     protected function checkClassConst(ClassConst $node, $modifierPos) {
@@ -1027,9 +992,9 @@ abstract class ParserAbstract implements Parser
                 "Cannot use 'abstract' as constant modifier",
                 $this->getAttributesAt($modifierPos)));
         }
-        if ($node->flags & Class_::MODIFIER_READONLY) {
+        if ($node->flags & Class_::MODIFIER_FINAL) {
             $this->emitError(new Error(
-                "Cannot use 'readonly' as constant modifier",
+                "Cannot use 'final' as constant modifier",
                 $this->getAttributesAt($modifierPos)));
         }
     }

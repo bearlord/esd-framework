@@ -313,12 +313,13 @@ class ActiveForm extends Widget
      * @param Model $model the data model.
      * @param string $attribute the attribute name or expression. See [[Html::getAttributeName()]] for the format
      * about attribute expression.
-     * @param array $options the additional configurations for the field object. These are properties of [[ActiveField]]
+     * @param array|null $options the additional configurations for the field object. These are properties of [[ActiveField]]
      * or a subclass, depending on the value of [[fieldClass]].
      * @return ActiveField the created ActiveField object.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      * @see fieldConfig
      */
-    public function field($model, $attribute, $options = [])
+    public function field(Model $model, string $attribute, ?array $options = [])
     {
         $config = $this->fieldConfig;
         if ($config instanceof \Closure) {
@@ -403,8 +404,9 @@ class ActiveForm extends Widget
      * as a model.
      *
      * @return array the error message array indexed by the attribute IDs.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public static function validate($model, $attributes = null)
+    public static function validate(Model $model, $attributes = null): array
     {
         $result = [];
         if ($attributes instanceof Model) {
@@ -446,8 +448,9 @@ class ActiveForm extends Widget
      * If this parameter is empty, it means any attribute listed in the applicable
      * validation rules should be validated.
      * @return array the error message array indexed by the attribute IDs.
+     * @throws \ESD\Yii\Base\InvalidConfigException
      */
-    public static function validateMultiple($models, $attributes = null)
+    public static function validateMultiple(array $models, $attributes = null): array
     {
         $result = [];
         /* @var $model Model */

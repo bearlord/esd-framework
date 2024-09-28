@@ -196,12 +196,12 @@ class CookieCollection extends BaseObject implements \IteratorAggregate, \ArrayA
      * Returns whether there is a cookie with the specified name.
      * This method is required by the SPL interface [[\ArrayAccess]].
      * It is implicitly called when you use something like `isset($collection[$name])`.
-     * @param string $name the cookie name
+     * @param string $offset the cookie name
      * @return bool whether the named cookie exists
      */
-    public function offsetExists($name)
+    public function offsetExists($offset): bool
     {
-        return $this->has($name);
+        return $this->has($offset);
     }
 
     /**
@@ -209,12 +209,12 @@ class CookieCollection extends BaseObject implements \IteratorAggregate, \ArrayA
      * This method is required by the SPL interface [[\ArrayAccess]].
      * It is implicitly called when you use something like `$cookie = $collection[$name];`.
      * This is equivalent to [[get()]].
-     * @param string $name the cookie name
+     * @param string $offset the cookie name
      * @return Cookie the cookie with the specified name, null if the named cookie does not exist.
      */
-    public function offsetGet($name)
+    public function offsetGet($offset): ?Cookie
     {
-        return $this->get($name);
+        return $this->get($offset);
     }
 
     /**
@@ -222,12 +222,12 @@ class CookieCollection extends BaseObject implements \IteratorAggregate, \ArrayA
      * This method is required by the SPL interface [[\ArrayAccess]].
      * It is implicitly called when you use something like `$collection[$name] = $cookie;`.
      * This is equivalent to [[add()]].
-     * @param string $name the cookie name
-     * @param Cookie $cookie the cookie to be added
+     * @param string $offset the cookie name
+     * @param Cookie $value the cookie to be added
      */
-    public function offsetSet($name, $cookie)
+    public function offsetSet($offset, $value)
     {
-        $this->add($cookie);
+        $this->add($value);
     }
 
     /**
@@ -235,10 +235,10 @@ class CookieCollection extends BaseObject implements \IteratorAggregate, \ArrayA
      * This method is required by the SPL interface [[\ArrayAccess]].
      * It is implicitly called when you use something like `unset($collection[$name])`.
      * This is equivalent to [[remove()]].
-     * @param string $name the cookie name
+     * @param string $offset the cookie name
      */
-    public function offsetUnset($name)
+    public function offsetUnset($offset)
     {
-        $this->remove($name);
+        $this->remove($offset);
     }
 }

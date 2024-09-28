@@ -55,7 +55,7 @@ class Action extends Component
      * @param Controller $controller the controller that owns this action
      * @param array $config name-value pairs that will be used to initialize the object properties
      */
-    public function __construct($id, $controller, $config = [])
+    public function __construct(string $id, Controller $controller, array $config = [])
     {
         $this->id = $id;
         $this->controller = $controller;
@@ -67,7 +67,7 @@ class Action extends Component
      *
      * @return string the unique ID of this action among the whole application.
      */
-    public function getUniqueId()
+    public function getUniqueId(): string
     {
         return $this->controller->getUniqueId() . '/' . $this->id;
     }
@@ -78,9 +78,9 @@ class Action extends Component
      *
      * @param array $params the parameters to be bound to the action's run() method.
      * @return mixed the result of the action
-     * @throws InvalidConfigException if the action class does not have a run() method
+     * @throws InvalidConfigException|\ESD\Yii\Base\Exception|\ReflectionException if the action class does not have a run() method
      */
-    public function runWithParams($params)
+    public function runWithParams(array $params)
     {
         if (!method_exists($this, 'run')) {
             throw new InvalidConfigException(get_class($this) . ' must define a "run()" method.');
@@ -107,7 +107,7 @@ class Action extends Component
      *
      * @return bool whether to run the action.
      */
-    protected function beforeRun()
+    protected function beforeRun(): bool
     {
         return true;
     }

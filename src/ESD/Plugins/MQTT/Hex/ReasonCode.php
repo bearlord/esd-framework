@@ -157,6 +157,10 @@ abstract class ReasonCode
         self::GRANTED_QOS_2 => 'Granted QoS 2',
     ];
 
+    /**
+     * @param bool $isQos
+     * @return string[]
+     */
     public static function getReasonPhrases(bool $isQos = false): array
     {
         if ($isQos) {
@@ -166,6 +170,11 @@ abstract class ReasonCode
         return static::$reasonPhrases;
     }
 
+    /**
+     * @param int $value
+     * @param bool $isQos
+     * @return string
+     */
     public static function getReasonPhrase(int $value, bool $isQos = false): string
     {
         if ($isQos) {

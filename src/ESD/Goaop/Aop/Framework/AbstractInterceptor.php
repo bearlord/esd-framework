@@ -153,26 +153,4 @@ abstract class AbstractInterceptor implements Interceptor, OrderedAdvice, Serial
             $this->$key = $value;
         }
     }
-
-    public function __serialize(): array
-    {
-        $vars = array_filter(get_object_vars($this));
-
-        $vars['adviceMethod'] = static::serializeAdvice($this->adviceMethod);
-
-        return $vars;
-        //return serialize($vars);
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $vars = $data;
-
-        $vars['adviceMethod'] = static::unserializeAdvice($vars['adviceMethod']);
-        foreach ($vars as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
-
 }

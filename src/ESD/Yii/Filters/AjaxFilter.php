@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Filters;
 
+use ESD\Yii\Base\Action;
 use ESD\Yii\Yii;
 use ESD\Yii\Base\ActionFilter;
 use ESD\Yii\Web\BadRequestHttpException;
@@ -55,7 +56,7 @@ class AjaxFilter extends ActionFilter
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if ($this->request->getIsAjax()) {
             return true;

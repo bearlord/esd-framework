@@ -5,24 +5,23 @@ namespace ESD\Nikic\PhpParser\Node\Expr;
 use ESD\Nikic\PhpParser\Node\Arg;
 use ESD\Nikic\PhpParser\Node\Expr;
 use ESD\Nikic\PhpParser\Node\Identifier;
-use ESD\Nikic\PhpParser\Node\VariadicPlaceholder;
 
-class MethodCall extends CallLike
+class MethodCall extends Expr
 {
     /** @var Expr Variable holding object */
     public $var;
     /** @var Identifier|Expr Method name */
     public $name;
-    /** @var array<Arg|VariadicPlaceholder> Arguments */
+    /** @var Arg[] Arguments */
     public $args;
 
     /**
      * Constructs a function call node.
      *
-     * @param Expr                           $var        Variable holding object
-     * @param string|Identifier|Expr         $name       Method name
-     * @param array<Arg|VariadicPlaceholder> $args       Arguments
-     * @param array                          $attributes Additional attributes
+     * @param Expr                   $var        Variable holding object
+     * @param string|Identifier|Expr $name       Method name
+     * @param Arg[]                  $args       Arguments
+     * @param array                  $attributes Additional attributes
      */
     public function __construct(Expr $var, $name, array $args = [], array $attributes = []) {
         $this->attributes = $attributes;
@@ -37,9 +36,5 @@ class MethodCall extends CallLike
     
     public function getType() : string {
         return 'Expr_MethodCall';
-    }
-
-    public function getRawArgs(): array {
-        return $this->args;
     }
 }

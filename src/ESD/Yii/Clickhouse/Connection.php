@@ -198,12 +198,12 @@ class Connection extends \ESD\Yii\Db\Connection
     /**
      * Quotes a string value for use in a query.
      * Note that if the parameter is not a string or int, it will be returned without change.
-     * @param string $str string to be quoted
+     * @param string $value string to be quoted
      * @return string the properly quoted string
      */
-    public function quoteValue($str)
+    public function quoteValue($value): string
     {
-        return $this->getSchema()->quoteValue($str);
+        return $this->getSchema()->quoteValue($value);
     }
 
     /**

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -25,15 +23,15 @@ interface Invocation extends Joinpoint
      * Get the arguments of invocation as an array.
      *
      * @api
+     *
+     * @return array the arguments of the invocation
      */
-    public function getArguments(): array;
+    public function getArguments();
 
     /**
      * Sets the arguments for current invocation
      *
      * @param array $arguments New list of arguments
-     *
-     * @api
      */
-    public function setArguments(array $arguments): void;
+    public function setArguments(array $arguments);
 }

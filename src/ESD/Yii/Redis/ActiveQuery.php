@@ -108,11 +108,12 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Executes the query and returns all results as an array.
-     * @param Connection $db the database connection used to execute the query.
+     * @param \ESD\Yii\Redis\Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @return array|ActiveRecord[] the query results. If the query results in nothing, an empty array will be returned.
+     * @throws \ESD\Yii\Base\NotSupportedException
      */
-    public function all($db = null)
+    public function all(?Connection $db = null): array
     {
         if ($this->emulateExecution) {
             return [];
@@ -167,13 +168,14 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Executes the query and returns a single row of result.
-     * @param Connection $db the database connection used to execute the query.
+     * @param \ESD\Yii\Redis\Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @return ActiveRecord|array|null a single row of query result. Depending on the setting of [[asArray]],
      * the query result may be either an array or an ActiveRecord object. Null will be returned
      * if the query results in nothing.
+     * @throws \ESD\Yii\Base\NotSupportedException
      */
-    public function one($db = null)
+    public function one(\ESD\Yii\Db\Connection $db = null)
     {
         if ($this->emulateExecution) {
             return null;
@@ -213,11 +215,13 @@ class ActiveQuery extends Component implements ActiveQueryInterface
     /**
      * Returns the number of records.
      * @param string $q the COUNT expression. This parameter is ignored by this implementation.
-     * @param Connection $db the database connection used to execute the query.
+     * @param \ESD\Yii\Redis\Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @return int number of records
+     * @throws \ESD\Yii\Base\NotSupportedException
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function count($q = '*', $db = null)
+    public function count($q = '*', Connection $db = null)
     {
         if ($this->emulateExecution) {
             return 0;

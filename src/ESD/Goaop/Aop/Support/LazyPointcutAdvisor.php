@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -14,33 +12,41 @@ namespace ESD\Goaop\Aop\Support;
 
 use ESD\Goaop\Aop\Advice;
 use ESD\Goaop\Aop\Pointcut;
-use ESD\Goaop\Aop\PointcutAdvisor;
 use ESD\Goaop\Core\AspectContainer;
 
 /**
  * Lazy pointcut advisor is used to create a delayed pointcut only when needed
  */
-class LazyPointcutAdvisor extends AbstractGenericAdvisor implements PointcutAdvisor
+class LazyPointcutAdvisor extends AbstractGenericPointcutAdvisor
 {
+
     /**
-     * Pointcut expression represented with string
+     * Pointcut expression
+     *
+     * @var string
      */
-    private string $pointcutExpression;
+    private $pointcutExpression;
 
     /**
      * Instance of parsed pointcut
+     *
+     * @var Pointcut|null
      */
-    private ?Pointcut $pointcut = null;
+    private $pointcut;
 
     /**
-     * Instance of aspect container
+     * @var AspectContainer
      */
-    private AspectContainer $container;
+    private $container;
 
     /**
-     * Creates the LazyPointcutAdvisor by specifying textual pointcut expression and Advice to run when Pointcut matches.
+     * Create a DefaultPointcutAdvisor, specifying Pointcut and Advice.
+     *
+     * @param AspectContainer $container Instance of container
+     * @param string $pointcutExpression The Pointcut targeting the Advice
+     * @param Advice $advice The Advice to run when Pointcut matches
      */
-    public function __construct(AspectContainer $container, string $pointcutExpression, Advice $advice)
+    public function __construct(AspectContainer $container, $pointcutExpression, Advice $advice)
     {
         $this->container          = $container;
         $this->pointcutExpression = $pointcutExpression;
@@ -49,11 +55,14 @@ class LazyPointcutAdvisor extends AbstractGenericAdvisor implements PointcutAdvi
 
     /**
      * Get the Pointcut that drives this advisor.
+     *
+     * @return Pointcut The pointcut
      */
-    public function getPointcut(): Pointcut
+    public function getPointcut()
     {
         if ($this->pointcut === null) {
-            // Inject these dependencies and make them lazy!
+            // Inject this dependencies and make them lazy!
+            // should be extracted from AbstractAspectLoaderExtension into separate class
 
             /** @var Pointcut\PointcutLexer $lexer */
             $lexer = $this->container->get('aspect.pointcut.lexer');

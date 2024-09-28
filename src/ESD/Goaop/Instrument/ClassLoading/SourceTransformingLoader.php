@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,61 +10,63 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Instrument\ClassLoading;
 
-use ESD\Goaop\Instrument\Transformer\SourceTransformer;
-use ESD\Goaop\Instrument\Transformer\StreamMetaData;
 use php_user_filter as PhpStreamFilter;
-use RuntimeException;
-
-use function strlen;
+use ESD\Goaop\Instrument\Transformer\StreamMetaData;
+use ESD\Goaop\Instrument\Transformer\SourceTransformer;
 
 /**
  * Php class loader filter for processing php code
  *
  * @property resource $stream Stream instance of underlying resource
- */
+*/
 class SourceTransformingLoader extends PhpStreamFilter
 {
     /**
      * Php filter definition
      */
-    public const PHP_FILTER_READ = 'php://filter/read=';
+    const PHP_FILTER_READ = 'php://filter/read=';
 
     /**
      * Default PHP filter name for registration
      */
-    public const FILTER_IDENTIFIER = 'go.source.transforming.loader';
+    const FILTER_IDENTIFIER = 'go.source.transforming.loader';
 
     /**
      * String buffer
+     *
+     * @var string
      */
-    protected string $data = '';
+    protected $data = '';
 
     /**
      * List of transformers
      *
-     * @var SourceTransformer[]
+     * @var array|SourceTransformer[]
      */
-    protected static array $transformers = [];
+    protected static $transformers = [];
 
     /**
      * Identifier of filter
+     *
+     * @var string
      */
-    protected static string $filterId;
+    protected static $filterId;
 
     /**
      * Register current loader as stream filter in PHP
      *
-     * @throws RuntimeException If registration was failed
+     * @param string|null $filterId Identifier for the filter
+     * @throws \RuntimeException If registration was failed
      */
-    public static function register(string $filterId = self::FILTER_IDENTIFIER): void
+    public static function register(?string $filterId = self::FILTER_IDENTIFIER)
     {
         if (!empty(self::$filterId)) {
-            throw new RuntimeException('Stream filter already registered');
+            throw new \RuntimeException('Stream filter already registered');
         }
 
-        $result = stream_filter_register($filterId, self::class);
-        if ($result === false) {
-            throw new RuntimeException('Stream filter was not registered');
+        $result = stream_filter_register($filterId, __CLASS__);
+        if (!$result) {
+            throw new \RuntimeException('Stream filter was not registered');
         }
         self::$filterId = $filterId;
     }
@@ -74,12 +74,13 @@ class SourceTransformingLoader extends PhpStreamFilter
     /**
      * Returns the name of registered filter
      *
-     * @throws RuntimeException if filter was not registered
+     * @throws \RuntimeException if filter was not registered
+     * @return string
      */
     public static function getId(): string
     {
         if (empty(self::$filterId)) {
-            throw new RuntimeException('Stream filter was not registered');
+            throw new \RuntimeException('Stream filter was not registered');
         }
 
         return self::$filterId;
@@ -94,7 +95,6 @@ class SourceTransformingLoader extends PhpStreamFilter
             $this->data .= $bucket->data;
         }
 
-        /** @phpstan-ignore-next-line PhpStan uses old version of phpstorm-stubs, $bucket can be nullable */
         if ($closing || feof($this->stream)) {
             $consumed = strlen($this->data);
 
@@ -113,16 +113,24 @@ class SourceTransformingLoader extends PhpStreamFilter
 
     /**
      * Adds a SourceTransformer to be applied by this LoadTimeWeaver.
+     *
+     * @param $transformer SourceTransformer Transformer for source code
+     *
+     * @return void
      */
-    public static function addTransformer(SourceTransformer $transformer): void
+    public static function addTransformer(SourceTransformer $transformer)
     {
         self::$transformers[] = $transformer;
     }
 
     /**
      * Transforms source code by passing it through all transformers
+     *
+     * @param StreamMetaData|null $metadata Metadata from stream
+     *
+     * @return void
      */
-    public static function transformCode(StreamMetaData $metadata): void
+    public static function transformCode(StreamMetaData $metadata)
     {
         foreach (self::$transformers as $transformer) {
             $result = $transformer->transform($metadata);

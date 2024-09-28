@@ -47,7 +47,7 @@ class Service extends Component
             }
 
             if ($key !== null) {
-                if ($param->getType() !== null && $param->getType()->getName() == 'array') {
+                if ($param->isArray()) {
                     $params[$key] = $params[$key] === '' ? [] : preg_split('/\s*,\s*/', $params[$key]);
                 }
                 $args[] = $actionParams[$key] = $params[$key];

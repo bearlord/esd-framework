@@ -154,7 +154,6 @@ class ActorManager
         DISet($className . ":" . $actor->getName(), null);
         $this->actorTable->del($actor->getName());
 
-//        var_dump($actor->getName());
         //Dispatch ActorDeleteEvent to actor-cache process, do not need reply
         Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorDeleteEvent(
             ActorDeleteEvent::ActorDeleteEvent,

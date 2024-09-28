@@ -57,7 +57,7 @@ class Agent implements AgentInterface
      * @param int $timeout
      * @return ConsulResponse
      */
-    public function service(array $options = [], int $timeout = 5)
+    public function service(array $options = [], $timeout = 5)
     {
         $params = array(
             'timeout' => $timeout,
@@ -91,11 +91,11 @@ class Agent implements AgentInterface
 
     /**
      * Join
-     * @param string $address
+     * @param $address
      * @param array $options
      * @return ConsulResponse
      */
-    public function join(string $address, array $options = [])
+    public function join($address, array $options = [])
     {
         $params = array(
             'query' => OptionsResolver::resolve($options, ['wan']),
@@ -106,10 +106,10 @@ class Agent implements AgentInterface
 
     /**
      * Force leave
-     * @param string $node
+     * @param $node
      * @return ConsulResponse
      */
-    public function forceLeave(string $node)
+    public function forceLeave($node)
     {
         return $this->client->get('/v1/agent/force-leave/' . $node);
     }
@@ -130,10 +130,10 @@ class Agent implements AgentInterface
 
     /**
      * Deregister check
-     * @param string $checkId
+     * @param $checkId
      * @return ConsulResponse
      */
-    public function deregisterCheck(string $checkId)
+    public function deregisterCheck($checkId)
     {
         return $this->client->put('/v1/agent/check/deregister/' . $checkId);
     }
@@ -141,11 +141,11 @@ class Agent implements AgentInterface
     /**
      * Pass check
      * Pass check
-     * @param string $checkId
+     * @param $checkId
      * @param array $options
      * @return mixed
      */
-    public function passCheck(string $checkId, array $options = [])
+    public function passCheck($checkId, array $options = [])
     {
         $params = array(
             'query' => OptionsResolver::resolve($options, ['note']),
@@ -156,11 +156,11 @@ class Agent implements AgentInterface
 
     /**
      * Warn check
-     * @param string $checkId
+     * @param $checkId
      * @param array $options
      * @return ConsulResponse
      */
-    public function warnCheck(string $checkId, array $options = [])
+    public function warnCheck($checkId, array $options = [])
     {
         $params = array(
             'query' => OptionsResolver::resolve($options, ['note']),
@@ -171,11 +171,11 @@ class Agent implements AgentInterface
 
     /**
      * Fail check
-     * @param string $checkId
+     * @param $checkId
      * @param array $options
      * @return ConsulResponse
      */
-    public function failCheck(string $checkId, array $options = [])
+    public function failCheck($checkId, array $options = [])
     {
         $params = array(
             'query' => OptionsResolver::resolve($options, ['note']),
@@ -200,10 +200,10 @@ class Agent implements AgentInterface
 
     /**
      * Deregister service
-     * @param string $serviceId
+     * @param $serviceId
      * @return ConsulResponse
      */
-    public function deregisterService(string $serviceId)
+    public function deregisterService($serviceId)
     {
         return $this->client->put('/v1/agent/service/deregister/' . $serviceId);
     }

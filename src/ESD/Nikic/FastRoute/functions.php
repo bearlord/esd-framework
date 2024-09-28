@@ -12,10 +12,10 @@ if (!function_exists('ESD\Nikic\FastRoute\simpleDispatcher')) {
     function simpleDispatcher(callable $routeDefinitionCallback, array $options = [])
     {
         $options += [
-            'routeParser' => 'ESD\\Nikic\FastRoute\\RouteParser\\Std',
-            'dataGenerator' => 'ESD\\Nikic\\FastRoute\\DataGenerator\\GroupCountBased',
-            'dispatcher' => 'ESD\\Nikic\\FastRoute\\Dispatcher\\GroupCountBased',
-            'routeCollector' => 'ESD\\Nikic\\FastRoute\\RouteCollector',
+            'routeParser' => 'ESD\Nikic\FastRoute\\RouteParser\\Std',
+            'dataGenerator' => 'ESD\Nikic\FastRoute\\DataGenerator\\GroupCountBased',
+            'dispatcher' => 'ESD\Nikic\FastRoute\\Dispatcher\\GroupCountBased',
+            'routeCollector' => 'ESD\Nikic\FastRoute\\RouteCollector',
         ];
 
         /** @var RouteCollector $routeCollector */
@@ -36,10 +36,10 @@ if (!function_exists('ESD\Nikic\FastRoute\simpleDispatcher')) {
     function cachedDispatcher(callable $routeDefinitionCallback, array $options = [])
     {
         $options += [
-            'routeParser' => 'ESD\\Nikic\\FastRoute\\RouteParser\\Std',
-            'dataGenerator' => 'ESD\\Nikic\\FastRoute\\DataGenerator\\GroupCountBased',
-            'dispatcher' => 'ESD\\Nikic\\FastRoute\\Dispatcher\\GroupCountBased',
-            'routeCollector' => 'ESD\\Nikic\\FastRoute\\RouteCollector',
+            'routeParser' => 'ESD\Nikic\FastRoute\\RouteParser\\Std',
+            'dataGenerator' => 'ESD\Nikic\FastRoute\\DataGenerator\\GroupCountBased',
+            'dispatcher' => 'ESD\Nikic\FastRoute\\Dispatcher\\GroupCountBased',
+            'routeCollector' => 'ESD\Nikic\FastRoute\\RouteCollector',
             'cacheDisabled' => false,
         ];
 

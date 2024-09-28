@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -24,50 +22,58 @@ class MagicMethodPointcut implements PointFilter, Pointcut
 
     /**
      * Method name to match, can contain wildcards *,?
+     *
+     * @var string
      */
-    protected string $methodName = '';
+    protected $methodName = '';
 
     /**
      * Regular expression for matching
+     *
+     * @var string
      */
-    protected string $regexp;
+    protected $regexp;
 
     /**
      * Modifier filter for method
+     *
+     * @var PointFilter
      */
-    protected PointFilter $modifierFilter;
+    protected $modifierFilter;
 
     /**
      * Magic method matcher constructor
      *
      * NB: only public methods can be matched as __call and __callStatic are public
+     *
+     * @param string $methodName Name of the dynamic method to match or glob pattern
+     * @param PointFilter $modifierFilter Method modifier filter (static or not)
      */
-    public function __construct(string $methodName, PointFilter $modifierFilter)
+    public function __construct($methodName, PointFilter $modifierFilter = null)
     {
         $this->methodName     = $methodName;
-        $this->regexp         = strtr(
-            preg_quote($this->methodName, '/'),
-            [
-                '\\*' => '.*?',
-                '\\?' => '.',
-                '\\|' => '|'
-            ]
-        );
+        $this->regexp         = strtr(preg_quote($this->methodName, '/'), [
+            '\\*' => '.*?',
+            '\\?' => '.',
+            '\\|' => '|'
+        ]);
         $this->modifierFilter = $modifierFilter;
     }
 
     /**
      * Performs matching of point of code
      *
-     * @param mixed              $point     Specific part of code, can be any Reflection class
-     * @param null|mixed         $context   Related context, can be class or namespace
-     * @param null|string|object $instance  Invocation instance or string for static calls
-     * @param null|array         $arguments Dynamic arguments for method
+     * @param mixed $point Specific part of code, can be any Reflection class
+     * @param null|mixed $context Related context, can be class or namespace
+     * @param null|string|object $instance Invocation instance or string for static calls
+     * @param null|array $arguments Dynamic arguments for method
+     *
+     * @return bool
      */
-    public function matches($point, $context = null, $instance = null, array $arguments = null): bool
+    public function matches($point, $context = null, $instance = null, array $arguments = null)
     {
         // With single parameter (statically) always matches for __call, __callStatic
-        if ($instance === null) {
+        if (!$instance) {
             return ($point->name === '__call' || $point->name === '__callStatic');
         }
 
@@ -76,15 +82,17 @@ class MagicMethodPointcut implements PointFilter, Pointcut
         }
 
         // for __call and __callStatic method name is the first argument on invocation
-        [$methodName] = $arguments;
+        list($methodName) = $arguments;
 
-        return ($methodName === $this->methodName) || (bool)preg_match("/^(?:{$this->regexp})$/", $methodName);
+        return ($methodName === $this->methodName) || (bool) preg_match("/^(?:{$this->regexp})$/", $methodName);
     }
 
     /**
      * Returns the kind of point filter
+     *
+     * @return integer
      */
-    public function getKind(): int
+    public function getKind()
     {
         return PointFilter::KIND_METHOD | PointFilter::KIND_DYNAMIC;
     }

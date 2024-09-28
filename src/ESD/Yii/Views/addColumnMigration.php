@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedVariableInspection */
 /**
  * This view is used by Console/Controllers/MigrateController.php.
  *

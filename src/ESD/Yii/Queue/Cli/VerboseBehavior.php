@@ -42,7 +42,7 @@ class VerboseBehavior extends Behavior
     /**
      * @inheritdoc
      */
-    public function events()
+    public function events(): array
     {
         return [
             Queue::EVENT_BEFORE_EXEC => 'beforeExec',

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types = 1);
 /*
  * Go! AOP framework
  *
@@ -27,12 +25,14 @@ use ESD\Goaop\Core\AspectContainer;
 class PointcutBuilder
 {
     /**
-     * Instance of aspect container
+     * @var AspectContainer
      */
-    protected AspectContainer $container;
+    protected $container;
 
     /**
      * Default constructor for the builder
+     *
+     * @param AspectContainer $container Instance of container
      */
     public function __construct(AspectContainer $container)
     {
@@ -41,64 +41,88 @@ class PointcutBuilder
 
     /**
      * Declares the "Before" hook for specific pointcut expression
+     *
+     * @param string $pointcutExpression Pointcut, e.g. "within(**)"
+     * @param Closure $advice Advice to call
      */
-    public function before(string $pointcutExpression, Closure $adviceToInvoke): void
+    public function before($pointcutExpression, Closure $advice)
     {
-        $interceptor = new BeforeInterceptor($adviceToInvoke, 0, $pointcutExpression);
+        $interceptor = new BeforeInterceptor($advice, 0, $pointcutExpression);
         $this->registerAdviceInContainer($pointcutExpression, $interceptor);
     }
 
     /**
      * Declares the "After" hook for specific pointcut expression
+     *
+     * @param string $pointcutExpression Pointcut, e.g. "within(**)"
+     * @param Closure $advice Advice to call
      */
-    public function after(string $pointcutExpression, Closure $adviceToInvoke): void
+    public function after($pointcutExpression, Closure $advice)
     {
-        $interceptor = new AfterInterceptor($adviceToInvoke, 0, $pointcutExpression);
+        $interceptor = new AfterInterceptor($advice, 0, $pointcutExpression);
         $this->registerAdviceInContainer($pointcutExpression, $interceptor);
     }
 
     /**
      * Declares the "AfterThrowing" hook for specific pointcut expression
+     *
+     * @param string $pointcutExpression Pointcut, e.g. "within(**)"
+     * @param Closure $advice Advice to call
      */
-    public function afterThrowing(string $pointcutExpression, Closure $adviceToInvoke): void
+    public function afterThrowing($pointcutExpression, Closure $advice)
     {
-        $interceptor = new AfterThrowingInterceptor($adviceToInvoke, 0, $pointcutExpression);
+        $interceptor = new AfterThrowingInterceptor($advice, 0, $pointcutExpression);
         $this->registerAdviceInContainer($pointcutExpression, $interceptor);
     }
 
     /**
      * Declares the "Around" hook for specific pointcut expression
+     *
+     * @param string $pointcutExpression Pointcut, e.g. "within(**)"
+     * @param Closure $advice Advice to call
      */
-    public function around(string $pointcutExpression, Closure $adviceToInvoke): void
+    public function around($pointcutExpression, Closure $advice)
     {
-        $interceptor = new AroundInterceptor($adviceToInvoke, 0, $pointcutExpression);
+        $interceptor = new AroundInterceptor($advice, 0, $pointcutExpression);
         $this->registerAdviceInContainer($pointcutExpression, $interceptor);
     }
 
     /**
-     * Declares the error message for specific pointcut expression with concrete error level
+     * Declares the error message for specific pointcut expression
+     *
+     * @param string $pointcutExpression Pointcut, e.g. "within(**)"
+     * @param string $message Error message to show
+     * @param integer $level Error level to trigger
      */
-    public function declareError(string $pointcutExpression, string $message, int $errorLevel = E_USER_ERROR): void
+    public function declareError($pointcutExpression, $message, $level = E_USER_ERROR)
     {
-        $interceptor = new DeclareErrorInterceptor($message, $errorLevel, $pointcutExpression);
+        $interceptor = new DeclareErrorInterceptor($message, $level, $pointcutExpression);
         $this->registerAdviceInContainer($pointcutExpression, $interceptor);
     }
+
 
     /**
      * General method to register advices
+     *
+     * @param string $pointcutExpression Pointcut expression string
+     * @param Advice $advice Instance of advice
      */
-    private function registerAdviceInContainer(string $pointcutExpression, Advice $adviceToInvoke): void
+    private function registerAdviceInContainer($pointcutExpression, Advice $advice)
     {
         $this->container->registerAdvisor(
-            new LazyPointcutAdvisor($this->container, $pointcutExpression, $adviceToInvoke),
+            new LazyPointcutAdvisor($this->container, $pointcutExpression, $advice),
             $this->getPointcutId($pointcutExpression)
         );
     }
 
     /**
-     * Returns an unique name for given pointcut expression
+     * Returns a unique name for pointcut expression
+     *
+     * @param string $pointcutExpression
+     *
+     * @return string
      */
-    private function getPointcutId(string $pointcutExpression): string
+    private function getPointcutId($pointcutExpression)
     {
         static $index = 0;
 

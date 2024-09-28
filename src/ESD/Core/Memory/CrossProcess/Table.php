@@ -55,11 +55,10 @@ class Table implements \Iterator, \Countable
      * @param string $name filed name
      * @param int $type Field type, supports 3 types, TYPE_INT, TYPE_FLOAT, TYPE_STRING
      * @param int $size The maximum length of the string field, in bytes. Fields of type string must specify $size
-     * @return bool
      */
-    public function column(string $name, int $type, int $size = 0): bool
+    public function column(string $name, int $type, int $size = 0): void
     {
-        return $this->swooleTable->column($name, $type, $size);
+        $this->swooleTable->column($name, $type, $size);
     }
 
     /**
@@ -87,11 +86,10 @@ class Table implements \Iterator, \Countable
      * If the same key is set, the previous data will be overwritten.
      * The key is not binary safe and must be a string type. Binary data must not be passed in.
      * @param array $value must be an array and must be exactly the same as the field's $name
-     * @return bool
      */
-    public function set(string $key, array $value): bool
+    public function set(string $key, array $value): void
     {
-        return $this->swooleTable->set($key, $value);
+        $this->swooleTable->set($key, $value);
     }
 
     /**
@@ -100,9 +98,9 @@ class Table implements \Iterator, \Countable
      * @param string $key specifies the data key. If the row corresponding to $key does not exist, the default column value is 0
      * @param string $column specifies the column name, only floating point and integer fields are supported
      * @param mixed $incrBy increment, default is 1. If the column is integer, $incrBy must be int, if the column is floating point, $incrBy must be float
-     * @return int returns the final result value
+     * @return int | float returns the final result value
      */
-    public function incr(string $key, string $column, $incrBy = 1): int
+    public function incr(string $key, string $column, $incrBy = 1)
     {
         return $this->swooleTable->incr($key, $column, $incrBy);
     }
@@ -113,9 +111,9 @@ class Table implements \Iterator, \Countable
      * @param string $key specifies the data key. If the row corresponding to $key does not exist, the default column value is 0
      * @param string $column specifies the column name, only floating point and integer fields are supported
      * @param mixed $incrBy increment, default is 1. If the column is integer, $incrBy must be int, if the column is floating point, $incrBy must be float
-     * @return int returns the final result value
+     * @return int | float returns the final result value
      */
-    public function decr(string $key, string $column, $incrBy = 1): int
+    public function decr(string $key, string $column, $incrBy = 1)
     {
         return $this->swooleTable->decr($key, $column, $incrBy);
     }
@@ -127,7 +125,7 @@ class Table implements \Iterator, \Countable
      * @param string|null $field returns only the value of the field when $field is specified, not the entire record
      * @return mixed If the final result value $key does not exist, it will return false, and the result array will be returned successfully
      */
-    public function get(string $key, string $field = null): mixed
+    public function get(string $key, string $field = null)
     {
         return $this->swooleTable->get($key, $field);
     }

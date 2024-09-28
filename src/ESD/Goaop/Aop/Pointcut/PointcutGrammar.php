@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -12,7 +10,6 @@ declare(strict_types=1);
 
 namespace ESD\Goaop\Aop\Pointcut;
 
-use Closure;
 use Dissect\Lexer\Token;
 use Dissect\Parser\Grammar;
 use Doctrine\Common\Annotations\Reader;
@@ -24,9 +21,6 @@ use ESD\Goaop\Aop\Support\ReturnTypeFilter;
 use ESD\Goaop\Aop\Support\SimpleNamespaceFilter;
 use ESD\Goaop\Aop\Support\TruePointFilter;
 use ESD\Goaop\Core\AspectContainer;
-use ReflectionMethod;
-
-use function constant;
 
 /**
  * Pointcut grammar defines general structure of pointcuts and rules of parsing
@@ -35,6 +29,9 @@ class PointcutGrammar extends Grammar
 {
     /**
      * Constructs a pointcut grammar with AST
+     *
+     * @param AspectContainer $container Instance of the container
+     * @param Reader $annotationReader
      */
     public function __construct(AspectContainer $container, Reader $annotationReader)
     {
@@ -45,27 +42,31 @@ class PointcutGrammar extends Grammar
 
         $this('pointcutExpression')
             ->is('pointcutExpression', '||', 'conjugatedExpression')
-            ->call(fn($first, $_0, $second) => new OrPointcut($first, $second))
-            ->is('conjugatedExpression')
-        ;
+            ->call(function ($first, $_0, $second) {
+                return new OrPointcut($first, $second);
+            })
+            ->is('conjugatedExpression');
 
         $this('conjugatedExpression')
             ->is('conjugatedExpression', '&&', 'negatedExpression')
-            ->call(fn($first, $_0, $second) => new AndPointcut($first, $second))
-            ->is('negatedExpression')
-        ;
+            ->call(function ($first, $_0, $second) {
+                return new AndPointcut($first, $second);
+            })
+            ->is('negatedExpression');
 
         $this('negatedExpression')
             ->is('!', 'brakedExpression')
-            ->call(fn($_0, $item) => new NotPointcut($item))
-            ->is('brakedExpression')
-        ;
+            ->call(function ($_0, $item) {
+                return new NotPointcut($item);
+            })
+            ->is('brakedExpression');
 
         $this('brakedExpression')
             ->is('(', 'pointcutExpression', ')')
-            ->call(fn($_0, $e, $_1) => $e)
-            ->is('singlePointcut')
-        ;
+            ->call(function ($_0, $e, $_1) {
+                return $e;
+            })
+            ->is('singlePointcut');
 
         $this('singlePointcut')
             ->is('accessPointcut')
@@ -79,325 +80,280 @@ class PointcutGrammar extends Grammar
             ->is('cflowbelowPointcut')
             ->is('dynamicExecutionPointcut')
             ->is('matchInheritedPointcut')
-            ->is('pointcutReference')
-        ;
+            ->is('pointcutReference');
 
         $this('accessPointcut')
             ->is('access', '(', 'propertyAccessReference', ')')
-            ->call(fn($_0, $_1, $propertyReference) => $propertyReference)
-        ;
+            ->call(function ($_0, $_1, $propertyReference) {
+                return $propertyReference;
+            });
 
         $this('executionPointcut')
             ->is('execution', '(', 'methodExecutionReference', ')')
-            ->call(fn($_0, $_1, $methodReference) => $methodReference)
+            ->call(function ($_0, $_1, $methodReference) {
+                return $methodReference;
+            })
             ->is('execution', '(', 'functionExecutionReference', ')')
-            ->call(fn($_0, $_1, $functionReference) => $functionReference)
-        ;
+            ->call(function ($_0, $_1, $functionReference) {
+                return $functionReference;
+            });
 
         $this('withinPointcut')
             ->is('within', '(', 'classFilter', ')')
-            ->call(
-                function ($_0, $_1, $classFilter) {
-                    $pointcut = new TruePointcut(PointFilter::KIND_ALL);
-                    $pointcut->setClassFilter($classFilter);
+            ->call(function ($_0, $_1, $classFilter) {
+                $pointcut = new TruePointcut(PointFilter::KIND_ALL);
+                $pointcut->setClassFilter($classFilter);
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('annotatedAccessPointcut')
             ->is('annotation', 'access', '(', 'namespaceName', ')')
-            ->call(
-                function ($_0, $_1, $_2, $annotationClassName) use ($annotationReader) {
-                    $kindProperty = PointFilter::KIND_PROPERTY;
+            ->call(function ($_0, $_1, $_2, $annotationClassName) use ($annotationReader) {
+                $kindProperty = PointFilter::KIND_PROPERTY;
 
-                    return new AnnotationPointcut($kindProperty, $annotationReader, $annotationClassName);
-                }
-            )
-        ;
+                return new AnnotationPointcut($kindProperty, $annotationReader, $annotationClassName);
+            });
 
         $this('annotatedExecutionPointcut')
             ->is('annotation', 'execution', '(', 'namespaceName', ')')
-            ->call(
-                function ($_0, $_1, $_2, $annotationClassName) use ($annotationReader) {
-                    $kindMethod = PointFilter::KIND_METHOD;
+            ->call(function ($_0, $_1, $_2, $annotationClassName) use ($annotationReader) {
+                $kindMethod = PointFilter::KIND_METHOD;
 
-                    return new AnnotationPointcut($kindMethod, $annotationReader, $annotationClassName);
-                }
-            )
-        ;
+                return new AnnotationPointcut($kindMethod, $annotationReader, $annotationClassName);
+            });
 
         $this('annotatedWithinPointcut')
             ->is('annotation', 'within', '(', 'namespaceName', ')')
-            ->call(
-                function ($_0, $_1, $_2, $annotationClassName) use ($annotationReader) {
-                    $pointcut    = new TruePointcut(PointFilter::KIND_ALL);
-                    $kindClass   = PointFilter::KIND_CLASS;
-                    $classFilter = new AnnotationPointcut($kindClass, $annotationReader, $annotationClassName);
-                    $pointcut->setClassFilter($classFilter);
+            ->call(function ($_0, $_1, $_2, $annotationClassName) use ($annotationReader) {
+                $pointcut    = new TruePointcut(PointFilter::KIND_ALL);
+                $kindClass   = PointFilter::KIND_CLASS;
+                $classFilter = new AnnotationPointcut($kindClass, $annotationReader, $annotationClassName);
+                $pointcut->setClassFilter($classFilter);
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('initializationPointcut')
             ->is('initialization', '(', 'classFilter', ')')
-            ->call(
-                function ($_0, $_1, $classFilter) {
-                    $pointcut = new TruePointcut(PointFilter::KIND_INIT + PointFilter::KIND_CLASS);
-                    $pointcut->setClassFilter($classFilter);
+            ->call(function ($_0, $_1, $classFilter) {
+                $pointcut = new TruePointcut(PointFilter::KIND_INIT + PointFilter::KIND_CLASS);
+                $pointcut->setClassFilter($classFilter);
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('staticInitializationPointcut')
             ->is('staticinitialization', '(', 'classFilter', ')')
-            ->call(
-                function ($_0, $_1, $classFilter) {
-                    $pointcut = new TruePointcut(PointFilter::KIND_STATIC_INIT + PointFilter::KIND_CLASS);
-                    $pointcut->setClassFilter($classFilter);
+            ->call(function ($_0, $_1, $classFilter) {
+                $pointcut = new TruePointcut(PointFilter::KIND_STATIC_INIT + PointFilter::KIND_CLASS);
+                $pointcut->setClassFilter($classFilter);
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('cflowbelowPointcut')
             ->is('cflowbelow', '(', 'executionPointcut', ')')
-            ->call(fn($_0, $_1, $pointcut) => new CFlowBelowMethodPointcut($pointcut))
-        ;
+            ->call(function ($_0, $_1, $pointcut) {
+                return new CFlowBelowMethodPointcut($pointcut);
+            });
 
         $this('matchInheritedPointcut')
             ->is('matchInherited', '(', ')')
-            ->call(fn() => new MatchInheritedPointcut())
-        ;
+            ->call(function () {
+                return new MatchInheritedPointcut();
+            });
 
         $this('dynamicExecutionPointcut')
             // ideally, this should be 'dynamic', 'methodExecutionReference'
             ->is('dynamic', '(', 'memberReference', '(', 'argumentList', ')', ')')
-            ->call(
-                function ($_0, $_1, ClassMemberReference $reference) {
-                    $memberFilter = new AndPointFilter(
-                        $reference->getVisibilityFilter(),
-                        $reference->getAccessTypeFilter()
-                    );
+            ->call(function ($_0, $_1, ClassMemberReference $reference) {
+                $memberFilter = new AndPointFilter(
+                    $reference->getVisibilityFilter(),
+                    $reference->getAccessTypeFilter()
+                );
 
-                    $pointcut = new MagicMethodPointcut($reference->getMemberNamePattern(), $memberFilter);
-                    $pointcut->setClassFilter($reference->getClassFilter());
+                $pointcut = new MagicMethodPointcut($reference->getMemberNamePattern(), $memberFilter);
+                $pointcut->setClassFilter($reference->getClassFilter());
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('pointcutReference')
             ->is('namespaceName', '->', 'namePatternPart')
-            ->call(fn($className, $_0, $name) => new PointcutReference($container, "{$className}->{$name}"))
-        ;
+            ->call(function ($className, $_0, $name) use ($container) {
+                return new PointcutReference($container, "{$className}->{$name}");
+            });
 
         $this('propertyAccessReference')
             ->is('memberReference')
-            ->call(
-                function (ClassMemberReference $reference) {
-                    $memberFilter = new AndPointFilter(
-                        $reference->getVisibilityFilter(),
-                        $reference->getAccessTypeFilter()
-                    );
+            ->call(function (ClassMemberReference $reference) {
+                $memberFilter = new AndPointFilter(
+                    $reference->getVisibilityFilter(),
+                    $reference->getAccessTypeFilter()
+                );
 
-                    $pointcut = new SignaturePointcut(
-                        PointFilter::KIND_PROPERTY,
-                        $reference->getMemberNamePattern(),
-                        $memberFilter
-                    );
+                $pointcut = new SignaturePointcut(
+                    PointFilter::KIND_PROPERTY,
+                    $reference->getMemberNamePattern(),
+                    $memberFilter);
 
-                    $pointcut->setClassFilter($reference->getClassFilter());
+                $pointcut->setClassFilter($reference->getClassFilter());
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('methodExecutionReference')
             ->is('memberReference', '(', 'argumentList', ')')
-            ->call(
-                function (ClassMemberReference $reference) {
-                    $memberFilter = new AndPointFilter(
-                        $reference->getVisibilityFilter(),
-                        $reference->getAccessTypeFilter()
-                    );
+            ->call(function (ClassMemberReference $reference) {
+                $memberFilter = new AndPointFilter(
+                    $reference->getVisibilityFilter(),
+                    $reference->getAccessTypeFilter()
+                );
 
-                    $pointcut = new SignaturePointcut(
-                        PointFilter::KIND_METHOD,
-                        $reference->getMemberNamePattern(),
-                        $memberFilter
-                    );
+                $pointcut = new SignaturePointcut(
+                    PointFilter::KIND_METHOD,
+                    $reference->getMemberNamePattern(),
+                    $memberFilter
+                );
 
-                    $pointcut->setClassFilter($reference->getClassFilter());
+                $pointcut->setClassFilter($reference->getClassFilter());
 
-                    return $pointcut;
-                }
-            )
+                return $pointcut;
+            })
             ->is('memberReference', '(', 'argumentList', ')', ':', 'namespaceName')
-            ->call(
-                function (ClassMemberReference $reference, $_0, $_1, $_2, $_3, $returnType) {
-                    $memberFilter = new AndPointFilter(
-                        $reference->getVisibilityFilter(),
-                        $reference->getAccessTypeFilter(),
-                        new ReturnTypeFilter($returnType)
-                    );
+            ->call(function (ClassMemberReference $reference, $_0, $_1, $_2, $_3, $returnType) {
+                $memberFilter = new AndPointFilter(
+                    $reference->getVisibilityFilter(),
+                    $reference->getAccessTypeFilter(),
+                    new ReturnTypeFilter($returnType)
+                );
 
-                    $pointcut = new SignaturePointcut(
-                        PointFilter::KIND_METHOD,
-                        $reference->getMemberNamePattern(),
-                        $memberFilter
-                    );
+                $pointcut = new SignaturePointcut(
+                    PointFilter::KIND_METHOD,
+                    $reference->getMemberNamePattern(),
+                    $memberFilter
+                );
 
-                    $pointcut->setClassFilter($reference->getClassFilter());
+                $pointcut->setClassFilter($reference->getClassFilter());
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('functionExecutionReference')
             ->is('namespacePattern', 'nsSeparator', 'namePatternPart', '(', 'argumentList', ')')
-            ->call(
-                function ($namespacePattern, $_0, $namePattern) {
-                    $nsFilter = new SimpleNamespaceFilter($namespacePattern);
-                    $pointcut = new FunctionPointcut($namePattern);
-                    $pointcut->setNamespaceFilter($nsFilter);
+            ->call(function ($namespacePattern, $_0, $namePattern) {
+                $nsFilter = new SimpleNamespaceFilter($namespacePattern);
+                $pointcut = new FunctionPointcut($namePattern);
+                $pointcut->setNamespaceFilter($nsFilter);
 
-                    return $pointcut;
-                }
-            )
+                return $pointcut;
+            })
             ->is('namespacePattern', 'nsSeparator', 'namePatternPart', '(', 'argumentList', ')', ':', 'namespaceName')
-            ->call(
-                function ($namespacePattern, $_0, $namePattern, $_1, $_2, $_3, $_4, $returnType) {
-                    $nsFilter   = new SimpleNamespaceFilter($namespacePattern);
-                    $typeFilter = new ReturnTypeFilter($returnType);
-                    $pointcut   = new FunctionPointcut($namePattern, $typeFilter);
-                    $pointcut->setNamespaceFilter($nsFilter);
+            ->call(function ($namespacePattern, $_0, $namePattern, $_1, $_2, $_3, $_4, $returnType) {
+                $nsFilter   = new SimpleNamespaceFilter($namespacePattern);
+                $typeFilter = new ReturnTypeFilter($returnType);
+                $pointcut   = new FunctionPointcut($namePattern, $typeFilter);
+                $pointcut->setNamespaceFilter($nsFilter);
 
-                    return $pointcut;
-                }
-            )
-        ;
+                return $pointcut;
+            });
 
         $this('memberReference')
             ->is('memberModifiers', 'classFilter', 'memberAccessType', 'namePatternPart')
-            ->call(
-                function (
-                    ModifierMatcherFilter $memberModifiers,
-                    PointFilter $classFilter,
-                    ModifierMatcherFilter $memberAccessType,
+            ->call(function (
+                ModifierMatcherFilter $memberModifiers,
+                PointFilter $classFilter,
+                ModifierMatcherFilter $memberAccessType,
+                $namePattern
+            ) {
+                $reference = new ClassMemberReference(
+                    $classFilter,
+                    $memberModifiers,
+                    $memberAccessType,
                     $namePattern
-                ) {
-                    $reference = new ClassMemberReference(
-                        $classFilter,
-                        $memberModifiers,
-                        $memberAccessType,
-                        $namePattern
-                    );
+                );
 
-                    return $reference;
-                }
-            )
-        ;
+                return $reference;
+            });
 
         $this('classFilter')
             ->is('namespacePattern')
-            ->call(
-                function ($pattern) {
-                    $truePointFilter = TruePointFilter::getInstance();
+            ->call(function ($pattern) {
+                $truePointFilter = TruePointFilter::getInstance();
 
-                    return $pattern === '**'
-                        ? $truePointFilter
-                        : new SignaturePointcut(PointFilter::KIND_CLASS, $pattern, $truePointFilter);
-                }
-            )
+                return $pattern === '**'
+                    ? $truePointFilter
+                    : new SignaturePointcut(PointFilter::KIND_CLASS, $pattern, $truePointFilter);
+            })
             ->is('namespacePattern', '+')
-            ->call(fn($parentClassName) => new InheritanceClassFilter($parentClassName))
-        ;
+            ->call(function ($parentClassName) {
+                return new InheritanceClassFilter($parentClassName);
+            });
 
         $this('argumentList')
             ->is('*');
 
         $this('memberAccessType')
             ->is('::')
-            ->call(fn() => new ModifierMatcherFilter(ReflectionMethod::IS_STATIC))
+            ->call(function () {
+                return new ModifierMatcherFilter(\ReflectionMethod::IS_STATIC);
+            })
             ->is('->')
-            ->call(
-                function () {
-                    $modifierMatcherFilter = new ModifierMatcherFilter();
-                    $modifierMatcherFilter->notMatch(ReflectionMethod::IS_STATIC);
+            ->call(function () {
+                $modifierMatcherFilter = new ModifierMatcherFilter();
+                $modifierMatcherFilter->notMatch(\ReflectionMethod::IS_STATIC);
 
-                    return $modifierMatcherFilter;
-                }
-            )
-        ;
+                return $modifierMatcherFilter;
+            });
 
         $this('namespacePattern')
-            ->is('**')
-            ->call($stringConverter)
+            ->is('**')->call($stringConverter)
             ->is('namePatternPart')
-            ->is('namespacePattern', 'nsSeparator', 'namePatternPart')
-            ->call($stringConverter)
-            ->is('namespacePattern', 'nsSeparator', '**')
-            ->call($stringConverter)
-        ;
+            ->is('namespacePattern', 'nsSeparator', 'namePatternPart')->call($stringConverter)
+            ->is('namespacePattern', 'nsSeparator', '**')->call($stringConverter);
 
         $this('namePatternPart')
-            ->is('*')
-            ->call($stringConverter)
-            ->is('namePart')
-            ->call($stringConverter)
-            ->is('namePatternPart', '*')
-            ->call($stringConverter)
-            ->is('namePatternPart', 'namePart')
-            ->call($stringConverter)
-            ->is('namePatternPart', '|', 'namePart')
-            ->call($stringConverter)
-        ;
+            ->is('*')->call($stringConverter)
+            ->is('namePart')->call($stringConverter)
+            ->is('namePatternPart', '*')->call($stringConverter)
+            ->is('namePatternPart', 'namePart')->call($stringConverter)
+            ->is('namePatternPart', '|', 'namePart')->call($stringConverter);
 
         $this('namespaceName')
-            ->is('namePart')
-            ->call($stringConverter)
-            ->is('namespaceName', 'nsSeparator', 'namePart')
-            ->call($stringConverter)
-        ;
+            ->is('namePart')->call($stringConverter)
+            ->is('namespaceName', 'nsSeparator', 'namePart')->call($stringConverter);
 
         $this('memberModifiers')
             ->is('memberModifier', '|', 'memberModifiers')
-            ->call(fn($modifier, $_0, ModifierMatcherFilter $matcher) => $matcher->orMatch($modifier))
+            ->call(function ($modifier, $_0, ModifierMatcherFilter $matcher) {
+                return $matcher->orMatch($modifier);
+            })
             ->is('memberModifier', 'memberModifiers')
-            ->call(fn($modifier, ModifierMatcherFilter $matcher) => $matcher->andMatch($modifier))
+            ->call(function ($modifier, ModifierMatcherFilter $matcher) {
+                return $matcher->andMatch($modifier);
+            })
             ->is('memberModifier')
-            ->call(fn($modifier) => new ModifierMatcherFilter($modifier))
-        ;
+            ->call(function ($modifier) {
+                return new ModifierMatcherFilter($modifier);
+            });
 
         $converter = $this->getModifierConverter();
         $this('memberModifier')
-            ->is('public')
-            ->call($converter)
-            ->is('protected')
-            ->call($converter)
-            ->is('private')
-            ->call($converter)
-            ->is('final')
-            ->call($converter)
-        ;
+            ->is('public')->call($converter)
+            ->is('protected')->call($converter)
+            ->is('private')->call($converter)
+            ->is('final')->call($converter);
 
         $this->start('pointcutExpression');
     }
 
     /**
      * Returns callable for converting node(s) to the string
+     *
+     * @return \Closure
      */
-    private function getNodeToStringConverter(): callable
+    private function getNodeToStringConverter()
     {
         return function (...$nodes) {
             $value = '';
@@ -415,8 +371,10 @@ class PointcutGrammar extends Grammar
 
     /**
      * Returns callable for converting node value for modifiers to the constant value
+     *
+     * @return \Closure
      */
-    private function getModifierConverter(): Closure
+    private function getModifierConverter()
     {
         return function (Token $token) {
             $name = strtoupper($token->getValue());

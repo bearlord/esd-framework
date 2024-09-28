@@ -24,37 +24,37 @@ interface QueryInterface
 {
     /**
      * Executes the query and returns all results as an array.
-     * @param Connection $db the database connection used to execute the query.
+     * @param \ESD\Yii\Db\Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @return array the query results. If the query results in nothing, an empty array will be returned.
      */
-    public function all($db = null);
+    public function all(Connection $db = null);
 
     /**
      * Executes the query and returns a single row of result.
-     * @param Connection $db the database connection used to execute the query.
+     * @param \ESD\Yii\Db\Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @return array|bool the first row (in terms of an array) of the query result. False is returned if the query
      * results in nothing.
      */
-    public function one($db = null);
+    public function one(Connection $db = null);
 
     /**
      * Returns the number of records.
-     * @param string $q the COUNT expression. Defaults to '*'.
-     * @param Connection $db the database connection used to execute the query.
+     * @param string|null $q the COUNT expression. Defaults to '*'.
+     * @param \ESD\Yii\Db\Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @return int number of records.
      */
-    public function count($q = '*', $db = null);
+    public function count(?string $q = '*', Connection $db = null);
 
     /**
      * Returns a value indicating whether the query result contains any row of data.
-     * @param Connection $db the database connection used to execute the query.
+     * @param \ESD\Yii\Db\Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @return bool whether the query result contains any row of data.
      */
-    public function exists($db = null);
+    public function exists(Connection $db = null);
 
     /**
      * Sets the [[indexBy]] property.
@@ -160,7 +160,7 @@ interface QueryInterface
      * @see andWhere()
      * @see orWhere()
      */
-    public function where($condition);
+    public function where(array $condition);
 
     /**
      * Adds an additional WHERE condition to the existing one.
@@ -171,7 +171,7 @@ interface QueryInterface
      * @see where()
      * @see orWhere()
      */
-    public function andWhere($condition);
+    public function andWhere(array $condition);
 
     /**
      * Adds an additional WHERE condition to the existing one.
@@ -182,7 +182,7 @@ interface QueryInterface
      * @see where()
      * @see andWhere()
      */
-    public function orWhere($condition);
+    public function orWhere(array $condition);
 
     /**
      * Sets the WHERE part of the query ignoring empty parameters.

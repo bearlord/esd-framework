@@ -116,11 +116,7 @@ class Migration extends Component implements MigrationInterface
                 return false;
             }
             $transaction->commit();
-        } catch (\Exception $e) {
-            $this->printException($e);
-            $transaction->rollBack();
-            return false;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             $this->printException($e);
             $transaction->rollBack();
             return false;
@@ -145,11 +141,7 @@ class Migration extends Component implements MigrationInterface
                 return false;
             }
             $transaction->commit();
-        } catch (\Exception $e) {
-            $this->printException($e);
-            $transaction->rollBack();
-            return false;
-        } catch (\Throwable $e) {
+        } catch (\Exception|\Throwable $e) {
             $this->printException($e);
             $transaction->rollBack();
             return false;

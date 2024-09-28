@@ -113,8 +113,9 @@ class AccessControl extends ActionFilter
      * You may override this method to do last-minute preparation for the action.
      * @param Action $action the action to be executed.
      * @return bool whether the action should continue to be executed.
+     * @throws \ESD\Yii\Web\ForbiddenHttpException
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action): bool
     {
         $user = $this->user;
         $request = Yii::$app->getRequest();

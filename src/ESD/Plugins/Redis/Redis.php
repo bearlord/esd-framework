@@ -19,9 +19,6 @@ class Redis implements DBInterface
      */
     private $_redis;
 
-    /**
-     * @var string
-     */
     private $_lastQuery;
 
     /**
@@ -33,11 +30,11 @@ class Redis implements DBInterface
     }
 
     /**
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param array|null $arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, ?array $arguments = null)
     {
         $this->_lastQuery = $name;
         return $this->execute($name, function () use ($name, $arguments) {
@@ -46,19 +43,19 @@ class Redis implements DBInterface
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param $value
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         $this->_redis->$name = $value;
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->_redis->$name;
     }
@@ -66,7 +63,7 @@ class Redis implements DBInterface
     /**
      * @return string
      */
-    public function getType(): string
+    public function getType()
     {
         return "redis";
     }
@@ -76,7 +73,7 @@ class Redis implements DBInterface
      * @param callable|null $call
      * @return mixed
      */
-    public function execute(string $name, callable $call = null): mixed
+    public function execute(string $name, ?callable $call = null)
     {
         if ($call != null) {
             return $call();
@@ -84,9 +81,9 @@ class Redis implements DBInterface
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getLastQuery(): string
+    public function getLastQuery()
     {
         return $this->_lastQuery;
     }

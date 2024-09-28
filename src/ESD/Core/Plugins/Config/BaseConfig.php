@@ -16,10 +16,29 @@ class BaseConfig
 {
     use ToConfigArray;
 
+    /**
+     * @var int
+     */
     protected static $uuid = 1000;
+
+    /**
+     * @var string
+     */
     private $configPrefix;
+
+    /**
+     * @var array
+     */
     private $config = [];
+
+    /**
+     * @var bool
+     */
     private $isArray;
+
+    /**
+     * @var null
+     */
     private $indexName;
 
     /**
@@ -83,10 +102,10 @@ class BaseConfig
     /**
      * Process prefix to array
      *
-     * @param $prefix
+     * @param string $prefix
      * @return array
      */
-    protected function processPrefix($prefix): array
+    protected function processPrefix(string $prefix): array
     {
         $cabinet = [];
         $box = &$cabinet;

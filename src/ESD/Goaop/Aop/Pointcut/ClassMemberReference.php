@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * Go! AOP framework
  *
@@ -22,37 +20,45 @@ class ClassMemberReference
 {
     /**
      * Filter for class names
+     *
+     * @var PointFilter
      */
-    private PointFilter $classFilter;
+    private $classFilter;
 
     /**
      * Member visibility filter (public/protected/etc)
+     *
+     * @var ModifierMatcherFilter
      */
-    private ModifierMatcherFilter $visibilityFilter;
+    private $visibilityFilter;
 
     /**
      * Filter for access type (statically "::" or dynamically "->")
+     *
+     * @var ModifierMatcherFilter
      */
-    private ModifierMatcherFilter $accessTypeFilter;
+    private $accessTypeFilter;
 
     /**
      * Member name pattern
+     *
+     * @var string
      */
-    private string $memberNamePattern;
+    private $memberNamePattern;
 
     /**
      * Default constructor
      *
-     * @param PointFilter           $classFilter
-     * @param ModifierMatcherFilter $visibilityFilter  Public/protected/etc
-     * @param ModifierMatcherFilter $accessTypeFilter  Static or dynamic
-     * @param string                $memberNamePattern Expression for the name
+     * @param PointFilter $classFilter
+     * @param ModifierMatcherFilter $visibilityFilter Public/protected/etc
+     * @param ModifierMatcherFilter $accessTypeFilter Static or dynamic
+     * @param string $memberNamePattern Expression for the name
      */
     public function __construct(
         PointFilter $classFilter,
         ModifierMatcherFilter $visibilityFilter,
         ModifierMatcherFilter $accessTypeFilter,
-        string $memberNamePattern
+        $memberNamePattern
     ) {
         $this->classFilter       = $classFilter;
         $this->visibilityFilter  = $visibilityFilter;
@@ -61,33 +67,33 @@ class ClassMemberReference
     }
 
     /**
-     * Returns the filter for class
+     * @return PointFilter
      */
-    public function getClassFilter(): PointFilter
+    public function getClassFilter()
     {
         return $this->classFilter;
     }
 
     /**
-     * Returns the filter for visibility: public/protected/private
+     * @return ModifierMatcherFilter
      */
-    public function getVisibilityFilter(): ModifierMatcherFilter
+    public function getVisibilityFilter()
     {
         return $this->visibilityFilter;
     }
 
     /**
-     * Returns the filter for access type: static/dynamic
+     * @return ModifierMatcherFilter
      */
-    public function getAccessTypeFilter(): ModifierMatcherFilter
+    public function getAccessTypeFilter()
     {
         return $this->accessTypeFilter;
     }
 
     /**
-     * Returns the pattern for member name
+     * @return string
      */
-    public function getMemberNamePattern(): string
+    public function getMemberNamePattern()
     {
         return $this->memberNamePattern;
     }

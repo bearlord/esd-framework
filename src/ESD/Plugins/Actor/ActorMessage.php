@@ -35,10 +35,11 @@ class ActorMessage
     /**
      * ActorMessage constructor.
      * @param $data
-     * @param null $msgId
-     * @param null $from
+     * @param int|null $msgId
+     * @param string|null $from
+     * @param string|null $to
      */
-    public function __construct($data, $msgId = null, $from = null, $to = null)
+    public function __construct($data, ?int $msgId = null, ?string $from = null, ?string $to = null)
     {
         $this->data = $data;
         $this->msgId = $msgId;
@@ -95,9 +96,9 @@ class ActorMessage
     }
 
     /**
-     * @return mixed|string|null
+     * @return string|null
      */
-    public function getTo()
+    public function getTo(): ?string
     {
         return $this->to;
     }
@@ -105,7 +106,7 @@ class ActorMessage
     /**
      * @param string $to
      */
-    public function setTo($to): void
+    public function setTo(string $to): void
     {
         $this->to = $to;
     }
