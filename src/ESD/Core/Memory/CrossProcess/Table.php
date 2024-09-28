@@ -56,7 +56,7 @@ class Table implements \Iterator, \Countable
      * @param int $type Field type, supports 3 types, TYPE_INT, TYPE_FLOAT, TYPE_STRING
      * @param int $size The maximum length of the string field, in bytes. Fields of type string must specify $size
      */
-    public function column(string $name, int $type, int $size = 0)
+    public function column(string $name, int $type, int $size = 0): void
     {
         $this->swooleTable->column($name, $type, $size);
     }
@@ -120,7 +120,7 @@ class Table implements \Iterator, \Countable
 
     /**
      * Get a row of data
-     * 
+     *
      * @param string $key specifies the KEY of the query data row, which must be a string type
      * @param string|null $field returns only the value of the field when $field is specified, not the entire record
      * @return mixed If the final result value $key does not exist, it will return false, and the result array will be returned successfully
@@ -181,9 +181,9 @@ class Table implements \Iterator, \Countable
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function next()
+    public function next(): void
     {
-        return $this->swooleTable->next();
+        $this->swooleTable->next();
     }
 
     /**
@@ -218,8 +218,8 @@ class Table implements \Iterator, \Countable
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function rewind()
+    public function rewind(): void
     {
-        return $this->swooleTable->rewind();
+        $this->swooleTable->rewind();
     }
 }

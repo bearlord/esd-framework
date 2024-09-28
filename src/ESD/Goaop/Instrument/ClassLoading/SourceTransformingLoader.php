@@ -55,10 +55,10 @@ class SourceTransformingLoader extends PhpStreamFilter
     /**
      * Register current loader as stream filter in PHP
      *
-     * @param string $filterId Identifier for the filter
+     * @param string|null $filterId Identifier for the filter
      * @throws \RuntimeException If registration was failed
      */
-    public static function register($filterId = self::FILTER_IDENTIFIER)
+    public static function register(?string $filterId = self::FILTER_IDENTIFIER)
     {
         if (!empty(self::$filterId)) {
             throw new \RuntimeException('Stream filter already registered');
@@ -77,7 +77,7 @@ class SourceTransformingLoader extends PhpStreamFilter
      * @throws \RuntimeException if filter was not registered
      * @return string
      */
-    public static function getId()
+    public static function getId(): string
     {
         if (empty(self::$filterId)) {
             throw new \RuntimeException('Stream filter was not registered');
@@ -89,7 +89,7 @@ class SourceTransformingLoader extends PhpStreamFilter
     /**
      * {@inheritdoc}
      */
-    public function filter($in, $out, &$consumed, $closing)
+    public function filter($in, $out, &$consumed, $closing): int
     {
         while ($bucket = stream_bucket_make_writeable($in)) {
             $this->data .= $bucket->data;
