@@ -20,7 +20,7 @@
         "ext-swoole": ">=4.8.0",
         "ezyang/htmlpurifier": "^4.10.0",
         "filp/whoops": "^2.3",
-        "illuminate/view": ">=5.8",
+        "illuminate/view": "8.83.27",
         "jakubledl/dissect": "~1.0",
         "jeremeamia/superclosure": "*",
         "monolog/monolog": "^1.24",
