@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Queue\Closure;
 
-use SuperClosure\Serializer;
+use function Opis\Closure\unserialize as opis_unserialize;
 use ESD\Yii\Queue\JobInterface;
 
 /**
@@ -29,8 +29,10 @@ class Job implements JobInterface
      */
     public function execute($queue)
     {
-        $serializer = new Serializer();
-        $closure = $serializer->unserialize($this->serialized);
-        return $closure();
+        $unserialized = opis_unserialize($this->serialized);
+        if ($unserialized instanceof \Closure) {
+            return $unserialized();
+        }
+        return $unserialized->execute($queue);
     }
 }

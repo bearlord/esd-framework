@@ -22,7 +22,7 @@
         "filp/whoops": "^2.3",
         "illuminate/view": "8.83.27",
         "jakubledl/dissect": "~1.0",
-        "jeremeamia/superclosure": "*",
+        "opis/closure": "*",
         "monolog/monolog": "^1.24",
         "php": "^8.0",
         "php-amqplib/php-amqplib": "^2.9.0",
