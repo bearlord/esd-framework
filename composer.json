@@ -24,7 +24,6 @@
         "jakubledl/dissect": "~1.0",
         "jeremeamia/superclosure": "*",
         "monolog/monolog": "^1.24",
-        "ocramius/proxy-manager": "^2.1",
         "php": "^8.0",
         "php-amqplib/php-amqplib": "^2.9.0",
         "php-di/php-di": "^6.0",
