@@ -83,7 +83,7 @@ class DeclareErrorInterceptor extends BaseInterceptor
      *
      * @return array
      */
-    public function __serialize()
+    public function __serialize(): array
     {
         $vars = array_filter(get_object_vars($this));
         unset($vars['adviceMethod']);
@@ -97,7 +97,7 @@ class DeclareErrorInterceptor extends BaseInterceptor
      * @param array $data The string representation of the object.
      * @return void
      */
-    public function __unserialize(array $data)
+    public function __unserialize(array $data): void
     {
         $vars = $data;
         $vars['adviceMethod'] = self::getDeclareErrorAdvice();

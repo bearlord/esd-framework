@@ -90,7 +90,7 @@ abstract class BaseInterceptor extends BaseAdvice implements Interceptor
      *
      * @return array
      */
-    public function __serialize()
+    public function __serialize(): array
     {
         $vars = array_filter(get_object_vars($this));
         $vars['adviceMethod'] = static::serializeAdvice($this->adviceMethod);
@@ -104,7 +104,7 @@ abstract class BaseInterceptor extends BaseAdvice implements Interceptor
      * @param array $data The string representation of the object.
      * @return void
      */
-    public function __unserialize(array $data)
+    public function __unserialize(array $data): void
     {
         $vars = $data;
         $vars['adviceMethod'] = static::unserializeAdvice($vars['adviceMethod']);
