@@ -94,12 +94,12 @@ class DeclareErrorInterceptor extends BaseInterceptor
     /**
      * Unserialize an interceptor from the string
      *
-     * @param string $serialized The string representation of the object.
+     * @param array $data The string representation of the object.
      * @return void
      */
-    public function __unserialize($serialized)
+    public function __unserialize(array $data)
     {
-        $vars = unserialize($serialized);
+        $vars = $data;
         $vars['adviceMethod'] = self::getDeclareErrorAdvice();
         foreach ($vars as $key => $value) {
             $this->$key = $value;
