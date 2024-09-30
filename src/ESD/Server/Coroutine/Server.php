@@ -62,7 +62,7 @@ abstract class Server extends \ESD\Core\Server\Server
     public function configure()
     {
         parent::configure();
-    
-        $this->getLog()->debug(Yii::t("esd", "Print configuration") . ":\n" . $this->getConfigContext()->getCacheContainYaml());
+
+        //$this->getLog()->debug(Yii::t("esd", "Print configuration") . ":\n" . $this->getConfigContext()->getCacheContainYaml());
     }
 }
