@@ -1029,7 +1029,7 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
      * @param mixed $offset the offset to retrieve element.
      * @return mixed the element at the offset, null if no element is found at the offset
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->$offset;
     }
@@ -1038,10 +1038,10 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
      * Sets the element at the specified offset.
      * This method is required by the SPL interface [[\ArrayAccess]].
      * It is implicitly called when you use something like `$model[$offset] = $item;`.
-     * @param int $offset the offset to set element
+     * @param mixed $offset the offset to set element
      * @param mixed $item the element value
      */
-    public function offsetSet($offset, $item)
+    public function offsetSet(mixed $offset, mixed $item): void
     {
         $this->$offset = $item;
     }
@@ -1052,7 +1052,7 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
      * It is implicitly called when you use something like `unset($model[$offset])`.
      * @param mixed $offset the offset to unset element
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         $this->$offset = null;
     }

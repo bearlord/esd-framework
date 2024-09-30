@@ -2,11 +2,13 @@
 
 namespace ESD\Plugins\Actor\Multicast;
 
+use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\ProcessRPC\GetProcessRpc;
 
 trait GetMulticast
 {
     use GetProcessRpc;
+    use GetLogger;
 
     /**
      * @var MulticastConfig
@@ -65,7 +67,7 @@ trait GetMulticast
      * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function subscribe(string $channel, string $actor)
+    public function actorSubscribe(string $channel, string $actor)
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -84,7 +86,7 @@ trait GetMulticast
      * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function unsubscribe(string $channel, string $actor)
+    public function actorUnsubscribe(string $channel, string $actor)
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -101,7 +103,7 @@ trait GetMulticast
      * @param $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function unsubscribeAll(string $actor)
+    public function actorUnsubscribeAll(string $actor)
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -122,7 +124,7 @@ trait GetMulticast
      * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publish(string $channel, ?string $message, ?array $excludeActorList = [])
+    public function actorPublish(string $channel, ?string $message, ?array $excludeActorList = [])
     {
         /** @var Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);

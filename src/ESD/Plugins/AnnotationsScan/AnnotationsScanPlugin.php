@@ -163,7 +163,8 @@ class AnnotationsScanPlugin extends AbstractPlugin
             //While we're grabbing the namespace name...
             if ($getting_namespace === true) {
                 //If the token is a string or the namespace separator...
-                if (is_array($token) && in_array($token[0], [T_STRING, T_NS_SEPARATOR])) {
+
+                if (is_array($token) && in_array($token[0], [T_STRING, T_NAME_QUALIFIED])) {
                     //Append the token's value to the name of the namespace
                     $namespace .= $token[1];
                 } else if ($token === ';') {
@@ -186,6 +187,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
         if (empty($class)) {
             return null;
         }
+
         //Build the fully-qualified class name and return it
         return $namespace ? $namespace . '\\' . $class : $class;
     }
@@ -201,6 +203,8 @@ class AnnotationsScanPlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
+        Server::$instance->getLog()->info("hello world");
+
         //Add src directory by default
         $this->annotationsScanConfig->addIncludePath(Server::$instance->getServerConfig()->getSrcDir());
 
@@ -217,6 +221,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
         $this->setToDIContainer(CachedReader::class, $this->cacheReader);
         $this->setToDIContainer(ScanClass::class, $this->scanClass);
         $paths = array_unique($this->annotationsScanConfig->getIncludePaths());
+
         foreach ($paths as $path) {
             $files = $this->scanPhp($path);
             foreach ($files as $file) {
@@ -338,6 +343,7 @@ class AnnotationsScanPlugin extends AbstractPlugin
                     }
                 }
             }
+
         }
         $this->ready();
     }
