@@ -12,10 +12,10 @@ namespace ESD\Goaop\ParserReflection;
 
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\Traits\ReflectionClassLikeTrait;
-use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
-use ESD\Nikic\PhpParser\Node\Stmt\Interface_;
-use ESD\Nikic\PhpParser\Node\Stmt\TraitUse;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as InternalReflectionClass;
 
 /**

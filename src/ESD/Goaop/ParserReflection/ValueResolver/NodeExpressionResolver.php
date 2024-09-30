@@ -13,11 +13,11 @@ namespace ESD\Goaop\ParserReflection\ValueResolver;
 use ESD\Goaop\ParserReflection\ReflectionClass;
 use ESD\Goaop\ParserReflection\ReflectionException;
 use ESD\Goaop\ParserReflection\ReflectionFileNamespace;
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\Node\Expr;
-use ESD\Nikic\PhpParser\Node\Scalar;
-use ESD\Nikic\PhpParser\Node\Scalar\MagicConst;
-use ESD\Nikic\PhpParser\Node\Stmt\Expression;
+use PhpParser\Node;
+use PhpParser\Node\Expr;
+use PhpParser\Node\Scalar;
+use PhpParser\Node\Scalar\MagicConst;
+use PhpParser\Node\Stmt\Expression;
 
 /**
  * Tries to resolve expression into value

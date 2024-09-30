@@ -17,7 +17,7 @@ use ESD\Goaop\Aop\Intercept\Interceptor;
 /**
  * Base interceptor realization
  */
-abstract class BaseInterceptor extends BaseAdvice implements Interceptor, Serializable
+abstract class BaseInterceptor extends BaseAdvice implements Interceptor
 {
     /**
      * Pointcut expression
@@ -77,6 +77,34 @@ abstract class BaseInterceptor extends BaseAdvice implements Interceptor, Serial
      * @return void
      */
     public function unserialize($serialized)
+    {
+        $vars = unserialize($serialized);
+        $vars['adviceMethod'] = static::unserializeAdvice($vars['adviceMethod']);
+        foreach ($vars as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
+     * Serializes an interceptor into string representation
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
+        $vars = array_filter(get_object_vars($this));
+        $vars['adviceMethod'] = static::serializeAdvice($this->adviceMethod);
+
+        return $vars;
+    }
+
+    /**
+     * Unserialize an interceptor from the string
+     *
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function __unserialize($serialized)
     {
         $vars = unserialize($serialized);
         $vars['adviceMethod'] = static::unserializeAdvice($vars['adviceMethod']);

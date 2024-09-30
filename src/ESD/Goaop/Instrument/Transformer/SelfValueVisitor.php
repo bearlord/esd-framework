@@ -10,12 +10,12 @@
 
 namespace ESD\Goaop\Instrument\Transformer;
 
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\Node\Name;
-use ESD\Nikic\PhpParser\Node\Name\FullyQualified;
-use ESD\Nikic\PhpParser\Node\Stmt;
-use ESD\Nikic\PhpParser\Node\Expr;
-use ESD\Nikic\PhpParser\NodeVisitorAbstract;
+use PhpParser\Node;
+use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Stmt;
+use PhpParser\Node\Expr;
+use PhpParser\NodeVisitorAbstract;
 
 /**
  * Node visitor that resolves class name for `self` nodes with FQN

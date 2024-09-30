@@ -12,8 +12,8 @@ namespace ESD\Goaop\ParserReflection;
 
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\Traits\ReflectionFunctionLikeTrait;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\ClassMethod;
 use ReflectionMethod as BaseReflectionMethod;
 
 /**
@@ -138,7 +138,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function getClosure($object = null)
+    public function getClosure($object = null): \Closure
     {
         $this->initializeInternalReflection();
 
@@ -148,7 +148,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass(): \ReflectionClass
     {
         return isset($this->declaringClass) ? $this->declaringClass : new ReflectionClass($this->className);
     }
@@ -156,7 +156,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function getModifiers()
+    public function getModifiers(): int
     {
         $modifiers = 0;
         if ($this->isPublic()) {
@@ -184,7 +184,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function getPrototype()
+    public function getPrototype(): \ReflectionMethod
     {
         $parent = $this->getDeclaringClass()->getParentClass();
         if (!$parent) {
@@ -202,7 +202,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function invoke($object, $args = null)
+    public function invoke(?object $object, mixed ...$args): mixed
     {
         $this->initializeInternalReflection();
 
@@ -212,7 +212,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function invokeArgs($object, array $args)
+    public function invokeArgs($object, array $args): mixed
     {
         $this->initializeInternalReflection();
 
@@ -222,7 +222,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isAbstract()
+    public function isAbstract(): bool
     {
         return $this->getDeclaringClass()->isInterface() || $this->getClassMethodNode()->isAbstract();
     }
@@ -230,7 +230,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isConstructor()
+    public function isConstructor(): bool
     {
         return $this->getClassMethodNode()->name == '__construct';
     }
@@ -238,7 +238,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isDestructor()
+    public function isDestructor(): bool
     {
         return $this->getClassMethodNode()->name == '__destruct';
     }
@@ -246,7 +246,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isFinal()
+    public function isFinal(): bool
     {
         return $this->getClassMethodNode()->isFinal();
     }
@@ -254,7 +254,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isPrivate()
+    public function isPrivate(): bool
     {
         return $this->getClassMethodNode()->isPrivate();
     }
@@ -262,7 +262,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isProtected()
+    public function isProtected(): bool
     {
         return $this->getClassMethodNode()->isProtected();
     }
@@ -270,7 +270,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->getClassMethodNode()->isPublic();
     }
@@ -278,7 +278,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function isStatic()
+    public function isStatic(): bool
     {
         return $this->getClassMethodNode()->isStatic();
     }
@@ -286,7 +286,7 @@ class ReflectionMethod extends BaseReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function setAccessible($accessible)
+    public function setAccessible($accessible): void
     {
         $this->initializeInternalReflection();
 

@@ -12,8 +12,8 @@ namespace ESD\Goaop\Instrument\Transformer;
 
 use ESD\Goaop\Aop\Framework\ReflectionConstructorInvocation;
 use ESD\Goaop\Core\AspectContainer;
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\NodeTraverser;
+use PhpParser\Node;
+use PhpParser\NodeTraverser;
 
 /**
  * Transforms the source code to add an ability to intercept new instances creation

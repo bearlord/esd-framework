@@ -79,6 +79,34 @@ class DeclareErrorInterceptor extends BaseInterceptor
     }
 
     /**
+     * Serializes an interceptor into string representation
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
+        $vars = array_filter(get_object_vars($this));
+        unset($vars['adviceMethod']);
+
+        return $vars;
+    }
+
+    /**
+     * Unserialize an interceptor from the string
+     *
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function __unserialize($serialized)
+    {
+        $vars = unserialize($serialized);
+        $vars['adviceMethod'] = self::getDeclareErrorAdvice();
+        foreach ($vars as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
      * Returns an advice
      *
      * @return \Closure

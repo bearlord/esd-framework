@@ -12,17 +12,17 @@ namespace ESD\Goaop\ParserReflection;
 
 use ESD\Goaop\ParserReflection\Instrument\PathResolver;
 use ESD\Goaop\ParserReflection\NodeVisitor\RootNamespaceNormalizer;
-use ESD\Nikic\PhpParser\Lexer;
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassConst;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassLike;
-use ESD\Nikic\PhpParser\Node\Stmt\ClassMethod;
-use ESD\Nikic\PhpParser\Node\Stmt\Namespace_;
-use ESD\Nikic\PhpParser\Node\Stmt\Property;
-use ESD\Nikic\PhpParser\NodeTraverser;
-use ESD\Nikic\PhpParser\NodeVisitor\NameResolver;
-use ESD\Nikic\PhpParser\Parser;
-use ESD\Nikic\PhpParser\ParserFactory;
+use PhpParser\Lexer;
+use PhpParser\Node;
+use PhpParser\Node\Stmt\ClassConst;
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Property;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\Parser;
+use PhpParser\ParserFactory;
 
 /**
  * AST-based reflection engine, powered by PHP-Parser
@@ -73,7 +73,7 @@ class ReflectionEngine
             'endFilePos'
         ]]);
 
-        self::$parser = (new ParserFactory)->create(ParserFactory::ONLY_PHP7, self::$lexer);
+        self::$parser = (new ParserFactory)->createForNewestSupportedVersion();
 
         self::$traverser = $traverser = new NodeTraverser();
         $traverser->addVisitor(new NameResolver());

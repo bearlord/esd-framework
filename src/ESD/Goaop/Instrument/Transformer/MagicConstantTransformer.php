@@ -11,12 +11,12 @@
 namespace ESD\Goaop\Instrument\Transformer;
 
 use ESD\Goaop\Core\AspectKernel;
-use ESD\Nikic\PhpParser\Node\Expr\MethodCall;
-use ESD\Nikic\PhpParser\Node\Scalar\MagicConst;
-use ESD\Nikic\PhpParser\Node\Scalar\MagicConst\Dir;
-use ESD\Nikic\PhpParser\Node\Scalar\MagicConst\File;
-use ESD\Nikic\PhpParser\NodeTraverser;
-use ESD\Nikic\PhpParser\Node\Identifier;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Scalar\MagicConst;
+use PhpParser\Node\Scalar\MagicConst\Dir;
+use PhpParser\Node\Scalar\MagicConst\File;
+use PhpParser\NodeTraverser;
+use PhpParser\Node\Identifier;
 
 /**
  * Transformer that replaces magic __DIR__ and __FILE__ constants in the source code

@@ -11,9 +11,9 @@
 namespace ESD\Goaop\ParserReflection\NodeVisitor;
 
 use ESD\Goaop\ParserReflection\ValueResolver\NodeExpressionResolver;
-use ESD\Nikic\PhpParser\Node;
-use ESD\Nikic\PhpParser\NodeTraverser;
-use ESD\Nikic\PhpParser\NodeVisitorAbstract;
+use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
 
 /**
  * Visitor to collect static variables in the method/function body and resove them

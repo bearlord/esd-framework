@@ -12,7 +12,7 @@ namespace ESD\Goaop\ParserReflection;
 
 use ESD\Goaop\ParserReflection\Traits\InternalPropertiesEmulationTrait;
 use ESD\Goaop\ParserReflection\Traits\ReflectionFunctionLikeTrait;
-use ESD\Nikic\PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\Function_;
 use ReflectionFunction as BaseReflectionFunction;
 
 /**
