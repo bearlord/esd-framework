@@ -203,8 +203,6 @@ class AnnotationsScanPlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
-        Server::$instance->getLog()->info("hello world");
-
         //Add src directory by default
         $this->annotationsScanConfig->addIncludePath(Server::$instance->getServerConfig()->getSrcDir());
 
