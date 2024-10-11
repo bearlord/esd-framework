@@ -212,7 +212,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildLimit(int $limit, int $offset): string
+    public function buildLimit($limit, $offset): string
     {
         $sql = '';
         if ($this->hasLimit($limit)) {
