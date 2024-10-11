@@ -10,6 +10,7 @@ namespace ESD\Yii\Db;
 use ESD\Yii\Base\Application;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidArgumentException;
+use ESD\Yii\Caching\Dependency;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Yii;
@@ -136,11 +137,11 @@ class Query extends Component implements QueryInterface, ExpressionInterface
 
     /**
      * Creates a DB command that can be used to execute this query.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return Command the created DB command instance.
      */
-    public function createCommand($db = null)
+    public function createCommand(?Connection $db = null)
     {
         if ($db === null) {
             $db = Yii::$app->getDb();
@@ -161,7 +162,7 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * @param QueryBuilder $builder
      * @return $this a prepared query instance which will be used by [[QueryBuilder]] to build the SQL
      */
-    public function prepare($builder)
+    public function prepare(QueryBuilder $builder)
     {
         return $this;
     }
@@ -182,12 +183,12 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * }
      * ```
      *
-     * @param int $batchSize the number of records to be fetched in each batch.
-     * @param Connection $db the database connection. If not set, the "db" application component will be used.
+     * @param int|null $batchSize the number of records to be fetched in each batch.
+     * @param Connection|null $db the database connection. If not set, the "db" application component will be used.
      * @return BatchQueryResult the batch query result. It implements the [[\Iterator]] interface
      * and can be traversed to retrieve the data in batches.
      */
-    public function batch($batchSize = 100, $db = null)
+    public function batch(?int $batchSize = 100, ?Connection $db = null): BatchQueryResult
     {
         return Yii::createObject([
             'class' => BatchQueryResult::className(),
@@ -210,12 +211,12 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * }
      * ```
      *
-     * @param int $batchSize the number of records to be fetched in each batch.
+     * @param int|null $batchSize the number of records to be fetched in each batch.
      * @param Connection $db the database connection. If not set, the "db" application component will be used.
      * @return BatchQueryResult the batch query result. It implements the [[\Iterator]] interface
      * and can be traversed to retrieve the data in batches.
      */
-    public function each($batchSize = 100, $db = null)
+    public function each(?int $batchSize = 100, ?Connection $db = null): BatchQueryResult
     {
         return Yii::createObject([
             'class' => BatchQueryResult::className(),
@@ -228,11 +229,11 @@ class Query extends Component implements QueryInterface, ExpressionInterface
 
     /**
      * Executes the query and returns all results as an array.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return array the query results. If the query results in nothing, an empty array will be returned.
      */
-    public function all($db = null)
+    public function all(?Connection $db = null)
     {
         if ($this->emulateExecution) {
             return [];
@@ -248,7 +249,7 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * @param array $rows the raw query result from database
      * @return array the converted query result
      */
-    public function populate($rows)
+    public function populate(array $rows)
     {
         if ($this->indexBy === null) {
             return $rows;
@@ -263,12 +264,12 @@ class Query extends Component implements QueryInterface, ExpressionInterface
 
     /**
      * Executes the query and returns a single row of result.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return array|bool the first row (in terms of an array) of the query result. False is returned if the query
      * results in nothing.
      */
-    public function one($db = null)
+    public function one(?Connection $db = null)
     {
         if ($this->emulateExecution) {
             return false;
@@ -280,12 +281,12 @@ class Query extends Component implements QueryInterface, ExpressionInterface
     /**
      * Returns the query result as a scalar value.
      * The value returned will be the first column in the first row of the query results.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return string|null|false the value of the first column in the first row of the query result.
      * False is returned if the query result is empty.
      */
-    public function scalar($db = null)
+    public function scalar(?Connection $db = null)
     {
         if ($this->emulateExecution) {
             return null;
@@ -296,11 +297,11 @@ class Query extends Component implements QueryInterface, ExpressionInterface
 
     /**
      * Executes the query and returns the first column of the result.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return array the first column of the query result. An empty array is returned if the query results in nothing.
      */
-    public function column($db = null)
+    public function column(?Connection $db = null): array
     {
         if ($this->emulateExecution) {
             return [];
@@ -342,14 +343,14 @@ class Query extends Component implements QueryInterface, ExpressionInterface
 
     /**
      * Returns the number of records.
-     * @param string $q the COUNT expression. Defaults to '*'.
+     * @param string|null $q the COUNT expression. Defaults to '*'.
      * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given (or null), the `db` application component will be used.
      * @return int|string number of records. The result may be a string depending on the
      * underlying database engine and to support integer values higher than a 32bit PHP integer can handle.
      */
-    public function count($q = '*', $db = null)
+    public function count(?string $q = '*', ?Connection $db = null)
     {
         if ($this->emulateExecution) {
             return 0;
@@ -362,11 +363,11 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * Returns the sum of the specified column values.
      * @param string $q the column name or expression.
      * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return mixed the sum of the specified column values.
      */
-    public function sum($q, $db = null)
+    public function sum($q, ?Connection $db = null)
     {
         if ($this->emulateExecution) {
             return 0;
@@ -379,11 +380,11 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * Returns the average of the specified column values.
      * @param string $q the column name or expression.
      * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return mixed the average of the specified column values.
      */
-    public function average($q, $db = null)
+    public function average($q, ?Connection $db = null)
     {
         if ($this->emulateExecution) {
             return 0;
@@ -396,11 +397,11 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * Returns the minimum of the specified column values.
      * @param string $q the column name or expression.
      * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return mixed the minimum of the specified column values.
      */
-    public function min($q, $db = null)
+    public function min(string $q, ?Connection $db = null)
     {
         return $this->queryScalar("MIN($q)", $db);
     }
@@ -409,22 +410,22 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * Returns the maximum of the specified column values.
      * @param string $q the column name or expression.
      * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return mixed the maximum of the specified column values.
      */
-    public function max($q, $db = null)
+    public function max(sting $q, ?Connection $db = null)
     {
         return $this->queryScalar("MAX($q)", $db);
     }
 
     /**
      * Returns a value indicating whether the query result contains any row of data.
-     * @param Connection $db the database connection used to generate the SQL statement.
+     * @param Connection|null $db the database connection used to generate the SQL statement.
      * If this parameter is not given, the `db` application component will be used.
      * @return bool whether the query result contains any row of data.
      */
-    public function exists($db = null)
+    public function exists(?Connection $db = null)
     {
         if ($this->emulateExecution) {
             return false;
@@ -443,7 +444,7 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * @param Connection|null $db
      * @return bool|string
      */
-    protected function queryScalar($selectExpression, $db)
+    protected function queryScalar($selectExpression, ?Connection $db)
     {
         if ($this->emulateExecution) {
             return null;
@@ -490,7 +491,7 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * @throws \ESD\Yii\Base\InvalidConfigException
      * @since 2.0.12
      */
-    public function getTablesUsedInFrom()
+    public function getTablesUsedInFrom(): array
     {
         if (empty($this->from)) {
             return [];
@@ -516,7 +517,7 @@ class Query extends Component implements QueryInterface, ExpressionInterface
      * @return string[] table names indexed by aliases
      * @since 2.0.14
      */
-    protected function cleanUpTableNames($tableNames)
+    protected function cleanUpTableNames(array $tableNames): array
     {
         $cleanedUpTableNames = [];
         foreach ($tableNames as $alias => $tableName) {
@@ -582,7 +583,7 @@ PATTERN;
      * @param string $name
      * @return string
      */
-    private function ensureNameQuoted($name)
+    private function ensureNameQuoted(string $name)
     {
         $name = str_replace(["'", '"', '`', '[', ']'], '', $name);
         if ($name && !preg_match('/^{{.*}}$/', $name)) {
@@ -610,11 +611,11 @@ PATTERN;
      * Starting from version 2.0.1, you may also select sub-queries as columns by specifying each such column
      * as a `Query` instance representing the sub-query.
      *
-     * @param string $option additional option that should be appended to the 'SELECT' keyword. For example,
+     * @param string|null $option additional option that should be appended to the 'SELECT' keyword. For example,
      * in MySQL, the option 'SQL_CALC_FOUND_ROWS' can be used.
      * @return $this the query object itself
      */
-    public function select($columns, $option = null)
+    public function select($columns, ?string $option = null): self
     {
         if ($columns instanceof ExpressionInterface) {
             $columns = [$columns];
@@ -644,7 +645,7 @@ PATTERN;
      * @return $this the query object itself
      * @see select()
      */
-    public function addSelect($columns)
+    public function addSelect($columns): self
     {
         if ($columns instanceof ExpressionInterface) {
             $columns = [$columns];
@@ -669,7 +670,7 @@ PATTERN;
      * @param array $columns the columns to be merged to the select.
      * @since 2.0.14
      */
-    protected function getUniqueColumns($columns)
+    protected function getUniqueColumns(array $columns): array
     {
         $unaliasedColumns = $this->getUnaliasedColumnsFromSelect();
 
@@ -699,7 +700,7 @@ PATTERN;
      * @return array List of columns without aliases from SELECT statement.
      * @since 2.0.14
      */
-    protected function getUnaliasedColumnsFromSelect()
+    protected function getUnaliasedColumnsFromSelect(): array
     {
         $result = [];
         if (is_array($this->select)) {
@@ -714,10 +715,10 @@ PATTERN;
 
     /**
      * Sets the value indicating whether to SELECT DISTINCT or not.
-     * @param bool $value whether to SELECT DISTINCT or not.
+     * @param bool|null $value whether to SELECT DISTINCT or not.
      * @return $this the query object itself
      */
-    public function distinct($value = true)
+    public function distinct(?bool $value = true): self
     {
         $this->distinct = $value;
         return $this;
@@ -757,7 +758,7 @@ PATTERN;
      *
      * @return $this the query object itself
      */
-    public function from($tables)
+    public function from($tables): self
     {
         if ($tables instanceof ExpressionInterface) {
             $tables = [$tables];
@@ -780,13 +781,13 @@ PATTERN;
      * {@inheritdoc}
      *
      * @param string|array|ExpressionInterface $condition the conditions that should be put in the WHERE part.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see andWhere()
      * @see orWhere()
      * @see QueryInterface::where()
      */
-    public function where($condition, $params = [])
+    public function where($condition, ?array $params = []): self
     {
         $this->where = $condition;
         $this->addParams($params);
@@ -798,12 +799,12 @@ PATTERN;
      * The new condition and the existing one will be joined using the `AND` operator.
      * @param string|array|ExpressionInterface $condition the new WHERE condition. Please refer to [[where()]]
      * on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see where()
      * @see orWhere()
      */
-    public function andWhere($condition, $params = [])
+    public function andWhere($condition, ?array $params = []): self
     {
         if ($this->where === null) {
             $this->where = $condition;
@@ -821,12 +822,12 @@ PATTERN;
      * The new condition and the existing one will be joined using the `OR` operator.
      * @param string|array|ExpressionInterface $condition the new WHERE condition. Please refer to [[where()]]
      * on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see where()
      * @see andWhere()
      */
-    public function orWhere($condition, $params = [])
+    public function orWhere($condition, ?array $params = []): self
     {
         if ($this->where === null) {
             $this->where = $condition;
@@ -858,12 +859,12 @@ PATTERN;
      *
      * @param string $name the column name.
      * @param string $value the column value optionally prepended with the comparison operator.
-     * @param string $defaultOperator The operator to use, when no operator is given in `$value`.
+     * @param string|null $defaultOperator The operator to use, when no operator is given in `$value`.
      * Defaults to `=`, performing an exact match.
      * @return $this The query object itself
      * @since 2.0.8
      */
-    public function andFilterCompare($name, $value, $defaultOperator = '=')
+    public function andFilterCompare(string $name, string $value, ?string $defaultOperator = '='): self
     {
         if (preg_match('/^(<>|>=|>|<=|<|=)/', $value, $matches)) {
             $operator = $matches[1];
@@ -902,10 +903,10 @@ PATTERN;
      * 'post.author_id = user.id'
      * ```
      *
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      */
-    public function join($type, $table, $on = '', $params = [])
+    public function join(string $type, $table, $on = '', ?array $params = []): self
     {
         $this->join[] = [$type, $table, $on];
         return $this->addParams($params);
@@ -926,10 +927,10 @@ PATTERN;
      *
      * @param string|array $on the join condition that should appear in the ON part.
      * Please refer to [[join()]] on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      */
-    public function innerJoin($table, $on = '', $params = [])
+    public function innerJoin($table, $on = '', ?array $params = []): self
     {
         $this->join[] = ['INNER JOIN', $table, $on];
         return $this->addParams($params);
@@ -950,10 +951,10 @@ PATTERN;
      *
      * @param string|array $on the join condition that should appear in the ON part.
      * Please refer to [[join()]] on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query
+     * @param array|null $params the parameters (name => value) to be bound to the query
      * @return $this the query object itself
      */
-    public function leftJoin($table, $on = '', $params = [])
+    public function leftJoin($table, $on = '', ?array $params = []): self
     {
         $this->join[] = ['LEFT JOIN', $table, $on];
         return $this->addParams($params);
@@ -974,10 +975,10 @@ PATTERN;
      *
      * @param string|array $on the join condition that should appear in the ON part.
      * Please refer to [[join()]] on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query
+     * @param array|null $params the parameters (name => value) to be bound to the query
      * @return $this the query object itself
      */
-    public function rightJoin($table, $on = '', $params = [])
+    public function rightJoin($table, $on = '', ?array $params = []): self
     {
         $this->join[] = ['RIGHT JOIN', $table, $on];
         return $this->addParams($params);
@@ -999,7 +1000,7 @@ PATTERN;
      * @return $this the query object itself
      * @see addGroupBy()
      */
-    public function groupBy($columns)
+    public function groupBy($columns): self
     {
         if ($columns instanceof ExpressionInterface) {
             $columns = [$columns];
@@ -1026,7 +1027,7 @@ PATTERN;
      * @return $this the query object itself
      * @see groupBy()
      */
-    public function addGroupBy($columns)
+    public function addGroupBy($columns): self
     {
         if ($columns instanceof ExpressionInterface) {
             $columns = [$columns];
@@ -1046,12 +1047,12 @@ PATTERN;
      * Sets the HAVING part of the query.
      * @param string|array|ExpressionInterface $condition the conditions to be put after HAVING.
      * Please refer to [[where()]] on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see andHaving()
      * @see orHaving()
      */
-    public function having($condition, $params = [])
+    public function having($condition, ?array $params = []): self
     {
         $this->having = $condition;
         $this->addParams($params);
@@ -1063,12 +1064,12 @@ PATTERN;
      * The new condition and the existing one will be joined using the `AND` operator.
      * @param string|array|ExpressionInterface $condition the new HAVING condition. Please refer to [[where()]]
      * on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see having()
      * @see orHaving()
      */
-    public function andHaving($condition, $params = [])
+    public function andHaving($condition, ?array $params = []): self
     {
         if ($this->having === null) {
             $this->having = $condition;
@@ -1084,12 +1085,12 @@ PATTERN;
      * The new condition and the existing one will be joined using the `OR` operator.
      * @param string|array|ExpressionInterface $condition the new HAVING condition. Please refer to [[where()]]
      * on how to specify this parameter.
-     * @param array $params the parameters (name => value) to be bound to the query.
+     * @param array|null $params the parameters (name => value) to be bound to the query.
      * @return $this the query object itself
      * @see having()
      * @see andHaving()
      */
-    public function orHaving($condition, $params = [])
+    public function orHaving($condition, ?array $params = []): self
     {
         if ($this->having === null) {
             $this->having = $condition;
@@ -1128,7 +1129,7 @@ PATTERN;
      * @see orFilterHaving()
      * @since 2.0.11
      */
-    public function filterHaving(array $condition)
+    public function filterHaving(array $condition): self
     {
         $condition = $this->filterCondition($condition);
         if ($condition !== []) {
@@ -1153,7 +1154,7 @@ PATTERN;
      * @see orFilterHaving()
      * @since 2.0.11
      */
-    public function andFilterHaving(array $condition)
+    public function andFilterHaving(array $condition): self
     {
         $condition = $this->filterCondition($condition);
         if ($condition !== []) {
@@ -1178,7 +1179,7 @@ PATTERN;
      * @see andFilterHaving()
      * @since 2.0.11
      */
-    public function orFilterHaving(array $condition)
+    public function orFilterHaving(array $condition): self
     {
         $condition = $this->filterCondition($condition);
         if ($condition !== []) {
@@ -1191,10 +1192,10 @@ PATTERN;
     /**
      * Appends a SQL statement using UNION operator.
      * @param string|Query $sql the SQL statement to be appended using UNION
-     * @param bool $all TRUE if using UNION ALL and FALSE if using UNION
+     * @param bool|null $all TRUE if using UNION ALL and FALSE if using UNION
      * @return $this the query object itself
      */
-    public function union($sql, $all = false)
+    public function union($sql, ?bool $all = false): self
     {
         $this->union[] = ['query' => $sql, 'all' => $all];
         return $this;
@@ -1207,7 +1208,7 @@ PATTERN;
      * @return $this the query object itself
      * @see addParams()
      */
-    public function params($params)
+    public function params($params): self
     {
         $this->params = $params;
         return $this;
@@ -1220,7 +1221,7 @@ PATTERN;
      * @return $this the query object itself
      * @see params()
      */
-    public function addParams($params)
+    public function addParams(array $params): self
     {
         if (!empty($params)) {
             if (empty($this->params)) {
@@ -1250,7 +1251,7 @@ PATTERN;
      * @return $this the Query object itself
      * @since 2.0.14
      */
-    public function cache($duration = true, $dependency = null)
+    public function cache($duration = true, ?Dependency $dependency = null): self
     {
         $this->queryCacheDuration = $duration;
         $this->queryCacheDependency = $dependency;
@@ -1262,7 +1263,7 @@ PATTERN;
      * @return $this the Query object itself
      * @since 2.0.14
      */
-    public function noCache()
+    public function noCache(): self
     {
         $this->queryCacheDuration = -1;
         return $this;
@@ -1275,7 +1276,7 @@ PATTERN;
      * @return Command
      * @since 2.0.14
      */
-    protected function setCommandCache($command)
+    protected function setCommandCache(Command $command): Command
     {
         if ($this->queryCacheDuration !== null || $this->queryCacheDependency !== null) {
             $duration = $this->queryCacheDuration === true ? null : $this->queryCacheDuration;
@@ -1291,7 +1292,7 @@ PATTERN;
      * @param Query $from the source query object
      * @return Query the new Query object
      */
-    public static function create($from)
+    public static function create(Query $from): Query
     {
         return new self([
             'where' => $from->where,
