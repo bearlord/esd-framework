@@ -122,7 +122,7 @@ class Command extends Component
      * @param \ESD\Yii\Caching\Dependency $dependency the cache dependency associated with the cached query result.
      * @return $this the command object itCommand
      */
-    public function cache($duration = null, ?Dependency $dependency = null): Command
+    public function cache($duration = null, ?Dependency $dependency = null): self
     {
         $this->queryCacheDuration = $duration === null ? $this->db->queryCacheDuration : $duration;
         $this->queryCacheDependency = $dependency;
@@ -133,7 +133,7 @@ class Command extends Component
      * Disables query cache for this command.
      * @return $this the command object itCommand
      */
-    public function noCache(): Command
+    public function noCache(): self
     {
         $this->queryCacheDuration = -1;
         return $this;
@@ -158,7 +158,7 @@ class Command extends Component
      * @see reset()
      * @see cancel()
      */
-    public function setSql(string $sql): Command
+    public function setSql(string $sql): self
     {
         if ($sql !== $this->_sql) {
             $this->cancel();
@@ -180,7 +180,7 @@ class Command extends Component
      * @see reset()
      * @see cancel()
      */
-    public function setRawSql(string $sql): Command
+    public function setRawSql(string $sql): self
     {
         if ($sql !== $this->_sql) {
             $this->cancel();
@@ -289,7 +289,7 @@ class Command extends Component
      * @return $this the current command being executed
      * @see https://secure.php.net/manual/en/function.PDOStatement-bindParam.php
      */
-    public function bindParam($name, &$value, ?int $dataType = null, ?int $length = null, $driverOptions = null): Command
+    public function bindParam($name, &$value, ?int $dataType = null, ?int $length = null, $driverOptions = null): self
     {
         $this->prepare();
 
@@ -352,7 +352,7 @@ class Command extends Component
      * e.g. `[':name' => 'John', ':profile' => new PdoValue($profile, \PDO::PARAM_LOB)]`.
      * @return $this the current command being executed
      */
-    public function bindValues(?array $values): Command
+    public function bindValues(?array $values): self
     {
         if (empty($values)) {
             return $this;
@@ -465,7 +465,7 @@ class Command extends Component
      * Passing of [[ESD\Yii\Db\Query|Query]] is available since version 2.0.11.
      * @return $this the command object itCommand
      */
-    public function insert(string $table, $columns): Command
+    public function insert(string $table, $columns): self
     {
         $params = [];
         $sql = $this->db->getQueryBuilder()->insert($table, $columns, $params);
@@ -497,7 +497,7 @@ class Command extends Component
      * @param array|\Generator $rows the rows to be batch inserted into the table
      * @return $this the command object itCommand
      */
-    public function batchInsert(string $table, array $columns, $rows): Command
+    public function batchInsert(string $table, array $columns, $rows): self
     {
         $table = $this->db->quoteSql($table);
         $columns = array_map(function ($column) {
@@ -542,7 +542,7 @@ class Command extends Component
      * @return $this the command object itCommand.
      * @since 2.0.14
      */
-    public function upsert(string $table, $insertColumns, $updateColumns = true, ?array $params = []): Command
+    public function upsert(string $table, $insertColumns, $updateColumns = true, ?array $params = []): self
     {
         $sql = $this->db->getQueryBuilder()->upsert($table, $insertColumns, $updateColumns, $params);
 
@@ -647,7 +647,7 @@ class Command extends Component
      * @param string $newName the new table name. The name will be properly quoted by the method.
      * @return $this the command object itCommand
      */
-    public function renameTable(string $table, string $newName): Command
+    public function renameTable(string $table, string $newName): self
     {
         $sql = $this->db->getQueryBuilder()->renameTable($table, $newName);
 
@@ -659,7 +659,7 @@ class Command extends Component
      * @param string $table the table to be dropped. The name will be properly quoted by the method.
      * @return $this the command object itCommand
      */
-    public function dropTable(string $table): Command
+    public function dropTable(string $table): self
     {
         $sql = $this->db->getQueryBuilder()->dropTable($table);
 
@@ -671,7 +671,7 @@ class Command extends Component
      * @param string $table the table to be truncated. The name will be properly quoted by the method.
      * @return $this the command object itCommand
      */
-    public function truncateTable(string $table): Command
+    public function truncateTable(string $table): self
     {
         $sql = $this->db->getQueryBuilder()->truncateTable($table);
 
@@ -687,7 +687,7 @@ class Command extends Component
      * as `varchar(255)`, and `string not null` becomes `varchar(255) not null`.
      * @return $this the command object itCommand
      */
-    public function addColumn(string $table, string $column, string $type): Command
+    public function addColumn(string $table, string $column, string $type): self
     {
         $sql = $this->db->getQueryBuilder()->addColumn($table, $column, $type);
 
@@ -700,7 +700,7 @@ class Command extends Component
      * @param string $column the name of the column to be dropped. The name will be properly quoted by the method.
      * @return $this the command object itCommand
      */
-    public function dropColumn(string $table, string $column): Command
+    public function dropColumn(string $table, string $column): self
     {
         $sql = $this->db->getQueryBuilder()->dropColumn($table, $column);
 
@@ -714,7 +714,7 @@ class Command extends Component
      * @param string $newName the new name of the column. The name will be properly quoted by the method.
      * @return $this the command object itCommand
      */
-    public function renameColumn(string $table, string $oldName, string $newName): Command
+    public function renameColumn(string $table, string $oldName, string $newName): self
     {
         $sql = $this->db->getQueryBuilder()->renameColumn($table, $oldName, $newName);
 
@@ -730,7 +730,7 @@ class Command extends Component
      * as `varchar(255)`, and `string not null` becomes `varchar(255) not null`.
      * @return $this the command object itCommand
      */
-    public function alterColumn(string $table, string $column, string $type): Command
+    public function alterColumn(string $table, string $column, string $type): self
     {
         $sql = $this->db->getQueryBuilder()->alterColumn($table, $column, $type);
 
@@ -745,7 +745,7 @@ class Command extends Component
      * @param string|array $columns comma separated string or array of columns that the primary key will consist of.
      * @return $this the command object itCommand.
      */
-    public function addPrimaryKey(string $name, string $table, $columns): Command
+    public function addPrimaryKey(string $name, string $table, $columns): self
     {
         $sql = $this->db->getQueryBuilder()->addPrimaryKey($name, $table, $columns);
 
@@ -758,7 +758,7 @@ class Command extends Component
      * @param string $table the table that the primary key constraint will be removed from.
      * @return $this the command object itCommand
      */
-    public function dropPrimaryKey(string $name, string $table): Command
+    public function dropPrimaryKey(string $name, string $table): self
     {
         $sql = $this->db->getQueryBuilder()->dropPrimaryKey($name, $table);
 
@@ -777,7 +777,7 @@ class Command extends Component
      * @param string $update the ON UPDATE option. Most DBMS support these options: RESTRICT, CASCADE, NO ACTION, SET DEFAULT, SET NULL
      * @return $this the command object itCommand
      */
-    public function addForeignKey(string $name, string $table, $columns, string $refTable, $refColumns, ?string $delete = null, ?string $update = null): Command
+    public function addForeignKey(string $name, string $table, $columns, string $refTable, $refColumns, ?string $delete = null, ?string $update = null): self
     {
         $sql = $this->db->getQueryBuilder()->addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete, $update);
 
@@ -790,7 +790,7 @@ class Command extends Component
      * @param string $table the table whose foreign is to be dropped. The name will be properly quoted by the method.
      * @return $this the command object itCommand
      */
-    public function dropForeignKey(string $name, string $table): Command
+    public function dropForeignKey(string $name, string $table): self
     {
         $sql = $this->db->getQueryBuilder()->dropForeignKey($name, $table);
 
@@ -819,7 +819,7 @@ class Command extends Component
      * @param string $table the table whose index is to be dropped. The name will be properly quoted by the method.
      * @return $this the command object itCommand
      */
-    public function dropIndex(string $name, string $table): Command
+    public function dropIndex(string $name, string $table): self
     {
         $sql = $this->db->getQueryBuilder()->dropIndex($name, $table);
 
@@ -838,7 +838,7 @@ class Command extends Component
      * @return $this the command object itCommand.
      * @since 2.0.13
      */
-    public function addUnique(string $name, string $table, $columns): Command
+    public function addUnique(string $name, string $table, $columns): self
     {
         $sql = $this->db->getQueryBuilder()->addUnique($name, $table, $columns);
 
@@ -854,7 +854,7 @@ class Command extends Component
      * @return $this the command object itCommand.
      * @since 2.0.13
      */
-    public function dropUnique(string $name, string $table): Command
+    public function dropUnique(string $name, string $table): self
     {
         $sql = $this->db->getQueryBuilder()->dropUnique($name, $table);
 
@@ -871,7 +871,7 @@ class Command extends Component
      * @return $this the command object itCommand.
      * @since 2.0.13
      */
-    public function addCheck(string $name, string $table, string $expression): Command
+    public function addCheck(string $name, string $table, string $expression): self
     {
         $sql = $this->db->getQueryBuilder()->addCheck($name, $table, $expression);
 
@@ -906,7 +906,7 @@ class Command extends Component
      * @return $this the command object itCommand.
      * @since 2.0.13
      */
-    public function addDefaultValue(string $name, string $table, string $column, $value): Command
+    public function addDefaultValue(string $name, string $table, string $column, $value): self
     {
         $sql = $this->db->getQueryBuilder()->addDefaultValue($name, $table, $column, $value);
 
@@ -922,7 +922,7 @@ class Command extends Component
      * @return $this the command object itCommand.
      * @since 2.0.13
      */
-    public function dropDefaultValue(string $name, string $table): Command
+    public function dropDefaultValue(string $name, string $table): self
     {
         $sql = $this->db->getQueryBuilder()->dropDefaultValue($name, $table);
 
@@ -939,7 +939,7 @@ class Command extends Component
      * @return $this the command object itCommand
      * @throws NotSupportedException if this is not supported by the underlying DBMS
      */
-    public function resetSequence(string $table, $value = null): Command
+    public function resetSequence(string $table, $value = null): self
     {
         $sql = $this->db->getQueryBuilder()->resetSequence($table, $value);
 
@@ -971,7 +971,7 @@ class Command extends Component
      * @return $this the command object itCommand
      * @throws NotSupportedException if this is not supported by the underlying DBMS
      */
-    public function checkIntegrity($check = true, $schema = '', $table = ''): Command
+    public function checkIntegrity($check = true, $schema = '', $table = ''): self
     {
         $sql = $this->db->getQueryBuilder()->checkIntegrity($check, $schema, $table);
 
@@ -987,7 +987,7 @@ class Command extends Component
      * @return $this the command object itCommand
      * @since 2.0.8
      */
-    public function addCommentOnColumn($table, string $column, string $comment): Command
+    public function addCommentOnColumn($table, string $column, string $comment): self
     {
         $sql = $this->db->getQueryBuilder()->addCommentOnColumn($table, $column, $comment);
 
@@ -1002,7 +1002,7 @@ class Command extends Component
      * @return $this the command object itCommand
      * @since 2.0.8
      */
-    public function addCommentOnTable(string $table, string $comment): Command
+    public function addCommentOnTable(string $table, string $comment): self
     {
         $sql = $this->db->getQueryBuilder()->addCommentOnTable($table, $comment);
 
@@ -1017,7 +1017,7 @@ class Command extends Component
      * @return $this the command object itCommand
      * @since 2.0.8
      */
-    public function dropCommentFromColumn(string $table, string $column): Command
+    public function dropCommentFromColumn(string $table, string $column): self
     {
         $sql = $this->db->getQueryBuilder()->dropCommentFromColumn($table, $column);
 
@@ -1031,7 +1031,7 @@ class Command extends Component
      * @return $this the command object itCommand
      * @since 2.0.8
      */
-    public function dropCommentFromTable(string $table): Command
+    public function dropCommentFromTable(string $table): self
     {
         $sql = $this->db->getQueryBuilder()->dropCommentFromTable($table);
 
@@ -1048,7 +1048,7 @@ class Command extends Component
      * @throws \ESD\Yii\Db\Exception
      * @since 2.0.14
      */
-    public function createView(string $viewName, $subquery): Command
+    public function createView(string $viewName, $subquery): self
     {
         $sql = $this->db->getQueryBuilder()->createView($viewName, $subquery);
 
@@ -1062,7 +1062,7 @@ class Command extends Component
      * @return $this the command object itCommand.
      * @since 2.0.14
      */
-    public function dropView(string $viewName): Command
+    public function dropView(string $viewName): self
     {
         $sql = $this->db->getQueryBuilder()->dropView($viewName);
 
