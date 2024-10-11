@@ -1227,14 +1227,14 @@ class QueryBuilder extends BaseObject
     }
 
     /**
-     * @param array $columns
+     * @param array|null $columns
      * @param array $params the binding parameters to be populated
      * @param bool $distinct
      * @param string|null $selectOption
      * @return string the SELECT clause built from [[Query::$select]].
      * @throws \ESD\Yii\Db\Exception
      */
-    public function buildSelect(array $columns, array &$params, bool $distinct = false, ?string $selectOption = null): string
+    public function buildSelect(?array $columns, array &$params, bool $distinct = false, ?string $selectOption = null): string
     {
         $select = $distinct ? 'SELECT DISTINCT' : 'SELECT';
         if ($selectOption !== null) {
