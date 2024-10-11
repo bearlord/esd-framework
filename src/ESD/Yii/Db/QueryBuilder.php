@@ -1289,12 +1289,12 @@ class QueryBuilder extends BaseObject
     }
 
     /**
-     * @param array $joins
+     * @param array|bool $joins
      * @param array $params the binding parameters to be populated
      * @return string the JOIN clause built from [[Query::$join]].
      * @throws Exception if the $joins parameter is not in proper format
      */
-    public function buildJoin(array $joins, array &$params): string
+    public function buildJoin(?array $joins, array &$params): string
     {
         if (empty($joins)) {
             return '';
@@ -1364,10 +1364,10 @@ class QueryBuilder extends BaseObject
     }
 
     /**
-     * @param array $columns
+     * @param array|null $columns
      * @return string the GROUP BY clause
      */
-    public function buildGroupBy(array $columns): string
+    public function buildGroupBy(?array $columns): string
     {
         if (empty($columns)) {
             return '';
@@ -1403,7 +1403,7 @@ class QueryBuilder extends BaseObject
      * @param int $offset the offset number. See [[Query::offset]] for more details.
      * @return string the SQL completed with ORDER BY/LIMIT/OFFSET (if any)
      */
-    public function buildOrderByAndLimit(string $sql, array $orderBy, int $limit, int $offset): string
+    public function buildOrderByAndLimit(string $sql, array $orderBy, $limit, $offset): string
     {
         $orderBy = $this->buildOrderBy($orderBy);
         if ($orderBy !== '') {
@@ -1732,7 +1732,7 @@ class QueryBuilder extends BaseObject
      *
      * @since 2.0.14
      */
-    public function bindParam(?string $value, array &$params): string
+    public function bindParam($value, array &$params): string
     {
         $phName = self::PARAM_PREFIX . count($params);
         $params[$phName] = $value;
