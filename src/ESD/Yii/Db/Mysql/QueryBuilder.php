@@ -346,7 +346,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return null|string the column definition
      * @throws Exception in case when table does not contain column
      */
-    private function getColumnDefinition($table, $column)
+    private function getColumnDefinition(string $table, string $column)
     {
         $quotedTable = $this->db->quoteTableName($table);
         $row = $this->db->createCommand('SHOW CREATE TABLE ' . $quotedTable)->queryOne();
@@ -376,7 +376,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      * @return bool
      * @see https://dev.mysql.com/doc/refman/5.6/en/fractional-seconds.html
      */
-    private function supportsFractionalSeconds()
+    private function supportsFractionalSeconds(): bool
     {
         $version = $this->db->getSlavePdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
         return version_compare($version, '5.6.4', '>=');
@@ -389,7 +389,7 @@ class QueryBuilder extends \ESD\Yii\Db\QueryBuilder
      *
      * @return array
      */
-    private function defaultTimeTypeMap()
+    private function defaultTimeTypeMap(): array
     {
         $map = [
             Schema::TYPE_DATETIME => 'datetime',
