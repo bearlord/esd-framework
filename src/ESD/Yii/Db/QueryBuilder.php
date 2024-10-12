@@ -1477,12 +1477,12 @@ class QueryBuilder extends BaseObject
     }
 
     /**
-     * @param array $unions
+     * @param array|null $unions
      * @param array $params the binding parameters to be populated
      * @return string the UNION clause built from [[Query::$union]].
      * @throws \ESD\Yii\Db\Exception
      */
-    public function buildUnion(array $unions, array &$params): string
+    public function buildUnion(?array $unions, array &$params): string
     {
         if (empty($unions)) {
             return '';
