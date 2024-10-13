@@ -123,14 +123,14 @@ class ServerConfig extends BaseConfig
      * 5 => SWOOLE_LOG_ERROR
      * SWOOLE_LOG_DEBUG and SWOOLE_LOG_TRACE are only available when compiled into --enable-debug-log and --enable-trace-log versions
      * The default is SWOOLE_LOG_DEBUG, that is, all levels are printed
-     * @var string
+     * @var int
      */
     protected $logLevel;
 
     /**
      * Heartbeat detection mechanism Every second, Swoole polls all TCP connections
      * and closes connections that exceed the heartbeat time.
-     * @var int
+     * @var int|bool
      */
     protected $heartbeatCheckInterval;
 
@@ -223,7 +223,7 @@ class ServerConfig extends BaseConfig
     /**
      * After $enableStaticHandler is true, the underlying layer will first determine whether the file exists in
      * the document_root path after receiving the Http request. If it exists, it will directly send the file content to
-     * the client and will not trigger the onRequest callbac
+     * the client and will not trigger the onRequest callback
      * @var bool
      */
     protected $enableStaticHandler = false;
@@ -287,7 +287,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getReactorNum()
+    public function getReactorNum(): int
     {
         return $this->reactorNum;
     }
@@ -295,7 +295,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $reactorNum
      */
-    public function setReactorNum(int $reactorNum)
+    public function setReactorNum(int $reactorNum): void
     {
         $this->reactorNum = $reactorNum;
     }
@@ -311,7 +311,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $workerNum
      */
-    public function setWorkerNum(int $workerNum)
+    public function setWorkerNum(int $workerNum): void
     {
         $this->workerNum = $workerNum;
     }
@@ -327,7 +327,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $dispatchMode
      */
-    public function setDispatchMode(int $dispatchMode)
+    public function setDispatchMode(int $dispatchMode): void
     {
         $this->dispatchMode = $dispatchMode;
     }
@@ -359,7 +359,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $maxConn
      */
-    public function setMaxConn(int $maxConn)
+    public function setMaxConn(int $maxConn): void
     {
         $this->maxConn = $maxConn;
     }
@@ -375,7 +375,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param bool $daemonize
      */
-    public function setDaemonize(bool $daemonize)
+    public function setDaemonize(bool $daemonize): void
     {
         $this->daemonize = $daemonize;
     }
@@ -391,7 +391,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param bool $reloadAsync
      */
-    public function setReloadAsync(bool $reloadAsync)
+    public function setReloadAsync(bool $reloadAsync): void
     {
         $this->reloadAsync = $reloadAsync;
     }
@@ -407,7 +407,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $maxWaitTime
      */
-    public function setMaxWaitTime(int $maxWaitTime)
+    public function setMaxWaitTime(int $maxWaitTime): void
     {
         $this->maxWaitTime = $maxWaitTime;
     }
@@ -423,13 +423,13 @@ class ServerConfig extends BaseConfig
     /**
      * @param bool $openCpuAffinity
      */
-    public function setOpenCpuAffinity(bool $openCpuAffinity)
+    public function setOpenCpuAffinity(bool $openCpuAffinity): void
     {
         $this->openCpuAffinity = $openCpuAffinity;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getCpuAffinityIgnore(): ?array
     {
@@ -439,7 +439,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param array $cpuAffinityIgnore
      */
-    public function setCpuAffinityIgnore(array $cpuAffinityIgnore)
+    public function setCpuAffinityIgnore(array $cpuAffinityIgnore): void
     {
         $this->cpuAffinityIgnore = $cpuAffinityIgnore;
     }
@@ -455,39 +455,39 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $logFile
      */
-    public function setLogFile(string $logFile)
+    public function setLogFile(string $logFile): void
     {
         $this->logFile = $logFile;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getLogLevel()
+    public function getLogLevel(): int
     {
         return $this->logLevel ?? 0;
     }
 
     /**
-     * @param string $logLevel
+     * @param int $logLevel
      */
-    public function setLogLevel(string $logLevel)
+    public function setLogLevel(int $logLevel): void
     {
         $this->logLevel = $logLevel;
     }
 
     /**
-     * @return int
+     * @return int|bool
      */
-    public function getHeartbeatCheckInterval(): int
+    public function getHeartbeatCheckInterval()
     {
         return $this->heartbeatCheckInterval;
     }
 
     /**
-     * @param int $heartbeatCheckInterval
+     * @param $heartbeatCheckInterval
      */
-    public function setHeartbeatCheckInterval(int $heartbeatCheckInterval)
+    public function setHeartbeatCheckInterval($heartbeatCheckInterval): void
     {
         $this->heartbeatCheckInterval = $heartbeatCheckInterval;
     }
@@ -503,7 +503,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $heartbeatIdleTime
      */
-    public function setHeartbeatIdleTime(int $heartbeatIdleTime)
+    public function setHeartbeatIdleTime(int $heartbeatIdleTime): void
     {
         $this->heartbeatIdleTime = $heartbeatIdleTime;
     }
@@ -520,7 +520,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $user
      */
-    public function setUser(string $user)
+    public function setUser(string $user): void
     {
         $this->user = $user;
     }
@@ -536,7 +536,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $group
      */
-    public function setGroup(string $group)
+    public function setGroup(string $group): void
     {
         $this->group = $group;
     }
@@ -552,7 +552,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $chroot
      */
-    public function setChroot(string $chroot)
+    public function setChroot(string $chroot): void
     {
         $this->chroot = $chroot;
     }
@@ -568,7 +568,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $pidFile
      */
-    public function setPidFile(string $pidFile)
+    public function setPidFile(string $pidFile): void
     {
         $this->pidFile = $pidFile;
     }
@@ -576,7 +576,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getBufferOutputSize()
+    public function getBufferOutputSize(): int
     {
         return $this->bufferOutputSize ?? 8 * 1024 * 1024;
     }
@@ -584,7 +584,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $bufferOutputSize
      */
-    public function setBufferOutputSize(int $bufferOutputSize)
+    public function setBufferOutputSize(int $bufferOutputSize): void
     {
         $this->bufferOutputSize = $bufferOutputSize;
     }
@@ -600,7 +600,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $socketBufferSize
      */
-    public function setSocketBufferSize(int $socketBufferSize)
+    public function setSocketBufferSize(int $socketBufferSize): void
     {
         $this->socketBufferSize = $socketBufferSize;
     }
@@ -616,7 +616,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param int $maxCoroutine
      */
-    public function setMaxCoroutine(int $maxCoroutine)
+    public function setMaxCoroutine(int $maxCoroutine): void
     {
         $this->maxCoroutine = $maxCoroutine;
     }
@@ -632,7 +632,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $uploadTmpDir
      */
-    public function setUploadTmpDir(string $uploadTmpDir)
+    public function setUploadTmpDir(string $uploadTmpDir): void
     {
         $this->uploadTmpDir = $uploadTmpDir;
     }
@@ -648,7 +648,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param bool $httpParsePost
      */
-    public function setHttpParsePost(bool $httpParsePost)
+    public function setHttpParsePost(bool $httpParsePost): void
     {
         $this->httpParsePost = $httpParsePost;
     }
@@ -664,7 +664,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $documentRoot
      */
-    public function setDocumentRoot(string $documentRoot)
+    public function setDocumentRoot(string $documentRoot): void
     {
         $this->documentRoot = $documentRoot;
     }
@@ -680,7 +680,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param bool $enableStaticHandler
      */
-    public function setEnableStaticHandler(bool $enableStaticHandler)
+    public function setEnableStaticHandler(bool $enableStaticHandler): void
     {
         $this->enableStaticHandler = $enableStaticHandler;
     }
@@ -696,7 +696,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param bool $httpCompression
      */
-    public function setHttpCompression(bool $httpCompression)
+    public function setHttpCompression(bool $httpCompression): void
     {
         $this->httpCompression = $httpCompression;
     }
@@ -712,7 +712,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param string $websocketSubprotocol
      */
-    public function setWebsocketSubprotocol(string $websocketSubprotocol)
+    public function setWebsocketSubprotocol(string $websocketSubprotocol): void
     {
         $this->websocketSubprotocol = $websocketSubprotocol;
     }
@@ -728,7 +728,7 @@ class ServerConfig extends BaseConfig
     /**
      * @param bool $openWebsocketCloseFrame
      */
-    public function setOpenWebsocketCloseFrame(bool $openWebsocketCloseFrame)
+    public function setOpenWebsocketCloseFrame(bool $openWebsocketCloseFrame): void
     {
         $this->openWebsocketCloseFrame = $openWebsocketCloseFrame;
     }
@@ -844,7 +844,7 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getBanner(): ?string
     {
@@ -876,17 +876,17 @@ class ServerConfig extends BaseConfig
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
