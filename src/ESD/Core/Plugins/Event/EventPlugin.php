@@ -58,7 +58,6 @@ class EventPlugin extends AbstractPlugin
         DIGet(Channel::class);
         class_exists(Message::class);
         class_exists(EventMessage::class);
-        return;
     }
 
     /**

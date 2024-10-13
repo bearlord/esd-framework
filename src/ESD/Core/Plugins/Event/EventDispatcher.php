@@ -46,11 +46,11 @@ class EventDispatcher
      *
      * @param string $type
      * @param EventCall|null $eventCall
-     * @param bool $once
+     * @param bool|null $once
      * @return EventCall
      * @throws \Exception
      */
-    public function listen($type, ?EventCall $eventCall = null, $once = false): EventCall
+    public function listen(string $type, ?EventCall $eventCall = null, ?bool $once = false): EventCall
     {
         if (!array_key_exists($type, $this->eventCalls)) {
             $this->eventCalls[$type] = [];
@@ -58,7 +58,8 @@ class EventDispatcher
         if ($eventCall == null) {
             $eventCall = DIGet(EventCall::class, [$this, $type, $once]);
         }
-        array_push($this->eventCalls[$type], $eventCall);
+        $this->eventCalls[$type][] = $eventCall;
+
         return $eventCall;
     }
 
@@ -68,14 +69,13 @@ class EventDispatcher
      * @param string $type
      * @param EventCall $eventCall
      */
-    public function remove($type, EventCall $eventCall)
+    public function remove(string $type, EventCall $eventCall)
     {
-        if ($eventCall != null) {
-            $eventCall->destroy();
-        }
+        $eventCall->destroy();
+
         if (array_key_exists($type, $this->eventCalls)) {
             $index = array_search($eventCall, $this->eventCalls[$type]);
-            if ($index !== null) {
+            if ($index !== false) {
                 unset ($this->eventCalls[$type][$index]);
             }
             $numListeners = count($this->eventCalls[$type]);
@@ -89,9 +89,9 @@ class EventDispatcher
      * Removes all event listeners with a certain type, or all of them if type is null.
      * Be careful when removing all event listeners: you never know who else was listening.
      *
-     * @param string $type
+     * @param string|null $type
      */
-    public function removeAll($type = null)
+    public function removeAll(?string $type = null)
     {
         if ($type) {
             unset ($this->eventCalls[$type]);
@@ -128,7 +128,7 @@ class EventDispatcher
 
         foreach ($this->orderList as $order) {
             if ($order instanceof AbstractEventDispatcher) {
-                if ($start == false && $event->getProgress() == $order->getName()) {
+                if (!$start && $event->getProgress() == $order->getName()) {
                     $start = true;
                     continue;
                 }
@@ -165,7 +165,7 @@ class EventDispatcher
      * @param Event $event
      * @param array $toProcessIds
      */
-    public function dispatchProcessIdEvent(Event $event, $toProcessIds)
+    public function dispatchProcessIdEvent(Event $event, array $toProcessIds)
     {
         $event->setDstInfo(ProcessEventDispatcher::type, $toProcessIds);
         $this->dispatchEvent($event);

@@ -117,7 +117,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
     /**
      * @return array
      */
-    public function getServers()
+    public function getServers(): array
     {
         return $this->server;
     }
@@ -135,7 +135,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      *
      * @return string
      */
-    public function getRequestTarget()
+    public function getRequestTarget(): string
     {
         if ($this->requestTarget !== null) {
             return $this->requestTarget;
@@ -167,7 +167,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @param mixed $requestTarget
      * @return static
      */
-    public function withRequestTarget($requestTarget)
+    public function withRequestTarget($requestTarget): AbstractRequest
     {
         if (preg_match('#\s#', $requestTarget)) {
             throw new \InvalidArgumentException('Invalid request target provided; cannot contain whitespace');
@@ -183,7 +183,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      *
      * @return string Returns the request method.
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -201,7 +201,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod(string $method): self
+    public function withMethod(string $method): AbstractRequest
     {
         $method = strtoupper($method);
         $methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD'];
@@ -220,7 +220,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      *
      * @return array
      */
-    public function getServerParams()
+    public function getServerParams(): array
     {
         return $this->server;
     }
@@ -231,7 +231,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @param array $serverParams
      * @return static
      */
-    public function withServerParams(array $serverParams)
+    public function withServerParams(array $serverParams): AbstractRequest
     {
         $this->server = $serverParams;
         return $this;
@@ -264,7 +264,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @param array $cookies Array of key/value pairs representing cookies.
      * @return static
      */
-    public function withCookieParams(array $cookies)
+    public function withCookieParams(array $cookies): AbstractRequest
     {
         $this->cookieParams = $cookies;
         return $this;
@@ -293,7 +293,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      *
      * @return static
      */
-    public function addQueryParam(string $name, $value)
+    public function addQueryParam(string $name, $value): AbstractRequest
     {
         $this->queryParams[$name] = $value;
 
@@ -318,7 +318,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @param array $query Array of query string arguments, typically from $_GET.
      * @return static
      */
-    public function withQueryParams(array $query)
+    public function withQueryParams(array $query): AbstractRequest
     {
         $this->queryParams = $query;
         return $this;
@@ -334,7 +334,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @return array An array tree of UploadedFileInterface instances; an empty
      *     array MUST be returned if no data is present.
      */
-    public function getUploadedFiles()
+    public function getUploadedFiles(): array
     {
         return $this->files;
     }
@@ -349,7 +349,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @return static
      * @throws \InvalidArgumentException if an invalid structure is provided.
      */
-    public function withUploadedFiles(array $uploadedFiles)
+    public function withUploadedFiles(array $uploadedFiles): AbstractRequest
     {
         $this->files = $uploadedFiles;
         return $this;
@@ -380,7 +380,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      *
      * @return static
      */
-    public function addParserBody(string $name, $value)
+    public function addParserBody(string $name, $value): AbstractRequest
     {
         if (is_array($this->parsedBody)) {
             $this->parsedBody[$name] = $value;
@@ -410,7 +410,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @return static
      * @throws \InvalidArgumentException if an unsupported argument type is provided.
      */
-    public function withParsedBody($data)
+    public function withParsedBody($data): AbstractRequest
     {
         $this->parsedBody = $data;
         return $this;
@@ -426,7 +426,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      *
      * @return array Attributes derived from the request.
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
@@ -462,7 +462,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @return static
      *@see getAttributes()
      */
-    public function withAttribute(string $name, $value): self
+    public function withAttribute(string $name, $value): AbstractRequest
     {
         $this->attributes[$name] = $value;
         return $this;
@@ -480,7 +480,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
           * @return static
      *@see getAttributes()
      */
-    public function withoutAttribute(string $name): self
+    public function withoutAttribute(string $name): AbstractRequest
     {
         if (false === array_key_exists($name, $this->attributes)) {
             return $this;
@@ -530,7 +530,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @param bool|null $preserveHost Preserve the original state of the Host header.
      * @return static
      */
-    public function withUri(UriInterface $uri, ?bool $preserveHost = false): self
+    public function withUri(UriInterface $uri, ?bool $preserveHost = false): AbstractRequest
     {
         if ($uri === $this->uri) {
             return $this;

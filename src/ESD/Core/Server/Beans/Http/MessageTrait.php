@@ -51,7 +51,7 @@ trait MessageTrait
      * @param string $version HTTP protocol version
      * @return static
      */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion(string $version)
     {
         if ($this->protocol === $version) {
             return $this;
@@ -94,7 +94,7 @@ trait MessageTrait
      *                     name using a case-insensitive string comparison. Returns false if
      *                     no matching header name is found in the message.
      */
-    public function hasHeader($name): bool
+    public function hasHeader(string $name): bool
     {
         return isset($this->headerNames[strtolower($name)]);
     }
@@ -111,7 +111,7 @@ trait MessageTrait
      *                     header. If the header does not appear in the message, this method MUST
      *                     return an empty array.
      */
-    public function getHeader($name): array
+    public function getHeader(string $name): array
     {
         $name = strtolower($name);
 
@@ -140,7 +140,7 @@ trait MessageTrait
      *                     concatenated together using a comma. If the header does not appear in
      *                     the message, this method MUST return an empty string.
      */
-    public function getHeaderLine($name): string
+    public function getHeaderLine(string $name): string
     {
         return implode(', ', $this->getHeader($name));
     }
@@ -158,7 +158,7 @@ trait MessageTrait
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader($name, $value)
+    public function withHeader(string $name, $value)
     {
         if (!is_array($value)) {
             $value = [$value];
@@ -203,7 +203,7 @@ trait MessageTrait
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader(string $name, $value)
     {
         if (!is_array($value)) {
             $value = [$value];
@@ -233,7 +233,7 @@ trait MessageTrait
      * @param string $name Case-insensitive header field name to remove.
      * @return static
      */
-    public function withoutHeader($name)
+    public function withoutHeader(string $name)
     {
         $normalized = strtolower($name);
 

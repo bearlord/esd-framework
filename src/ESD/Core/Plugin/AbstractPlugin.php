@@ -83,6 +83,5 @@ abstract class AbstractPlugin extends Order implements PluginInterface
      */
     public function init(Context $context)
     {
-        return;
     }
 }

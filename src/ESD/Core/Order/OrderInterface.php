@@ -25,9 +25,9 @@ interface OrderInterface
     public function getOrderIndex(Order $root, int $layer): int;
 
     /**
-     * @param mixed $afterPlug
+     * @param mixed $afterOrder
      */
-    public function addAfterOrder(Order $afterPlug);
+    public function addAfterOrder(Order $afterOrder);
 
     /**
      * @param $className

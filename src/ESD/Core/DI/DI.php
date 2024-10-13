@@ -80,10 +80,10 @@ class DI
      * Get
      *
      * @param $name
-     * @param array $params
+     * @param array|null $params
      * @return mixed
      */
-    public function get($name, $params = [])
+    public function get($name, ?array $params = [])
     {
         $result = $this->getContainer()->get($name);
         if ($result instanceof Factory) {

@@ -130,7 +130,7 @@ function getContext(): ?\ESD\Core\Context\Context
  *
  * @param string $key
  * @param $value
- * @return mixed
+ * @return void
  */
 function setContextValue(string $key, $value)
 {
@@ -163,7 +163,7 @@ function deleteContextValue(string $key): bool
  * @param string $key
  * @param $value
  * @param string $class
- * @return mixed
+ * @return void
  */
 function setContextValueWithClass(string $key, $value, string $class)
 {
@@ -259,7 +259,6 @@ function DISet(string $name, $value)
  */
 function call($callback, array $args = [])
 {
-    $result = null;
     if ($callback instanceof \Closure) {
         $result = $callback(...$args);
     } elseif (is_object($callback) || (is_string($callback) && function_exists($callback))) {

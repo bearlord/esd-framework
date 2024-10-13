@@ -58,7 +58,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      *
      * @return array Attributes derived from the request.
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
@@ -132,7 +132,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      */
     public function withStatus(int $code, ?string $reasonPhrase = ''): self
     {
-        $this->statusCode = (int)$code;
+        $this->statusCode = $code;
         return $this;
     }
 
@@ -165,7 +165,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * @param string $charset
      * @return static
      */
-    public function setCharset(string $charset)
+    public function setCharset(string $charset): AbstractResponse
     {
         $this->charset = $charset;
         return $this;
@@ -177,7 +177,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * @param Cookie $cookie
      * @return static
      */
-    public function withCookie(Cookie $cookie)
+    public function withCookie(Cookie $cookie): AbstractResponse
     {
         $this->cookies[$cookie->getDomain()][$cookie->getPath()][$cookie->getName()] = $cookie;
         return $this;
@@ -258,7 +258,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * Is end
      * @return bool
      */
-    abstract public function isEnd();
+    abstract public function isEnd(): bool;
 
     /**
      * Send http redirect. Calling this method will automatically send and end the response.

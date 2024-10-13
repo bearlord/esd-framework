@@ -99,10 +99,10 @@ class GoIntrospectionProcessor implements ProcessorInterface
         $record['extra'] = array_merge(
             $record['extra'],
             array(
-                'file' => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
-                'line' => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
-                'class' => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
-                'function' => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
+                'file' => $trace[$i - 1]['file'] ?? null,
+                'line' => $trace[$i - 1]['line'] ?? null,
+                'class' => $trace[$i]['class'] ?? null,
+                'function' => $trace[$i]['function'] ?? null,
             )
         );
 

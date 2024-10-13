@@ -123,14 +123,14 @@ class HttpStream implements StreamInterface
      *
      * @link http://www.php.net/manual/en/function.fseek.php
      * @param int $offset Stream offset
-     * @param int $whence Specifies how the cursor position will be calculated
+     * @param int|null $whence Specifies how the cursor position will be calculated
      *     based on the seek offset. Valid values are identical to the built-in
      *     PHP $whence values for `fseek()`.  SEEK_SET: Set position equal to
      *     offset bytes SEEK_CUR: Set position to current location plus offset
      *     SEEK_END: Set position to end-of-stream plus offset.
      * @throws \RuntimeException on failure.
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek(int $offset, ?int $whence = SEEK_SET)
     {
         throw new \BadMethodCallException('Not implemented');
     }
@@ -165,7 +165,7 @@ class HttpStream implements StreamInterface
      * @param string $string The string that is to be written.
      * @throws \RuntimeException on failure.
      */
-    public function write($string)
+    public function write(string $string)
     {
         $this->contents .= $string;
     }
@@ -190,7 +190,7 @@ class HttpStream implements StreamInterface
      *     if no bytes are available.
      * @throws \RuntimeException if an error occurs.
      */
-    public function read($length)
+    public function read(int $length): string
     {
         throw new \BadMethodCallException('Not implemented');
     }
@@ -213,12 +213,12 @@ class HttpStream implements StreamInterface
      * stream_get_meta_data() function.
      *
      * @link http://php.net/manual/en/function.stream-get-meta-data.php
-     * @param string $key Specific metadata to retrieve.
+     * @param string|null $key Specific metadata to retrieve.
      * @return array|mixed|null Returns an associative array if no key is
      *     provided. Returns a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
      */
-    public function getMetadata($key = null)
+    public function getMetadata(string $key = null)
     {
         throw new \BadMethodCallException('Not implemented');
     }

@@ -31,12 +31,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function debug($message, array $context = array())
+    public function debug($message, ?array $context = [])
     {
         $this->addRecord(Logger::DEBUG, $message, $context);
     }
@@ -45,12 +45,12 @@ trait GetLogger
      * Adds a log record.
      *
      * @param int $level The logging level
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function addRecord($level, $message, array $context = array())
+    public function addRecord(int $level, $message, ?array $context = [])
     {
         Server::$instance->getLog()->log($level, $message, $context);
     }
@@ -60,12 +60,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function info($message, array $context = array())
+    public function info($message, ?array $context = [])
     {
         $this->addRecord(Logger::INFO, $message, $context);
     }
@@ -75,12 +75,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function notice($message, array $context = array())
+    public function notice($message, ?array $context = [])
     {
         $this->addRecord(Logger::NOTICE, $message, $context);
     }
@@ -90,12 +90,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function warn($message, array $context = array())
+    public function warn($message, ?array $context = [])
     {
         $this->addRecord(Logger::WARNING, $message, $context);
     }
@@ -105,12 +105,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function warning($message, array $context = array())
+    public function warning($message, ?array $context = [])
     {
         $this->addRecord(Logger::WARNING, $message, $context);
     }
@@ -120,12 +120,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function err($message, array $context = array())
+    public function err($message, ?array $context = [])
     {
         $this->addRecord(Logger::ERROR, $message, $context);
     }
@@ -135,12 +135,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function error($message, array $context = array())
+    public function error($message, ?array $context = [])
     {
         $this->addRecord(Logger::ERROR, $message, $context);
     }
@@ -150,12 +150,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function crit($message, array $context = array())
+    public function crit($message, ?array $context = [])
     {
         $this->addRecord(Logger::CRITICAL, $message, $context);
     }
@@ -165,12 +165,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function critical($message, array $context = array())
+    public function critical($message, ?array $context = [])
     {
         $this->addRecord(Logger::CRITICAL, $message, $context);
     }
@@ -180,12 +180,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function alert($message, array $context = array())
+    public function alert($message, ?array $context = [])
     {
         $this->addRecord(Logger::ALERT, $message, $context);
     }
@@ -195,12 +195,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function emerg($message, array $context = array())
+    public function emerg($message, ?array $context = [])
     {
         $this->addRecord(Logger::EMERGENCY, $message, $context);
     }
@@ -210,12 +210,12 @@ trait GetLogger
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param mixed $message The log message
+     * @param array|null $context The log context
      * @return void Whether the record has been processed
      * @throws \Exception
      */
-    public function emergency($message, array $context = array())
+    public function emergency($message, ?array $context = [])
     {
         $this->addRecord(Logger::EMERGENCY, $message, $context);
     }

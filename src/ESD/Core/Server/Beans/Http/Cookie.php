@@ -25,11 +25,11 @@ class Cookie
      * Creates cookie from raw header string.
      *
      * @param string $cookie
-     * @param bool $decode
+     * @param bool|null $decode
      *
      * @return static
      */
-    public static function fromString($cookie, $decode = false)
+    public static function fromString(string $cookie, ?bool $decode = false): self
     {
         $data = array(
             'expires' => 0,
@@ -75,25 +75,24 @@ class Cookie
      * @param string $name The name of the cookie
      * @param string|null $value The value of the cookie
      * @param int|string|\DateTimeInterface $expire The time the cookie expires
-     * @param string $path The path on the server in which the cookie will be available on
+     * @param string|null $path The path on the server in which the cookie will be available on
      * @param string|null $domain The domain that the cookie is available to
      * @param bool $secure Whether the cookie should only be transmitted over a secure HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
      * @param bool $raw Whether the cookie value should be sent with no url encoding
      * @param string|null $sameSite Whether the cookie will be available for cross-site requests
      *
-     * @throws \InvalidArgumentException
      */
     public function __construct(
-        $name,
-        $value = null,
+        string  $name,
+        ?string $value = null,
         $expire = 0,
-        $path = '/',
-        $domain = null,
-        $secure = false,
-        $httpOnly = true,
-        $raw = false,
-        $sameSite = null
+        ?string  $path = '/',
+        ?string  $domain = null,
+        ?bool    $secure = false,
+        ?bool    $httpOnly = true,
+        ?bool    $raw = false,
+        ?string $sameSite = null
     ) {
         // from PHP source code
         if (preg_match("/[=,; \t\r\n\013\014]/", $name)) {

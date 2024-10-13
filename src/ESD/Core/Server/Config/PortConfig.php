@@ -457,7 +457,7 @@ class PortConfig extends BaseConfig
     /**
      * @param string $sslKeyFile
      */
-    public function setSslKeyFile($sslKeyFile)
+    public function setSslKeyFile(string $sslKeyFile)
     {
         $this->sslKeyFile = $sslKeyFile;
     }

@@ -33,10 +33,10 @@ interface EventCall
     public function call(callable $callback);
 
     /**
-     * @param int $timeout
+     * @param int|null $timeout
      * @return mixed
      */
-    public function wait($timeout = 5);
+    public function wait(?int $timeout = 5);
     /**
      * @return mixed
      */

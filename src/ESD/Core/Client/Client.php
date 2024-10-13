@@ -139,7 +139,7 @@ class Client
      * Obtain the local host: port of client socket.
      * return an array successfully，as：array('host' => '127.0.0.1', 'port' => 53652)
      *
-     * @return array
+     * @return array|false
      */
     public function getSockName()
     {

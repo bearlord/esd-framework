@@ -69,7 +69,7 @@ class ProcessManager
      * @param int $processId
      * @return Process
      */
-    public function getProcessFromId(int $processId)
+    public function getProcessFromId(int $processId): ?Process
     {
         if ($processId == MasterProcess::ID) {
             return $this->masterProcess;
@@ -86,7 +86,7 @@ class ProcessManager
      * @param string $processName
      * @return Process
      */
-    public function getProcessFromName(string $processName)
+    public function getProcessFromName(string $processName): ?Process
     {
         foreach ($this->processes as $process) {
             if ($process->getProcessName() == $processName) {
@@ -135,10 +135,9 @@ class ProcessManager
      * @param string $processClass
      * @param string $groupName
      * @return ProcessConfig
-     * @throws \ReflectionException
      * @throws \ESD\Core\Plugins\Config\ConfigException
      */
-    public function addCustomProcessesConfig(string $name, $processClass, string $groupName)
+    public function addCustomProcessesConfig(string $name, string $processClass, string $groupName): ProcessConfig
     {
         $processConfig = new ProcessConfig($processClass, $name, $groupName);
         $this->customProcessConfigs[$name] = $processConfig;
@@ -202,9 +201,9 @@ class ProcessManager
      * Get process group
      *
      * @param string $groupName
-     * @return ProcessGroup
+     * @return ProcessGroup|null
      */
-    public function getProcessGroup(string $groupName): ProcessGroup
+    public function getProcessGroup(string $groupName): ?ProcessGroup
     {
         if (isset($this->groups[$groupName])) {
             return $this->groups[$groupName];
@@ -215,6 +214,10 @@ class ProcessManager
                 $group[] = $process;
             }
         }
+        if (empty($group)) {
+            return null;
+        }
+
         $processGroup = new ProcessGroup($this, $groupName, $group);
         $this->groups[$groupName] = $processGroup;
 

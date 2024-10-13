@@ -367,7 +367,7 @@ abstract class Process
     /**
      * Send message to the process
      *
-     * @param Message $message
+     * @param Message|mixed $message
      * @param Process $toProcess
      */
     public function sendMessage(Message $message, Process $toProcess)

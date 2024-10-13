@@ -55,7 +55,7 @@ class AtomicLong
      *
      * @return int
      */
-    public function get()
+    public function get(): int
     {
         return $this->swooleAtomicLong->get();
     }

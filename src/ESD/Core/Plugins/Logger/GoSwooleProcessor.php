@@ -23,12 +23,12 @@ class GoSwooleProcessor implements ProcessorInterface
 
     /**
      * GoSwooleProcessor constructor.
-     * @param bool $color
-     * @param $level
-     * @param array $skipClassesPartials
-     * @param int $skipStackFramesCount
+     * @param bool|null $color
+     * @param int|null $level
+     * @param array|null $skipClassesPartials
+     * @param int|null $skipStackFramesCount
      */
-    public function __construct($color = true, $level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0)
+    public function __construct(?bool $color = true, ?int $level = Logger::DEBUG, ?array $skipClassesPartials = [], ?int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
@@ -40,7 +40,7 @@ class GoSwooleProcessor implements ProcessorInterface
      * @param  array $record
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
@@ -83,7 +83,7 @@ class GoSwooleProcessor implements ProcessorInterface
      * @param $levelName
      * @return string
      */
-    private function handleLevelName($level, $levelName)
+    private function handleLevelName($level, $levelName): string
     {
         $levelName = sprintf('%-7s', $levelName);
         if ($this->color) {
@@ -108,7 +108,7 @@ class GoSwooleProcessor implements ProcessorInterface
      * @param $cid
      * @return string
      */
-    private function handleProcess($processGroup, $processName, $cid)
+    private function handleProcess($processGroup, $processName, $cid): string
     {
         $processName = sprintf('%10s', $processName);
         $result = sprintf("[%15s|%15s|%8s]", $processGroup, $processName, $cid);
@@ -128,7 +128,7 @@ class GoSwooleProcessor implements ProcessorInterface
      * @param $func
      * @return string
      */
-    private function handleClassName($class, $func)
+    private function handleClassName($class, $func): string
     {
         $maxLength = 25;
         if (!empty($class) && strlen($class) > $maxLength) {
