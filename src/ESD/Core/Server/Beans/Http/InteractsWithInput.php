@@ -74,7 +74,7 @@ trait InteractsWithInput
     }
 
     /**
-     * Retrieve a input item from the request
+     * Retrieve an input item from the request
      *
      * @param null|string $key
      * @param null|mixed $default
@@ -121,7 +121,7 @@ trait InteractsWithInput
     }
 
     /**
-     * Retrieve a upload item from the request
+     * Retrieve an upload item from the request
      *
      * @param string|null $key
      * @param null $default

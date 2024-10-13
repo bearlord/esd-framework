@@ -220,7 +220,7 @@ class Uri implements UriInterface
      * The value returned MUST be percent-encoded, but MUST NOT double-encode
      * any characters. To determine what characters to encode, please refer to
      * RFC 3986, Sections 2 and 3.4.
-     * As an example, if a value in a key/value pair of the query string should
+     * As an example, if a value in a key/value a pair of the query string should
      * include an ampersand ("&") not intended as a delimiter between values,
      * that value MUST be passed in encoded form (e.g., "%26") to the instance.
      *
@@ -284,7 +284,7 @@ class Uri implements UriInterface
      * user; an empty string for the user is equivalent to removing user
      * information.
      *
-     * @param string $user The user name to use for authority.
+     * @param string $user The username to use for authority.
      * @param null|string $password The password associated with $user.
      * @return static A new instance with the specified user information.
      */

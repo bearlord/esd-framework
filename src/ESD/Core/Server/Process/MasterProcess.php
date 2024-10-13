@@ -45,7 +45,6 @@ class MasterProcess extends Process
      */
     public function onProcessStop()
     {
-        return;
     }
 
 
@@ -58,15 +57,12 @@ class MasterProcess extends Process
      */
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
-        return;
     }
 
     /**
      * @inheritDoc
-     * @return void
      */
     public function init()
     {
-        return;
     }
 }

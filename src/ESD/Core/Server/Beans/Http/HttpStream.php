@@ -110,7 +110,7 @@ class HttpStream implements StreamInterface
     }
 
     /**
-     * Returns whether or not the stream is seekable.
+     * Returns whether the stream is seekable.
      *
      */
     public function isSeekable()
@@ -150,7 +150,7 @@ class HttpStream implements StreamInterface
     }
 
     /**
-     * Returns whether or not the stream is writable.
+     * Returns whether the stream is writable.
      *
      * @return bool
      */
@@ -171,7 +171,7 @@ class HttpStream implements StreamInterface
     }
 
     /**
-     * Returns whether or not the stream is readable.
+     * Returns whether the stream is readable.
      *
      * @return bool
      */

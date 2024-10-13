@@ -84,10 +84,10 @@ class PortManager
     /**
      * Get port config
      * @param $port
-     * @return PortConfig
+     * @return PortConfig|null
      * @throws \Exception
      */
-    public function getPortConfig($port): PortConfig
+    public function getPortConfig($port): ?PortConfig
     {
         $configs = Server::$instance->getConfigContext()->get(PortConfig::KEY);
         foreach ($configs as $key => $value) {
@@ -98,6 +98,8 @@ class PortManager
                 return $portConfig;
             }
         }
+
+        return null;
     }
 
     /**

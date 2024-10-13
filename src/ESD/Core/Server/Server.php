@@ -684,7 +684,7 @@ abstract class Server
     }
 
     /**
-     * Protect connection state, don't be disconnect by heartbeat process
+     * Protect connection state, don't be disconnected by heartbeat process
      * @param int $fd
      * @param bool $value
      */
@@ -775,12 +775,11 @@ abstract class Server
      * Pack websocket data
      *
      * @param WebSocketFrame $webSocketFrame
-     * @param bool $mask
      * @return string
      */
-    public function wsPack(WebSocketFrame $webSocketFrame, $mask = false): string
+    public function wsPack(WebSocketFrame $webSocketFrame): string
     {
-        return $this->server->pack($webSocketFrame->getData(), $webSocketFrame->getOpcode(), $webSocketFrame->getFinish(), $mask);
+        return $this->server->pack($webSocketFrame->getData(), $webSocketFrame->getOpcode(), $webSocketFrame->getFinish());
     }
 
     /**

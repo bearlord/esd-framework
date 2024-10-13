@@ -71,12 +71,12 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * This method obviates the need for a hasAttribute() method, as it allows
      * specifying a default value to return if the attribute is not found.
      *
-     * @see getAttributes()
      * @param string $name    The attribute name.
      * @param mixed  $default Default value to return if the attribute does not exist.
      * @return mixed
+     *@see getAttributes()
      */
-    public function getAttribute($name, $default = null)
+    public function getAttribute(string $name, $default = null)
     {
         return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : $default;
     }
@@ -89,12 +89,12 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * immutability of the message, and MUST return an instance that has the
      * updated attribute.
      *
-     * @see getAttributes()
      * @param string $name  The attribute name.
      * @param mixed  $value The value of the attribute.
      * @return static
+     *@see getAttributes()
      */
-    public function withAttribute($name, $value)
+    public function withAttribute(string $name, $value): self
     {
         $this->attributes[$name] = $value;
         return $this;
@@ -123,20 +123,20 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      *
      * @link http://tools.ietf.org/html/rfc7231#section-6
      * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * @param int    $code         The 3-digit integer result code to set.
-     * @param string $reasonPhrase The reason phrase to use with the
+     * @param int $code         The 3-digit integer result code to set.
+     * @param string|null $reasonPhrase The reason phrase to use with the
      *                             provided status code; if none is provided, implementations MAY
      *                             use the defaults as suggested in the HTTP specification.
      * @return static
      * @throws \InvalidArgumentException For invalid status code arguments.
      */
-    public function withStatus($code, $reasonPhrase = ''): self
+    public function withStatus(int $code, ?string $reasonPhrase = ''): self
     {
         $this->statusCode = (int)$code;
         return $this;
     }
 
-    public function getReasonPhrase()
+    public function getReasonPhrase(): string
     {
         return '';
     }
@@ -187,7 +187,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * @param string $content
      * @return $this
      */
-    public function withContent($content = '')
+    public function withContent(string $content = ''): self
     {
         if($content == null || !is_string($content)) {
             $content = '';
@@ -200,9 +200,9 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * @param string $content
      * @return $this
      */
-    public function appendBody($content)
+    public function appendBody(string $content): self
     {
-        if($content == null || !is_string($content)) {
+        if($content == null) {
             $content = '';
         }
         if(!$this->stream) {
@@ -216,9 +216,9 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * @param string $content
      * @return $this
      */
-    public function append($content)
+    public function append(string $content): self
     {
-        if($content == null || !is_string($content)) {
+        if($content == null) {
             $content = '';
         }
         if(!$this->stream) {
@@ -233,7 +233,7 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
      * @param $fd
      * @return static
      */
-    abstract public static function create($fd);
+    abstract public static function create($fd): self;
 
     /**
      * load

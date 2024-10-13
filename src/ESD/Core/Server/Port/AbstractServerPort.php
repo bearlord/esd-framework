@@ -205,6 +205,7 @@ abstract class AbstractServerPort
      * @param $server
      * @param int $fd
      * @param int $reactorId
+     * @throws \Exception
      */
     public function _onClose($server, int $fd, int $reactorId)
     {
@@ -241,6 +242,7 @@ abstract class AbstractServerPort
      * @param $server
      * @param string $data
      * @param array $clientInfo
+     * @throws \Exception
      */
     public function _onPacket($server, string $data, array $clientInfo)
     {
@@ -307,6 +309,7 @@ abstract class AbstractServerPort
     /**
      * @param $server
      * @param $frame
+     * @throws \Exception
      */
     public function _onMessage($server, $frame)
     {
@@ -334,7 +337,7 @@ abstract class AbstractServerPort
      * @return bool
      * @throws \Exception
      */
-    public function _onHandshake($request, $response)
+    public function _onHandshake($request, $response): bool
     {
         Server::$instance->getProcessManager()->getCurrentProcess()->waitReady();
 
@@ -385,6 +388,7 @@ abstract class AbstractServerPort
                 $this->_onOpen($this->server->getServer(), $request);
             });
         });
+        return true;
     }
 
     public abstract function onWsPassCustomHandshake(Request $request): bool;

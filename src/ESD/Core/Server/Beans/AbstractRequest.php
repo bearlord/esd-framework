@@ -201,7 +201,7 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod($method)
+    public function withMethod(string $method): self
     {
         $method = strtoupper($method);
         $methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD'];
@@ -439,12 +439,12 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * This method obviates the need for a hasAttribute() method, as it allows
      * specifying a default value to return if the attribute is not found.
      *
-     * @see getAttributes()
      * @param string $name    The attribute name.
      * @param mixed  $default Default value to return if the attribute does not exist.
      * @return mixed
+     *@see getAttributes()
      */
-    public function getAttribute($name, $default = null)
+    public function getAttribute(string $name, $default = null)
     {
         return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : $default;
     }
@@ -457,12 +457,12 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * immutability of the message, and MUST return an instance that has the
      * updated attribute.
      *
-     * @see getAttributes()
      * @param string $name  The attribute name.
-     * @param mixed  $value The value of the attribute.
+          * @param mixed  $value The value of the attribute.
      * @return static
+     *@see getAttributes()
      */
-    public function withAttribute($name, $value)
+    public function withAttribute(string $name, $value): self
     {
         $this->attributes[$name] = $value;
         return $this;
@@ -476,11 +476,11 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      * immutability of the message, and MUST return an instance that removes
      * the attribute.
      *
-     * @see getAttributes()
      * @param string $name The attribute name.
-     * @return static
+          * @return static
+     *@see getAttributes()
      */
-    public function withoutAttribute($name)
+    public function withoutAttribute(string $name): self
     {
         if (false === array_key_exists($name, $this->attributes)) {
             return $this;
@@ -527,10 +527,10 @@ abstract class AbstractRequest implements RequestInterface, ServerRequestInterfa
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
      * @param UriInterface $uri          New request URI to use.
-     * @param bool         $preserveHost Preserve the original state of the Host header.
+     * @param bool|null $preserveHost Preserve the original state of the Host header.
      * @return static
      */
-    public function withUri(UriInterface $uri, $preserveHost = false): self
+    public function withUri(UriInterface $uri, ?bool $preserveHost = false): self
     {
         if ($uri === $this->uri) {
             return $this;

@@ -6,8 +6,6 @@
 
 namespace ESD\Core\Server\Beans;
 
-use ESD\Core\ParamException;
-use ESD\Core\Exception;
 use ESD\Core\Server\Beans\Http\Cookie;
 use ESD\Core\Server\Server;
 use ESD\Yii\Yii;
@@ -79,7 +77,7 @@ abstract class Request extends AbstractRequest
     public $methodParam = '_method';
 
     private $_hostInfo;
-    
+
     private $_hostName;
 
     private $_scheme;
@@ -88,7 +86,7 @@ abstract class Request extends AbstractRequest
      * Get scheme
      * @throws \Exception
      */
-    public function getScheme()
+    public function getScheme(): ?string
     {
         if ($this->_scheme === null) {
             $serverPort = $this->server[self::SERVER_SERVER_PORT];
@@ -114,13 +112,12 @@ abstract class Request extends AbstractRequest
     }
 
     /**
-     * @param mixed $scheme
+     * @param string|null $scheme
      */
-    public function setScheme($scheme): void
+    public function setScheme(?string $scheme): void
     {
         $this->_scheme = $scheme;
     }
-
 
 
     /**
@@ -143,20 +140,21 @@ abstract class Request extends AbstractRequest
      * > If you don't have access to the server configuration, you can setup [[\yii\filters\HostControl]] filter at
      * > application level in order to protect against such kind of attack.
      *
-     * @property string|null schema and hostname part (with port number if needed) of the request URL
-     * (e.g. `http://www.yiiframework.com`), null if can't be obtained from `$_SERVER` and wasn't set.
-     * See [[getHostInfo()]] for security related notes on this property.
      * @return string|null schema and hostname part (with port number if needed) of the request URL
-     * (e.g. `http://www.yiiframework.com`), null if can't be obtained from `$_SERVER` and wasn't set.
+     * (e.g. `http://www.yiiframework.com`), null if you can't be obtained from `$_SERVER` and wasn't set.
+     * @throws \Exception
+     * @property string|null schema and hostname part (with port number if needed) of the request URL
+     * (e.g. `http://www.yiiframework.com`), null if you can't be obtained from `$_SERVER` and wasn't set.
+     * See [[getHostInfo()]] for security related notes on this property.
      * @see setHostInfo()
      */
-    public function getHostInfo()
+    public function getHostInfo(): ?string
     {
         if ($this->_hostInfo === null) {
             $http = $this->getScheme();
 
             if ($this->getHeader('X-Forwarded-Host')) {
-                $this->_hostInfo = $http . '://' . trim(explode(',', $this->getHeader('X-Forwarded-Host'))[0]);
+                $this->_hostInfo = $http . '://' . trim($this->getHeader('X-Forwarded-Host')[0]);
             } elseif ($this->getHeader('Host')) {
                 $this->_hostInfo = $http . '://' . $this->getHeader('Host')[0];
             }
@@ -172,7 +170,7 @@ abstract class Request extends AbstractRequest
      * @param string|null $value the schema and host part of the application URL. The trailing slashes will be removed.
      * @see getHostInfo() for security related notes on this property.
      */
-    public function setHostInfo($value)
+    public function setHostInfo(?string $value)
     {
         $this->_hostName = null;
         $this->_hostInfo = $value === null ? null : rtrim($value, '/');
@@ -185,11 +183,13 @@ abstract class Request extends AbstractRequest
      *
      * This token is generated in a way to prevent [BREACH attacks](http://breachattack.com/). It may be passed
      * along via a hidden field of an HTML form or an HTTP header value to support CSRF validation.
-     * @param bool $regenerate whether to regenerate CSRF token. When this parameter is true, each time
+     * @param bool|null $regenerate whether to regenerate CSRF token. When this parameter is true, each time
      * this method is called, a new CSRF token will be generated and persisted (in session or cookie).
      * @return string the token used to perform CSRF validation.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \Random\RandomException
      */
-    public function getCsrfToken($regenerate = false)
+    public function getCsrfToken(?bool $regenerate = false): string
     {
         if ($this->_csrfToken === null || $regenerate) {
             if ($regenerate || ($token = $this->loadCsrfToken()) === null) {
@@ -206,7 +206,7 @@ abstract class Request extends AbstractRequest
      * @return string the CSRF token loaded from cookie or session. Null is returned if the cookie or session
      * does not have CSRF token.
      */
-    protected function loadCsrfToken()
+    protected function loadCsrfToken(): string
     {
         if ($this->enableCsrfCookie) {
             return $this->cookie($this->csrfParam);
@@ -217,8 +217,11 @@ abstract class Request extends AbstractRequest
     /**
      * Generates an unmasked random token used to perform CSRF validation.
      * @return string the random token for CSRF validation.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws \Random\RandomException
      */
-    protected function generateCsrfToken()
+    protected function generateCsrfToken(): string
     {
         $token = Yii::$app->getSecurity()->generateRandomKey();
         if ($this->enableCsrfCookie) {
@@ -232,7 +235,7 @@ abstract class Request extends AbstractRequest
     /**
      * @return string the CSRF token sent via [[CSRF_HEADER]] by browser. Null is returned if no such header is sent.
      */
-    public function getCsrfTokenFromHeader()
+    public function getCsrfTokenFromHeader(): string
     {
         return $this->getHeader(static::CSRF_HEADER)[0];
     }
@@ -246,12 +249,14 @@ abstract class Request extends AbstractRequest
      * Note that the method will NOT perform CSRF validation if [[enableCsrfValidation]] is false or the HTTP method
      * is among GET, HEAD or OPTIONS.
      *
-     * @param string $clientSuppliedToken the user-provided CSRF token to be validated. If null, the token will be retrieved from
+     * @param string|null $clientSuppliedToken the user-provided CSRF token to be validated. If null, the token will be retrieved from
      * the [[csrfParam]] POST field or HTTP header.
      * This parameter is available since version 2.0.4.
      * @return bool whether CSRF token is valid. If [[enableCsrfValidation]] is false, this method will return true.
+     * @throws \ESD\Yii\Base\Exception
+     * @throws \Random\RandomException
      */
-    public function validateCsrfToken($clientSuppliedToken = null)
+    public function validateCsrfToken(?string $clientSuppliedToken = null): bool
     {
         $method = $this->getMethod();
         // only validate CSRF token on non-"safe" methods http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1
@@ -265,7 +270,7 @@ abstract class Request extends AbstractRequest
             return $this->validateCsrfTokenInternal($clientSuppliedToken, $trueToken);
         }
 
-        return $this->validateCsrfTokenInternal($this->getBodyParam($this->csrfParam), $trueToken)
+        return $this->validateCsrfTokenInternal($this->input($this->csrfParam), $trueToken)
             || $this->validateCsrfTokenInternal($this->getCsrfTokenFromHeader(), $trueToken);
     }
 
@@ -276,12 +281,8 @@ abstract class Request extends AbstractRequest
      * @param string $trueToken The masked true token.
      * @return bool
      */
-    private function validateCsrfTokenInternal($clientSuppliedToken, $trueToken)
+    private function validateCsrfTokenInternal(string $clientSuppliedToken, string $trueToken): bool
     {
-        if (!is_string($clientSuppliedToken)) {
-            return false;
-        }
-
         $security = Yii::$app->security;
 
         return $security->unmaskToken($clientSuppliedToken) === $security->unmaskToken($trueToken);

@@ -126,7 +126,7 @@ trait MessageTrait
 
     /**
      * Retrieves a comma-separated string of the values for a single header.
-     * This method returns all of the header values of the given
+     * This method returns all the header values of the given
      * case-insensitive header name as a string concatenated together using
      * a comma.
      * NOTE: Not all header values may be appropriately represented using
@@ -213,7 +213,7 @@ trait MessageTrait
         $normalized = strtolower($name);
 
         if (isset($this->headerNames[$normalized])) {
-            $this->headerNames[$normalized];
+            $this->headerNames[$normalized] = $name;
             $this->headers[$name] = array_merge($this->headers[$name], $value);
         } else {
             $this->headerNames[$normalized] = $name;

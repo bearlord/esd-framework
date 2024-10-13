@@ -360,7 +360,7 @@ abstract class Process
             $this->log->error($e);
         }
         if ($this->swooleProcess != null) {
-            $this->swooleProcess->exit(0);
+            $this->swooleProcess->exit();
         }
     }
 

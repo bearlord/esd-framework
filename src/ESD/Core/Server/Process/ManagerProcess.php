@@ -22,6 +22,7 @@ class ManagerProcess extends Process
     /**
      * ManagerProcess constructor.
      * @param Server $server
+     * @throws \Exception
      */
     public function __construct(Server $server)
     {
@@ -44,7 +45,6 @@ class ManagerProcess extends Process
      */
     public function onProcessStop()
     {
-        return;
     }
 
     /**
@@ -55,17 +55,14 @@ class ManagerProcess extends Process
      */
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
-        return;
     }
 
 
     /**
      * @inheritDoc
      *
-     * @return mixed|void
      */
     public function init()
     {
-        return;
     }
 }

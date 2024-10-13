@@ -110,7 +110,7 @@ class ProcessManager
      * Get customer process configs
      *
      * @return array
-     * @throws \ESD\Core\Plugins\Config\ConfigException
+     * @throws \ESD\Core\Plugins\Config\ConfigException|\Exception
      */
     public function getCustomProcessConfigs(): array
     {
