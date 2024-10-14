@@ -287,7 +287,7 @@ class ServerConfig extends BaseConfig
     /**
      * @return int
      */
-    public function getReactorNum(): int
+    public function getReactorNum(): ?int
     {
         return $this->reactorNum;
     }
