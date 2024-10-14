@@ -51,7 +51,7 @@ class Coroutine
      */
     public static function isExist($coId): bool
     {
-        return \Swoole\Coroutine::isExist($coId);
+        return \Swoole\Coroutine::exists($coId);
     }
 
     /**
@@ -103,7 +103,7 @@ class Coroutine
      *
      * @return Context|null
      */
-    public static function getParentContext()
+    public static function getParentContext(): ?Context
     {
         return self::getContext()->getParentContext();
     }
@@ -112,9 +112,9 @@ class Coroutine
      * Iterate through all coroutines in the current process.
      * @return \Iterator
      */
-    public static function getListCoroutines()
+    public static function getListCoroutines(): \Iterator
     {
-        return \Swoole\Coroutine::getListCoroutines();
+        return \Swoole\Coroutine::listCoroutines();
     }
 
     /**
@@ -167,7 +167,7 @@ class Coroutine
      */
     public static function runTask($runnable)
     {
-        $cid = goWithContext(function () use ($runnable) {
+        return goWithContext(function () use ($runnable) {
             if ($runnable != null) {
                 if ($runnable instanceof Runnable) {
                     $result = $runnable->run();
@@ -178,7 +178,6 @@ class Coroutine
                 }
             }
         });
-        return $cid;
     }
 
 }

@@ -39,7 +39,7 @@ class EventCallImpl extends ChannelImpl implements EventCall
      */
     public function __construct(EventDispatcher $eventDispatcher, string $type, bool $once = false)
     {
-        parent::__construct(1);
+        parent::__construct();
         $this->type = $type;
         $this->once = $once;
         $this->eventDispatcher = $eventDispatcher;
@@ -111,10 +111,10 @@ class EventCallImpl extends ChannelImpl implements EventCall
 
     /**
      * @inheritDoc
-     * @param int $timeout
+     * @param int|null $timeout
      * @return mixed
      */
-    public function wait(int $timeout = 5)
+    public function wait(?int $timeout = 5)
     {
         return $this->pop($timeout);
     }
@@ -131,7 +131,7 @@ class EventCallImpl extends ChannelImpl implements EventCall
     /**
      * @inheritDoc
      * @param $data
-     * @return mixed
+     * @return void
      */
     public function send($data)
     {
