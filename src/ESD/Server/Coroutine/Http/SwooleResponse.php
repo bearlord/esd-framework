@@ -92,7 +92,7 @@ class SwooleResponse extends Response
      * Is end
      * @return bool
      */
-    public function isEnd()
+    public function isEnd(): bool
     {
         return $this->isEnd;
     }
@@ -114,7 +114,7 @@ class SwooleResponse extends Response
      * @return static
      * @throws \ESD\Core\Exception
      */
-    public static function create($fd)
+    public static function create($fd): self
     {
         $object = new SwooleResponse();
         $object->load(\Swoole\Http\Response::create($fd));
