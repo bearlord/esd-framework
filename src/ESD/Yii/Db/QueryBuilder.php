@@ -1398,12 +1398,12 @@ class QueryBuilder extends BaseObject
     /**
      * Builds the ORDER BY and LIMIT/OFFSET clauses and appends them to the given SQL.
      * @param string $sql the existing SQL (without ORDER BY/LIMIT/OFFSET)
-     * @param array $orderBy the order by columns. See [[Query::orderBy]] for more details on how to specify this parameter.
+     * @param array|null $orderBy the order by columns. See [[Query::orderBy]] for more details on how to specify this parameter.
      * @param int $limit the limit number. See [[Query::limit]] for more details.
      * @param int $offset the offset number. See [[Query::offset]] for more details.
      * @return string the SQL completed with ORDER BY/LIMIT/OFFSET (if any)
      */
-    public function buildOrderByAndLimit(string $sql, array $orderBy, $limit, $offset): string
+    public function buildOrderByAndLimit(string $sql, ?array $orderBy, $limit, $offset): string
     {
         $orderBy = $this->buildOrderBy($orderBy);
         if ($orderBy !== '') {
@@ -1418,10 +1418,10 @@ class QueryBuilder extends BaseObject
     }
 
     /**
-     * @param array $columns
+     * @param array|null $columns
      * @return string the ORDER BY clause built from [[Query::$orderBy]].
      */
-    public function buildOrderBy(array $columns): string
+    public function buildOrderBy(?array $columns): string
     {
         if (empty($columns)) {
             return '';

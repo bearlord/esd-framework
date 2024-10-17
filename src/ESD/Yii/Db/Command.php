@@ -153,12 +153,12 @@ class Command extends Component
      * The previous SQL (if any) will be discarded, and [[params]] will be cleared as well. See [[reset()]]
      * for details.
      *
-     * @param string $sql the SQL statement to be set.
+     * @param string|null $sql the SQL statement to be set.
      * @return $this this command instance
      * @see reset()
      * @see cancel()
      */
-    public function setSql(string $sql): self
+    public function setSql(?string $sql): self
     {
         if ($sql !== $this->_sql) {
             $this->cancel();
