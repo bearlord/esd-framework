@@ -71,11 +71,11 @@ class JwtBuilder implements \ArrayAccess
     }
 
     /**
-     * @param $offset
-     * @param $value
+     * @param mixed $offset
+     * @param mixed $value
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
             $this->container[] = $value;
@@ -94,19 +94,19 @@ class JwtBuilder implements \ArrayAccess
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->container[$offset]);
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      * @return mixed|null
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->container[$offset] ?? null;
     }
@@ -140,7 +140,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @return mixed
      */
-    public function getScope()
+    public function getScope(): mixed
     {
         return $this->container['scope'] ?? '';
     }
@@ -165,7 +165,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @param mixed $subject
      */
-    public function setSubject($subject): void
+    public function setSubject(mixed $subject): void
     {
         $this->container['sub'] = $subject;
 
@@ -174,7 +174,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @return mixed
      */
-    public function getAudience()
+    public function getAudience(): mixed
     {
         return $this->container['aud'] ?? '';
     }
@@ -182,7 +182,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @param mixed $audience
      */
-    public function setAudience($audience): void
+    public function setAudience(mixed $audience): void
     {
         $this->container['aud'] = $audience;
     }
@@ -190,7 +190,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @return mixed
      */
-    public function getExpiration()
+    public function getExpiration(): mixed
     {
         return $this->container['exp'] ?? '';
     }
@@ -198,7 +198,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @param mixed $expiration
      */
-    public function setExpiration($expiration): void
+    public function setExpiration(mixed $expiration): void
     {
         $this->container['exp'] = $expiration;
     }
@@ -206,7 +206,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @return mixed
      */
-    public function getNotBefore()
+    public function getNotBefore(): mixed
     {
         return $this->container['nbf'] ?? '';
     }
@@ -214,7 +214,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @param mixed $notBefore
      */
-    public function setNotBefore($notBefore): void
+    public function setNotBefore(mixed $notBefore): void
     {
         $this->container['nbf'] = $notBefore;
     }
@@ -222,7 +222,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @return mixed
      */
-    public function getIssuedAt()
+    public function getIssuedAt(): mixed
     {
         return $this->container['iat'] ?? '';
     }
@@ -230,7 +230,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @param mixed $issuedAt
      */
-    public function setIssuedAt($issuedAt): void
+    public function setIssuedAt(mixed $issuedAt): void
     {
         $this->container['iat'] = $issuedAt;
     }
@@ -238,7 +238,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @return mixed
      */
-    public function getJwtId()
+    public function getJwtId(): mixed
     {
         return $this->container['jti'] ?? '';
     }
@@ -246,7 +246,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @param mixed $jwtId
      */
-    public function setJwtId($jwtId): void
+    public function setJwtId(mixed $jwtId): void
     {
         $this->container['jti'] = $jwtId;
     }
@@ -254,7 +254,7 @@ class JwtBuilder implements \ArrayAccess
     /**
      * @return mixed
      */
-    public function getJwtData()
+    public function getJwtData(): mixed
     {
         return $this->container['data'] ?? [];
     }

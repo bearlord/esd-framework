@@ -81,6 +81,9 @@ class WhiteList
     /**
      * @param array $payload
      * @return bool
+     * @throws \ESD\Core\Exception
+     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws \RedisException
      */
     public function effective(array $payload): bool
     {
@@ -100,8 +103,11 @@ class WhiteList
     /**
      * @param string $uid
      * @param string $version
-     * @param string $type
+     * @param string|null $type
      * @return bool
+     * @throws \ESD\Core\Exception
+     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws \RedisException
      */
     public function add(string $uid, string $version, ?string $type = Jwt::SCOPE_TOKEN): bool
     {
@@ -112,6 +118,7 @@ class WhiteList
      * @param string $uid
      * @param string|null $type
      * @return bool
+     * @throws \ESD\Core\Exception
      * @throws \ESD\Plugins\Redis\RedisException
      * @throws \RedisException
      */
