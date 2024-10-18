@@ -110,7 +110,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass(): \ReflectionClass
     {
         return new ReflectionClass($this->className);
     }
@@ -118,7 +118,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getDocComment()
+    public function getDocComment(): false|string
     {
         $docBlock = $this->classConstantNode->getDocComment();
 
@@ -128,7 +128,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getModifiers()
+    public function getModifiers(): int
     {
         $modifiers = 0;
         if ($this->isPublic()) {
@@ -147,7 +147,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->constNode->name->toString();
     }
@@ -155,7 +155,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         $solver = new NodeExpressionResolver($this->getDeclaringClass());
         $solver->process($this->constNode->value);
@@ -165,7 +165,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isPrivate()
+    public function isPrivate(): bool
     {
         return $this->classConstantNode->isPrivate();
     }
@@ -173,7 +173,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isProtected()
+    public function isProtected(): bool
     {
         return $this->classConstantNode->isProtected();
     }
@@ -181,7 +181,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->classConstantNode->isPublic();
     }
@@ -189,7 +189,7 @@ class ReflectionClassConstant extends BaseReflectionClassConstant
     /**
      * @inheritDoc
      */
-    public function __toString()
+    public function __toString(): string
     {
         # Starting from PHP7.3 gettype returns different names, need to remap them
         static $typeMap = [

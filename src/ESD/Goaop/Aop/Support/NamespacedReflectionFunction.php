@@ -30,7 +30,7 @@ class NamespacedReflectionFunction extends ReflectionFunction
      * @param string $namespace Name of the namespace
      * {@inheritDoc}
      */
-    public function __construct($name, $namespace = '')
+    public function __construct($name, string $namespace = '')
     {
         $this->namespace = $namespace;
         parent::__construct($name);
@@ -39,7 +39,7 @@ class NamespacedReflectionFunction extends ReflectionFunction
     /**
      * {@inheritDoc}
      */
-    public function getNamespaceName()
+    public function getNamespaceName(): string
     {
         if ($this->namespace) {
             return $this->namespace;
