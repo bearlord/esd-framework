@@ -16,7 +16,7 @@
         "cebe/markdown": "^1.2.1",
         "doctrine/annotations": "^1.6",
         "doctrine/cache": "^1.5",
-        "doctrine/common": "^2.13.1",
+        "doctrine/common": "*",
         "ext-json": "*",
         "ext-swoole": ">=4.8.0",
         "ezyang/htmlpurifier": "^4.10.0",
