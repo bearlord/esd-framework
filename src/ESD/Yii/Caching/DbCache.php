@@ -97,8 +97,9 @@ class DbCache extends Cache
      * @param mixed $key a key identifying the cached value. This can be a simple string or
      * a complex data structure consisting of factors representing the key.
      * @return bool true if a value exists in cache, false if the value is not in the cache or expired.
+     * @throws \ESD\Yii\Db\Exception
      */
-    public function exists($key)
+    public function exists(mixed $key): bool
     {
         $key = $this->buildKey($key);
 
@@ -123,8 +124,9 @@ class DbCache extends Cache
      * This is the implementation of the method declared in the parent class.
      * @param string $key a unique key identifying the cached value
      * @return string|false the value stored in cache, false if the value is not in the cache or expired.
+     * @throws \ESD\Yii\Db\Exception
      */
-    protected function getValue($key)
+    protected function getValue(string $key): mixed
     {
         $query = new Query();
         $query->select(['data'])
@@ -146,8 +148,9 @@ class DbCache extends Cache
      * Retrieves multiple values from cache with the specified keys.
      * @param array $keys a list of keys identifying the cached values
      * @return array a list of cached values indexed by the keys
+     * @throws \ESD\Yii\Db\Exception
      */
-    protected function getValues($keys)
+    protected function getValues(array $keys): array
     {
         if (empty($keys)) {
             return [];
@@ -186,11 +189,12 @@ class DbCache extends Cache
      * This is the implementation of the method declared in the parent class.
      *
      * @param string $key the key identifying the value to be cached
-     * @param string $value the value to be cached. Other types (if you have disabled [[serializer]]) cannot be saved.
-     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param mixed $value the value to be cached. Other types (if you have disabled [[serializer]]) cannot be saved.
+     * @param int|null $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
+     * @throws \Throwable
      */
-    protected function setValue($key, $value, $duration)
+    protected function setValue(string $key, mixed $value, ?int $duration): bool
     {
         try {
             $this->db->noCache(function (Connection $db) use ($key, $value, $duration) {
@@ -216,11 +220,12 @@ class DbCache extends Cache
      * This is the implementation of the method declared in the parent class.
      *
      * @param string $key the key identifying the value to be cached
-     * @param string $value the value to be cached. Other types (if you have disabled [[serializer]]) cannot be saved.
-     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param mixed $value the value to be cached. Other types (if you have disabled [[serializer]]) cannot be saved.
+     * @param int|null $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
+     * @throws \Throwable
      */
-    protected function addValue($key, $value, $duration)
+    protected function addValue(string $key, mixed $value, ?int $duration): bool
     {
         $this->gc();
 
@@ -247,8 +252,9 @@ class DbCache extends Cache
      * This is the implementation of the method declared in the parent class.
      * @param string $key the key of the value to be deleted
      * @return bool if no error happens during deletion
+     * @throws \Throwable
      */
-    protected function deleteValue($key)
+    protected function deleteValue(string $key): bool
     {
         $this->db->noCache(function (Connection $db) use ($key) {
             $db->createCommand()
@@ -263,6 +269,7 @@ class DbCache extends Cache
      * Removes the expired data values.
      * @param bool $force whether to enforce the garbage collection regardless of [[gcProbability]].
      * Defaults to false, meaning the actual deletion happens with the probability as specified by [[gcProbability]].
+     * @throws \ESD\Yii\Db\Exception
      */
     public function gc($force = false)
     {
@@ -277,8 +284,9 @@ class DbCache extends Cache
      * Deletes all values from cache.
      * This is the implementation of the method declared in the parent class.
      * @return bool whether the flush operation was successful.
+     * @throws \ESD\Yii\Db\Exception
      */
-    protected function flushValues()
+    protected function flushValues(): bool
     {
         $this->db->createCommand()
             ->delete($this->cacheTable)

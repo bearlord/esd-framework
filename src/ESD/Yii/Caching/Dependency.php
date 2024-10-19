@@ -44,7 +44,7 @@ abstract class Dependency extends \ESD\Yii\Base\BaseObject
      * This method is invoked by cache before writing data into it.
      * @param CacheInterface $cache the cache component that is currently evaluating this dependency
      */
-    public function evaluateDependency($cache)
+    public function evaluateDependency(CacheInterface $cache): void
     {
         if ($this->reusable) {
             $hash = $this->generateReusableHash();
@@ -59,11 +59,11 @@ abstract class Dependency extends \ESD\Yii\Base\BaseObject
 
     /**
      * Returns a value indicating whether the dependency has changed.
-     * @deprecated since version 2.0.11. Will be removed in version 2.1. Use [[isChanged()]] instead.
      * @param CacheInterface $cache the cache component that is currently evaluating this dependency
      * @return bool whether the dependency has changed.
+     *@deprecated since version 2.0.11. Will be removed in version 2.1. Use [[isChanged()]] instead.
      */
-    public function getHasChanged($cache)
+    public function getHasChanged(CacheInterface $cache): bool
     {
         return $this->isChanged($cache);
     }
@@ -74,7 +74,7 @@ abstract class Dependency extends \ESD\Yii\Base\BaseObject
      * @return bool whether the dependency has changed.
      * @since 2.0.11
      */
-    public function isChanged($cache)
+    public function isChanged(CacheInterface $cache): bool
     {
         if ($this->reusable) {
             $hash = $this->generateReusableHash();
@@ -92,7 +92,7 @@ abstract class Dependency extends \ESD\Yii\Base\BaseObject
     /**
      * Resets all cached data for reusable dependencies.
      */
-    public static function resetReusableData()
+    public static function resetReusableData(): void
     {
         self::$_reusableData = [];
     }
@@ -102,7 +102,7 @@ abstract class Dependency extends \ESD\Yii\Base\BaseObject
      * @return string a unique hash value for this cache dependency.
      * @see reusable
      */
-    protected function generateReusableHash()
+    protected function generateReusableHash(): string
     {
         $data = $this->data;
         $this->data = null;  // https://github.com/yiisoft/yii2/issues/3052
@@ -117,5 +117,5 @@ abstract class Dependency extends \ESD\Yii\Base\BaseObject
      * @param CacheInterface $cache the cache component that is currently evaluating this dependency
      * @return mixed the data needed to determine if dependency has been changed.
      */
-    abstract protected function generateDependencyData($cache);
+    abstract protected function generateDependencyData(CacheInterface $cache): mixed;
 }

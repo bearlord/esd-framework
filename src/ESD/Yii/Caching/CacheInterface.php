@@ -52,7 +52,7 @@ interface CacheInterface extends \ArrayAccess
      * @param mixed $key the key to be normalized
      * @return string the generated cache key
      */
-    public function buildKey($key);
+    public function buildKey(mixed $key): string;
 
     /**
      * Retrieves a value from cache with a specified key.
@@ -61,7 +61,7 @@ interface CacheInterface extends \ArrayAccess
      * @return mixed the value stored in cache, false if the value is not in the cache, expired,
      * or the dependency associated with the cached data has changed.
      */
-    public function get($key);
+    public function get(mixed $key): mixed;
 
     /**
      * Checks whether a specified key exists in the cache.
@@ -75,7 +75,7 @@ interface CacheInterface extends \ArrayAccess
      * a complex data structure consisting of factors representing the key.
      * @return bool true if a value exists in cache, false if the value is not in the cache or expired.
      */
-    public function exists($key);
+    public function exists(mixed $key): bool;
 
     /**
      * Retrieves multiple values from cache with the specified keys.
@@ -87,7 +87,7 @@ interface CacheInterface extends \ArrayAccess
      * is returned in terms of (key, value) pairs.
      * If a value is not cached or expired, the corresponding array value will be false.
      */
-    public function multiGet($keys);
+    public function multiGet(array $keys): array;
 
     /**
      * Stores a value identified by a key into cache.
@@ -97,14 +97,14 @@ interface CacheInterface extends \ArrayAccess
      * @param mixed $key a key identifying the value to be cached. This can be a simple string or
      * a complex data structure consisting of factors representing the key.
      * @param mixed $value the value to be cached
-     * @param int $duration default duration in seconds before the cache will expire. If not set,
+     * @param int|null $duration default duration in seconds before the cache will expire. If not set,
      * default [[defaultDuration]] value is used.
-     * @param Dependency $dependency dependency of the cached item. If the dependency changes,
+     * @param Dependency|null $dependency dependency of the cached item. If the dependency changes,
      * the corresponding value in the cache will be invalidated when it is fetched via [[get()]].
      * This parameter is ignored if [[serializer]] is false.
      * @return bool whether the value is successfully stored into cache
      */
-    public function set($key, $value, $duration = null, $dependency = null);
+    public function set(mixed $key, mixed $value, ?int $duration = null, ?Dependency $dependency = null): bool;
 
     /**
      * Stores multiple items in cache. Each item contains a value identified by a key.
@@ -112,13 +112,13 @@ interface CacheInterface extends \ArrayAccess
      * expiration time will be replaced with the new ones, respectively.
      *
      * @param array $items the items to be cached, as key-value pairs.
-     * @param int $duration default number of seconds in which the cached values will expire. 0 means never expire.
-     * @param Dependency $dependency dependency of the cached items. If the dependency changes,
+     * @param int|null $duration default number of seconds in which the cached values will expire. 0 means never expire.
+     * @param Dependency|null $dependency dependency of the cached items. If the dependency changes,
      * the corresponding values in the cache will be invalidated when it is fetched via [[get()]].
      * This parameter is ignored if [[serializer]] is false.
      * @return array array of failed keys
      */
-    public function multiSet($items, $duration = 0, $dependency = null);
+    public function multiSet(array $items, ?int $duration = 0, ?Dependency $dependency = null): array;
 
     /**
      * Stores a value identified by a key into cache if the cache does not contain this key.
@@ -126,13 +126,13 @@ interface CacheInterface extends \ArrayAccess
      * @param mixed $key a key identifying the value to be cached. This can be a simple string or
      * a complex data structure consisting of factors representing the key.
      * @param mixed $value the value to be cached
-     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
-     * @param Dependency $dependency dependency of the cached item. If the dependency changes,
+     * @param int|null $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param Dependency|null $dependency dependency of the cached item. If the dependency changes,
      * the corresponding value in the cache will be invalidated when it is fetched via [[get()]].
      * This parameter is ignored if [[serializer]] is false.
      * @return bool whether the value is successfully stored into cache
      */
-    public function add($key, $value, $duration = 0, $dependency = null);
+    public function add(mixed $key, mixed $value, ?int $duration = 0, ?Dependency $dependency = null): bool;
 
     /**
      * Stores multiple items in cache. Each item contains a value identified by a key.
@@ -140,12 +140,12 @@ interface CacheInterface extends \ArrayAccess
      *
      * @param array $items the items to be cached, as key-value pairs.
      * @param int $duration default number of seconds in which the cached values will expire. 0 means never expire.
-     * @param Dependency $dependency dependency of the cached items. If the dependency changes,
+     * @param Dependency|null $dependency dependency of the cached items. If the dependency changes,
      * the corresponding values in the cache will be invalidated when it is fetched via [[get()]].
      * This parameter is ignored if [[serializer]] is false.
      * @return array array of failed keys
      */
-    public function multiAdd($items, $duration = 0, $dependency = null);
+    public function multiAdd(array $items, int $duration = 0, ?Dependency $dependency = null): array;
 
     /**
      * Deletes a value with the specified key from cache.
@@ -153,14 +153,14 @@ interface CacheInterface extends \ArrayAccess
      * a complex data structure consisting of factors representing the key.
      * @return bool if no error happens during deletion
      */
-    public function delete($key);
+    public function delete(mixed $key): bool;
 
     /**
      * Deletes all values from cache.
      * Be careful of performing this operation if the cache is shared among multiple applications.
      * @return bool whether the flush operation was successful.
      */
-    public function flush();
+    public function flush(): bool;
 
     /**
      * Method combines both [[set()]] and [[get()]] methods to retrieve value identified by a $key,
@@ -181,12 +181,12 @@ interface CacheInterface extends \ArrayAccess
      * a complex data structure consisting of factors representing the key.
      * @param callable|\Closure $callable the callable or closure that will be used to generate a value to be cached.
      * In case $callable returns `false`, the value will not be cached.
-     * @param int $duration default duration in seconds before the cache will expire. If not set,
+     * @param int|null $duration default duration in seconds before the cache will expire. If not set,
      * [[defaultDuration]] value will be used.
-     * @param Dependency $dependency dependency of the cached item. If the dependency changes,
+     * @param Dependency|null $dependency dependency of the cached item. If the dependency changes,
      * the corresponding value in the cache will be invalidated when it is fetched via [[get()]].
      * This parameter is ignored if [[serializer]] is `false`.
      * @return mixed result of $callable execution
      */
-    public function getOrSet($key, $callable, $duration = null, $dependency = null);
+    public function getOrSet(mixed $key, $callable, int $duration = null, Dependency $dependency = null): mixed;
 }

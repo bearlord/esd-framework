@@ -40,7 +40,7 @@ class TagDependency extends Dependency
      * @param CacheInterface $cache the cache component that is currently evaluating this dependency
      * @return mixed the data needed to determine if dependency has been changed.
      */
-    protected function generateDependencyData($cache)
+    protected function generateDependencyData(CacheInterface $cache): mixed
     {
         $timestamps = $this->getTimestamps($cache, (array) $this->tags);
 
@@ -60,7 +60,7 @@ class TagDependency extends Dependency
     /**
      * {@inheritdoc}
      */
-    public function isChanged($cache)
+    public function isChanged(CacheInterface $cache): bool
     {
         $timestamps = $this->getTimestamps($cache, (array) $this->tags);
         return $timestamps !== $this->data;
@@ -69,9 +69,9 @@ class TagDependency extends Dependency
     /**
      * Invalidates all of the cached data items that are associated with any of the specified [[tags]].
      * @param CacheInterface $cache the cache component that caches the data items
-     * @param string|array $tags
+     * @param array|string $tags
      */
-    public static function invalidate($cache, $tags)
+    public static function invalidate(CacheInterface $cache, array|string $tags): void
     {
         $keys = [];
         foreach ((array) $tags as $tag) {
@@ -86,7 +86,7 @@ class TagDependency extends Dependency
      * @param string[] $keys
      * @return array the timestamp indexed by cache keys
      */
-    protected static function touchKeys($cache, $keys)
+    protected static function touchKeys(CacheInterface $cache, array $keys): array
     {
         $items = [];
         $time = microtime();
@@ -103,7 +103,7 @@ class TagDependency extends Dependency
      * @param string[] $tags
      * @return array the timestamps indexed by the specified tags.
      */
-    protected function getTimestamps($cache, $tags)
+    protected function getTimestamps(CacheInterface $cache, array $tags): array
     {
         if (empty($tags)) {
             return [];

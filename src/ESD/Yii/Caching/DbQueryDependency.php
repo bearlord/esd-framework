@@ -67,7 +67,7 @@ class DbQueryDependency extends Dependency
      * @return mixed the data needed to determine if dependency has been changed.
      * @throws InvalidConfigException on invalid configuration.
      */
-    protected function generateDependencyData($cache)
+    protected function generateDependencyData(CacheInterface $cache): mixed
     {
         $db = $this->db;
         if ($db !== null) {
@@ -97,7 +97,7 @@ class DbQueryDependency extends Dependency
      * @param mixed $db connection.
      * @return mixed query result.
      */
-    private function executeQuery($query, $db)
+    private function executeQuery($query, $db): mixed
     {
         if ($this->method === null) {
             return $query->one($db);

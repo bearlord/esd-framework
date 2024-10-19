@@ -73,6 +73,7 @@ class FileCache extends Cache
 
     /**
      * Initializes this component by ensuring the existence of the cache path.
+     * @throws \ESD\Yii\Base\Exception
      */
     public function init()
     {
@@ -93,7 +94,7 @@ class FileCache extends Cache
      * a complex data structure consisting of factors representing the key.
      * @return bool true if a value exists in cache, false if the value is not in the cache or expired.
      */
-    public function exists($key)
+    public function exists(mixed $key): bool
     {
         $cacheFile = $this->getCacheFile($this->buildKey($key));
 
@@ -104,9 +105,9 @@ class FileCache extends Cache
      * Retrieves a value from cache with a specified key.
      * This is the implementation of the method declared in the parent class.
      * @param string $key a unique key identifying the cached value
-     * @return string|false the value stored in cache, false if the value is not in the cache or expired.
+     * @return mixed the value stored in cache, false if the value is not in the cache or expired.
      */
-    protected function getValue($key)
+    protected function getValue(string $key): mixed
     {
         $cacheFile = $this->getCacheFile($key);
 
@@ -129,12 +130,13 @@ class FileCache extends Cache
      * This is the implementation of the method declared in the parent class.
      *
      * @param string $key the key identifying the value to be cached
-     * @param string $value the value to be cached. Other types (If you have disabled [[serializer]]) unable to get is
+     * @param mixed $value the value to be cached. Other types (If you have disabled [[serializer]]) unable to get is
      * correct in [[getValue()]].
-     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param int|null $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
+     * @throws \ESD\Yii\Base\Exception
      */
-    protected function setValue($key, $value, $duration)
+    protected function setValue(string $key, mixed $value, ?int $duration = 0): bool
     {
         $this->gc();
         $cacheFile = $this->getCacheFile($key);
@@ -168,12 +170,13 @@ class FileCache extends Cache
      * This is the implementation of the method declared in the parent class.
      *
      * @param string $key the key identifying the value to be cached
-     * @param string $value the value to be cached. Other types (if you have disabled [[serializer]]) unable to get is
+     * @param mixed $value the value to be cached. Other types (if you have disabled [[serializer]]) unable to get is
      * correct in [[getValue()]].
-     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param int|null $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
+     * @throws \ESD\Yii\Base\Exception
      */
-    protected function addValue($key, $value, $duration)
+    protected function addValue(string $key, mixed $value, ?int $duration): bool
     {
         $cacheFile = $this->getCacheFile($key);
         if (@filemtime($cacheFile) > time()) {
@@ -189,7 +192,7 @@ class FileCache extends Cache
      * @param string $key the key of the value to be deleted
      * @return bool if no error happens during deletion
      */
-    protected function deleteValue($key)
+    protected function deleteValue(string $key): bool
     {
         $cacheFile = $this->getCacheFile($key);
 
@@ -201,7 +204,7 @@ class FileCache extends Cache
      * @param string $key cache key
      * @return string the cache file path
      */
-    protected function getCacheFile($key)
+    protected function getCacheFile(string $key): string
     {
         if ($this->directoryLevel > 0) {
             $base = $this->cachePath;
@@ -222,7 +225,7 @@ class FileCache extends Cache
      * This is the implementation of the method declared in the parent class.
      * @return bool whether the flush operation was successful.
      */
-    protected function flushValues()
+    protected function flushValues(): bool
     {
         $this->gc(true, false);
 
@@ -236,7 +239,7 @@ class FileCache extends Cache
      * @param bool $expiredOnly whether to removed expired cache files only.
      * If false, all cache files under [[cachePath]] will be removed.
      */
-    public function gc($force = false, $expiredOnly = true)
+    public function gc(?bool $force = false, ?bool $expiredOnly = true): void
     {
         if ($force || mt_rand(0, 1000000) < $this->gcProbability) {
             $this->gcRecursive($this->cachePath, $expiredOnly);
@@ -250,7 +253,7 @@ class FileCache extends Cache
      * @param bool $expiredOnly whether to only remove expired cache files. If false, all files
      * under `$path` will be removed.
      */
-    protected function gcRecursive($path, $expiredOnly)
+    protected function gcRecursive(string $path, bool $expiredOnly): void
     {
         if (($handle = opendir($path)) !== false) {
             while (($file = readdir($handle)) !== false) {
@@ -266,7 +269,7 @@ class FileCache extends Cache
                             Yii::warning("Unable to remove directory '{$fullPath}': {$error['message']}", __METHOD__);
                         }
                     }
-                } elseif (!$expiredOnly || $expiredOnly && @filemtime($fullPath) < time()) {
+                } elseif (!$expiredOnly || @filemtime($fullPath) < time()) {
                     if (!@unlink($fullPath)) {
                         $error = error_get_last();
                         Yii::warning("Unable to remove file '{$fullPath}': {$error['message']}", __METHOD__);

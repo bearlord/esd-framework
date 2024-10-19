@@ -28,7 +28,7 @@ class DummyCache extends Cache
      * @param string $key a unique key identifying the cached value
      * @return mixed|false the value stored in cache, false if the value is not in the cache or expired.
      */
-    protected function getValue($key)
+    protected function getValue(string $key): mixed
     {
         return false;
     }
@@ -39,10 +39,10 @@ class DummyCache extends Cache
      *
      * @param string $key the key identifying the value to be cached
      * @param mixed $value the value to be cached
-     * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @param int|null $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
      */
-    protected function setValue($key, $value, $duration)
+    protected function setValue(string $key, mixed $value, ?int $duration): bool
     {
         return true;
     }
@@ -55,7 +55,7 @@ class DummyCache extends Cache
      * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
      */
-    protected function addValue($key, $value, $duration)
+    protected function addValue(string $key, mixed $value, ?int $duration): bool
     {
         return true;
     }
@@ -66,7 +66,7 @@ class DummyCache extends Cache
      * @param string $key the key of the value to be deleted
      * @return bool if no error happens during deletion
      */
-    protected function deleteValue($key)
+    protected function deleteValue(string $key): bool
     {
         return true;
     }
@@ -76,7 +76,7 @@ class DummyCache extends Cache
      * This is the implementation of the method declared in the parent class.
      * @return bool whether the flush operation was successful.
      */
-    protected function flushValues()
+    protected function flushValues(): bool
     {
         return true;
     }

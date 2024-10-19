@@ -37,7 +37,7 @@ class FileDependency extends Dependency
      * @return mixed the data needed to determine if dependency has been changed.
      * @throws InvalidConfigException if [[fileName]] is not set
      */
-    protected function generateDependencyData($cache)
+    protected function generateDependencyData(CacheInterface $cache): mixed
     {
         if ($this->fileName === null) {
             throw new InvalidConfigException('FileDependency::fileName must be set');

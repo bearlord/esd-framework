@@ -43,7 +43,7 @@ class ExpressionDependency extends Dependency
      * @param CacheInterface $cache the cache component that is currently evaluating this dependency
      * @return mixed the data needed to determine if dependency has been changed.
      */
-    protected function generateDependencyData($cache)
+    protected function generateDependencyData(CacheInterface $cache): mixed
     {
         return eval("return {$this->expression};");
     }

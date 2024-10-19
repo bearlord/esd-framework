@@ -47,10 +47,10 @@ class DbDependency extends Dependency
      * @return mixed the data needed to determine if dependency has been changed.
      * @throws InvalidConfigException if [[db]] is not a valid application component ID
      */
-    protected function generateDependencyData($cache)
+    protected function generateDependencyData(CacheInterface $cache): mixed
     {
         /* @var $db Connection */
-        $db = Instance::ensure($this->db, Connection::className());
+        $db = Instance::ensure($this->db, Connection::class);
         if ($this->sql === null) {
             throw new InvalidConfigException('DbDependency::sql must be set.');
         }
