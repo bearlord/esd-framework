@@ -143,7 +143,7 @@ class Cache extends \ESD\Yii\Caching\Cache
      * a complex data structure consisting of factors representing the key.
      * @return bool true if a value exists in cache, false if the value is not in the cache or expired.
      */
-    public function exists($key)
+    public function exists(mixed $key)
     {
         return (bool) $this->redis->executeCommand('EXISTS', [$this->buildKey($key)]);
     }
@@ -151,7 +151,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function getValue($key)
+    protected function getValue(string $key)
     {
         return $this->getReplica()->executeCommand('GET', [$key]);
     }
@@ -159,7 +159,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function getValues($keys)
+    protected function getValues(array $keys)
     {
         $response = $this->getReplica()->executeCommand('MGET', [$keys]);
         $result = [];
@@ -174,7 +174,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function setValue($key, $value, $duration)
+    protected function setValue(string $key, mixed $value, int $duration)
     {
         if ($duration == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
@@ -186,7 +186,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function setValues($data, $duration)
+    protected function setValues(array $data, int $duration)
     {
         $failedKeys = [];
         if ($duration == 0) {
@@ -215,7 +215,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function addValue($key, $value, $duration)
+    protected function addValue(string $key, mixed $value, int $duration)
     {
         if ($duration == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
@@ -227,7 +227,7 @@ class Cache extends \ESD\Yii\Caching\Cache
     /**
      * @inheritdoc
      */
-    protected function deleteValue($key)
+    protected function deleteValue(string $key)
     {
         return (bool) $this->redis->executeCommand('DEL', [$key]);
     }

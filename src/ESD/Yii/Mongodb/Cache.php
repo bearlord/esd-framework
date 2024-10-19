@@ -74,7 +74,7 @@ class Cache extends \ESD\Yii\Caching\Cache
      * @param string $key a unique key identifying the cached value
      * @return string|bool the value stored in cache, false if the value is not in the cache or expired.
      */
-    protected function getValue($key)
+    protected function getValue(string $key)
     {
         $query = new Query;
         $row = $query->select(['data'])
@@ -103,11 +103,11 @@ class Cache extends \ESD\Yii\Caching\Cache
      * This method should be implemented by child classes to store the data
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
-     * @param string $value the value to be cached
+     * @param mixed $value the value to be cached
      * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
      */
-    protected function setValue($key, $value, $duration): bool
+    protected function setValue(string $key, mixed $value, int $duration): bool
     {
         $result = $this->db->getCollection($this->cacheCollection)
             ->update(['id' => $key], [
@@ -127,11 +127,11 @@ class Cache extends \ESD\Yii\Caching\Cache
      * This method should be implemented by child classes to store the data
      * in specific cache storage.
      * @param string $key the key identifying the value to be cached
-     * @param string $value the value to be cached
+     * @param mixed $value the value to be cached
      * @param int $duration the number of seconds in which the cached value will expire. 0 means never expire.
      * @return bool true if the value is successfully stored into cache, false otherwise
      */
-    protected function addValue($key, $value, $duration): bool
+    protected function addValue(string $key, mixed $value, int $duration): bool
     {
         $this->gc();
 
@@ -162,7 +162,7 @@ class Cache extends \ESD\Yii\Caching\Cache
      * @return bool if no error happens during deletion
      * @throws \ESD\Yii\Mongodb\Exception
      */
-    protected function deleteValue($key): bool
+    protected function deleteValue(string $key): bool
     {
         $this->db->getCollection($this->cacheCollection)->remove(['id' => $key]);
         return true;
