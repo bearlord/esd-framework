@@ -66,11 +66,11 @@ abstract class Actor
 
     /**
      * Actor constructor.
-     * @param string $name
-     * @throws \DI\DependencyException
-     * @throws ActorException
+     * @param string|null $name
+     * @param bool $isCreated
+     * @throws \ESD\Plugins\Actor\ActorException
      */
-    final public function __construct(string $name = '', bool $isCreated = false)
+    final public function __construct(?string $name = '', bool $isCreated = false)
     {
         $this->name = $name;
         Server::$instance->getContainer()->injectOn($this);
@@ -90,9 +90,9 @@ abstract class Actor
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
@@ -108,7 +108,7 @@ abstract class Actor
     /**
      * Init data
      * @param $data
-     * @return mixed
+     * @return void
      */
     public function initData($data)
     {
@@ -117,7 +117,7 @@ abstract class Actor
 
     /**
      * Process the received message
-     * @param $message
+     * @param \ESD\Plugins\Actor\ActorMessage $message
      * @return mixed
      */
     abstract protected function handleMessage(ActorMessage $message);
@@ -144,9 +144,8 @@ abstract class Actor
      * Get proxy
      * @param string $actorName
      * @param bool $oneway
-     * @param int $timeOut
-     * @return static
-     * @throws ActorException
+     * @param float|null $timeOut
+     * @return \ESD\Plugins\Actor\ActorRPCProxy|false
      */
     public static function getProxy(string $actorName, ?bool $oneway = false, ?float $timeOut = 5)
     {
@@ -159,12 +158,13 @@ abstract class Actor
 
     /**
      * Create
+     * @param string $actionClass
      * @param string $actorName
      * @param null $data
      * @param bool $waitCreate
-     * @param int $timeOut
-     * @return static
-     * @throws ActorException
+     * @param float|null $timeOut
+     * @return \ESD\Plugins\Actor\ActorRPCProxy|false|void
+     * @throws \ESD\Plugins\Actor\ActorException
      */
     public static function create(string $actionClass, string $actorName, $data = null, ?bool $waitCreate = true, ?float $timeOut = 5)
     {
@@ -187,11 +187,6 @@ abstract class Actor
             $call = Server::$instance->getEventDispatcher()->listen(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actorName, null, true);
             $result = $call->wait($timeOut);
             if ($result == null) {
-                /*
-                throw new ActorException(Yii::t('esd', 'Actor {actor} created timeout', [
-                    'actor' => $actorName
-                ]));
-                */
                 return false;
             }
 
@@ -313,7 +308,7 @@ abstract class Actor
      * Subscribe
      *
      * @param string $channel
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException|\ESD\Core\Exception
      */
     public function subscribe(string $channel)
     {
@@ -329,6 +324,7 @@ abstract class Actor
      *
      * @param string $channel
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \Exception
      */
     public function unsubscribe(string $channel)
     {
@@ -343,6 +339,7 @@ abstract class Actor
      * Unsubscribe all
      * @return void
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \Exception
      */
     public function unsubscribeAll(): void
     {
