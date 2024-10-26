@@ -120,7 +120,6 @@ class Channel
      * @param array $excludeActorList
      * @param string|null $from
      * @return void
-     * @throws ActorException
      */
     public function publish(string $channel, string $message, array $excludeActorList = [], ?string $from = ''): void
     {
@@ -145,7 +144,6 @@ class Channel
      * @param $message
      * @param string|null $fromActor
      * @return void
-     * @throws ActorException
      */
     protected function publishToActor(string $channel, string $toActor, $message, ?string $fromActor = ''): void
     {
@@ -168,6 +166,7 @@ class Channel
      * @param string $actor
      * @return bool
      * @throws \ESD\Core\Exception
+     * @throws \Exception
      */
     public function subscribe(string $channel, string $actor): bool
     {
@@ -193,6 +192,7 @@ class Channel
      * @param string $channel
      * @param string $actor
      * @return bool
+     * @throws \Exception
      */
     public function unsubscribe(string $channel, string $actor): bool
     {
@@ -222,6 +222,7 @@ class Channel
      * Unsubscribe all
      * @param string $actor
      * @return bool
+     * @throws \Exception
      */
     public function unsubscribeAll(string $actor): bool
     {
@@ -242,7 +243,7 @@ class Channel
     /**
      * Build a subscription tree, allowing only 5 layers
      *
-     * @param $channel
+     * @param string $channel
      * @return Set
      */
     protected function buildTrees(string $channel): Set

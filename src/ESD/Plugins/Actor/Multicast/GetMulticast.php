@@ -16,6 +16,19 @@ trait GetMulticast
     protected $multicastConfig;
 
     /**
+     * @return MulticastConfig
+     * @throws \Exception
+     */
+    protected function getMulticastConfig(): MulticastConfig
+    {
+        if ($this->multicastConfig == null) {
+            $this->multicastConfig = DIGet(MulticastConfig::class);
+        }
+
+        return $this->multicastConfig;
+    }
+
+    /**
      * Has channel
      * @param string $channel
      * @param string $actor
@@ -23,7 +36,7 @@ trait GetMulticast
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      * @throws \Exception
      */
-    public function hasChannel(string $channel, string $actor): bool
+    public function actorHasChannel(string $channel, string $actor): bool
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -46,19 +59,6 @@ trait GetMulticast
         /** @var Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);
         $rpcProxy->deleteChannel($channel);
-    }
-
-    /**
-     * @return MulticastConfig
-     * @throws \Exception
-     */
-    protected function getMulticastConfig(): MulticastConfig
-    {
-        if ($this->multicastConfig == null) {
-            $this->multicastConfig = DIGet(MulticastConfig::class);
-        }
-
-        return $this->multicastConfig;
     }
 
     /**
