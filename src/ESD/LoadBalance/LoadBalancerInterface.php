@@ -23,7 +23,7 @@ interface LoadBalancerInterface
      * @param Node[] $nodes
      * @return $this
      */
-    public function setNodes(array $nodes);
+    public function setNodes(array $nodes): LoadBalancerInterface;
 
     /**
      * @return Node[] $nodes

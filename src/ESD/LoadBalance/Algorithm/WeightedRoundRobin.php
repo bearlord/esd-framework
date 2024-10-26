@@ -10,6 +10,7 @@ namespace ESD\LoadBalance\Algorithm;
 
 use ESD\LoadBalance\AbstractLoadBalancer;
 use ESD\LoadBalance\Node;
+use ESD\LoadBalance\RuntimeException;
 
 /**
  * Class WeightedRoundRobin

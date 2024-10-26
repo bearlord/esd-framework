@@ -32,7 +32,7 @@ abstract class AbstractLoadBalancer implements LoadBalancerInterface
      * @param Node[] $nodes
      * @return $this
      */
-    public function setNodes(array $nodes): self
+    public function setNodes(array $nodes): LoadBalancerInterface
     {
         $this->nodes = $nodes;
         return $this;
