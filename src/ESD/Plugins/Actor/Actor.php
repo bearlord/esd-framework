@@ -344,12 +344,13 @@ abstract class Actor
     /**
      * Unsubscribe all
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \Exception
      */
     public function unsubscribeAll(): void
     {
         $actor = $this->getName();
 
-        /** @var Channel $rpcProxy */
+        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
         $rpcProxy->unsubscribeAll($actor);
     }
@@ -360,7 +361,6 @@ abstract class Actor
      * @param string $channel
      * @param string $message
      * @param array|null $excludeActorList
-     * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
     public function publish(string $channel, string $message, ?array $excludeActorList = []): void
@@ -380,7 +380,6 @@ abstract class Actor
      * @param string $channel
      * @param string $message
      * @return void
-     * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
     public function publishTo(string $channel, string $message): void
@@ -398,7 +397,6 @@ abstract class Actor
      * @param string $channel
      * @param string $message
      * @return void
-     * @throws ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
     public function publishIn(string $channel, string $message): void
