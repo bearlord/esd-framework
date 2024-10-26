@@ -19,7 +19,7 @@ trait GetMulticast
      * @return MulticastConfig|mixed
      * @throws \Exception
      */
-    protected function getMulticastConfig()
+    protected function getMulticastConfig(): MulticastConfig
     {
         if ($this->multicastConfig == null) {
             $this->multicastConfig = DIGet(MulticastConfig::class);
