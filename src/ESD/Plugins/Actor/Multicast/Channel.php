@@ -57,7 +57,7 @@ class Channel
      * @param string $channel
      * @param string $actor
      */
-    private function addSubscribeFormTable(string $channel, string $actor)
+    private function addSubscribeFormTable(string $channel, string $actor): void
     {
         if (empty($actor)) {
             return;
@@ -77,7 +77,7 @@ class Channel
      * @param string $actor
      * @return bool
      */
-    public function hasChannel(string $channel, string $actor)
+    public function hasChannel(string $channel, string $actor): bool
     {
         $set = !empty($this->subscribeArr[$channel]) ? $this->subscribeArr : null;
         if ($set == null) {
@@ -94,7 +94,7 @@ class Channel
      * @return void
      * @throws \Exception
      */
-    public function deleteChannel(string $channel)
+    public function deleteChannel(string $channel): void
     {
         if (!empty($channel)) {
             unset($this->subscribeArr[$channel]);
@@ -122,7 +122,7 @@ class Channel
      * @return void
      * @throws ActorException
      */
-    public function publish(string $channel, string $message, array $excludeActorList = [], ?string $from = '')
+    public function publish(string $channel, string $message, array $excludeActorList = [], ?string $from = ''): void
     {
         $tree = $this->buildTrees($channel);
 
@@ -147,7 +147,7 @@ class Channel
      * @return void
      * @throws ActorException
      */
-    protected function publishToActor(string $channel, string $toActor, $message, ?string $fromActor = '')
+    protected function publishToActor(string $channel, string $toActor, $message, ?string $fromActor = ''): void
     {
         $actorInstance = Actor::getProxy($toActor);
 
@@ -245,7 +245,7 @@ class Channel
      * @param $channel
      * @return Set
      */
-    protected function buildTrees(string $channel)
+    protected function buildTrees(string $channel): Set
     {
         $isSys = false;
         if ($channel[0] == "$") {
@@ -284,13 +284,13 @@ class Channel
     }
 
     /**
-     * @param $arr
-     * @param $temp
-     * @param $result
-     * @param $complete
-     * @param $isSys
+     * @param array $arr
+     * @param array $temp
+     * @param \Ds\Set $result
+     * @param bool $complete
+     * @param bool $isSys
      */
-    protected function helpReplacePlus($arr, &$temp, &$result, $complete, $isSys)
+    protected function helpReplacePlus(array $arr, array &$temp, Set &$result, bool $complete, bool $isSys): void
     {
         $count = count($arr);
 

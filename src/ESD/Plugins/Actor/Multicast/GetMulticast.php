@@ -21,6 +21,7 @@ trait GetMulticast
      * @param string $actor
      * @return bool
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \Exception
      */
     public function hasChannel(string $channel, string $actor): bool
     {
@@ -66,6 +67,7 @@ trait GetMulticast
      * @param string $channel
      * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \Exception
      */
     public function actorSubscribe(string $channel, string $actor): void
     {
@@ -85,6 +87,7 @@ trait GetMulticast
      * @param string $channel
      * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \Exception
      */
     public function actorUnsubscribe(string $channel, string $actor): void
     {
@@ -100,7 +103,7 @@ trait GetMulticast
 
     /**
      * Unsubscribe all
-     * @param $actor
+     * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
     public function actorUnsubscribeAll(string $actor): void
