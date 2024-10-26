@@ -197,10 +197,10 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
     }
 
     /**
-     * @param string $content
+     * @param string|null $content
      * @return $this
      */
-    public function appendBody(string $content): self
+    public function appendBody(?string $content): self
     {
         if($content == null) {
             $content = '';
@@ -213,10 +213,10 @@ abstract class AbstractResponse implements \Psr\Http\Message\ResponseInterface
     }
 
     /**
-     * @param string $content
+     * @param string|null $content
      * @return $this
      */
-    public function append(string $content): self
+    public function append(?string $content): self
     {
         if($content == null) {
             $content = '';
