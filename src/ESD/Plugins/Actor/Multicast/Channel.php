@@ -193,6 +193,7 @@ class Channel
      * @param string $channel
      * @param string $actor
      * @return bool
+     * @throws \Exception
      */
     public function unsubscribe(string $channel, string $actor): bool
     {
@@ -222,6 +223,7 @@ class Channel
      * Unsubscribe all
      * @param string $actor
      * @return bool
+     * @throws \Exception
      */
     public function unsubscribeAll(string $actor): bool
     {
@@ -242,8 +244,8 @@ class Channel
     /**
      * Build a subscription tree, allowing only 5 layers
      *
-     * @param $channel
-     * @return Set
+     * @param string $channel
+     * @return \Ds\Set
      */
     protected function buildTrees(string $channel)
     {
@@ -284,13 +286,13 @@ class Channel
     }
 
     /**
-     * @param $arr
-     * @param $temp
-     * @param $result
-     * @param $complete
-     * @param $isSys
+     * @param array $arr
+     * @param array $temp
+     * @param \Ds\Set $result
+     * @param bool $complete
+     * @param bool $isSys
      */
-    protected function helpReplacePlus($arr, &$temp, &$result, $complete, $isSys)
+    protected function helpReplacePlus(array $arr, array &$temp, Set &$result, bool $complete, bool $isSys)
     {
         $count = count($arr);
 
