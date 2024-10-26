@@ -7,6 +7,7 @@
 namespace ESD\Rpc\IdGenerator;
 
 use ESD\Utils\Base62;
+use Exception;
 
 /**
  * Class NodeRequestIdGenerator
