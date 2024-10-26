@@ -237,9 +237,9 @@ abstract class Actor
      * @param int $msec
      * @param callable $callback
      * @param ...$params
-     * @return false|int
+     * @return int
      */
-    public function after(int $msec, callable $callback, ... $params)
+    public function after(int $msec, callable $callback, ... $params): int
     {
         $id = Timer::after($msec, $callback, ...$params);
         $this->timerIds[$id] = $id;
@@ -261,8 +261,9 @@ abstract class Actor
     /**
      * Clear all timer
      * @return void
+     * @throws \Exception
      */
-    public function clearAllTimer()
+    public function clearAllTimer(): bool
     {
         if (!empty($this->timerIds)) {
             foreach ($this->timerIds as $timerId) {
@@ -272,13 +273,14 @@ abstract class Actor
                 "actor" => $this->getName()
             ]));
         }
+        return true;
     }
 
     /**
      * @return void
      * @throws \Exception
      */
-    public function saveContext()
+    public function saveContext(): void
     {
         $class = get_class($this);
         $name = $this->getName();
@@ -297,7 +299,7 @@ abstract class Actor
      * @return MulticastConfig|mixed
      * @throws \Exception
      */
-    protected function getMulticastConfig()
+    protected function getMulticastConfig(): MulticastConfig
     {
         if ($this->multicastConfig == null) {
             $this->multicastConfig = DIGet(MulticastConfig::class);
@@ -339,13 +341,14 @@ abstract class Actor
 
     /**
      * Unsubscribe all
+     * @return void
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function unsubscribeAll()
+    public function unsubscribeAll(): void
     {
         $actor = $this->getName();
 
-        /** @var Channel $rpcProxy */
+        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
         $rpcProxy->unsubscribeAll($actor);
     }
@@ -355,10 +358,12 @@ abstract class Actor
      *
      * @param string $channel
      * @param string $message
-     * @param array $excludeActorList
+     * @param array|null $excludeActorList
+     * @return void
+     * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publish(string $channel, string $message, ?array $excludeActorList = [])
+    public function publish(string $channel, string $message, ?array $excludeActorList = []): void
     {
         $from = $this->getName();
 
@@ -373,13 +378,12 @@ abstract class Actor
 
     /**
      * @param string $channel
-     * @param string$message
-     * @param array $excludeActorList
+     * @param string $message
      * @return void
-     * @throws ActorException
+     * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publishTo(string $channel, string $message)
+    public function publishTo(string $channel, string $message): void
     {
         $from = $this->getName();
 
