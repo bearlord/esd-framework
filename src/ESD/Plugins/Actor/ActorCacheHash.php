@@ -67,7 +67,7 @@ class ActorCacheHash implements \ArrayAccess
      * @param $offset
      * @return array|mixed|null
      */
-    public function offsetGet(mixed $offset): bool
+    public function offsetGet(mixed $offset): mixed
     {
         $path = explode($this->delimiter, $offset);
         $deep = &$this->container;

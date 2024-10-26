@@ -40,7 +40,7 @@ trait GetMulticast
      * @param string $channel
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function deleteChannel(string $channel)
+    public function deleteChannel(string $channel): void
     {
         /** @var Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);
@@ -48,10 +48,10 @@ trait GetMulticast
     }
 
     /**
-     * @return MulticastConfig|mixed
+     * @return MulticastConfig
      * @throws \Exception
      */
-    protected function getMulticastConfig()
+    protected function getMulticastConfig(): MulticastConfig
     {
         if ($this->multicastConfig == null) {
             $this->multicastConfig = DIGet(MulticastConfig::class);
@@ -67,7 +67,7 @@ trait GetMulticast
      * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function actorSubscribe(string $channel, string $actor)
+    public function actorSubscribe(string $channel, string $actor): void
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -86,7 +86,7 @@ trait GetMulticast
      * @param string $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function actorUnsubscribe(string $channel, string $actor)
+    public function actorUnsubscribe(string $channel, string $actor): void
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -103,7 +103,7 @@ trait GetMulticast
      * @param $actor
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function actorUnsubscribeAll(string $actor)
+    public function actorUnsubscribeAll(string $actor): void
     {
         if (empty($actor)) {
             $this->warn("Actor is empty");
@@ -124,7 +124,7 @@ trait GetMulticast
      * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function actorPublish(string $channel, ?string $message, ?array $excludeActorList = [])
+    public function actorPublish(string $channel, ?string $message, ?array $excludeActorList = []): void
     {
         /** @var Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), Channel::class, true);

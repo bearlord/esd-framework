@@ -81,7 +81,6 @@ class ActorManager
 
     /**
      * @return ActorManager
-     * @throws \Exception
      */
     public static function getInstance(): ActorManager
     {

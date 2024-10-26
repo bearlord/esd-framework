@@ -92,7 +92,7 @@ abstract class Actor
     /**
      * @return mixed
      */
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
@@ -100,7 +100,7 @@ abstract class Actor
     /**
      * @param mixed $data
      */
-    public function setData($data): void
+    public function setData(mixed $data): void
     {
         $this->data = $data;
     }
@@ -108,19 +108,19 @@ abstract class Actor
     /**
      * Init data
      * @param $data
-     * @return mixed
+     * @return void
      */
-    public function initData($data)
+    public function initData($data): void
     {
         $this->data = $data;
     }
 
     /**
      * Process the received message
-     * @param $message
+     * @param \ESD\Plugins\Actor\ActorMessage $message
      * @return mixed
      */
-    abstract protected function handleMessage(ActorMessage $message);
+    abstract protected function handleMessage(ActorMessage $message): mixed;
 
     /**
      * @return string
@@ -134,7 +134,7 @@ abstract class Actor
      * Destroy
      * @throws \Exception
      */
-    public function destroy()
+    public function destroy(): void
     {
         $this->clearAllTimer();
         ActorManager::getInstance()->removeActor($this);
@@ -144,9 +144,8 @@ abstract class Actor
      * Get proxy
      * @param string $actorName
      * @param bool $oneway
-     * @param int $timeOut
-     * @return static
-     * @throws ActorException
+     * @param float|null $timeOut
+     * @return \ESD\Plugins\Actor\ActorRPCProxy|false
      */
     public static function getProxy(string $actorName, ?bool $oneway = false, ?float $timeOut = 5)
     {
@@ -159,12 +158,13 @@ abstract class Actor
 
     /**
      * Create
+     * @param string $actionClass
      * @param string $actorName
      * @param null $data
      * @param bool $waitCreate
-     * @param int $timeOut
-     * @return static
-     * @throws ActorException
+     * @param float|null $timeOut
+     * @return \ESD\Plugins\Actor\ActorRPCProxy|false|void
+     * @throws \ESD\Plugins\Actor\ActorException
      */
     public static function create(string $actionClass, string $actorName, $data = null, ?bool $waitCreate = true, ?float $timeOut = 5)
     {
@@ -203,7 +203,7 @@ abstract class Actor
      * Proxy receive a message, throw it in the mailbox
      * @param ActorMessage $message
      */
-    public function sendMessage(ActorMessage $message)
+    public function sendMessage(ActorMessage $message): void
     {
         $this->channel->push($message);
     }
@@ -222,9 +222,9 @@ abstract class Actor
      * @param int $msec
      * @param callable $callback
      * @param ...$params
-     * @return false|int
+     * @return int
      */
-    public function tick(int $msec, callable $callback, ... $params)
+    public function tick(int $msec, callable $callback, ... $params): int
     {
         $id = Timer::tick($msec, $callback, ...$params);
         $this->timerIds[$id] = $id;
@@ -237,9 +237,9 @@ abstract class Actor
      * @param int $msec
      * @param callable $callback
      * @param ...$params
-     * @return false|int
+     * @return int
      */
-    public function after(int $msec, callable $callback, ... $params)
+    public function after(int $msec, callable $callback, ... $params): int
     {
         $id = Timer::after($msec, $callback, ...$params);
         $this->timerIds[$id] = $id;
@@ -250,19 +250,22 @@ abstract class Actor
     /**
      * Clear timer
      * @param int $id
-     * @return void
+     * @return bool
      */
-    public function clearTimer(int $id)
+    public function clearTimer(int $id): bool
     {
         Timer::clear($id);
         unset($this->timerIds[$id]);
+
+        return true;
     }
 
     /**
      * Clear all timer
-     * @return void
+     * @return bool
+     * @throws \Exception
      */
-    public function clearAllTimer()
+    public function clearAllTimer(): bool
     {
         if (!empty($this->timerIds)) {
             foreach ($this->timerIds as $timerId) {
@@ -272,13 +275,14 @@ abstract class Actor
                 "actor" => $this->getName()
             ]));
         }
+        return true;
     }
 
     /**
      * @return void
      * @throws \Exception
      */
-    public function saveContext()
+    public function saveContext(): void
     {
         $class = get_class($this);
         $name = $this->getName();
@@ -294,10 +298,10 @@ abstract class Actor
 
 
     /**
-     * @return MulticastConfig|mixed
+     * @return MulticastConfig
      * @throws \Exception
      */
-    protected function getMulticastConfig()
+    protected function getMulticastConfig(): MulticastConfig
     {
         if ($this->multicastConfig == null) {
             $this->multicastConfig = DIGet(MulticastConfig::class);
@@ -311,9 +315,9 @@ abstract class Actor
      * Subscribe
      *
      * @param string $channel
-     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
+     * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException|\ESD\Core\Exception
      */
-    public function subscribe(string $channel)
+    public function subscribe(string $channel): void
     {
         $actor = $this->getName();
 
@@ -328,7 +332,7 @@ abstract class Actor
      * @param string $channel
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function unsubscribe(string $channel)
+    public function unsubscribe(string $channel): void
     {
         $actor = $this->getName();
 
@@ -341,7 +345,7 @@ abstract class Actor
      * Unsubscribe all
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function unsubscribeAll()
+    public function unsubscribeAll(): void
     {
         $actor = $this->getName();
 
@@ -355,10 +359,11 @@ abstract class Actor
      *
      * @param string $channel
      * @param string $message
-     * @param array $excludeActorList
+     * @param array|null $excludeActorList
+     * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publish(string $channel, string $message, ?array $excludeActorList = [])
+    public function publish(string $channel, string $message, ?array $excludeActorList = []): void
     {
         $from = $this->getName();
 
@@ -373,13 +378,12 @@ abstract class Actor
 
     /**
      * @param string $channel
-     * @param string$message
-     * @param array $excludeActorList
+     * @param string $message
      * @return void
-     * @throws ActorException
+     * @throws \ESD\Plugins\Actor\ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publishTo(string $channel, string $message)
+    public function publishTo(string $channel, string $message): void
     {
         $from = $this->getName();
 
@@ -397,7 +401,7 @@ abstract class Actor
      * @throws ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
-    public function publishIn(string $channel, string $message)
+    public function publishIn(string $channel, string $message): void
     {
         $from = $this->getName();
 
