@@ -53,14 +53,14 @@ class AutoReloadPlugin extends AbstractPlugin
     /**
      * @inheritDoc
      * @param Context $context
-     * @return mixed
+     * @return void
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \ESD\Core\Plugins\Config\ConfigException
      * @throws \ReflectionException
      * @throws \ESD\Core\Exception
      */
-    public function beforeServerStart(Context $context): mixed
+    public function beforeServerStart(Context $context)
     {
         if ($this->autoReloadConfig->getMonitorDir() == null) {
             $this->autoReloadConfig->setEnable(Server::$instance->getServerConfig()->isReloadAsync());
@@ -76,10 +76,10 @@ class AutoReloadPlugin extends AbstractPlugin
     /**
      * @inheritDoc
      * @param Context $context
-     * @return mixed
+     * @return void
      * @throws \Exception
      */
-    public function beforeProcessStart(Context $context): mixed
+    public function beforeProcessStart(Context $context)
     {
         if (Server::$instance->getProcessManager()->getCurrentProcess()->getProcessName() === self::PROCESS_NAME) {
             $this->inotifyReload = new InotifyReload($this->autoReloadConfig);
