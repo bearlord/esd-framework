@@ -61,7 +61,7 @@ class AopConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->cacheDir;
     }
@@ -77,7 +77,7 @@ class AopConfig extends BaseConfig
     /**
      * @return string[]
      */
-    public function getIncludePaths()
+    public function getIncludePaths(): array
     {
         return $this->includePaths;
     }
@@ -93,7 +93,7 @@ class AopConfig extends BaseConfig
     /**
      * @param string $includePath
      */
-    public function addIncludePath(string $includePath)
+    public function addIncludePath(string $includePath): void
     {
         $includePath = realpath($includePath);
         if ($includePath === false) {
@@ -107,7 +107,7 @@ class AopConfig extends BaseConfig
     /**
      * @param OrderAspect $param
      */
-    public function addAspect(OrderAspect $param)
+    public function addAspect(OrderAspect $param): void
     {
         $this->aspects[] = $param;
     }
@@ -124,7 +124,7 @@ class AopConfig extends BaseConfig
      * Build config
      * @throws ConfigException
      */
-    public function buildConfig()
+    public function buildConfig(): void
     {
         if (empty($this->includePaths)) {
             throw new ConfigException("includePaths cannot be empty");
@@ -166,7 +166,7 @@ class AopConfig extends BaseConfig
     /**
      * @param string $excludePath
      */
-    public function addExcludePath(string $excludePath)
+    public function addExcludePath(string $excludePath): void
     {
         $excludePath = realpath($excludePath);
         if ($excludePath === false) {
