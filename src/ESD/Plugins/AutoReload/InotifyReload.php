@@ -37,7 +37,7 @@ class InotifyReload
      * @param AutoReloadConfig $autoReloadConfig
      * @throws \Exception
      */
-    public function prepareInit(AutoReloadConfig $autoReloadConfig)
+    public function prepareInit(AutoReloadConfig $autoReloadConfig): void
     {
         if ($autoReloadConfig->isEnable()) {
             $this->info(Yii::t('esd', 'Hot reload is enabled'));
@@ -53,7 +53,7 @@ class InotifyReload
     /**
      * Use inotify
      */
-    public function useInotify()
+    public function useInotify(): void
     {
         global $monitorFiles;
 
@@ -99,7 +99,7 @@ class InotifyReload
      *
      * @throws \Exception
      */
-    public function unUseInotify()
+    public function unUseInotify(): void
     {
         $this->warn("Non-inotify mode, performance is extremely low, it is not recommended to enable it in a formal environment. Please install inotify extension");
         if (Process::isDarwin()) {
@@ -134,10 +134,10 @@ class InotifyReload
     /**
      * Delete cache
      *
-     * @param $file
+     * @param string $file
      * @throws \ESD\Core\Exception
      */
-    private function deleteCache($file)
+    private function deleteCache(string $file): void
     {
         $cacheDir = Server::$instance->getServerConfig()->getCacheDir() . "/aop";
         $rootDir = realpath(Server::$instance->getServerConfig()->getRootDir());

@@ -15,7 +15,7 @@ use ESD\Core\Plugins\Config\BaseConfig;
  */
 class AutoReloadConfig extends BaseConfig
 {
-    const KEY = "reload";
+    const KEY = "autoreload";
 
     /**
      * @var bool

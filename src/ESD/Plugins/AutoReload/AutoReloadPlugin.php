@@ -62,15 +62,15 @@ class AutoReloadPlugin extends AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
+        $this->autoReloadConfig->setEnable(Server::$instance->getServerConfig()->isReloadAsync());
+
         if ($this->autoReloadConfig->getMonitorDir() == null) {
-            $this->autoReloadConfig->setEnable(Server::$instance->getServerConfig()->isReloadAsync());
             $this->autoReloadConfig->setMonitorDir(Server::$instance->getServerConfig()->getSrcDir());
         }
         $this->autoReloadConfig->merge();
 
         //Add help process
         Server::$instance->addProcess(self::PROCESS_NAME, HelperReloadProcess::class, self::PROCESS_GROUP_NAME);
-        return;
     }
 
     /**
