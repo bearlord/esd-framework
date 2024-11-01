@@ -61,7 +61,7 @@ class AopConfig extends BaseConfig
     /**
      * @return string
      */
-    public function getCacheDir(): string
+    public function getCacheDir(): ?string
     {
         return $this->cacheDir;
     }
