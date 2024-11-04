@@ -112,6 +112,10 @@ class Logger extends Component
      */
     public $dispatcher;
 
+    /**
+     * @var bool whether the log function is enabled
+     */
+    public $enabled = false;
 
     /**
      * Initializes the logger by registering [[flush()]] as a shutdown function.
@@ -141,6 +145,10 @@ class Logger extends Component
      */
     public function log($message, $level, $category = 'application')
     {
+        if (!$this->enabled) {
+            return;
+        }
+        
         $time = microtime(true);
         $traces = [];
         if ($this->traceLevel > 0) {
