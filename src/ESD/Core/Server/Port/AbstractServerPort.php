@@ -212,9 +212,13 @@ abstract class AbstractServerPort
         Server::$instance->getProcessManager()->getCurrentProcess()->waitReady();
         try {
             $port = Server::$instance->getPortManager()->getPortFromFd($fd);
-            if (Server::$instance->isEstablished($fd)) {
+            if (empty($port)) {
+                return;
+            }
+
+            if ($port->isWebSocket()) {
                 $this->onWsClose($fd, $reactorId);
-            } else if ($port->isTcp()) {
+            } elseif ($port->isUDP()) {
                 $this->onTcpClose($fd, $reactorId);
             }
         } catch (\Throwable $e) {
