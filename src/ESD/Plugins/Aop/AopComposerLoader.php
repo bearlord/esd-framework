@@ -117,17 +117,13 @@ class AopComposerLoader extends \ESD\Goaop\Instrument\ClassLoading\AopComposerLo
         } else {
             if ($file !== false) {
                 if (strpos($file, 'php://') === 0) {
-                    if (strpos($file, "Swoole")
-                        || strpos($file, "Yii")
-                        || strpos($file, "ESD/Nikic")
-                    ) {
+                    if (strpos($file, "ESD/Nikic")) {
                         $oldfile = $file;
                         if (preg_match('/resource=(.+)$/', $file, $matches)) {
                             $file = PathResolver::realpath($matches[1]);
                             $newfile = $file;
                         }
                     }
-
                 }
                 include $file;
             }
