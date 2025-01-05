@@ -291,16 +291,25 @@ class Application extends ServiceLocator
             /** @var PdoPools $pdoPools */
             $pdoPools = getDeepContextValueByClassName(PdoPools::class);
             if (!empty($pdoPools)) {
-                /** @var PdoPool $pool */
+                /** @var \ESD\Yii\Plugin\Pdo\PdoPool $pool */
                 $pool = $pdoPools->getPool($poolKey);
                 if ($pool == null) {
+                    Server::$instance->getLog()->error("No Pdo connection pool named {$poolKey} was found");
                     throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
                 }
-                return $pool->db();
+                try {
+                    $db = $pool->db();
+                    if (empty($db)) {
+                        Server::$instance->getLog()->error("Empty db, get db once.");
+                        return $this->getDbOnce($name);
+                    }
+                    return $db;
+                } catch (\Exception $e) {
+                    Server::$instance->getLog()->error($e);
+                }
             } else {
                 return $this->getDbOnce($name);
             }
-
         } else {
             return $db;
         }
