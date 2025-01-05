@@ -83,6 +83,10 @@ class PdoPool extends Pool
         if ($db == null) {
             /** @var Connection $db */
             $db = $this->pool->pop();
+            if ($db == null) {
+                Server::$instance->getLog()->error("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
+                throw new \PDOException("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
+            }
 
             \Swoole\Coroutine::defer(function () use ($contextKey) {
                 $db = getContextValue($contextKey);
