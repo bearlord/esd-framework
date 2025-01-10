@@ -26,6 +26,9 @@ class ChannelImpl implements Channel
 
     const CHANNEL_CLOSED = SWOOLE_CHANNEL_CLOSED;
 
+    /**
+     * @var \Swoole\Coroutine\Channel
+     */
     public $swooleChannel;
 
     /**
@@ -68,7 +71,7 @@ class ChannelImpl implements Channel
 
     /**
      * Loop pop
-     * @param $callback
+     * @param callable $callback
      */
     public function popLoop(callable $callback)
     {

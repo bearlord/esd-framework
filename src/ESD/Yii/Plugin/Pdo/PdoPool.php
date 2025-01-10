@@ -6,9 +6,7 @@
 
 namespace ESD\Yii\Plugin\Pdo;
 
-use ESD\Core\Channel\Channel;
 use ESD\Core\Pool\Pool;
-use ESD\Coroutine\Coroutine;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Db\Exception;
@@ -20,12 +18,19 @@ use ESD\Yii\Db\Exception;
 class PdoPool extends Pool
 {
     /**
-     * @var Channel
+     * @var \ESD\Core\Channel\Channel
      */
     protected $pool;
 
-    /** @var Config */
+    /**
+     * @var \ESD\Yii\Plugin\Pdo\Config
+     */
     protected $config;
+
+    /**
+     * @var \ESD\Yii\Plugin\Pdo\ChannelImpl
+     */
+    protected $channel;
 
     /**
      * Pool constructor.
@@ -35,16 +40,17 @@ class PdoPool extends Pool
     public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->pool = DIGet(Channel::class, [$config->getPoolMaxNumber()]);
+        $this->channel = new ChannelImpl($config->getPoolMaxNumber());
+
         for ($i = 0; $i < $config->getPoolMaxNumber(); $i++) {
             $db = $this->connect($config);
-            $this->pool->push($db);
+            $this->channel->push($db);
         }
     }
 
     /**
-     * @param Config $config
-     * @return Connection
+     * @param \ESD\Yii\Plugin\Pdo\Config $config
+     * @return \ESD\Yii\Db\Connection
      * @throws \ESD\Yii\Db\Exception
      */
     protected function connect(Config $config): Connection
@@ -73,6 +79,7 @@ class PdoPool extends Pool
 
     /**
      * @return \ESD\Yii\Db\Connection
+     * @throws \Exception
      */
     public function db(): Connection
     {
@@ -82,18 +89,24 @@ class PdoPool extends Pool
 
         if ($db == null) {
             /** @var Connection $db */
-            $db = $this->pool->pop();
+            $db = $this->channel->pop();
             if ($db == null) {
                 Server::$instance->getLog()->error("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
-                throw new \PDOException("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
+                throw new \RuntimeException("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
             }
 
             \Swoole\Coroutine::defer(function () use ($contextKey) {
                 $db = getContextValue($contextKey);
-                $this->pool->push($db);
+                $this->channel->push($db);
             });
             setContextValue($contextKey, $db);
         }
+
+        if (! $db instanceof Connection) {
+            Server::$instance->getLog()->error("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
+            throw new \RuntimeException("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
+        }
+
         return $db;
     }
 }
