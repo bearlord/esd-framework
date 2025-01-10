@@ -105,7 +105,7 @@ class AopComposerLoader extends \ESD\Goaop\Instrument\ClassLoading\AopComposerLo
     public function loadClass($class): void
     {
         //File operations must close the global RuntimeCoroutine
-        //enableRuntimeCoroutine(false);
+        enableRuntimeCoroutine(false);
         $file = $this->findFile($class);
 
         if (strpos($class, "App\\") !== false) {
