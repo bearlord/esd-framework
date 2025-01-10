@@ -38,6 +38,7 @@
     },
     "require-dev": {
         "ext-iconv": "*",
+        "swoole/ide-helper": "^5.0",
         "symfony/process": "^5.4.46 | ^6.4.14",
         "twig/twig": "^3.11.2"
     },

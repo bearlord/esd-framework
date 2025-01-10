@@ -91,8 +91,9 @@ class PdoPool extends Pool
             /** @var Connection $db */
             $db = $this->channel->pop();
             if ($db == null) {
-                Server::$instance->getLog()->error("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
-                throw new \RuntimeException("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
+                $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase poolMaxNumber";
+                Server::$instance->getLog()->error($errorMessage);
+                throw new \RuntimeException($errorMessage);
             }
 
             \Swoole\Coroutine::defer(function () use ($contextKey) {
@@ -103,8 +104,9 @@ class PdoPool extends Pool
         }
 
         if (! $db instanceof Connection) {
-            Server::$instance->getLog()->error("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
-            throw new \RuntimeException("Couldn't pop item from {$contextKey} database pool, please increase poolMaxNumber");
+            $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase poolMaxNumber";
+            Server::$instance->getLog()->error($errorMessage);
+            throw new \RuntimeException($errorMessage);
         }
 
         return $db;
