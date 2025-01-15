@@ -26,23 +26,21 @@ class PdoPool extends Pool
      * @var \ESD\Yii\Plugin\Pdo\Config
      */
     protected $config;
-
+    
     /**
-     * @var \ESD\Yii\Plugin\Pdo\ChannelImpl
+     * @var \ESD\Core\Channel\Channel
      */
     protected $channel;
 
     /**
-     * Pool constructor.
-     * @param Config $config
+     * @param \ESD\Yii\Plugin\Pdo\Config $config
      * @throws \ESD\Yii\Db\Exception
      */
     public function __construct(Config $config)
     {
-        $this->config = $config;
-        $this->channel = new ChannelImpl($config->getPoolMaxNumber());
+        parent::__construct($config);
 
-        for ($i = 0; $i < $config->getPoolMaxNumber(); $i++) {
+        for ($i = 0; $i < $this->getOption()->getMaxConnections(); $i++) {
             $db = $this->connect($config);
             $this->channel->push($db);
         }

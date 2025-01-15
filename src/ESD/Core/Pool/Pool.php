@@ -19,8 +19,33 @@ class Pool
      */
     protected $pool;
 
-    /** @var Config */
+    /**
+     * @var Channel
+     */
+    protected $channel;
+
+    /**
+     * @var \ESD\Core\Pool\Config
+     */
     protected $config;
+
+    /**
+     * @var \ESD\Core\Pool\PoolOption
+     */
+    protected $option;
+
+
+    /**
+     * @param \ESD\Core\Pool\Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+
+        $this->initOption($config->toConfigArray());
+
+        $this->generateChannel();
+    }
 
     /**
      * @return Channel
@@ -28,6 +53,33 @@ class Pool
     public function getPool()
     {
         return $this->pool;
+    }
+
+    /**
+     * @return \ESD\Core\Channel\Channel
+     */
+    public function getChannel(): Channel
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @param \ESD\Core\Channel\Channel $channel
+     * @return void
+     */
+    public function setChannel(Channel $channel): void
+    {
+        $this->channel = $channel;
+    }
+
+    /**
+     * @return void
+     */
+    protected function generateChannel()
+    {
+        $channel = DIGet(Channel::class, [$this->option->getMaxConnections()]);
+
+        $this->setChannel($channel);
     }
 
     /**
@@ -45,4 +97,21 @@ class Pool
     {
         $this->config = $config;
     }
+
+    /**
+     * @param array $options
+     * @return void
+     */
+    protected function initOption(array $options = [])
+    {
+        $this->option = new PoolOption(
+            $options['minConnections'] ?? null,
+            $options['maxConnections'] ?? null,
+            $options['connectTimeout'] ?? null,
+            $options['waitTimeout'] ?? null,
+            $options['heartbeat'] ?? null,
+            $options['maxIdleTime'] ?? null
+        );
+    }
+
 }
