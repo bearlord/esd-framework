@@ -129,7 +129,7 @@ class AnnotationRoute implements IRoute
 
                         case ($annotation instanceof RequestParam):
                             if ($request == null) {
-                                continue;
+                                break;
                             }
                             $result = $request->query($annotation->value);
                             if ($annotation->required && $result == null) {
@@ -140,7 +140,7 @@ class AnnotationRoute implements IRoute
 
                         case ($annotation instanceof RequestFormData):
                             if ($request == null) {
-                                continue;
+                                break;
                             }
                             $result = $request->post($annotation->value);
                             if ($annotation->required && $result == null) {
@@ -152,7 +152,7 @@ class AnnotationRoute implements IRoute
                         case ($annotation instanceof RequestRawJson):
                         case ($annotation instanceof RequestBody):
                             if ($request == null) {
-                                continue;
+                                break;
                             }
                             if (!$json = json_decode($request->getBody()->getContents(), true)) {
                                 $this->warning('RequestRawJson errror, raw:' . $request->getBody()->getContents());
@@ -167,7 +167,7 @@ class AnnotationRoute implements IRoute
 
                         case ($annotation instanceof RequestRaw):
                             if ($request == null) {
-                                continue;
+                                break;
                             }
                             $raw = $request->getBody()->getContents();
                             $params[$annotation->value] = $raw;
@@ -175,7 +175,7 @@ class AnnotationRoute implements IRoute
 
                         case ($annotation instanceof RequestRawXml):
                             if ($request == null) {
-                                continue;
+                                break;
                             }
                             $raw = $request->getBody()->getContents();
                             if (!$xml = simplexml_load_string($raw, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS)) {
