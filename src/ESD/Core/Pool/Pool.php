@@ -99,6 +99,23 @@ class Pool
     }
 
     /**
+     * @return \ESD\Core\Pool\PoolOption
+     */
+    public function getOption(): PoolOption
+    {
+        return $this->option;
+    }
+
+    /**
+     * @param \ESD\Core\Pool\PoolOption $option
+     * @return void
+     */
+    public function setOption(PoolOption $option): void
+    {
+        $this->option = $option;
+    }
+
+    /**
      * @param array $options
      * @return void
      */
