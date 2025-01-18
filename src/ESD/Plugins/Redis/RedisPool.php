@@ -7,6 +7,7 @@
 namespace ESD\Plugins\Redis;
 
 use ESD\Core\Channel\Channel;
+use ESD\Core\Pool\ConnectionInterface;
 use ESD\Core\Pool\Pool;
 
 /**
@@ -29,6 +30,11 @@ class RedisPool extends Pool
             $db = new Redis();
             $this->pool->push($db);
         }
+    }
+
+    protected function createConnection(): ConnectionInterface
+    {
+        return new Connection();
     }
 
     /**
