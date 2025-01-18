@@ -2,7 +2,7 @@
 
 namespace ESD\Core\Pool;
 
-class PoolOption
+class PoolOption implements PoolOptionInterface
 {
     /**
      * @var int Min connections of pool.

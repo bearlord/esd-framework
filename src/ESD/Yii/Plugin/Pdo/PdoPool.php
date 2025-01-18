@@ -6,9 +6,9 @@
 
 namespace ESD\Yii\Plugin\Pdo;
 
+use ESD\Core\Pool\ConnectionInterface;
 use ESD\Core\Pool\Pool;
 use ESD\Server\Coroutine\Server;
-use ESD\Yii\Db\Connection;
 use ESD\Yii\Db\Exception;
 
 /**
@@ -26,7 +26,7 @@ class PdoPool extends Pool
      * @var \ESD\Yii\Plugin\Pdo\Config
      */
     protected $config;
-    
+
     /**
      * @var \ESD\Core\Channel\Channel
      */
@@ -39,74 +39,58 @@ class PdoPool extends Pool
     public function __construct(Config $config)
     {
         parent::__construct($config);
-
-        for ($i = 0; $i < $this->getOption()->getMaxConnections(); $i++) {
-            $db = $this->connect($config);
-            $this->channel->push($db);
-        }
     }
 
     /**
-     * @param \ESD\Yii\Plugin\Pdo\Config $config
-     * @return \ESD\Yii\Db\Connection
-     * @throws \ESD\Yii\Db\Exception
+     * @return \ESD\Core\Pool\ConnectionInterface
      */
-    protected function connect(Config $config): Connection
+    protected function createConnection(): ConnectionInterface
     {
-        try {
-            $db = new Connection([
-                "poolName" => $config->getName(),
-                "dsn" => $config->getDsn(),
-                "username" => $config->getUsername(),
-                "password" => $config->getPassword(),
-                "charset" => $config->getCharset(),
-                "tablePrefix" => $config->getTablePrefix(),
-                "enableSchemaCache" => $config->getEnableSchemaCache(),
-                "schemaCacheDuration" => $config->getSchemaCacheDuration(),
-                "schemaCache" => $config->getSchemaCache(),
-            ]);
-            $db->open();
-        } catch (Exception $e) {
-            Server::$instance->getLog()->error($e->getMessage());
+        $connection = new Connection($this, $this->getConfig());
+        $connection->connect();
 
-            throw new Exception($e->getMessage(), $e->errorInfo, (int)$e->getCode(), $e);
-        }
-
-        return $db;
+        return $connection;
     }
 
     /**
      * @return \ESD\Yii\Db\Connection
      * @throws \Exception
      */
-    public function db(): Connection
+    public function db(): \ESD\Yii\Db\Connection
     {
         $contextKey = sprintf("Pdo:%s", $this->getConfig()->getName());
 
         $db = getContextValue($contextKey);
-
         if ($db == null) {
-            /** @var Connection $db */
-            $db = $this->channel->pop();
-            if ($db == null) {
-                $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase poolMaxNumber";
+            /** @var \ESD\Yii\Plugin\Pdo\Connection $poolConnection */
+            $poolConnection = $this->get();
+            if (empty($poolConnection)) {
+                $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase maxConnections";
                 Server::$instance->getLog()->error($errorMessage);
                 throw new \RuntimeException($errorMessage);
             }
 
-            \Swoole\Coroutine::defer(function () use ($contextKey) {
+            /** @var \ESD\Yii\Db\Connection $db */
+            $db = $poolConnection->getDbConnection();
+
+            \Swoole\Coroutine::defer(function () use ($poolConnection, $contextKey) {
                 $db = getContextValue($contextKey);
-                $this->channel->push($db);
+
+                $poolConnection->setLastUseTime(microtime(true));
+                $poolConnection->setConnection($db);
+
+                $this->release($poolConnection);
             });
             setContextValue($contextKey, $db);
         }
 
-        if (! $db instanceof Connection) {
-            $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase poolMaxNumber";
+        if (! $db instanceof \ESD\Yii\Db\Connection) {
+            $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase maxConnections";
             Server::$instance->getLog()->error($errorMessage);
             throw new \RuntimeException($errorMessage);
         }
 
         return $db;
     }
+
 }
