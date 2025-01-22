@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ESD Yii pdo plugin
+ * ESD framework
  * @author bearlord <565364226@qq.com>
  */
 

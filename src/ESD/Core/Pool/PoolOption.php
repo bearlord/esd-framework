@@ -1,4 +1,9 @@
 <?php
+/**
+ * ESD framework
+ * @author bearlord <565364226@qq.com>
+ * copy from hyperf[https://www.hyperf.io/]
+ */
 
 namespace ESD\Core\Pool;
 

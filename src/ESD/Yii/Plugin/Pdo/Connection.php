@@ -1,4 +1,8 @@
 <?php
+/**
+ * ESD framework
+ * @author bearlord <565364226@qq.com>
+ */
 
 namespace ESD\Yii\Plugin\Pdo;
 
@@ -115,7 +119,6 @@ class Connection extends PoolConnection
      */
     public function reconnect(): bool
     {
-        Server::$instance->getLog()->debug(sprintf("%s, reconnect...\n", date("Y-m-d H:i:s")));
         $this->close();
         $this->connect();
 

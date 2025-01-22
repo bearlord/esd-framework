@@ -1,12 +1,14 @@
 <?php
 /**
- * ESD Yii pdo plugin
+ * ESD framework
  * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Yii\Plugin\Pdo;
 
 use ESD\Core\Server\Server;
+use ESD\Yii\Db\Connection;
+use ESD\Yii\Yii;
 
 /**
  * Trait GetPdo
@@ -19,49 +21,94 @@ trait GetPdo
      * @return mixed
      * @throws \Exception
      */
-    public function pdo(string $name = "default")
+    public function pdo(?string $name = "default")
     {
-        if ($name === "default") {
-            $poolKey = "default";
-            $contextKey = "Pdo:default";
-        } elseif ($name === "slave") {
-            $slaveConfigs = Server::$instance->getConfigContext()->get("yii.db.default.slaves");
-            if (empty($slaveConfigs)) {
-                $poolKey = "default";
-                $contextKey = "Pdo:default";
-            } else {
-                $slaveRandKey = array_rand($slaveConfigs);
+        $subname = "";
+        if (strpos($name, ".") > 0) {
+            list($name, $subname) = explode(".", $name, 2);
+        }
 
-                $poolKey = sprintf("default.slave.%s", $slaveRandKey);
-                $contextKey = sprintf("Pdo:default.slave.%s", $slaveRandKey);
-            }
+        switch ($subname) {
+            case "slave":
+            case "master":
+                $_configKey = sprintf("yii.db.%s.%ss", $name, $subname);
+                $_configs = Server::$instance->getConfigContext()->get($_configKey);
+                if (empty($_configs)) {
+                    $poolKey = $name;
+                    $contextKey = sprintf("Pdo:%s", $name);
+                } else {
+                    $_randKey = array_rand($_configs);
 
-        } elseif ($name === "master") {
-            $masterConfigs = Server::$instance->getConfigContext()->get("yii.db.default.masters");
-            if (empty($masterConfigs)) {
-                $poolKey = "default";
-                $contextKey = "Pdo:default";
-            } else {
-                $masterRandKey = array_rand($masterConfigs);
+                    $poolKey = sprintf("%s.%s.%s", $name, $subname, $_randKey);
+                    $contextKey = sprintf("Pdo:{$name}%s.%s.%s", $name, $subname, $_randKey);
+                }
+                break;
 
-                $poolKey = sprintf("default.master.%s", $masterRandKey);
-                $contextKey = sprintf("Pdo:default.master.%s", $masterRandKey);
-            }
+            default:
+                $poolKey = $name;
+                $contextKey = sprintf("Pdo:%s", $name);
+                break;
         }
 
         $db = getContextValue($contextKey);
 
         if ($db == null) {
-            /** @var \ESD\Yii\Plugin\Pdo\PdoPools $pdoPools * */
+            /** @var PdoPools $pdoPools */
             $pdoPools = getDeepContextValueByClassName(PdoPools::class);
-            /** @var \ESD\Yii\Plugin\Pdo\PdoPool $pool */
-            $pool = $pdoPools->getPool($poolKey);
-            if ($pool == null) {
-                throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+            if (!empty($pdoPools)) {
+                /** @var \ESD\Yii\Plugin\Pdo\PdoPool $pool */
+                $pool = $pdoPools->getPool($poolKey);
+                if ($pool == null) {
+                    Server::$instance->getLog()->error("No Pdo connection pool named {$poolKey} was found");
+                    throw new \PDOException("No Pdo connection pool named {$poolKey} was found");
+                }
+                try {
+                    $db = $pool->db();
+                    if (empty($db)) {
+                        Server::$instance->getLog()->error("Empty db, get db once.");
+                        return $this->getDbOnce($name);
+                    }
+                    return $db;
+                } catch (\Exception $e) {
+                    Server::$instance->getLog()->error($e);
+                }
+            } else {
+                return $this->getDbOnce($name);
             }
-            return $pool->db();
         } else {
             return $db;
         }
+    }
+
+    /**
+     * Get db once
+     * @return Connection|object|null
+     * @throws \ESD\Yii\Db\Exception|\ESD\Yii\Base\InvalidConfigException
+     */
+    public function getDbOnce($name): ?Connection
+    {
+        $contextKey = sprintf("Pdo:%s", $name);
+        $db = getContextValue($contextKey);
+        if (!empty($db)) {
+            return $db;
+        }
+
+        $_configKey = sprintf("yii.db.%s", $name);
+        $_config = Server::$instance->getConfigContext()->get($_configKey);
+        $db = new Connection([
+            'poolName' => $name,
+            'dsn' => $_config['dsn'],
+            'username' => $_config['username'],
+            'password' => $_config['password'],
+            'charset' => $_config['charset'] ?? 'utf8',
+            'tablePrefix' => $_config['tablePrefix'],
+            'enableSchemaCache' => $_config['enableSchemaCache'],
+            'schemaCacheDuration' => $_config['schemaCacheDuration'],
+            'schemaCache' => $_config['schemaCache'],
+        ]);
+        $db->open();
+        setContextValue($contextKey, $db);
+
+        return $db;
     }
 }

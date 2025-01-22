@@ -8,6 +8,7 @@ namespace ESD\Core\Pool;
 
 use ESD\Core\Channel\Channel;
 use ESD\Server\Coroutine\Server;
+use ESD\Core\Pool\FrequencyInterface;
 
 /**
  * Class Pool
@@ -39,6 +40,11 @@ abstract class Pool implements PoolInterface
      * @var int current connection
      */
     protected $currentConnections = 0;
+
+    /**
+     * @var FrequencyInterface
+     */
+    protected $frequency;
 
     /**
      * @param \ESD\Core\Pool\Config $config
@@ -143,6 +149,18 @@ abstract class Pool implements PoolInterface
     public function get(): ConnectionInterface
     {
         $connection = $this->getConnection();
+
+        try {
+            if ($this->frequency instanceof FrequencyInterface) {
+                $this->frequency->hit();
+
+                if ($this->frequency->isLowFrequency()) {
+                    $this->flush();
+                }
+            }
+        } catch (Throwable $exception) {
+            Server::$instance->getLog()->error((string) $exception);
+        }
 
         return $connection;
     }

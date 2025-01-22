@@ -1,6 +1,6 @@
 <?php
 /**
- * ESD Yii PDO plugin
+ * ESD framework
  * @author bearlord <565364226@qq.com>
  */
 
@@ -33,7 +33,7 @@ class Config extends \ESD\Core\Pool\Config
      * @var table prefix
      */
     protected $tablePrefix = "";
-    
+
     /**
      * @var string charset
      */

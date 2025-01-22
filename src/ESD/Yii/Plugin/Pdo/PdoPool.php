@@ -1,12 +1,13 @@
 <?php
 /**
- * ESD Yii pdo plugin
+ * ESD framework
  * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Yii\Plugin\Pdo;
 
 use ESD\Core\Pool\ConnectionInterface;
+use ESD\Core\Pool\DefaultFrequency;
 use ESD\Core\Pool\Pool;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Db\Exception;
@@ -39,6 +40,8 @@ class PdoPool extends Pool
     public function __construct(Config $config)
     {
         parent::__construct($config);
+
+        $this->frequency = new DefaultFrequency($this);
     }
 
     /**
