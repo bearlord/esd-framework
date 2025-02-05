@@ -7,14 +7,13 @@
 
 namespace ESD\Yii\Db;
 
-use ESD\Core\Server\Server;
 use PDO;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
-use League\Flysystem\NotSupportedException;
-use ESD\Yii\Yii;
-
 use ESD\Yii\Caching\CacheInterface;
+use ESD\Yii\Yii;
+use League\Flysystem\NotSupportedException;
 
 /**
  * Connection represents a connection to a database via [PDO](https://secure.php.net/manual/en/book.pdo.php).
@@ -605,7 +604,7 @@ class Connection extends Component
         $token = 'Opening DB connection: ' . $this->dsn;
         $enableProfiling = $this->enableProfiling;
         try {
-            Server::$instance->getLog()->info('Opening DB connection: ' . $this->dsn);
+            Server::$instance->getLog()->debug('Opening DB connection: ' . $this->dsn);
 
             Yii::info($token, __METHOD__);
             if ($enableProfiling) {

@@ -6,7 +6,7 @@
 
 namespace ESD\Yii\Plugin\Pdo;
 
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 use ESD\Yii\Db\Connection;
 use ESD\Yii\Yii;
 

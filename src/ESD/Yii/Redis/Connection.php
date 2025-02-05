@@ -12,20 +12,20 @@ use ESD\Yii\Yii;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Db\Exception;
 use ESD\Yii\Helpers\Inflector;
-use ESD\Core\Server\Server;
+use ESD\Server\Coroutine\Server;
 
 /**
- * The redis connection class is used to establish a connection to a [redis](http://redis.io/) server.
+ * The redis connection class is used to establish a connection to a [redis](https://redis.io/) server.
  *
  * By default it assumes there is a redis server running on localhost at port 6379 and uses the database number 0.
  *
  * It is possible to connect to a redis server using [[hostname]] and [[port]] or using a [[unixSocket]].
  *
- * It also supports [the AUTH command](http://redis.io/commands/auth) of redis.
+ * It also supports [the AUTH command](https://redis.io/commands/auth) of redis.
  * When the server needs authentication, you can set the [[password]] property to
  * authenticate with the server after connect.
  *
- * The execution of [redis commands](http://redis.io/commands) is possible with via [[executeCommand()]].
+ * The execution of [redis commands](https://redis.io/commands) is possible with via [[executeCommand()]].
  *
  * @method mixed append($key, $value) Append a value to a key. <https://redis.io/commands/append>
  * @method mixed auth($password) Authenticate to the server. <https://redis.io/commands/auth>
@@ -201,6 +201,19 @@ use ESD\Core\Server\Server;
  * @method mixed unwatch() Forget about all watched keys. <https://redis.io/commands/unwatch>
  * @method mixed wait($numslaves, $timeout) Wait for the synchronous replication of all the write commands sent in the context of the current connection. <https://redis.io/commands/wait>
  * @method mixed watch(...$keys) Watch the given keys to determine execution of the MULTI/EXEC block. <https://redis.io/commands/watch>
+ * @method mixed xack($stream, $group, ...$ids) Removes one or multiple messages from the pending entries list (PEL) of a stream consumer group <https://redis.io/commands/xack>
+ * @method mixed xadd($stream, $id, $field, $value, ...$fieldsValues) Appends the specified stream entry to the stream at the specified key <https://redis.io/commands/xadd>
+ * @method mixed xclaim($stream, $group, $consumer, $minIdleTimeMs, $id, ...$options) Changes the ownership of a pending message, so that the new owner is the consumer specified as the command argument <https://redis.io/commands/xclaim>
+ * @method mixed xdel($stream, ...$ids) Removes the specified entries from a stream, and returns the number of entries deleted <https://redis.io/commands/xdel>
+ * @method mixed xgroup($subCommand, $stream, $group, ...$options) Manages the consumer groups associated with a stream data structure <https://redis.io/commands/xgroup>
+ * @method mixed xinfo($subCommand, $stream, ...$options) Retrieves different information about the streams and associated consumer groups <https://redis.io/commands/xinfo>
+ * @method mixed xlen($stream) Returns the number of entries inside a stream <https://redis.io/commands/xlen>
+ * @method mixed xpending($stream, $group, ...$options) Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries <https://redis.io/commands/xpending>
+ * @method mixed xrange($stream, $start, $end, ...$options) Returns the stream entries matching a given range of IDs <https://redis.io/commands/xrange>
+ * @method mixed xread(...$options) Read data from one or multiple streams, only returning entries with an ID greater than the last received ID reported by the caller <https://redis.io/commands/xread>
+ * @method mixed xreadgroup($subCommand, $group, $consumer, ...$options) Special version of the XREAD command with support for consumer groups <https://redis.io/commands/xreadgroup>
+ * @method mixed xrevrange($stream, $end, $start, ...$options) Exactly like XRANGE, but with the notable difference of returning the entries in reverse order, and also taking the start-end range in reverse order <https://redis.io/commands/xrevrange>
+ * @method mixed xtrim($stream, $strategy, ...$options) Trims the stream to a given number of items, evicting older items (items with lower IDs) if needed <https://redis.io/commands/xtrim>
  * @method mixed zadd($key, ...$options) Add one or more members to a sorted set, or update its score if it already exists. <https://redis.io/commands/zadd>
  * @method mixed zcard($key) Get the number of members in a sorted set. <https://redis.io/commands/zcard>
  * @method mixed zcount($key, $min, $max) Count the members in a sorted set with scores within the given values. <https://redis.io/commands/zcount>
@@ -210,7 +223,7 @@ use ESD\Core\Server\Server;
  * @method mixed zrange($key, $start, $stop, $WITHSCORES = null) Return a range of members in a sorted set, by index. <https://redis.io/commands/zrange>
  * @method mixed zrangebylex($key, $min, $max, $LIMIT = null, $offset = null, $count = null) Return a range of members in a sorted set, by lexicographical range. <https://redis.io/commands/zrangebylex>
  * @method mixed zrevrangebylex($key, $max, $min, $LIMIT = null, $offset = null, $count = null) Return a range of members in a sorted set, by lexicographical range, ordered from higher to lower strings.. <https://redis.io/commands/zrevrangebylex>
- * @method mixed zrangebyscore($key, $min, $max, $WITHSCORES = null, $LIMIT = null, $offset = null, $count = null) Return a range of members in a sorted set, by score. <https://redis.io/commands/zrangebyscore>
+ * @method mixed zrangebyscore($key, $min, $max, ...$options) Return a range of members in a sorted set, by score. <https://redis.io/commands/zrangebyscore>
  * @method mixed zrank($key, $member) Determine the index of a member in a sorted set. <https://redis.io/commands/zrank>
  * @method mixed zrem($key, ...$members) Remove one or more members from a sorted set. <https://redis.io/commands/zrem>
  * @method mixed zremrangebylex($key, $min, $max) Remove all members in a sorted set between the given lexicographical range. <https://redis.io/commands/zremrangebylex>
@@ -226,9 +239,11 @@ use ESD\Core\Server\Server;
  * @method mixed hscan($key, $cursor, $MATCH = null, $pattern = null, $COUNT = null, $count = null) Incrementally iterate hash fields and associated values. <https://redis.io/commands/hscan>
  * @method mixed zscan($key, $cursor, $MATCH = null, $pattern = null, $COUNT = null, $count = null) Incrementally iterate sorted sets elements and associated scores. <https://redis.io/commands/zscan>
  *
- * @property string $driverName Name of the DB driver. This property is read-only.
- * @property bool $isActive Whether the DB connection is established. This property is read-only.
- * @property LuaScriptBuilder $luaScriptBuilder This property is read-only.
+ * @property-read string $connectionString Socket connection string.
+ * @property-read string $driverName Name of the DB driver.
+ * @property-read bool $isActive Whether the DB connection is established.
+ * @property-read LuaScriptBuilder $luaScriptBuilder
+ * @property-read resource|false $socket
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
@@ -239,6 +254,10 @@ class Connection extends Component
 
     public $database = 2;
 
+    /**
+     * @var array List of available redis commands.
+     * @see https://redis.io/commands
+     */
     public $redisCommands = [
         'APPEND', // Append a value to a key
         'AUTH', // Authenticate to the server
@@ -414,6 +433,19 @@ class Connection extends Component
         'UNWATCH', // Forget about all watched keys
         'WAIT', // Wait for the synchronous replication of all the write commands sent in the context of the current connection
         'WATCH', // Watch the given keys to determine execution of the MULTI/EXEC block
+        'XACK', // Removes one or multiple messages from the pending entries list (PEL) of a stream consumer group
+        'XADD', // Appends the specified stream entry to the stream at the specified key
+        'XCLAIM', // Changes the ownership of a pending message, so that the new owner is the consumer specified as the command argument
+        'XDEL', // Removes the specified entries from a stream, and returns the number of entries deleted
+        'XGROUP', // Manages the consumer groups associated with a stream data structure
+        'XINFO', // Retrieves different information about the streams and associated consumer groups
+        'XLEN', // Returns the number of entries inside a stream
+        'XPENDING', // Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+        'XRANGE', // Returns the stream entries matching a given range of IDs
+        'XREAD', // Read data from one or multiple streams, only returning entries with an ID greater than the last received ID reported by the caller
+        'XREADGROUP', // Special version of the XREAD command with support for consumer groups
+        'XREVRANGE', // Exactly like XRANGE, but with the notable difference of returning the entries in reverse order, and also taking the start-end range in reverse order
+        'XTRIM', // Trims the stream to a given number of items, evicting older items (items with lower IDs) if needed
         'ZADD', // Add one or more members to a sorted set, or update its score if it already exists
         'ZCARD', // Get the number of members in a sorted set
         'ZCOUNT', // Count the members in a sorted set with scores within the given values
@@ -441,18 +473,20 @@ class Connection extends Component
     ];
 
 
-    private $_redis;
-
-    public function init()
+    /**
+     * Closes the connection when this component is being serialized.
+     * @return array
+     */
+    public function __sleep()
     {
-        parent::init();
+        return array_keys(get_object_vars($this));
     }
 
     /**
      * Returns the name of the DB driver for the current [[dsn]].
      * @return string name of the DB driver
      */
-    public function getDriverName()
+    public function getDriverName(): string
     {
         return 'redis';
     }
@@ -460,57 +494,9 @@ class Connection extends Component
     /**
      * @return LuaScriptBuilder
      */
-    public function getLuaScriptBuilder()
+    public function getLuaScriptBuilder():LuaScriptBuilder
     {
         return new LuaScriptBuilder();
-    }
-
-    /**
-     * Executes a redis command.
-     * For a list of available commands and their parameters see http://redis.io/commands.
-     *
-     * The params array should contain the params separated by white space, e.g. to execute
-     * `SET mykey somevalue NX` call the following:
-     *
-     * ```php
-     * $redis->executeCommand('SET', ['mykey', 'somevalue', 'NX']);
-     * ```
-     *
-     * @param string $name the name of the command
-     * @param array $params list of parameters for the command
-     * @return array|bool|null|string Dependent on the executed command this method
-     * will return different data types:
-     *
-     * - `true` for commands that return "status reply" with the message `'OK'` or `'PONG'`.
-     * - `string` for commands that return "status reply" that does not have the message `OK` (since version 2.0.1).
-     * - `string` for commands that return "integer reply"
-     *   as the value is in the range of a signed 64 bit integer.
-     * - `string` or `null` for commands that return "bulk reply".
-     * - `array` for commands that return "Multi-bulk replies".
-     *
-     * See [redis protocol description](http://redis.io/topics/protocol)
-     * for details on the mentioned reply types.
-     * @throws Exception for commands that return [error reply](http://redis.io/topics/protocol#error-reply).
-     */
-    public function executeCommand($name, $params = [])
-    {
-        return $this->sendCommandInternal($name, $params);
-    }
-
-    /**
-     * Sends RAW command string to the server.
-     * @throws SocketException on connection error.
-     */
-    private function sendCommandInternal($command, $params)
-    {
-        $redisHandle= $this->redis();
-        $database  = Server::$instance->getConfigContext()->get('yii.components.cache.redis.database');
-        $redisHandle->select($database);
-
-        $redisCommand = strtoupper(Inflector::camel2words($command, false));
-        if (in_array($redisCommand, $this->redisCommands)) {
-            return call_user_func_array([$redisHandle, $redisCommand], $params);
-        }
     }
 
     /**
@@ -521,10 +507,10 @@ class Connection extends Component
      * ```
      *
      * @param string $name name of the missing method to execute
-     * @param array $params method call arguments
+     * @param array|null $params method call arguments
      * @return mixed
      */
-    public function __call(string $name, array $params)
+    public function __call(string $name, ?array $params = [])
     {
         $redisHandle= $this->redis();
         $database  = Server::$instance->getConfigContext()->get('yii.components.cache.redis.database');
@@ -538,4 +524,50 @@ class Connection extends Component
         }
     }
 
+    /**
+     * Executes a redis command.
+     * For a list of available commands and their parameters see https://redis.io/commands.
+     *
+     * The params array should contain the params separated by white space, e.g. to execute
+     * `SET mykey somevalue NX` call the following:
+     *
+     * ```php
+     * $redis->executeCommand('SET', ['mykey', 'somevalue', 'NX']);
+     * ```
+     *
+     * @param string $name the name of the command
+     * @param array|null $params list of parameters for the command
+     * @return array|bool|null|string Dependent on the executed command this method
+     * will return different data types:
+     *
+     * - `true` for commands that return "status reply" with the message `'OK'` or `'PONG'`.
+     * - `string` for commands that return "status reply" that does not have the message `OK` (since version 2.0.1).
+     * - `string` for commands that return "integer reply"
+     *   as the value is in the range of a signed 64 bit integer.
+     * - `string` or `null` for commands that return "bulk reply".
+     * - `array` for commands that return "Multi-bulk replies".
+     *
+     * See [redis protocol description](https://redis.io/topics/protocol)
+     * for details on the mentioned reply types.
+     * @throws Exception for commands that return [error reply](https://redis.io/topics/protocol#error-reply).
+     */
+    public function executeCommand(string $name, ?array $params = [])
+    {
+        return $this->sendCommandInternal($name, $params);
+    }
+
+    /**
+     * Sends RAW command string to the server.
+     */
+    private function sendCommandInternal(string $command, ?array $params = [])
+    {
+        $redisHandle= $this->redis();
+        $database  = Server::$instance->getConfigContext()->get('yii.components.cache.redis.database');
+        $redisHandle->select($database);
+
+        $redisCommand = strtoupper(Inflector::camel2words($command, false));
+        if (in_array($redisCommand, $this->redisCommands)) {
+            return call_user_func_array([$redisHandle, $redisCommand], $params);
+        }
+    }
 }

@@ -22,11 +22,51 @@ abstract class Connection implements ConnectionInterface
     protected $pool;
 
     /**
+     * @var \ESD\Core\Pool\Config
+     */
+    protected $config;
+
+    /**
      * @param \ESD\Core\Pool\PoolInterface $pool
      */
-    public function __construct(PoolInterface $pool)
+    public function __construct(PoolInterface $pool, Config $config)
     {
         $this->pool = $pool;
+        $this->config = $config;
+    }
+
+    /**
+     * @return \ESD\Core\Pool\PoolInterface
+     */
+    public function getPool(): PoolInterface
+    {
+        return $this->pool;
+    }
+
+    /**
+     * @param \ESD\Core\Pool\PoolInterface $pool
+     * @return void
+     */
+    public function setPool(PoolInterface $pool): void
+    {
+        $this->pool = $pool;
+    }
+
+    /**
+     * @return \ESD\Core\Pool\Config
+     */
+    public function getConfig(): Config
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param \ESD\Core\Pool\Config $config
+     * @return void
+     */
+    public function setConfig(Config $config): void
+    {
+        $this->config = $config;
     }
 
     /**
@@ -63,22 +103,6 @@ abstract class Connection implements ConnectionInterface
         $this->lastReleaseTime = $lastReleaseTime;
     }
 
-    /**
-     * @return \ESD\Core\Pool\PoolInterface
-     */
-    public function getPool(): PoolInterface
-    {
-        return $this->pool;
-    }
-
-    /**
-     * @param \ESD\Core\Pool\PoolInterface $pool
-     * @return void
-     */
-    public function setPool(PoolInterface $pool): void
-    {
-        $this->pool = $pool;
-    }
 
     /**
      * @return mixed

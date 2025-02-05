@@ -33,23 +33,32 @@ trait GetRedis
         if ($db == null) {
             /** @var RedisPools $redisPools */
             $redisPools = getDeepContextValueByClassName(RedisPools::class);
+            if (!empty($redisPools)) {
+                $pool = $redisPools->getPool($name);
 
-            $pool = $redisPools->getPool($name);
+                if ($pool == null) {
+                    throw new \RuntimeException("Redis connection pool named {$name} not found");
+                }
 
-            if ($pool == null) {
-                throw new Exception(Yii::t('esd', '{driverName} connection pool named {name} not found', [
-                    'driverName' => 'Redis',
-                    'name' => $name
-                ]));
+                try {
+                    $db = $pool->db();
+                    if (empty($db)) {
+                        throw new \RuntimeException("Redis connection fetch failed");
+                    }
+                    return $db;
+                } catch (\Exception $e) {
+                    Server::$instance->getLog()->error($e);
+                }
             }
-            $db = $pool->db();
         }
 
-        //Be sure to select default database
-        if ($db->getDbNum() != $defaultDbNum) {
-            $db->select($defaultDbNum);
+        if (empty($db)) {
+            //Be sure to select default database
+            if ($db->getDbNum() != $defaultDbNum) {
+                $db->select($defaultDbNum);
+            }
         }
-
+        
         return $db;
     }
 }

@@ -19,19 +19,9 @@ use ESD\Yii\Db\Exception;
 class PdoPool extends Pool
 {
     /**
-     * @var \ESD\Core\Channel\Channel
-     */
-    protected $pool;
-
-    /**
      * @var \ESD\Yii\Plugin\Pdo\Config
      */
     protected $config;
-
-    /**
-     * @var \ESD\Core\Channel\Channel
-     */
-    protected $channel;
 
     /**
      * @param \ESD\Yii\Plugin\Pdo\Config $config
@@ -49,7 +39,7 @@ class PdoPool extends Pool
      */
     protected function createConnection(): ConnectionInterface
     {
-        $connection = new Connection($this, $this->getConfig());
+        $connection = new PoolConnection($this, $this->getConfig());
         $connection->connect();
 
         return $connection;
@@ -65,7 +55,7 @@ class PdoPool extends Pool
 
         $db = getContextValue($contextKey);
         if ($db == null) {
-            /** @var \ESD\Yii\Plugin\Pdo\Connection $poolConnection */
+            /** @var \ESD\Yii\Plugin\Pdo\PoolConnection $poolConnection */
             $poolConnection = $this->get();
             if (empty($poolConnection)) {
                 $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase maxConnections";

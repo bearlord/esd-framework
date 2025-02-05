@@ -21,19 +21,19 @@ class Config extends \ESD\Core\Pool\Config
     protected $name = "";
 
     /**
+     * @var string
+     */
+    protected $host = "localhost";
+
+    /**
      * @var int
      */
-    protected $poolMaxNumber = 10;
+    protected $port = 6379;
 
     /**
-     * @var string
+     * @var mixed
      */
-    protected $host = "";
-
-    /**
-     * @var string
-     */
-    protected $password = "";
+    protected $auth = null;
 
     /**
      * @var int
@@ -41,9 +41,51 @@ class Config extends \ESD\Core\Pool\Config
     protected $database = 0;
 
     /**
+     * @var float
+     */
+    protected $timeout = 0.0;
+
+    /**
+     * @var mixed
+     */
+    protected $reserved = null;
+
+    /**
      * @var int
      */
-    protected $port = 6379;
+    protected $retryInterval = 0;
+
+    /**
+     * @var float
+     */
+    protected $readTimeout = 0.0;
+
+    /**
+     * @var array
+     */
+    protected $cluster = [];
+
+    /**
+     * @var array
+     */
+    protected $sentinel = [];
+
+    /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * @var int
+     */
+    protected $poolMaxNumber = 10;
+
+    /**
+     * @var string
+     */
+    protected $password = "";
+
+
 
     /**
      * @return string
@@ -94,15 +136,27 @@ class Config extends \ESD\Core\Pool\Config
         if (!extension_loaded('redis')) {
             throw new RedisException(Yii::t('esd', 'Redis extension is not loaded'));
         }
-        if ($this->poolMaxNumber < 1) {
-            throw new RedisException(Yii::t('esd', 'Redis poolMaxNumber must be greater than 1'));
-        }
         if (empty($this->name)) {
             throw new RedisException(Yii::t('esd', 'Redis name must be set'));
         }
         if (empty($this->host)) {
             throw new RedisException(Yii::t('esd', 'Redis host must be set'));
         }
+
+        return [
+            "name" => $this->name,
+            "host" => $this->host,
+            "port" => $this->port,
+            "auth" => $this->auth,
+            "database" => $this->database,
+            "timeout" => $this->timeout,
+            "reserved" => $this->reserved,
+            "retryInterval" => $this->retryInterval,
+            "readTimeout" => $this->readTimeout,
+            "cluster" => $this->cluster,
+            "sentinel" => $this->sentinel,
+            "option" => $this->options
+        ];
     }
 
     /**

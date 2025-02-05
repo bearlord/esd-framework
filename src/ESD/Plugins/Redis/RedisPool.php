@@ -8,7 +8,9 @@ namespace ESD\Plugins\Redis;
 
 use ESD\Core\Channel\Channel;
 use ESD\Core\Pool\ConnectionInterface;
+use ESD\Core\Pool\DefaultFrequency;
 use ESD\Core\Pool\Pool;
+use ESD\Server\Coroutine\Server;
 
 /**
  * Class RedisPool
@@ -23,6 +25,11 @@ class RedisPool extends Pool
      */
     public function __construct(Config $config)
     {
+        parent::__construct($config);
+
+        $this->frequency = new DefaultFrequency($this);
+
+
         $this->config = $config;
         $config->buildConfig();
         $this->pool = DIGet(Channel::class, [$config->getPoolMaxNumber()]);
@@ -32,44 +39,55 @@ class RedisPool extends Pool
         }
     }
 
+    /**
+     * @return \ESD\Core\Pool\ConnectionInterface
+     */
     protected function createConnection(): ConnectionInterface
     {
-        return new Connection();
+        $connection = new PoolConnection($this, $this->getConfig());
+        $connection->connect();
+
+        return $connection;
     }
 
     /**
-     * @return \Redis
-     * @throws RedisException
+     * @return \ESD\Plugins\Redis\RedisConnection
+     * @throws \RuntimeException
      */
-    public function db(): Redis
+    public function db(): RedisConnection
     {
         $contextKey = sprintf("Redis:%s", $this->getConfig()->getName());
+
         $db = getContextValue($contextKey);
         if ($db == null) {
-            /** @var Redis|\Redis $db */
-            $db = $this->pool->pop();
-            if ($db instanceof Redis) {
-                if (!$db->isConnected()) {
-                    if (!$db->connect($this->config->getHost(), $this->config->getPort())) {
-                        throw new RedisException($db->getLastError());
-                    }
-
-                    $db->setOption(\Redis::OPT_READ_TIMEOUT, -1);
-
-                    if (!empty($this->config->getPassword())) {
-                        if (!$db->auth($this->config->getPassword())) {
-                            throw new RedisException($db->getLastError());
-                        }
-                    }
-
-                    $db->select($this->config->getDatabase());
-                }
+            /** @var \ESD\Plugins\Redis\PoolConnection $poolConnection */
+            $poolConnection = $this->get();
+            if (empty($poolConnection)) {
+                $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase maxConnections";
+                Server::$instance->getLog()->error($errorMessage);
+                throw new \RuntimeException($errorMessage);
             }
-            \Swoole\Coroutine::defer(function () use ($db) {
-                $this->pool->push($db);
+
+            /** @var \Redis $db */
+            $db = $poolConnection->getDbConnection();
+
+            \Swoole\Coroutine::defer(function () use ($poolConnection, $contextKey) {
+                $db = getContextValue($contextKey);
+
+                $poolConnection->setLastUseTime(microtime(true));
+                $poolConnection->setConnection($db);
+
+                $this->release($poolConnection);
             });
             setContextValue($contextKey, $db);
         }
+
+        if (! $db instanceof \ESD\Plugins\Redis\RedisConnection) {
+            $errorMessage = "Connection pool {$contextKey} exhausted, Cannot establish new connection, please increase maxConnections";
+            Server::$instance->getLog()->error($errorMessage);
+            throw new \RuntimeException($errorMessage);
+        }
+
         return $db;
     }
 }

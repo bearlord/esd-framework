@@ -87,4 +87,9 @@ class Redis implements DBInterface
     {
         return $this->_lastQuery;
     }
+
+    public function close()
+    {
+
+    }
 }
