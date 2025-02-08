@@ -105,7 +105,8 @@ class UrlValidator extends Validator
             }
         }
 
-        return [$this->message, []];
+        $this->setValidCode(2100001);
+        return [$this->message, [], $this->getValidCode()];
     }
 
     private function idnToAscii($idn)

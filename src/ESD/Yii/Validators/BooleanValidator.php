@@ -59,10 +59,14 @@ class BooleanValidator extends Validator
         }
 
         if (!$valid) {
+            $this->setValidCode(100001);
+        }
+
+        if (!$valid) {
             return [$this->message, [
                 'true' => $this->trueValue === true ? 'true' : $this->trueValue,
                 'false' => $this->falseValue === false ? 'false' : $this->falseValue,
-            ]];
+            ], $this->getValidCode()];
         }
 
         return null;

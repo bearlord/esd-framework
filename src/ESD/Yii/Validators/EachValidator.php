@@ -173,7 +173,8 @@ class EachValidator extends Validator
     protected function validateValue($value)
     {
         if (!is_array($value) && !$value instanceof \ArrayAccess) {
-            return [$this->message, []];
+            $this->setValidCode(500001);
+            return [$this->message, [], $this->getValidCode()];
         }
 
         $validator = $this->getValidator();
@@ -183,12 +184,14 @@ class EachValidator extends Validator
             }
             $result = $validator->validateValue($v);
             if ($result !== null) {
+                $this->setValidCode(500002);
                 if ($this->allowMessageFromRule) {
                     $result[1]['value'] = $v;
+                    $result[2] = $this->getValidCode();
                     return $result;
                 }
 
-                return [$this->message, ['value' => $v]];
+                return [$this->message, ['value' => $v], $this->getValidCode()];
             }
         }
 

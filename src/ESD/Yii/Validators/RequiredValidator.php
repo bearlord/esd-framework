@@ -75,12 +75,14 @@ class RequiredValidator extends Validator
             return null;
         }
         if ($this->requiredValue === null) {
-            return [$this->message, []];
+            $this->setValidCode(1700001);
+            return [$this->message, [], $this->getValidCode()];
         }
 
+        $this->setValidCode(1700002);
         return [$this->message, [
             'requiredValue' => $this->requiredValue,
-        ]];
+        ], $this->getValidCode()];
     }
 
     /**

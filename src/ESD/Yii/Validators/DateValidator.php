@@ -226,6 +226,7 @@ class DateValidator extends Validator
                 throw new InvalidConfigException('Unknown validation type set for DateValidator::$type: ' . $this->type);
             }
         }
+
         if ($this->locale === null) {
             $this->locale = Yii::$app->getLanguage();
         }
@@ -307,11 +308,14 @@ class DateValidator extends Validator
     {
         $timestamp = $this->parseDateValue($value);
         if ($timestamp === false) {
-            return [$this->message, []];
+            $this->setValidCode(300001);
+            return [$this->message, [], $this->getValidCode()];
         } elseif ($this->min !== null && $timestamp < $this->min) {
-            return [$this->tooSmall, ['min' => $this->minString]];
+            $this->setValidCode(300002);
+            return [$this->tooSmall, ['min' => $this->minString], $this->getValidCode()];
         } elseif ($this->max !== null && $timestamp > $this->max) {
-            return [$this->tooBig, ['max' => $this->maxString]];
+            $this->setValidCode(300003);
+            return [$this->tooBig, ['max' => $this->maxString], $this->getValidCode()];
         }
 
         return null;

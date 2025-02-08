@@ -56,6 +56,13 @@ class NumberValidator extends Validator
      */
     public $numberPattern = '/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/';
 
+    public $codes = [
+        "integerOnly" => "13001",
+        "min" => "13002",
+        "tooBig" => "13003",
+        "tooSmall" => "13004",
+        "integerPattern" => "13005"
+    ];
 
     /**
      * {@inheritdoc}
@@ -104,15 +111,19 @@ class NumberValidator extends Validator
     protected function validateValue($value)
     {
         if ($this->isNotNumber($value)) {
-            return [Yii::t('yii', '{attribute} is invalid.'), []];
+            $this->setValidCode(1300001);
+            return [Yii::t('yii', '{attribute} is invalid.'), [], $this->getValidCode()];
         }
         $pattern = $this->integerOnly ? $this->integerPattern : $this->numberPattern;
         if (!preg_match($pattern, StringHelper::normalizeNumber($value))) {
-            return [$this->message, []];
+            $this->setValidCode(1300002);
+            return [$this->message, [], $this->getValidCode()];
         } elseif ($this->min !== null && $value < $this->min) {
-            return [$this->tooSmall, ['min' => $this->min]];
+            $this->setValidCode(1300003);
+            return [$this->tooSmall, ['min' => $this->min], $this->getValidCode()];
         } elseif ($this->max !== null && $value > $this->max) {
-            return [$this->tooBig, ['max' => $this->max]];
+            $this->setValidCode(1300004);
+            return [$this->tooBig, ['max' => $this->max], $this->getValidCode()];
         }
 
         return null;

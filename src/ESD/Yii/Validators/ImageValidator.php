@@ -131,29 +131,35 @@ class ImageValidator extends FileValidator
     protected function validateImage($image)
     {
         if (false === ($imageInfo = getimagesize($image->tempName))) {
-            return [$this->notImage, ['file' => $image->name]];
+            $this->setValidCode(1000001);
+            return [$this->notImage, ['file' => $image->name], $this->getValidCode()];
         }
 
         list($width, $height) = $imageInfo;
 
         if ($width == 0 || $height == 0) {
-            return [$this->notImage, ['file' => $image->name]];
+            $this->setValidCode(1000002);
+            return [$this->notImage, ['file' => $image->name], $this->getValidCode()];
         }
 
         if ($this->minWidth !== null && $width < $this->minWidth) {
-            return [$this->underWidth, ['file' => $image->name, 'limit' => $this->minWidth]];
+            $this->setValidCode(1000003);
+            return [$this->underWidth, ['file' => $image->name, 'limit' => $this->minWidth], $this->getValidCode()];
         }
 
         if ($this->minHeight !== null && $height < $this->minHeight) {
-            return [$this->underHeight, ['file' => $image->name, 'limit' => $this->minHeight]];
+            $this->setValidCode(1000004);
+            return [$this->underHeight, ['file' => $image->name, 'limit' => $this->minHeight], $this->getValidCode()];
         }
 
         if ($this->maxWidth !== null && $width > $this->maxWidth) {
-            return [$this->overWidth, ['file' => $image->name, 'limit' => $this->maxWidth]];
+            $this->setValidCode(1000005);
+            return [$this->overWidth, ['file' => $image->name, 'limit' => $this->maxWidth], $this->getValidCode()];
         }
 
         if ($this->maxHeight !== null && $height > $this->maxHeight) {
-            return [$this->overHeight, ['file' => $image->name, 'limit' => $this->maxHeight]];
+            $this->setValidCode(1000006);
+            return [$this->overHeight, ['file' => $image->name, 'limit' => $this->maxHeight], $this->getValidCode()];
         }
 
         return null;

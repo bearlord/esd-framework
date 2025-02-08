@@ -136,13 +136,16 @@ class StringValidator extends Validator
         $length = mb_strlen($value, $this->encoding);
 
         if ($this->min !== null && $length < $this->min) {
-            return [$this->tooShort, ['min' => $this->min]];
+            $this->setValidCode(1900001);
+            return [$this->tooShort, ['min' => $this->min], $this->getValidCode()];
         }
         if ($this->max !== null && $length > $this->max) {
-            return [$this->tooLong, ['max' => $this->max]];
+            $this->setValidCode(1900002);
+            return [$this->tooLong, ['max' => $this->max], $this->getValidCode()];
         }
         if ($this->length !== null && $length !== $this->length) {
-            return [$this->notEqual, ['length' => $this->length]];
+            $this->setValidCode(1900003);
+            return [$this->notEqual, ['length' => $this->length], $this->getValidCode()];
         }
 
         return null;

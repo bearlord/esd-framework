@@ -227,7 +227,7 @@ class FileValidator extends Validator
             if ($this->maxFiles && $filesCount > $this->maxFiles) {
                 $this->addError($model, $attribute, $this->tooMany, ['limit' => $this->maxFiles]);
             }
-            
+
             if ($this->minFiles && $this->minFiles > $filesCount) {
                 $this->addError($model, $attribute, $this->tooFew, ['limit' => $this->minFiles]);
             }
@@ -276,6 +276,7 @@ class FileValidator extends Validator
         switch ($value->error) {
             case UPLOAD_ERR_OK:
                 if ($this->maxSize !== null && $value->size > $this->getSizeLimit()) {
+                    $this->setValidCode(800001);
                     return [
                         $this->tooBig,
                         [
@@ -283,8 +284,10 @@ class FileValidator extends Validator
                             'limit' => $this->getSizeLimit(),
                             'formattedLimit' => Yii::$app->formatter->asShortSize($this->getSizeLimit()),
                         ],
+                        $this->getValidCode()
                     ];
                 } elseif ($this->minSize !== null && $value->size < $this->minSize) {
+                    $this->setValidCode(800002);
                     return [
                         $this->tooSmall,
                         [
@@ -292,21 +295,25 @@ class FileValidator extends Validator
                             'limit' => $this->minSize,
                             'formattedLimit' => Yii::$app->formatter->asShortSize($this->minSize),
                         ],
+                        $this->getValidCode()
                     ];
                 } elseif (!empty($this->extensions) && !$this->validateExtension($value)) {
-                    return [$this->wrongExtension, ['file' => $value->name, 'extensions' => implode(', ', $this->extensions)]];
+                    $this->setValidCode(800003);
+                    return [$this->wrongExtension, ['file' => $value->name, 'extensions' => implode(', ', $this->extensions)], $this->getValidCode()];
                 } elseif (!empty($this->mimeTypes) && !$this->validateMimeType($value)) {
-                    return [$this->wrongMimeType, ['file' => $value->name, 'mimeTypes' => implode(', ', $this->mimeTypes)]];
+                    $this->setValidCode(800004);
+                    return [$this->wrongMimeType, ['file' => $value->name, 'mimeTypes' => implode(', ', $this->mimeTypes)], $this->getValidCode()];
                 }
 
                 return null;
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
+            $this->setValidCode(800005);
                 return [$this->tooBig, [
                     'file' => $value->name,
                     'limit' => $this->getSizeLimit(),
                     'formattedLimit' => Yii::$app->formatter->asShortSize($this->getSizeLimit()),
-                ]];
+                ], $this->getValidCode()];
             case UPLOAD_ERR_PARTIAL:
                 Yii::warning('File was only partially uploaded: ' . $value->name, __METHOD__);
                 break;
@@ -323,7 +330,7 @@ class FileValidator extends Validator
                 break;
         }
 
-        return [$this->message, []];
+        return [$this->message, [], $this->getValidCode()];
     }
 
     /**

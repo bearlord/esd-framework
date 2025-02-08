@@ -171,11 +171,13 @@ class CompareValidator extends Validator
             throw new InvalidConfigException('CompareValidator::compareValue must be set.');
         }
         if (!$this->compareValues($this->operator, $this->type, $value, $this->compareValue)) {
+            $this->setValidCode(200001);
+
             return [$this->message, [
                 'compareAttribute' => $this->compareValue,
                 'compareValue' => $this->compareValue,
                 'compareValueOrAttribute' => $this->compareValue,
-            ]];
+            ], $this->getValidCode()];
         }
 
         return null;

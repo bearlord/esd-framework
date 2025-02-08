@@ -325,7 +325,8 @@ class IpValidator extends Validator
     private function validateSubnet($ip)
     {
         if (!is_string($ip)) {
-            return [$this->message, []];
+            $this->setValidCode(1200001);
+            return [$this->message, [], $this->getValidCode()];
         }
 
         $negation = null;
@@ -339,19 +340,23 @@ class IpValidator extends Validator
         }
 
         if ($this->subnet === true && $cidr === null) {
-            return [$this->noSubnet, []];
+            $this->setValidCode(1200002);
+            return [$this->noSubnet, [], $this->getValidCode()];
         }
         if ($this->subnet === false && $cidr !== null) {
-            return [$this->hasSubnet, []];
+            $this->setValidCode(1200003);
+            return [$this->hasSubnet, [], $this->getValidCode()];
         }
         if ($this->negation === false && $negation !== null) {
-            return [$this->message, []];
+            $this->setValidCode(1200004);
+            return [$this->message, [], $this->getValidCode()];
         }
 
         if ($this->getIpVersion($ip) === IpHelper::IPV6) {
             if ($cidr !== null) {
                 if ($cidr > IpHelper::IPV6_ADDRESS_LENGTH || $cidr < 0) {
-                    return [$this->wrongCidr, []];
+                    $this->setValidCode(1200005);
+                    return [$this->wrongCidr, [], $this->getValidCode()];
                 }
             } else {
                 $isCidrDefault = true;
@@ -359,10 +364,12 @@ class IpValidator extends Validator
             }
 
             if (!$this->validateIPv6($ip)) {
-                return [$this->message, []];
+                $this->setValidCode(1200006);
+                return [$this->message, [], $this->getValidCode()];
             }
             if (!$this->ipv6) {
-                return [$this->ipv6NotAllowed, []];
+                $this->setValidCode(1200007);
+                return [$this->ipv6NotAllowed, [], $this->getValidCode()];
             }
 
             if ($this->expandIPv6) {
@@ -371,22 +378,26 @@ class IpValidator extends Validator
         } else {
             if ($cidr !== null) {
                 if ($cidr > IpHelper::IPV4_ADDRESS_LENGTH || $cidr < 0) {
-                    return [$this->wrongCidr, []];
+                    $this->setValidCode(1200008);
+                    return [$this->wrongCidr, [], $this->getValidCode()];
                 }
             } else {
                 $isCidrDefault = true;
                 $cidr = IpHelper::IPV4_ADDRESS_LENGTH;
             }
             if (!$this->validateIPv4($ip)) {
-                return [$this->message, []];
+                $this->setValidCode(1200009);
+                return [$this->message, [], $this->getValidCode()];
             }
             if (!$this->ipv4) {
-                return [$this->ipv4NotAllowed, []];
+                $this->setValidCode(1200010);
+                return [$this->ipv4NotAllowed, [], $this->getValidCode()];
             }
         }
 
         if (!$this->isAllowed($ip, $cidr)) {
-            return [$this->notInRange, []];
+            $this->setValidCode(1200011);
+            return [$this->notInRange, [], $this->getValidCode()];
         }
 
         $result = $negation . $ip;

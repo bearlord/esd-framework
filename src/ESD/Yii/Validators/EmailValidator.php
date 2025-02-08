@@ -72,8 +72,10 @@ class EmailValidator extends Validator
     {
         if (!is_string($value)) {
             $valid = false;
+            $this->setValidCode(600001);
         } elseif (!preg_match('/^(?P<name>(?:"?([^"]*)"?\s)?)(?:\s+)?(?:(?P<open><?)((?P<local>.+)@(?P<domain>[^>]+))(?P<close>>?))$/i', $value, $matches)) {
             $valid = false;
+            $this->setValidCode(600002);
         } else {
             if ($this->enableIDN) {
                 $matches['local'] = $this->idnToAscii($matches['local']);
@@ -85,6 +87,7 @@ class EmailValidator extends Validator
                 // The maximum total length of a user name or other local-part is 64 octets. RFC 5322 section 4.5.3.1.1
                 // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.1
                 $valid = false;
+                $this->setValidCode(600003);
             } elseif (strlen($matches['local'] . '@' . $matches['domain']) > 254) {
                 // There is a restriction in RFC 2821 on the length of an address in MAIL and RCPT commands
                 // of 254 characters. Since addresses that do not fit in those fields are not normally useful, the
@@ -93,15 +96,20 @@ class EmailValidator extends Validator
                 // Dominic Sayers, RFC 3696 erratum 1690
                 // http://www.rfc-editor.org/errata_search.php?eid=1690
                 $valid = false;
+                $this->setValidCode(600004);
             } else {
                 $valid = preg_match($this->pattern, $value) || ($this->allowName && preg_match($this->fullPattern, $value));
                 if ($valid && $this->checkDNS) {
                     $valid = $this->isDNSValid($matches['domain']);
                 }
+
+                if (!$valid) {
+                    $this->setValidCode(600005);
+                }
             }
         }
 
-        return $valid ? null : [$this->message, []];
+        return $valid ? null : [$this->message, [], $this->getValidCode()];
     }
 
     /**

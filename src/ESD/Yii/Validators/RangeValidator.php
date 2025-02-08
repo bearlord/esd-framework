@@ -85,7 +85,11 @@ class RangeValidator extends Validator
             $in = true;
         }
 
-        return $this->not !== $in ? null : [$this->message, []];
+        if ($this->not !== $in) {
+            $this->setValidCode(1500001);
+        }
+
+        return $this->not !== $in ? null : [$this->message, [], $this->getValidCode()];
     }
 
     /**

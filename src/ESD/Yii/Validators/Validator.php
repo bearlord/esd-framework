@@ -312,14 +312,19 @@ class Validator extends Component
      * @param string $error the error message to be returned, if the validation fails.
      * @return bool whether the data is valid.
      */
-    public function validate($value, &$error = null)
+    public function validate($value, &$error = null, &$errorCode = null)
     {
         $result = $this->validateValue($value);
         if (empty($result)) {
             return true;
         }
 
-        list($message, $params) = $result;
+        //list($message, $params) = $result;
+        //modified on 2025/02/06
+        $message = $result[0] ?? null;
+        $params = $result[1] ?? null;
+        $errorCode = $result[2] ?? null;
+
         $params['attribute'] = Yii::t('yii', 'the input value');
         if (is_array($value)) {
             $params['value'] = 'array()';
@@ -499,5 +504,28 @@ class Validator extends Component
         return array_map(function ($attribute) {
             return ltrim($attribute, '!');
         }, $this->attributes);
+    }
+
+
+    /**
+     * @var int|null
+     */
+    public $validCode = null;
+
+    /**
+     * @return int|null
+     */
+    public function getValidCode(): ?int
+    {
+        return $this->validCode;
+    }
+
+    /**
+     * @param int|null $validCode
+     * @return void
+     */
+    public function setValidCode(?int $validCode): void
+    {
+        $this->validCode = $validCode;
     }
 }

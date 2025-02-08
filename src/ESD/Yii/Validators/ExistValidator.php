@@ -242,7 +242,7 @@ class ExistValidator extends Validator
 
         $query = $this->createQuery($this->targetClass, [$this->targetAttribute => $value]);
 
-        return $this->valueExists($this->targetClass, $query, $value) ? null : [$this->message, []];
+        return $this->valueExists($this->targetClass, $query, $value) ? null : [$this->message, [], $this->getValidCode()];
     }
 
     /**
@@ -264,6 +264,10 @@ class ExistValidator extends Validator
             });
         } else {
             $exists = $this->queryValueExists($query, $value);
+        }
+
+        if (!$exists) {
+            $this->setValidCode(700001);
         }
 
         return $exists;

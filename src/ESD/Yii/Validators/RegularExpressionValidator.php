@@ -57,7 +57,11 @@ class RegularExpressionValidator extends Validator
             (!$this->not && preg_match($this->pattern, $value)
             || $this->not && !preg_match($this->pattern, $value));
 
-        return $valid ? null : [$this->message, []];
+        if (!$value) {
+            $this->setValidCode(1600001);
+        }
+
+        return $valid ? null : [$this->message, [], $this->getValidCode()];
     }
 
     /**
