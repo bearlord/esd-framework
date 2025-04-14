@@ -113,9 +113,10 @@ class StatusCmd extends Command
         );
         if (!empty($master_pid)) {
             $io->note("$server_name server already running");
+            return ConsolePlugin::FAIL_EXIT;
         } else {
             $io->note("$server_name server not run");
-            return;
+            return ConsolePlugin::SUCCESS_EXIT;;
         }
     }
 }
