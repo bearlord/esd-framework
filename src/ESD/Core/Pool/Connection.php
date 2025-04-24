@@ -17,7 +17,7 @@ abstract class Connection implements ConnectionInterface
     protected $lastReleaseTime = 0.0;
 
     /**
-     * @var \ESD\Core\Pool\PoolInterface
+     * @var PoolInterface
      */
     protected $pool;
 
@@ -27,7 +27,8 @@ abstract class Connection implements ConnectionInterface
     protected $config;
 
     /**
-     * @param \ESD\Core\Pool\PoolInterface $pool
+     * @param PoolInterface $pool
+     * @param Config $config
      */
     public function __construct(PoolInterface $pool, Config $config)
     {
@@ -36,7 +37,7 @@ abstract class Connection implements ConnectionInterface
     }
 
     /**
-     * @return \ESD\Core\Pool\PoolInterface
+     * @return PoolInterface
      */
     public function getPool(): PoolInterface
     {
@@ -44,7 +45,7 @@ abstract class Connection implements ConnectionInterface
     }
 
     /**
-     * @param \ESD\Core\Pool\PoolInterface $pool
+     * @param PoolInterface $pool
      * @return void
      */
     public function setPool(PoolInterface $pool): void
@@ -112,7 +113,7 @@ abstract class Connection implements ConnectionInterface
     {
         try {
             return $this->getActiveConnection();
-        } catch (Throwable $exception) {
+        } catch (\Exception $exception) {
             Server::$instance->getLog()->warning('Get connection failed, try again. ' . $exception);
 
             return $this->getActiveConnection();
