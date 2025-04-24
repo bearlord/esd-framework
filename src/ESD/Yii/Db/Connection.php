@@ -13,7 +13,7 @@ use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Caching\CacheInterface;
 use ESD\Yii\Yii;
-use League\Flysystem\NotSupportedException;
+use ESD\Yii\Base\NotSupportedException;
 
 /**
  * Connection represents a connection to a database via [PDO](https://secure.php.net/manual/en/book.pdo.php).
@@ -798,7 +798,7 @@ class Connection extends Component
             try {
                 $transaction->rollBack();
             } catch (\Exception $e) {
-                \Yii::error($e, __METHOD__);
+                Yii::error($e, __METHOD__);
                 // hide this exception to be able to continue throwing original exception outside
             }
         }

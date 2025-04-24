@@ -20,6 +20,7 @@
         "ext-json": "*",
         "ext-redis": "*",
         "ext-swoole": ">=4.8.0",
+        "ext-pdo": "*",
         "ezyang/htmlpurifier": "^4.10.0",
         "filp/whoops": "^2.3",
         "illuminate/view": ">=5.8",
