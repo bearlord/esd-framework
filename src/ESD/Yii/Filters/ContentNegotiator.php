@@ -36,7 +36,7 @@ use ESD\Yii\Web\Response;
  *
  * ```php
  * // in application configuration
- * use yii\web\Response;
+ * use ESD\Yii\web\Response;
  *
  * return [
  *     'bootstrap' => [
@@ -60,7 +60,7 @@ use ESD\Yii\Web\Response;
  * specific actions if you configure the `only` or `except` property of the filter.
  *
  * ```php
- * use yii\web\Response;
+ * use ESD\Yii\web\Response;
  *
  * public function behaviors()
  * {
