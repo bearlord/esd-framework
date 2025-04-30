@@ -8,7 +8,6 @@
 namespace ESD\Yii\Helpers;
 
 use IntlDateFormatter;
-use Yii;
 
 /**
  * BaseFormatConverter provides concrete implementation for [[FormatConverter]].

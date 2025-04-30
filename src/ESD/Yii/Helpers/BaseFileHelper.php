@@ -8,7 +8,6 @@
 namespace ESD\Yii\Helpers;
 
 use ESD\Yii\Base\Exception;
-use Yii;
 use ESD\Yii\Base\ErrorException;
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\InvalidConfigException;

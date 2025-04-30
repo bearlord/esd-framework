@@ -7,8 +7,6 @@
 
 namespace ESD\Yii\Base;
 
-use Yii;
-
 /**
  * ErrorException represents a PHP error.
  *

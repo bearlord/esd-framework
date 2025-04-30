@@ -7,14 +7,13 @@
 
 namespace ESD\Yii\Elasticsearch;
 
-use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidConfigException;
-use yii\di\Instance;
+use ESD\Yii\Di\Instance;
 use ESD\Yii\Helpers\ArrayHelper;
 use ESD\Yii\Helpers\Json;
 use ESD\Yii\Helpers\VarDumper;
-use yii\log\Logger;
-use yii\log\Target;
+use ESD\Yii\Log\Logger;
+use ESD\Yii\Log\Target;
 
 /**
  * ElasticsearchTarget stores log messages in a Elasticsearch index.
