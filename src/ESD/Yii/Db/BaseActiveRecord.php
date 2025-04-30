@@ -7,7 +7,7 @@
 
 namespace ESD\Yii\Db;
 
-use ESD\Yii;
+use ESD\Yii\Yii;
 use ESD\Yii\Base\InvalidArgumentException;
 use ESD\Yii\Base\InvalidCallException;
 use ESD\Yii\Base\InvalidConfigException;
