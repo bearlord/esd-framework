@@ -8,6 +8,7 @@
 namespace ESD\Yii\Helpers;
 
 use IntlDateFormatter;
+use Yii;
 
 /**
  * BaseFormatConverter provides concrete implementation for [[FormatConverter]].
@@ -96,7 +97,7 @@ class BaseFormatConverter
      * @param string $pattern date format pattern in ICU format.
      * @param string $type 'date', 'time', or 'datetime'.
      * @param string $locale the locale to use for converting ICU short patterns `short`, `medium`, `long` and `full`.
-     * If not given, `Yii::$app->getLanguage()` will be used.
+     * If not given, `Yii::$app->getContextLanguage()` will be used.
      * @return string The converted date format pattern.
      */
     public static function convertDateIcuToPhp($pattern, $type = 'date', $locale = null)
@@ -353,7 +354,7 @@ class BaseFormatConverter
      * @param string $pattern date format pattern in ICU format.
      * @param string $type 'date', 'time', or 'datetime'.
      * @param string $locale the locale to use for converting ICU short patterns `short`, `medium`, `long` and `full`.
-     * If not given, `Yii::$app->getLanguage()` will be used.
+     * If not given, `Yii::$app->getContextLanguage()` will be used.
      * @return string The converted date format pattern.
      */
     public static function convertDateIcuToJui($pattern, $type = 'date', $locale = null)

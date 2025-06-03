@@ -228,10 +228,10 @@ class DateValidator extends Validator
         }
 
         if ($this->locale === null) {
-            $this->locale = Yii::$app->getLanguage();
+            $this->locale = Yii::$app->getContextLanguage();
         }
         if ($this->timeZone === null) {
-            $this->timeZone = Yii::$app->timeZone;
+            $this->timeZone = Yii::$app->getContextTimeZone();
         }
         if ($this->min !== null && $this->tooSmall === null) {
             $this->tooSmall = Yii::t('yii', '{attribute} must be no less than {min}.');

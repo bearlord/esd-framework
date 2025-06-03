@@ -37,8 +37,8 @@ use ESD\Yii\Web\NotFoundHttpException;
  * Controller configuration example:
  *
  * ```php
- * use ESD\Yii\Web\Controller;
- * use ESD\Yii\Filters\HostControl;
+ * use yii\web\Controller;
+ * use yii\filters\HostControl;
  *
  * class SiteController extends Controller
  * {

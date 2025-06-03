@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Helpers;
 
+use ESD\Yii\Yii;
 use ESD\Yii\Base\Exception;
 use ESD\Yii\Base\ErrorException;
 use ESD\Yii\Base\InvalidArgumentException;
@@ -111,14 +112,14 @@ class BaseFileHelper
         if ($language === $sourceLanguage) {
             return $file;
         }
-        /*
+
         if ($language === null) {
-            $language = Yii::$app->language;
+            $language = Yii::$app->getContextLanguage();
         }
         if ($sourceLanguage === null) {
-            $sourceLanguage = Yii::$app->sourceLanguage;
+            $sourceLanguage = Yii::$app->getContextLanguage();
         }
-        */
+
         $desiredFile = dirname($file) . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . basename($file);
         if (is_file($desiredFile)) {
             return $desiredFile;

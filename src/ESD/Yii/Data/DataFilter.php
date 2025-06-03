@@ -454,7 +454,7 @@ class DataFilter extends Model
             $params
         );
 
-        return Yii::$app->getI18n()->format($message, $params, Yii::$app->getLanguage());
+        return Yii::$app->getI18n()->format($message, $params, Yii::$app->getContextLanguage());
     }
 
     // Model specific:

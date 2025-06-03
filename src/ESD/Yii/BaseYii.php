@@ -511,7 +511,7 @@ class BaseYii
     {
 
         if (static::$app !== null) {
-            return Application::instance()->getI18n()->translate($category, $message, $params, $language ?: static::$app->getLanguage());
+            return Application::instance()->getI18n()->translate($category, $message, $params, $language ?: static::$app->getContextLanguage());
         }
 
         $placeholders = [];

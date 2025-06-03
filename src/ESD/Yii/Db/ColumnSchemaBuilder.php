@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Db;
 
+use Yii;
 use ESD\Yii\Base\BaseObject;
 use ESD\Yii\Helpers\StringHelper;
 

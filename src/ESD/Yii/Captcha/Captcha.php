@@ -7,6 +7,7 @@
 
 namespace ESD\Yii\Captcha;
 
+use Yii;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Helpers\Html;
 use ESD\Yii\Helpers\Json;

@@ -44,6 +44,7 @@ class ModelCmd extends Command
         $this->addOption('modelSuffix', 'ms', InputOption::VALUE_OPTIONAL, 'model suffix?', '');
         $this->addOption('standardizeCapitals', null, InputOption::VALUE_OPTIONAL, 'standardize capitals?', 0);
         $this->addOption('singularize', null, InputOption::VALUE_OPTIONAL, 'singularize?', 0);
+        $this->addOption('enableI18N', null, InputOption::VALUE_OPTIONAL, 'enable i18n?', 0);
     }
 
     /**
@@ -64,6 +65,7 @@ class ModelCmd extends Command
         $modelSuffix = $input->getOption('modelSuffix');
         $standardizeCapitals = $input->getOption('standardizeCapitals');
         $singularize = $input->getOption('singularize');
+        $enableI18N = $input->getOption('enableI18N');
 
         if (strcmp($standardizeCapitals, "true") === 0) {
             $standardizeCapitals = true;
@@ -95,6 +97,7 @@ class ModelCmd extends Command
             'useTablePrefix' => $useTablePrefix,
             'standardizeCapitals' => $standardizeCapitals,
             'singularize' => $singularize,
+            'enableI18N' => $enableI18N
         ]);
         return ConsolePlugin::SUCCESS_EXIT;
 

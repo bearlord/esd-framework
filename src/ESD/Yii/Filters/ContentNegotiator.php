@@ -36,7 +36,7 @@ use ESD\Yii\Web\Response;
  *
  * ```php
  * // in application configuration
- * use ESD\Yii\web\Response;
+ * use yii\web\Response;
  *
  * return [
  *     'bootstrap' => [
@@ -60,7 +60,7 @@ use ESD\Yii\Web\Response;
  * specific actions if you configure the `only` or `except` property of the filter.
  *
  * ```php
- * use ESD\Yii\web\Response;
+ * use yii\web\Response;
  *
  * public function behaviors()
  * {
@@ -165,7 +165,7 @@ class ContentNegotiator extends ActionFilter implements BootstrapInterface
             if (\count($this->languages) > 1) {
                 $response->getHeaders()->add('Vary', 'Accept-Language');
             }
-            Yii::$app->language = $this->negotiateLanguage($request);
+            Yii::$app->setContextLanguage($this->negotiateLanguage($request));
         }
     }
 

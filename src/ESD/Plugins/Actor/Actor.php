@@ -73,6 +73,7 @@ abstract class Actor
     final public function __construct(?string $name = '', bool $isCreated = false)
     {
         $this->name = $name;
+
         Server::$instance->getContainer()->injectOn($this);
         if ($isCreated) {
             ActorManager::getInstance()->addActor($this);
@@ -84,7 +85,7 @@ abstract class Actor
         goWithContext(function () use ($name) {
             while (true) {
                 $message = $this->channel->pop();
-                $this->handleMessage($message);
+                $this->onHandleMessage($message);
             }
         });
     }
@@ -114,6 +115,27 @@ abstract class Actor
     {
         $this->data = $data;
     }
+
+    /**
+     * @param ActorMessage $message
+     * @return void
+     */
+    protected function onHandleMessage(ActorMessage $message)
+    {
+        $type = $message->getType();
+
+        switch ($type) {
+            case ActorMessage::TYPE_MULTICAST:
+                $this->handleMulticastMessage($message);
+                break;
+
+            case ActorMessage::TYPE_COMMON:
+            default:
+                $this->handleMessage($message);
+        }
+    }
+
+    abstract protected function handleMulticastMessage(ActorMessage $message);
 
     /**
      * Process the received message
@@ -316,6 +338,7 @@ abstract class Actor
 
         /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+
         $rpcProxy->subscribe($channel, $actor);
     }
 
@@ -370,6 +393,7 @@ abstract class Actor
 
         /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
+
         $rpcProxy->publish($channel, $message, $excludeActorList, $from);
     }
 

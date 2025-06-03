@@ -189,6 +189,8 @@ class Cache extends \ESD\Yii\Caching\Cache
     protected function setValues($data, $duration)
     {
         $failedKeys = [];
+        
+
         if ($duration == 0) {
             $this->redis->executeCommand('MSET', [$data]);
         } else {

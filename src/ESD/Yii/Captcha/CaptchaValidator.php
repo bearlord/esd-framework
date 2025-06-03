@@ -108,7 +108,7 @@ class CaptchaValidator extends Validator
             'caseSensitive' => $this->caseSensitive,
             'message' => Yii::$app->getI18n()->format($this->message, [
                 'attribute' => $model->getAttributeLabel($attribute),
-            ], Yii::$app->getLanguage()),
+            ], Yii::$app->getContextLanguage()),
         ];
         if ($this->skipOnEmpty) {
             $options['skipOnEmpty'] = 1;

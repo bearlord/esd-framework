@@ -30,6 +30,7 @@ use ESD\Yii\Plugin\Pdo\PdoPool;
  * @property \ESD\Yii\Web\User $user The user component. This property is read-only.
  * @property \ESD\Yii\Caching\Cache $cache The cache application component. Null if the component is not enabled.
  * @property \ESD\Yii\Base\Security $security The security application component. This property is read-only.
+ * @property \ESD\Yii\I18n\Formatter $formatter
  */
 class Application extends ServiceLocator
 {
@@ -126,6 +127,12 @@ class Application extends ServiceLocator
         //Set language
         if (!empty($config['language'])) {
             $this->setLanguage($config['language']);
+            $this->setContextLanguage($config['language']);
+        }
+
+        if (!empty($config['timezone'])) {
+            $this->settimeZone($config['timezone']);
+            $this->setContextTimeZone($config['timezone']);
         }
 
         //Merge core components with custom components
@@ -506,8 +513,61 @@ class Application extends ServiceLocator
     public function setLanguage(string $language): void
     {
         $this->language = $language;
+
+        setContextValue("language", $language);
     }
 
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getContextLanguage(): string
+    {
+        return getDeepContextValue("language");
+    }
+
+    /**
+     * @param string $language
+     * @return void
+     */
+    public function setContextLanguage(string $language): void
+    {
+        setContextValue("language", $language);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeZone(): string
+    {
+        return $this->timeZone;
+    }
+
+    /**
+     * @param string $timeZone
+     * @return void
+     */
+    public function setTimeZone(string $timeZone): void
+    {
+        $this->timeZone = $timeZone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContextTimeZone(): string
+    {
+        return getDeepContextValue("timeZone");
+    }
+
+    /**
+     * @param string $timeZone
+     * @return void
+     */
+    public function setContextTimeZone(string $timeZone): void
+    {
+        setContextValue("timeZone", $timeZone);
+    }
 
     /**
      * @return \ESD\Yii\Mongodb\Connection|mixed

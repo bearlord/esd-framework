@@ -308,7 +308,7 @@ class FileValidator extends Validator
                 return null;
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-            $this->setValidCode(800005);
+                $this->setValidCode(800005);
                 return [$this->tooBig, [
                     'file' => $value->name,
                     'limit' => $this->getSizeLimit(),

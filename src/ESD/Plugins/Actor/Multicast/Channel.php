@@ -156,7 +156,7 @@ class Channel
                 'channel' => $channel,
                 'type' => 'multicast',
                 'message' => $message
-            ], date("YmdHis").  mt_rand(10000, 99999), $fromActor, $toActor);
+            ], ActorMessage::TYPE_MULTICAST,  ("YmdHis").  mt_rand(10000, 99999), $fromActor, $toActor);
             $actorInstance->sendMessage($actorMessage);
         }
     }

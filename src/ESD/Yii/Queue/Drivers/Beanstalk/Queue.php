@@ -11,9 +11,8 @@ use Pheanstalk\Exception\ServerException;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 use Pheanstalk\PheanstalkInterface;
-use ESD\Yii\Base\InvalidArgumentException;
-
-use ESD\Yii\Queue\Cli\Queue as CliQueue;
+use yii\base\InvalidArgumentException;
+use yii\queue\cli\Queue as CliQueue;
 
 /**
  * Beanstalk Queue.

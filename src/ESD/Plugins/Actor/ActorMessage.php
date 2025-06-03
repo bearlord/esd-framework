@@ -6,26 +6,27 @@
 
 namespace ESD\Plugins\Actor;
 
-/**
- * Class ActorMessage
- * @package ESD\Plugins\Actor
- */
+
 class ActorMessage
 {
-    /**
-     * @var int Message id
-     */
-    protected $msgId;
+    const TYPE_COMMON = 'common';
+
+    const TYPE_MULTICAST = 'multicast';
 
     /**
-     * @var string From
+     * @var string|null Message id
      */
-    protected $from;
+    protected $msgId = null;
+
+    /**
+     * @var string|null From
+     */
+    protected $from = null;
 
     /**
      * @var string To
      */
-    protected $to;
+    protected $to = null;
 
     /**
      * @var mixed Data
@@ -33,18 +34,28 @@ class ActorMessage
     protected $data;
 
     /**
-     * ActorMessage constructor.
+     * @var string
+     */
+    protected $type = self::TYPE_COMMON;
+    
+    /**
      * @param $data
+     * @param string|null $type
      * @param int|null $msgId
      * @param string|null $from
      * @param string|null $to
      */
-    public function __construct($data, ?int $msgId = null, ?string $from = null, ?string $to = null)
+    public function __construct($data, ?string $type = null, ?string $msgId = null, ?string $from = null, ?string $to = null)
     {
         $this->data = $data;
+
         $this->msgId = $msgId;
+
         $this->from = $from;
+
         $this->to = $to;
+
+        $this->setType($type);
     }
 
     /**
@@ -66,7 +77,7 @@ class ActorMessage
     /**
      * @return int
      */
-    public function getMsgId(): int
+    public function getMsgId(): ?int
     {
         return $this->msgId;
     }
@@ -74,7 +85,7 @@ class ActorMessage
     /**
      * @param int $msgId
      */
-    public function setMsgId(int $msgId): void
+    public function setMsgId(?int $msgId = null): void
     {
         $this->msgId = $msgId;
     }
@@ -90,7 +101,7 @@ class ActorMessage
     /**
      * @param string $from
      */
-    public function setFrom(string $from): void
+    public function setFrom(?string $from = null): void
     {
         $this->from = $from;
     }
@@ -106,9 +117,30 @@ class ActorMessage
     /**
      * @param string $to
      */
-    public function setTo(string $to): void
+    public function setTo(?string $to = null): void
     {
         $this->to = $to;
     }
 
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return void
+     */
+    public function setType(?string $type = null): void
+    {
+        if (in_array($type, [self::TYPE_COMMON, self::TYPE_MULTICAST])) {
+            $this->type = $type;
+            return;
+        }
+
+        $this->type = self::TYPE_COMMON;
+    }
 }

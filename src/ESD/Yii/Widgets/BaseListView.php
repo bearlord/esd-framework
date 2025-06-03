@@ -234,7 +234,7 @@ abstract class BaseListView extends Widget
             'totalCount' => $totalCount,
             'page' => $page,
             'pageCount' => $pageCount,
-        ], Yii::$app->getLanguage());
+        ], Yii::$app->getContextLanguage());
     }
 
     /**

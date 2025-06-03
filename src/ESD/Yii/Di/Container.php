@@ -8,10 +8,10 @@
 namespace ESD\Yii\Di;
 
 use ReflectionClass;
+use Yii;
 use ESD\Yii\Base\Component;
 use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Helpers\ArrayHelper;
-use ESD\Yii\Yii;
 
 /**
  * Container implements a [dependency injection](http://en.wikipedia.org/wiki/Dependency_injection) container.
