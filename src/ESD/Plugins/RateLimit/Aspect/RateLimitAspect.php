@@ -82,9 +82,11 @@ class RateLimitAspect extends OrderAspect
                     switch (true) {
                         case ($annotation instanceof RateLimit):
                             $bucketKey = $annotation->key;
-                            if (is_callable($bucketKey)) {
-                                $bucketKey = $bucketKey($proceedingJoinPoint);
+                            
+                            if (is_array($bucketKey) && count($bucketKey) == 2) {
+                                $bucketKey = call_user_func([$bucketKey[0], $bucketKey[1]], $invocation);
                             }
+
                             if (!$bucketKey) {
                                 $bucketKey = $clientData->getPath();
                             }
