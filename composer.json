@@ -26,6 +26,7 @@
         "illuminate/view": ">=5.8",
         "jakubledl/dissect": "~1.0",
         "jeremeamia/superclosure": "*",
+        "malkusch/lock": "^3.0",
         "monolog/monolog": "^1.24",
         "ocramius/proxy-manager": "^2.1",
         "php": "^7.1 || ^8.0",
