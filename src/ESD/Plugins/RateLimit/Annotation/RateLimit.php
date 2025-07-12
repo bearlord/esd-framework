@@ -32,9 +32,9 @@ class RateLimit extends Annotation
     public array $limitCallback = [];
 
     /**
-     * @var string The key for rate limiting
+     * @var string|array The key for rate limiting
      */
-    public string $key = "";
+    public $key;
 
     /**
      * @var int Queue timeout time
