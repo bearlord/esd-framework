@@ -79,6 +79,9 @@ class Application extends ServiceLocator
     public function __construct()
     {
         Yii::$app = $this;
+
+        Yii::$container = new Container();
+
         $this->preInit();
     }
 
