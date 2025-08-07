@@ -6,14 +6,13 @@
 
 namespace ESD\Yii\Base;
 
-use DI\Container;
-use ESD\Core\DI\DI;
 use ESD\Core\Server\Server;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
 use ESD\Nikic\FastRoute\Dispatcher;
 use ESD\Plugins\EasyRoute\EasyRoutePlugin;
 use ESD\Plugins\Session\HttpSession;
+use ESD\Yii\Di\Container;
 use ESD\Yii\Di\ServiceLocator;
 use ESD\Yii\Plugin\Mongodb\MongodbPools;
 use ESD\Yii\Yii;
