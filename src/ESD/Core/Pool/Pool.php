@@ -55,7 +55,9 @@ abstract class Pool implements PoolInterface
     {
         $this->config = $config;
 
-        $this->initOption($config->toConfigArray());
+        $arr = $config->toConfigArray();
+        $options = $arr["options"] ?? [];
+        $this->initOption($options);
 
         $this->generateChannel();
     }
@@ -133,7 +135,7 @@ abstract class Pool implements PoolInterface
      * @param array $options
      * @return void
      */
-    protected function initOption(array $options = [])
+    protected function initOption(?array $options = [])
     {
         $this->option = new PoolOption(
             $options['minConnections'] ?? null,

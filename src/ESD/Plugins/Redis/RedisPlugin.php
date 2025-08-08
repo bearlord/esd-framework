@@ -79,6 +79,7 @@ class RedisPlugin extends AbstractPlugin
                 'name' => 'Redis'
             ]));
         }
+
         foreach ($configs as $key => $config) {
             $pool = new RedisPool($config);
             $pools->addPool($pool);

@@ -191,4 +191,21 @@ class Config extends \ESD\Core\Pool\Config implements ConfigInterface
     {
         $this->database = $database;
     }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     * @return void
+     */
+    public function setOptions(array $options): void
+    {
+        $this->options = $options;
+    }
 }
