@@ -3,6 +3,7 @@
 namespace ESD\Core\Pool;
 
 use ESD\Server\Coroutine\Server;
+use Throwable;
 
 abstract class Connection implements ConnectionInterface
 {
@@ -17,26 +18,27 @@ abstract class Connection implements ConnectionInterface
     protected $lastReleaseTime = 0.0;
 
     /**
-     * @var \ESD\Core\Pool\PoolInterface
+     * @var PoolInterface
      */
     protected $pool;
 
     /**
-     * @var \ESD\Core\Pool\Config
+     * @var ConfigInterface
      */
     protected $config;
 
     /**
-     * @param \ESD\Core\Pool\PoolInterface $pool
+     * @param PoolInterface $pool
+     * @param ConfigInterface $config
      */
-    public function __construct(PoolInterface $pool, Config $config)
+    public function __construct(PoolInterface $pool, ConfigInterface $config)
     {
         $this->pool = $pool;
         $this->config = $config;
     }
 
     /**
-     * @return \ESD\Core\Pool\PoolInterface
+     * @return PoolInterface
      */
     public function getPool(): PoolInterface
     {
@@ -44,7 +46,7 @@ abstract class Connection implements ConnectionInterface
     }
 
     /**
-     * @param \ESD\Core\Pool\PoolInterface $pool
+     * @param PoolInterface $pool
      * @return void
      */
     public function setPool(PoolInterface $pool): void
@@ -53,18 +55,18 @@ abstract class Connection implements ConnectionInterface
     }
 
     /**
-     * @return \ESD\Core\Pool\Config
+     * @return ConfigInterface
      */
-    public function getConfig(): Config
+    public function getConfig(): ConfigInterface
     {
         return $this->config;
     }
 
     /**
-     * @param \ESD\Core\Pool\Config $config
+     * @param ConfigInterface $config
      * @return void
      */
-    public function setConfig(Config $config): void
+    public function setConfig(ConfigInterface $config): void
     {
         $this->config = $config;
     }

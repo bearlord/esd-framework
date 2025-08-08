@@ -19,24 +19,14 @@ use ESD\Server\Coroutine\Server;
 class RedisPool extends Pool
 {
     /**
-     * RedisPool constructor.
      * @param Config $config
-     * @throws RedisException
+     * @throws \ReflectionException
      */
     public function __construct(Config $config)
     {
         parent::__construct($config);
 
         $this->frequency = new DefaultFrequency($this);
-
-
-        $this->config = $config;
-        $config->buildConfig();
-        $this->pool = DIGet(Channel::class, [$config->getPoolMaxNumber()]);
-        for ($i = 0; $i < $config->getPoolMaxNumber(); $i++) {
-            $db = new Redis();
-            $this->pool->push($db);
-        }
     }
 
     /**

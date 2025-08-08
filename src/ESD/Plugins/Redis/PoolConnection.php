@@ -2,6 +2,7 @@
 
 namespace ESD\Plugins\Redis;
 
+use ESD\Core\Pool\ConfigInterface;
 use ESD\Core\Pool\ConnectionInterface;
 use ESD\Core\Pool\Exception\ConnectionException;
 use ESD\Core\Pool\Connection as CorePoolConnection;
@@ -35,10 +36,10 @@ class PoolConnection extends CorePoolConnection
     protected $configArray = [];
 
     /**
-     * @param \ESD\Plugins\Redis\RedisPool $pool
-     * @param \ESD\Plugins\Redis\Config $config
+     * @param RedisPool $pool
+     * @param ConfigInterface $config
      */
-    public function __construct(RedisPool $pool, Config $config)
+    public function __construct(RedisPool $pool, ConfigInterface $config)
     {
         parent::__construct($pool, $config);
 
