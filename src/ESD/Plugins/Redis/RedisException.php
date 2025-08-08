@@ -8,10 +8,6 @@ namespace ESD\Plugins\Redis;
 
 use ESD\Core\Exception;
 
-/**
- * Class RedisException
- * @package ESD\Plugins\Redis
- */
 class RedisException extends Exception
 {
 

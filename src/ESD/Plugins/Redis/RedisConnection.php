@@ -8,6 +8,7 @@ use ESD\Server\Coroutine\Server;
 use Redis;
 use RedisCluster;
 use RedisSentinel;
+use Throwable;
 
 class RedisConnection
 {
@@ -22,7 +23,7 @@ class RedisConnection
     protected $driverType;
 
     /**
-     * @var \Redis|\RedisSentinel|\RedisCluster
+     * @var Redis|RedisSentinel|RedisCluster
      */
     protected $driver;
 
@@ -66,7 +67,7 @@ class RedisConnection
     }
 
     /**
-     * @return \Redis|\RedisCluster|\RedisSentinel
+     * @return Redis|RedisCluster|RedisSentinel
      */
     public function getDriver()
     {
@@ -74,7 +75,7 @@ class RedisConnection
     }
 
     /**
-     * @param \Redis|\RedisCluster|\RedisSentinel $driver
+     * @param Redis|RedisCluster|RedisSentinel $driver
      */
     public function setDriver($driver): void
     {
@@ -82,9 +83,8 @@ class RedisConnection
     }
 
     /**
-     * @return mixed|\Redis|\RedisCluster
-     * @throws \ESD\Core\Pool\Exception\ConnectionException
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @return mixed|Redis|RedisCluster
+     * @throws ConnectionException
      * @throws \RedisClusterException
      * @throws \RedisException
      */
@@ -116,9 +116,9 @@ class RedisConnection
         $options = $this->config['options'] ?? [];
         foreach ($options as $name => $value) {
             if (!empty($name)) {
-                $optionNmae = $this->formatOptionName($name);
-                if (!empty($optionNmae)) {
-                    $redis->setOption($optionNmae, $value);
+                $optionName = $this->formatOptionName($name);
+                if (!empty($optionName)) {
+                    $redis->setOption($optionName, $value);
                 }
             }
         }
@@ -136,6 +136,60 @@ class RedisConnection
     }
 
     /**
+     * @param string|null $name
+     * @return string
+     */
+    protected function formatOptionName(?string $name = null): string
+    {
+        if (empty($name)) {
+            return "";
+        }
+
+        switch ($name) {
+            case "serializer":
+                $optionName = Redis::OPT_SERIALIZER;
+                break;
+
+            case "prefix":
+                $optionName = Redis::OPT_PREFIX;
+                break;
+
+            case "readTimeout":
+                $optionName = Redis::OPT_READ_TIMEOUT;
+                break;
+
+            case "scan":
+                $optionName = Redis::OPT_SCAN;
+                break;
+
+            case "failover":
+                $optionName = Redis::OPT_FAILOVER;
+                break;
+
+            case "keepalive":
+                $optionName = defined(Redis::class . '::OPT_SLAVE_FAILOVER') ? Redis::OPT_SLAVE_FAILOVER : 5;
+                break;
+
+            case "compression":
+                $optionName = Redis::OPT_COMPRESSION;
+                break;
+
+            case "replyLiteral":
+                $optionName = Redis::OPT_REPLY_LITERAL;
+                break;
+
+            case "compressionLevel":
+                $optionName = Redis::OPT_COMPRESSION_LEVEL;
+                break;
+
+            default:
+                $optionName = null;
+        }
+
+        return $optionName;
+    }
+
+    /**
      * @return void
      * @throws \Exception
      */
@@ -146,8 +200,8 @@ class RedisConnection
     }
 
     /**
-     * @return \RedisCluster
-     * @throws \ESD\Core\Pool\Exception\ConnectionException
+     * @return RedisCluster
+     * @throws ConnectionException
      * @throws \RedisClusterException
      */
     protected function createRedisCluster(): RedisCluster
@@ -201,6 +255,7 @@ class RedisConnection
                         Server::$instance->getLog()->error(sprintf('The redis sentinel node [%s] is invalid.', $node));
                         continue;
                     }
+
                     $options = [
                         'host' => $resolved['host'],
                         'port' => (int)$resolved['port'],
@@ -208,8 +263,11 @@ class RedisConnection
                         'persistent' => $persistent,
                         'retryInterval' => $retryInterval,
                         'readTimeout' => $readTimeout,
-                        ...($auth ? ['auth' => $auth] : []),
                     ];
+
+                    if ($auth) {
+                        $options['auth'] = $auth;
+                    }
 
                     Server::$instance->getLog()->debug('Opening RedisSentinel connection: ' . $resolved['name'] . '.' . $this->getDriverType());
 
@@ -219,7 +277,7 @@ class RedisConnection
                         [$host, $port] = $masterInfo;
                         break;
                     }
-                } catch (\Throwable $exception) {
+                } catch (Throwable $exception) {
                     Server::$instance->getLog()->error('Redis sentinel connection failed, caused by ' . $exception->getMessage());
                     continue;
                 }
@@ -245,8 +303,8 @@ class RedisConnection
 
     /**
      * @param array $config
-     * @return \Redis
-     * @throws \ESD\Core\Pool\Exception\ConnectionException
+     * @return Redis
+     * @throws ConnectionException
      * @throws \RedisException
      */
     protected function createRedis(array $config): Redis
@@ -258,8 +316,8 @@ class RedisConnection
 
     /**
      * @param array $config
-     * @return \Redis
-     * @throws \ESD\Core\Pool\Exception\ConnectionException
+     * @return Redis
+     * @throws ConnectionException
      * @throws \RedisException
      */
     protected function innerConnect(array $config): Redis
@@ -295,7 +353,7 @@ class RedisConnection
     {
         try {
             return call_user_func_array([$this->driver, $name], $params);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             Server::$instance->getLog()->error('Redis Execute Command failed: ' . $exception->getMessage());
             throw new \Exception($exception->getMessage());
         }

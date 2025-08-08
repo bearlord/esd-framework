@@ -7,13 +7,14 @@
 namespace ESD\Plugins\Redis;
 
 use ESD\Core\Plugins\Config\BaseConfig;
+use ESD\Core\Pool\ConfigInterface;
 use ESD\Yii\Yii;
 
 /**
  * Class RedisOneConfig
  * @package ESD\Plugins\Redis
  */
-class Config extends \ESD\Core\Pool\Config
+class Config extends \ESD\Core\Pool\Config implements ConfigInterface
 {
     /**
      * @var string

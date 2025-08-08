@@ -8,11 +8,7 @@ namespace ESD\Core\Pool;
 
 use ESD\Core\Plugins\Config\BaseConfig;
 
-/**
- * Class Config
- * @package ESD\Core\Pool
- */
-abstract class Config extends BaseConfig
+abstract class Config extends BaseConfig implements ConfigInterface
 {
     /**
      * @var string
@@ -27,7 +23,7 @@ abstract class Config extends BaseConfig
     /**
      * @return string
      */
-    abstract protected function getKey();
+    abstract protected function getKey(): string;
 
 
     /**

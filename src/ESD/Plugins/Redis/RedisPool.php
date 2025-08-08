@@ -9,6 +9,7 @@ namespace ESD\Plugins\Redis;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Pool\ConnectionInterface;
 use ESD\Core\Pool\DefaultFrequency;
+use ESD\Core\Pool\Exception\ConnectionException;
 use ESD\Core\Pool\Pool;
 use ESD\Server\Coroutine\Server;
 
@@ -30,7 +31,11 @@ class RedisPool extends Pool
     }
 
     /**
-     * @return \ESD\Core\Pool\ConnectionInterface
+     * @return ConnectionInterface
+     * @throws RedisException
+     * @throws ConnectionException
+     * @throws \RedisClusterException
+     * @throws \RedisException
      */
     protected function createConnection(): ConnectionInterface
     {

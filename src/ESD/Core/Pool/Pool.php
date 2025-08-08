@@ -27,7 +27,7 @@ abstract class Pool implements PoolInterface
     protected $channel;
 
     /**
-     * @var \ESD\Core\Pool\Config
+     * @var Config
      */
     protected $config;
 
@@ -189,7 +189,7 @@ abstract class Pool implements PoolInterface
             while ($this->currentConnections > $this->option->getMinConnections() && $conn = $this->channel->pop(0.001)) {
                 try {
                     $conn->close();
-                } catch (\Throwable $exception) {
+                } catch (Throwable $exception) {
                     Server::$instance->getLog()->error((string)$exception);
                 } finally {
                     --$this->currentConnections;
@@ -239,7 +239,7 @@ abstract class Pool implements PoolInterface
 
     /**
      * @return ConnectionInterface
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function getConnection(): ConnectionInterface
     {
@@ -250,7 +250,7 @@ abstract class Pool implements PoolInterface
                 ++$this->currentConnections;
                 return $this->createConnection();
             }
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             --$this->currentConnections;
             Server::$instance->getLog()->error($throwable->getMessage());
             throw $throwable;

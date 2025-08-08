@@ -3,32 +3,18 @@
 namespace ESD\Plugins\Redis;
 
 use ESD\Core\Pool\ConfigInterface;
-use ESD\Core\Pool\ConnectionInterface;
 use ESD\Core\Pool\Exception\ConnectionException;
 use ESD\Core\Pool\Connection as CorePoolConnection;
-use ESD\Plugins\Redis\Exception\InvalidRedisConnectionException;
 use ESD\Plugins\Redis\Exception\InvalidRedisOptionException;
 use ESD\Server\Coroutine\Server;
-use RedisCluster;
-use RedisSentinel;
 use Redis;
 
 class PoolConnection extends CorePoolConnection
 {
     /**
-     * @var \ESD\Plugins\Redis\RedisConnection
+     * @var RedisConnection
      */
     protected $connection;
-
-    /**
-     * @var \ESD\Plugins\Redis\RedisPool
-     */
-    protected $pool;
-
-    /**
-     * @var \ESD\Plugins\Redis\Config
-     */
-    protected $config;
 
     /**
      * @var array
@@ -38,6 +24,7 @@ class PoolConnection extends CorePoolConnection
     /**
      * @param RedisPool $pool
      * @param ConfigInterface $config
+     * @throws RedisException
      */
     public function __construct(RedisPool $pool, ConfigInterface $config)
     {
@@ -47,7 +34,7 @@ class PoolConnection extends CorePoolConnection
     }
 
     /**
-     * @return \ESD\Plugins\Redis\RedisConnection
+     * @return RedisConnection
      */
     public function getConnection(): RedisConnection
     {
@@ -55,7 +42,7 @@ class PoolConnection extends CorePoolConnection
     }
 
     /**
-     * @param \ESD\Plugins\Redis\RedisConnection $connection
+     * @param RedisConnection $connection
      * @return void
      */
     public function setConnection(RedisConnection $connection): void
@@ -65,9 +52,12 @@ class PoolConnection extends CorePoolConnection
 
     /**
      * @return $this
-     * @throws \ESD\Core\Pool\Exception\ConnectionException
+     * @throws ConnectionException
+     * @throws RedisException
+     * @throws \RedisClusterException
+     * @throws \RedisException
      */
-    public function getActiveConnection()
+    public function getActiveConnection(): PoolConnection
     {
         if ($this->check()) {
             return $this;
@@ -80,56 +70,12 @@ class PoolConnection extends CorePoolConnection
         return $this;
     }
 
-
-    /**
-     * @param string|null $name
-     * @return string
-     */
-    protected function formatOptionName(?string $name = null): string
-    {
-        if (empty($name)) {
-            return "";
-        }
-        $optionNmae = null;
-
-        switch ($name) {
-            case "serializer":
-                $optionNmae = Redis::OPT_SERIALIZER;
-                break;
-            case "prefix":
-                $optionNmae = Redis::OPT_PREFIX;
-                break;
-            case "readTimeout":
-                $optionNmae = Redis::OPT_READ_TIMEOUT;
-                break;
-            case "scan":
-                $optionNmae = Redis::OPT_SCAN;
-                break;
-            case "failover":
-                $optionNmae = Redis::OPT_FAILOVER;
-                break;
-            case "keepalive":
-                $optionNmae = defined(Redis::class . '::OPT_SLAVE_FAILOVER') ? Redis::OPT_SLAVE_FAILOVER : 5;
-                break;
-            case "compression":
-                $optionNmae = Redis::OPT_COMPRESSION;
-                break;
-            case "replyLiteral":
-                $optionNmae = Redis::OPT_REPLY_LITERAL;
-                break;
-            case "compressionLevel":
-                $optionNmae = Redis::OPT_COMPRESSION_LEVEL;
-                break;
-            default:
-                throw new InvalidRedisOptionException(sprintf('The redis option key `%s` is invalid.', $name));
-                break;
-        }
-
-        return $optionNmae;
-    }
-
     /**
      * @return bool
+     * @throws ConnectionException
+     * @throws RedisException
+     * @throws \RedisClusterException
+     * @throws \RedisException
      */
     public function connect(): bool
     {
@@ -140,11 +86,15 @@ class PoolConnection extends CorePoolConnection
         $this->setLastUseTime(microtime(true));
 
         return true;
-
     }
 
     /**
      * @return bool
+     * @throws ConnectionException
+     * @throws RedisException
+     * @throws \RedisClusterException
+     * @throws \RedisException
+     * @throws \Exception
      */
     public function reconnect(): bool
     {
@@ -155,6 +105,7 @@ class PoolConnection extends CorePoolConnection
 
     /**
      * @return bool
+     * @throws \Exception
      */
     public function close(): bool
     {
@@ -168,15 +119,14 @@ class PoolConnection extends CorePoolConnection
     }
 
     /**
-     * @return \ESD\Plugins\Redis\RedisConnection
-     * @throws \ESD\Core\Pool\Exception\ConnectionException
+     * @return RedisConnection
+     * @throws ConnectionException
      */
-    public function getDbConnection()
+    public function getDbConnection(): RedisConnection
     {
         try {
             $activeConnection = $this->getActiveConnection();
-            $connection = $activeConnection->getConnection();
-            return $connection;
+            return $activeConnection->getConnection();
         } catch (\Throwable $exception) {
             Server::$instance->getLog()->warning('Get connection failed, try again. ' . (string)$exception);
 

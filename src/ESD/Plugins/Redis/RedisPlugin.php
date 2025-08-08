@@ -12,10 +12,6 @@ use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
-/**
- * Class RedisPlugin
- * @package ESD\Plugins\Redis
- */
 class RedisPlugin extends AbstractPlugin
 {
     use GetLogger;
