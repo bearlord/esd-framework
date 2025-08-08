@@ -50,12 +50,12 @@ class PoolOption implements PoolOptionInterface
     protected $maxIdleTime = 60;
 
     /**
-     * @param int $minConnections
-     * @param int $maxConnections
-     * @param float $connectTimeout
-     * @param float $waitTimeout
-     * @param int $heartbeat
-     * @param int $maxIdleTime
+     * @param int|null $minConnections
+     * @param int|null $maxConnections
+     * @param float|null $connectTimeout
+     * @param float|null $waitTimeout
+     * @param int|null $heartbeat
+     * @param int|null $maxIdleTime
      */
     public function __construct(
         ?int $minConnections = 1,
@@ -83,7 +83,7 @@ class PoolOption implements PoolOptionInterface
     }
 
     /**
-     * @param int $minConnections
+     * @param int|null $minConnections
      * @return void
      */
     public function setMinConnections(?int $minConnections): void
@@ -103,7 +103,7 @@ class PoolOption implements PoolOptionInterface
     }
 
     /**
-     * @param int $maxConnections
+     * @param int|null $maxConnections
      * @return void
      */
     public function setMaxConnections(?int $maxConnections): void
@@ -123,7 +123,7 @@ class PoolOption implements PoolOptionInterface
     }
 
     /**
-     * @param float $connectTimeout
+     * @param float|null $connectTimeout
      * @return void
      */
     public function setConnectTimeout(?float $connectTimeout): void
@@ -143,7 +143,7 @@ class PoolOption implements PoolOptionInterface
     }
 
     /**
-     * @param float $waitTimeout
+     * @param float|null $waitTimeout
      * @return void
      */
     public function setWaitTimeout(?float $waitTimeout): void
@@ -163,7 +163,7 @@ class PoolOption implements PoolOptionInterface
     }
 
     /**
-     * @param int $heartbeat
+     * @param int|null $heartbeat
      * @return void
      */
     public function setHeartbeat(?int $heartbeat): void
@@ -183,7 +183,7 @@ class PoolOption implements PoolOptionInterface
     }
 
     /**
-     * @param int $maxIdleTime
+     * @param int|null $maxIdleTime
      * @return void
      */
     public function setMaxIdleTime(?int $maxIdleTime): void

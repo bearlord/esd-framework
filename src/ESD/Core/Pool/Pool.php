@@ -8,7 +8,7 @@ namespace ESD\Core\Pool;
 
 use ESD\Core\Channel\Channel;
 use ESD\Server\Coroutine\Server;
-use ESD\Core\Pool\FrequencyInterface;
+use Throwable;
 
 /**
  * Class Pool
@@ -32,7 +32,7 @@ abstract class Pool implements PoolInterface
     protected $config;
 
     /**
-     * @var \ESD\Core\Pool\PoolOption
+     * @var PoolOption
      */
     protected $option;
 
@@ -47,7 +47,9 @@ abstract class Pool implements PoolInterface
     protected $frequency;
 
     /**
-     * @param \ESD\Core\Pool\Config $config
+     * @param Config $config
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function __construct(Config $config)
     {
@@ -61,13 +63,13 @@ abstract class Pool implements PoolInterface
     /**
      * @return Channel
      */
-    public function getPool()
+    public function getPool(): Channel
     {
         return $this->pool;
     }
 
     /**
-     * @return \ESD\Core\Channel\Channel
+     * @return Channel
      */
     public function getChannel(): Channel
     {
@@ -75,7 +77,7 @@ abstract class Pool implements PoolInterface
     }
 
     /**
-     * @param \ESD\Core\Channel\Channel $channel
+     * @param Channel $channel
      * @return void
      */
     public function setChannel(Channel $channel): void
@@ -85,6 +87,7 @@ abstract class Pool implements PoolInterface
 
     /**
      * @return void
+     * @throws \Exception
      */
     protected function generateChannel()
     {
@@ -110,18 +113,18 @@ abstract class Pool implements PoolInterface
     }
 
     /**
-     * @return \ESD\Core\Pool\PoolOption
+     * @return PoolOptionInterface
      */
-    public function getOption(): PoolOption
+    public function getOption(): PoolOptionInterface
     {
         return $this->option;
     }
 
     /**
-     * @param \ESD\Core\Pool\PoolOption $option
+     * @param PoolOptionInterface $option
      * @return void
      */
-    public function setOption(PoolOption $option): void
+    public function setOption(PoolOptionInterface $option): void
     {
         $this->option = $option;
     }
@@ -143,8 +146,8 @@ abstract class Pool implements PoolInterface
     }
 
     /**
-     * @return \ESD\Core\Pool\ConnectionInterface
-     * @throws \Exception
+     * @return ConnectionInterface
+     * @throws Throwable
      */
     public function get(): ConnectionInterface
     {
@@ -166,7 +169,7 @@ abstract class Pool implements PoolInterface
     }
 
     /**
-     * @param \ESD\Core\Pool\ConnectionInterface $connection
+     * @param ConnectionInterface $connection
      * @return void
      */
     public function release(ConnectionInterface $connection): void
@@ -186,7 +189,7 @@ abstract class Pool implements PoolInterface
             while ($this->currentConnections > $this->option->getMinConnections() && $conn = $this->channel->pop(0.001)) {
                 try {
                     $conn->close();
-                } catch (Throwable $exception) {
+                } catch (\Throwable $exception) {
                     Server::$instance->getLog()->error((string)$exception);
                 } finally {
                     --$this->currentConnections;
@@ -204,6 +207,7 @@ abstract class Pool implements PoolInterface
     /**
      * @param bool $must
      * @return void
+     * @throws \Exception
      */
     public function flushOne(bool $must = false): void
     {
@@ -212,7 +216,7 @@ abstract class Pool implements PoolInterface
             if ($must || ! $conn->check()) {
                 try {
                     $conn->close();
-                } catch (Throwable $exception) {
+                } catch (\Exception $exception) {
                     Server::$instance->getLog()->error((string)$exception);
                 } finally {
                     --$this->currentConnections;
@@ -234,8 +238,8 @@ abstract class Pool implements PoolInterface
     abstract protected function createConnection(): ConnectionInterface;
 
     /**
-     * @return \ESD\Core\Pool\ConnectionInterface
-     * @throws \Exception
+     * @return ConnectionInterface
+     * @throws \Throwable
      */
     protected function getConnection(): ConnectionInterface
     {
@@ -246,7 +250,7 @@ abstract class Pool implements PoolInterface
                 ++$this->currentConnections;
                 return $this->createConnection();
             }
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             --$this->currentConnections;
             Server::$instance->getLog()->error($throwable->getMessage());
             throw $throwable;
