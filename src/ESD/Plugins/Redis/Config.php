@@ -91,7 +91,7 @@ class Config extends \ESD\Core\Pool\Config implements ConfigInterface
     /**
      * @return string
      */
-    protected function getKey()
+    protected function getKey(): string
     {
         return 'redis';
     }

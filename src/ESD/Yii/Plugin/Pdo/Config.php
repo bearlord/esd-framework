@@ -57,7 +57,7 @@ class Config extends \ESD\Core\Pool\Config
     /**
      * @return string
      */
-    protected function getKey()
+    protected function getKey(): string
     {
         return 'pdo';
     }
