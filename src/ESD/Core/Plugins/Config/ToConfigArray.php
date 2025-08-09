@@ -38,15 +38,15 @@ trait ToConfigArray
                     if (is_array($this->$varName)) {
                         foreach ($this->$varName as $key => $value) {
                             if ($value instanceof BaseConfig) {
-                                $config[$this->toUnderlineCase($varName)][$this->toUnderlineCase($key)] = $value->toConfigArray();
+                                $config[$this->toCamelCase($varName)][$this->toCamelCase($key)] = $value->toConfigArray();
                             } else {
-                                $config[$this->toUnderlineCase($varName)][$this->toUnderlineCase($key)] = $value;
+                                $config[$this->toCamelCase($varName)][$this->toCamelCase($key)] = $value;
                             }
                         }
                     } elseif ($this->$varName instanceof BaseConfig) {
-                        $config[$this->toUnderlineCase($varName)] = $this->$varName->toConfigArray();
+                        $config[$this->toCamelCase($varName)] = $this->$varName->toConfigArray();
                     } else {
-                        $config[$this->toUnderlineCase($varName)] = $this->$varName;
+                        $config[$this->toCamelCase($varName)] = $this->$varName;
                     }
                 }
             }
