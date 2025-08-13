@@ -146,7 +146,7 @@ class ScheduledPlugin extends AbstractPlugin
                     }
                     if (empty($scheduled->cron)) {
                         $this->warn(Yii::t('esd', 'The {name} task is not set to cron and has been ignored', [
-                            'name' => $scheduledTask->getName()
+                            'name' => $scheduled->getName()
                         ]));
                         continue;
                     }
