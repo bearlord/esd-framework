@@ -10,27 +10,26 @@ use ESD\Server\Coroutine\Server;
 use ESD\Core\Pool\Connection as CorePoolConnection;
 use ESD\Yii\Db\Connection as DbConnection;
 use ESD\Core\Pool\Exception\ConnectionException;
+use ESD\Yii\Db\Exception;
 
+/**
+ * @property Config $config
+ */
 class PoolConnection extends CorePoolConnection
 {
     /**
-     * @var \ESD\Yii\Db\Connection
+     * @var DbConnection
      */
     protected $connection;
 
     /**
-     * @var \ESD\Yii\Plugin\Pdo\PdoPool
+     * @var PdoPool
      */
     protected $pool;
 
     /**
-     * @var \ESD\Yii\Plugin\Pdo\Config
-     */
-    protected $config;
-
-    /**
-     * @param \ESD\Yii\Plugin\Pdo\PdoPool $pool
-     * @param \ESD\Yii\Plugin\Pdo\Config $config
+     * @param PdoPool $pool
+     * @param Config $config
      */
     public function __construct(PdoPool $pool, Config $config)
     {
@@ -38,7 +37,7 @@ class PoolConnection extends CorePoolConnection
     }
 
     /**
-     * @return \ESD\Yii\Db\Connection
+     * @return DbConnection
      */
     public function getConnection(): DbConnection
     {
@@ -46,7 +45,7 @@ class PoolConnection extends CorePoolConnection
     }
 
     /**
-     * @param \ESD\Yii\Db\Connection $connection
+     * @param DbConnection $connection
      * @return void
      */
     public function setConnection(DbConnection $connection): void
@@ -55,25 +54,8 @@ class PoolConnection extends CorePoolConnection
     }
 
     /**
-     * @return \ESD\Yii\Plugin\Pdo\Config
-     */
-    public function getConfig(): Config
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param \ESD\Yii\Plugin\Pdo\Config $config
-     * @return void
-     */
-    public function setConfig(Config $config): void
-    {
-        $this->config = $config;
-    }
-
-    /**
      * @return bool
-     * @throws \ESD\Yii\Db\Exception
+     * @throws Exception
      */
     public function connect(): bool
     {
@@ -98,7 +80,7 @@ class PoolConnection extends CorePoolConnection
 
     /**
      * @return $this
-     * @throws \ESD\Yii\Plugin\Pdo\ConnectionException
+     * @throws ConnectionException|Exception
      */
     public function getActiveConnection()
     {
@@ -115,6 +97,7 @@ class PoolConnection extends CorePoolConnection
 
     /**
      * @return bool
+     * @throws Exception
      */
     public function reconnect(): bool
     {
@@ -129,7 +112,7 @@ class PoolConnection extends CorePoolConnection
      */
     public function close(): bool
     {
-        if ($this->connection instanceof \ESD\Yii\Db\Connection) {
+        if ($this->connection instanceof DbConnection) {
             $this->connection->close();
         }
 
@@ -139,17 +122,17 @@ class PoolConnection extends CorePoolConnection
     }
 
     /**
-     * @return \ESD\Yii\Db\Connection
-     * @throws \ESD\Yii\Plugin\Pdo\ConnectionException
+     * @return DbConnection
+     * @throws ConnectionException
+     * @throws Exception
      */
     public function getDbConnection(): DbConnection
     {
         try {
             $activeConnection =  $this->getActiveConnection();
-            $connection = $activeConnection->getConnection();
-            return $connection;
+            return $activeConnection->getConnection();
         } catch (\Throwable $exception) {
-            Server::$instance->getLog()->warning('Get connection failed, try again. ' . (string)$exception);
+            Server::$instance->getLog()->warning('Get connection failed, try again. ' . $exception);
 
             $activeConnection =  $this->getActiveConnection();
             return $activeConnection->getConnection();
