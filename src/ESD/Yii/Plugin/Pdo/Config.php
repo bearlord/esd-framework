@@ -6,12 +6,6 @@
 
 namespace ESD\Yii\Plugin\Pdo;
 
-use ESD\Core\Plugins\Config\BaseConfig;
-
-/**
- * Class Config
- * @package ESD\Yii\Plugin\Pdo
- */
 class Config extends \ESD\Core\Pool\Config
 {
     /**
@@ -20,17 +14,17 @@ class Config extends \ESD\Core\Pool\Config
     protected $dsn = "";
 
     /**
-     * @var username
+     * @var string username
      */
     protected $username = "";
 
     /**
-     * @var password
+     * @var string password
      */
     protected $password = "";
 
     /**
-     * @var table prefix
+     * @var string table prefix
      */
     protected $tablePrefix = "";
 
@@ -40,17 +34,17 @@ class Config extends \ESD\Core\Pool\Config
     protected $charset = "utf8";
 
     /**
-     * @var Enable schema cache
+     * @var bool Enable schema cache
      */
     protected $enableSchemaCache = false;
 
     /**
-     * @var Schema cache duration
+     * @var int Schema cache duration
      */
-    protected $schemaCacheDuration = false;
+    protected $schemaCacheDuration = 0;
 
     /**
-     * @var Schema cache component
+     * @var string Schema cache component
      */
     protected $schemaCache = "cache";
 
@@ -113,22 +107,6 @@ class Config extends \ESD\Core\Pool\Config
     /**
      * @return string
      */
-    public function getDb(): string
-    {
-        return $this->db;
-    }
-
-    /**
-     * @param string $db
-     */
-    public function setDb(string $db): void
-    {
-        $this->db = $db;
-    }
-
-    /**
-     * @return string
-     */
     public function getTablePrefix(): string
     {
         return $this->tablePrefix;
@@ -175,9 +153,9 @@ class Config extends \ESD\Core\Pool\Config
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getSchemaCacheDuration(): string
+    public function getSchemaCacheDuration(): int
     {
         return $this->schemaCacheDuration;
     }
@@ -185,7 +163,7 @@ class Config extends \ESD\Core\Pool\Config
     /**
      * @param int $duratioin
      */
-    public function setSchemaCacheDuration($duratioin): void
+    public function setSchemaCacheDuration(int $duratioin): void
     {
         $this->schemaCacheDuration = $duratioin;
     }
@@ -201,7 +179,7 @@ class Config extends \ESD\Core\Pool\Config
     /**
      * @param string $cache
      */
-    public function setSchemaCache($cache): void
+    public function setSchemaCache(string $cache): void
     {
         if (!empty($cache)) {
             $this->schemaCache = $cache;
@@ -212,7 +190,7 @@ class Config extends \ESD\Core\Pool\Config
      * Build config
      * @return array
      */
-    public function buildConfig()
+    public function buildConfig(): array
     {
         return [
             'dsn' => $this->getDsn(),
@@ -234,10 +212,11 @@ class Config extends \ESD\Core\Pool\Config
      * by an end user.
      * @return string name of the DB driver
      */
-    public function getDriverName()
+    public function getDriverName(): string
     {
         if (($pos = strpos($this->dsn, ':')) !== false) {
             return strtolower(substr($this->dsn, 0, $pos));
         }
+        return '';
     }
 }
