@@ -224,7 +224,8 @@ class Config extends \ESD\Core\Pool\Config
             'poolMaxNumber' => $this->getPoolMaxNumber(),
             'enableSchemaCache' => $this->getEnableSchemaCache(),
             'schemaCacheDuration' => $this->getSchemaCacheDuration(),
-            'schemaCache' => $this->getSchemaCache()
+            'schemaCache' => $this->getSchemaCache(),
+            'options' => $this->getOptions()
         ];
     }
 
