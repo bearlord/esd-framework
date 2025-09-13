@@ -245,13 +245,6 @@ abstract class Pool implements PoolInterface
     {
         $num = $this->getConnectionsInChannel();
 
-
-        var_dump([
-            $num,
-            $this->currentConnections,
-            $this->option
-        ]);
-
         try {
             if ($num === 0 && $this->currentConnections < $this->option->getMaxConnections()) {
                 ++$this->currentConnections;
