@@ -19,11 +19,6 @@ class Config extends \ESD\Core\Pool\Config implements ConfigInterface
     /**
      * @var string
      */
-    protected $name = "";
-
-    /**
-     * @var string
-     */
     protected $host = "localhost";
 
     /**
@@ -32,14 +27,19 @@ class Config extends \ESD\Core\Pool\Config implements ConfigInterface
     protected $port = 6379;
 
     /**
-     * @var mixed
+     * @var string
      */
-    protected $auth = null;
+    protected $password = "";
 
     /**
      * @var int
      */
     protected $database = 0;
+    
+    /**
+     * @var mixed
+     */
+    protected $auth = null;
 
     /**
      * @var float
@@ -70,22 +70,6 @@ class Config extends \ESD\Core\Pool\Config implements ConfigInterface
      * @var array
      */
     protected $sentinel = [];
-
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @var int
-     */
-    protected $poolMaxNumber = 10;
-
-    /**
-     * @var string
-     */
-    protected $password = "";
-
 
 
     /**
@@ -156,7 +140,7 @@ class Config extends \ESD\Core\Pool\Config implements ConfigInterface
             "readTimeout" => $this->readTimeout,
             "cluster" => $this->cluster,
             "sentinel" => $this->sentinel,
-            "option" => $this->options
+            "options" => $this->options
         ];
     }
 
@@ -193,19 +177,113 @@ class Config extends \ESD\Core\Pool\Config implements ConfigInterface
     }
 
     /**
-     * @return array
+     * @return mixed|null
      */
-    public function getOptions(): array
+    public function getAuth()
     {
-        return $this->options;
+        return $this->auth;
     }
 
     /**
-     * @param array $options
+     * @param mixed|null $auth
+     */
+    public function setAuth($auth): void
+    {
+        $this->auth = $auth;
+    }
+
+    public function getTimeout(): float
+    {
+        return $this->timeout;
+    }
+
+    public function setTimeout(float $timeout): void
+    {
+        $this->timeout = $timeout;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getReserved()
+    {
+        return $this->reserved;
+    }
+
+    /**
+     * @param mixed|null $reserved
+     */
+    public function setReserved($reserved): void
+    {
+        $this->reserved = $reserved;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRetryInterval(): int
+    {
+        return $this->retryInterval;
+    }
+
+    /**
+     * @param int $retryInterval
      * @return void
      */
-    public function setOptions(array $options): void
+    public function setRetryInterval(int $retryInterval): void
     {
-        $this->options = $options;
+        $this->retryInterval = $retryInterval;
     }
+
+    /**
+     * @return float
+     */
+    public function getReadTimeout(): float
+    {
+        return $this->readTimeout;
+    }
+
+    /**
+     * @param float $readTimeout
+     * @return void
+     */
+    public function setReadTimeout(float $readTimeout): void
+    {
+        $this->readTimeout = $readTimeout;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCluster(): array
+    {
+        return $this->cluster;
+    }
+
+    /**
+     * @param array $cluster
+     * @return void
+     */
+    public function setCluster(array $cluster): void
+    {
+        $this->cluster = $cluster;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSentinel(): array
+    {
+        return $this->sentinel;
+    }
+
+    /**
+     * @param array $sentinel
+     * @return void
+     */
+    public function setSentinel(array $sentinel): void
+    {
+        $this->sentinel = $sentinel;
+    }
+    
 }

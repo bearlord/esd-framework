@@ -55,9 +55,7 @@ abstract class Pool implements PoolInterface
     {
         $this->config = $config;
 
-        $arr = $config->toConfigArray();
-        $options = $arr["options"] ?? [];
-        $this->initOption($options);
+        $this->initOption($config->getOptions());
 
         $this->generateChannel();
     }
@@ -246,6 +244,13 @@ abstract class Pool implements PoolInterface
     protected function getConnection(): ConnectionInterface
     {
         $num = $this->getConnectionsInChannel();
+
+
+        var_dump([
+            $num,
+            $this->currentConnections,
+            $this->option
+        ]);
 
         try {
             if ($num === 0 && $this->currentConnections < $this->option->getMaxConnections()) {
