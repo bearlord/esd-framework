@@ -9,10 +9,6 @@ namespace ESD\Plugins\MQTT\Message;
 
 use ESD\Plugins\MQTT\Protocol\ProtocolInterface;
 
-/**
- * Class AbstractMessage
- * @package ESD\Plugins\MQTT\Message;
- */
 abstract class AbstractMessage
 {
     /**

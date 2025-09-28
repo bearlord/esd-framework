@@ -1,6 +1,7 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
@@ -13,10 +14,7 @@ use ESD\Plugins\MQTT\Packet\UnPackV5;
 use ESD\Plugins\MQTT\Tools\PackTool;
 use ESD\Plugins\MQTT\Tools\UnPackTool;
 
-/**
- * Class ProtocolV5
- * @package ESD\Plugins\MQTT\Protocol
- */
+
 class ProtocolV5 implements ProtocolInterface
 {
     /**

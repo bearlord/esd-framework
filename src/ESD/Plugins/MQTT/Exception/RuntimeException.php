@@ -7,10 +7,6 @@
 
 namespace ESD\Plugins\MQTT\Exception;
 
-/**
- * Class RuntimeException
- * @package ESD\Plugins\MQTT\Exception
- */
 class RuntimeException extends \RuntimeException
 {
 }

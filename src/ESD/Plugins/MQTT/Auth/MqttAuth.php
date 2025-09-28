@@ -1,20 +1,22 @@
 <?php
 /**
  * ESD framework
- * @author tmtbe <896369042@qq.com>
+ * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Auth;
 
-
-interface MqttAuth
+class MqttAuth implements MqttAuthInterface
 {
+
     /**
-     * 返回结果[$isAuth,$uid]
-     * @param $fd
-     * @param $username
-     * @param $password
-     * @return mixed
+     * @param int $fd
+     * @param string $username
+     * @param string $password
+     * @return array
      */
-    public function auth($fd, $username, $password): array;
+    public function auth(int $fd, string $username, string $password): array
+    {
+        return ["true", $fd];
+    }
 }

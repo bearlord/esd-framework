@@ -1,6 +1,7 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
@@ -16,10 +17,6 @@ use ESD\Plugins\MQTT\Tools\UnPackTool;
 use Throwable;
 use TypeError;
 
-/**
- * Class ProtocolV3
- * @package ESD\Plugins\MQTT\Protocol
- */
 class ProtocolV3 implements ProtocolInterface
 {
     /**

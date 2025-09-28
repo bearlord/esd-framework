@@ -9,10 +9,6 @@ namespace ESD\Plugins\MQTT\Message;
 
 use ESD\Plugins\MQTT\Protocol\ProtocolInterface;
 
-/**
- * Class Will
- * @package ESD\Plugins\MQTT\Message
- */
 class Will extends AbstractMessage
 {
     /**
@@ -113,7 +109,7 @@ class Will extends AbstractMessage
 
     /**
      * @param bool $getArray
-     * @return array|string
+     * @return array
      */
     public function getContents(bool $getArray = false)
     {

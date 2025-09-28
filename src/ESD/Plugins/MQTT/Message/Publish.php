@@ -12,10 +12,6 @@ use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Protocol\ProtocolV3;
 use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 
-/**
- * Class AbstractMessage
- * @package ESD\Plugins\MQTT\Message
- */
 class Publish extends AbstractMessage
 {
     /**
@@ -164,7 +160,7 @@ class Publish extends AbstractMessage
 
     /**
      * @param bool $getArray
-     * @return array|mixed|string
+     * @return array|string
      * @throws \Throwable
      */
     public function getContents(bool $getArray = false)

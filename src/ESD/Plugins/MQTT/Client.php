@@ -1,6 +1,7 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
@@ -72,6 +73,9 @@ class Client
      * @param bool $clean
      * @param array $will
      * @return bool
+     * @throws \Throwable
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function connect(bool $clean = true, array $will = [])
     {
@@ -102,6 +106,8 @@ class Client
      * @param array $topics
      * @param array $properties
      * @return bool
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function subscribe(array $topics, array $properties = [])
     {
@@ -119,6 +125,8 @@ class Client
      * @param array $topics
      * @param array $properties
      * @return bool
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function unSubscribe(array $topics, array $properties = [])
     {
@@ -140,6 +148,8 @@ class Client
      * @param int $retain
      * @param array $properties
      * @return bool
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function publish(
         string $topic,
@@ -184,6 +194,8 @@ class Client
 
     /**
      * @return bool
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function ping()
     {
@@ -194,6 +206,8 @@ class Client
      * @param int $code
      * @param array $properties
      * @return bool
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function close(int $code = ReasonCode::NORMAL_DISCONNECTION, array $properties = []): bool
     {
@@ -206,6 +220,8 @@ class Client
      * @param int $code
      * @param array $properties
      * @return bool
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function auth(int $code = ReasonCode::SUCCESS, array $properties = [])
     {

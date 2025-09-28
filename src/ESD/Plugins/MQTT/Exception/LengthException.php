@@ -7,10 +7,6 @@
 
 namespace ESD\Plugins\MQTT\Exception;
 
-/**
- * Class LengthException
- * @package ESD\Plugins\MQTT\Exception
- */
 class LengthException extends \LengthException
 {
 }

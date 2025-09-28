@@ -9,14 +9,8 @@
 namespace ESD\Plugins\MQTT;
 
 use DI\Annotation\Inject;
-use ESD\Plugins\MQTT\Message\AbstractMessage;
-use ESD\Plugins\MQTT\Message\ConnAck;
-use ESD\Plugins\MQTT\Message\DisConnect;
-use ESD\Plugins\MQTT\Message\PingResp;
-use ESD\Plugins\MQTT\Message\Publish;
-use ESD\Plugins\MQTT\Message\PubRec;
-use ESD\Plugins\MQTT\Message\SubAck;
-use ESD\Plugins\MQTT\Message\UnSubAck;
+use ESD\Core\Exception;
+use ESD\Core\Plugins\Config\ConfigException;
 use ESD\Plugins\MQTT\Packet\PackV3;
 use ESD\Plugins\MQTT\Packet\PackV5;
 use ESD\Plugins\MQTT\Packet\UnPackV3;
@@ -26,17 +20,16 @@ use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Tools\UnPackTool;
 use ESD\Core\Server\Config\PortConfig;
+use ESD\Plugins\Redis\RedisException;
 use ESD\Server\Coroutine\Server;
-use ESD\Plugins\MQTT\MqttPluginConfig;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\GetBoostSend;
 use ESD\Plugins\Pack\PackTool\AbstractPack;
-use ESD\Plugins\Pack\PackTool\IPack;
 use ESD\Plugins\Redis\GetRedis;
 use ESD\Plugins\Topic\GetTopic;
 use ESD\Plugins\Uid\GetUid;
+use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Yii;
-use function DI\get;
 
 class MqttPack extends AbstractPack
 {
@@ -87,7 +80,9 @@ class MqttPack extends AbstractPack
      *
      * @param int $fd
      * @param int $protocolLevel
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws Exception
+     * @throws RedisException
+     * @throws \RedisException
      */
     protected function setFdProtocolLevel(int $fd, int $protocolLevel): void
     {
@@ -102,7 +97,9 @@ class MqttPack extends AbstractPack
      *
      * @param int $fd
      * @return int|null
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws Exception
+     * @throws RedisException
+     * @throws \RedisException
      */
     protected function getFdProtocolLevel(int $fd): ?int
     {
@@ -133,7 +130,9 @@ class MqttPack extends AbstractPack
      *
      * @param int $fd
      * @param string $clientId
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws Exception
+     * @throws RedisException
+     * @throws \RedisException
      */
     protected function setFdClientIdMap(int $fd, string $clientId): void
     {
@@ -148,7 +147,9 @@ class MqttPack extends AbstractPack
      *
      * @param string $clientId
      * @param int $fd
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws Exception
+     * @throws RedisException
+     * @throws \RedisException
      */
     protected function setClientIdFdMap(string $clientId, int $fd): void
     {
@@ -163,7 +164,9 @@ class MqttPack extends AbstractPack
      *
      * @param int $fd
      * @return false|mixed|string
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws Exception
+     * @throws RedisException
+     * @throws \RedisException
      */
     protected function getClientIdFromFd(int $fd)
     {
@@ -181,7 +184,9 @@ class MqttPack extends AbstractPack
      *
      * @param string $clientId
      * @return false|mixed|string
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws Exception
+     * @throws RedisException
+     * @throws \RedisException
      */
     protected function getFdFromClientId(string $clientId)
     {
@@ -197,7 +202,9 @@ class MqttPack extends AbstractPack
     /**
      * @param $clientId
      * @param $data
-     * @throws \ESD\Plugins\Redis\RedisException
+     * @throws RedisException
+     * @throws Exception
+     * @throws \RedisException
      */
     protected function setClientConnectionInfo($clientId, $data)
     {
@@ -239,8 +246,9 @@ class MqttPack extends AbstractPack
      * @param mixed $data
      * @param PortConfig $portConfig
      * @return ClientData|null
-     * @throws \ESD\Plugins\Redis\RedisException
-     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws ConfigException
+     * @throws RedisException
+     * @throws InvalidConfigException
      */
     public function unPack(int $fd, $data, PortConfig $portConfig): ?ClientData
     {
@@ -249,7 +257,7 @@ class MqttPack extends AbstractPack
         switch ($type) {
             case Types::CONNECT:
                 //协议版本
-                $protocolLevel = UnPackTool::getProtocolLevel($data);
+                $protocolLevel = UnPackTool::getLevel($data);
                 //解包数据
                 $unpackedData = call_user_func([$this->getProtocolInstance($protocolLevel), 'unpack'], $data);
                 //客户端标识

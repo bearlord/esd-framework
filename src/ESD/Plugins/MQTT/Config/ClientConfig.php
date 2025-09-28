@@ -9,10 +9,6 @@ namespace ESD\Plugins\MQTT\Config;
 
 use ESD\Plugins\MQTT\Protocol\ProtocolInterface;
 
-/**
- * Class ClientConfig
- * @package ESD\Plugins\MQTT\Config
- */
 class ClientConfig extends AbstractConfig
 {
     /**
@@ -20,8 +16,18 @@ class ClientConfig extends AbstractConfig
      */
     protected $clientId = "";
 
+    /**
+     * @var array
+     */
     protected $swooleConfig = [
         "open_mqtt_protocol" => true,
+    ];
+
+    /**
+     * @var array
+     */
+    protected $headers = [
+        'Sec-Websocket-Protocol' => 'mqtt',
     ];
 
     /**
@@ -62,12 +68,17 @@ class ClientConfig extends AbstractConfig
     /**
      * @var int
      */
-    protected $maxAttempts = -1;
+    protected $maxAttempts = 0;
 
     /**
      * @var int
      */
     protected $sockType = SWOOLE_SOCK_TCP;
+
+    /**
+     * @var int
+     */
+    protected $verbose = MQTT_VERBOSE_NONE;
 
     /**
      * @return string
@@ -103,6 +114,25 @@ class ClientConfig extends AbstractConfig
     public function setSwooleConfig(array $config): self
     {
         $this->swooleConfig = array_merge($this->swooleConfig, $config);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     * @return $this
+     */
+    public function setHeaders(array $headers): self
+    {
+        $this->headers = array_merge($this->headers, $headers);
 
         return $this;
     }
@@ -288,5 +318,24 @@ class ClientConfig extends AbstractConfig
     public function isMQTT5(): bool
     {
         return $this->getProtocolLevel() === ProtocolInterface::MQTT_PROTOCOL_LEVEL_5_0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVerbose(): int
+    {
+        return $this->verbose;
+    }
+
+    /**
+     * @param int $verbose
+     * @return $this
+     */
+    public function setVerbose(int $verbose): self
+    {
+        $this->verbose = $verbose;
+
+        return $this;
     }
 }

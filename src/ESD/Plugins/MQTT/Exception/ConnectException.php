@@ -7,10 +7,6 @@
 
 namespace ESD\Plugins\MQTT\Exception;
 
-/**
- * Class ConnectException
- * @package ESD\Plugins\MQTT\Exception
- */
 class ConnectException extends \RuntimeException
 {
 }

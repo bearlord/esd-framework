@@ -82,10 +82,19 @@ class PackTool extends Common
     }
 
     /**
+     * @param string $body
+     * @return string
+     */
+    public static function genProperties(string $body): string
+    {
+        return static::packRemainingLength(strlen($body)) . $body;
+    }
+
+    /**
      * @param int $bodyLength
      * @return string
      */
-    private static function packRemainingLength(int $bodyLength): string
+    protected static function packRemainingLength(int $bodyLength): string
     {
         $string = '';
         do {

@@ -11,10 +11,6 @@ use ESD\Plugins\MQTT\Hex\ReasonCode;
 use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 
-/**
- * Class AbstractMessage
- * @package ESD\Plugins\MQTT\Message;
- */
 class Auth extends AbstractMessage
 {
     protected $code = ReasonCode::SUCCESS;
@@ -42,7 +38,7 @@ class Auth extends AbstractMessage
      * AUTH type is only available in MQTT5
      *
      * @param bool $getArray
-     * @return array|mixed|string
+     * @return array|string
      */
     public function getContents(bool $getArray = false)
     {

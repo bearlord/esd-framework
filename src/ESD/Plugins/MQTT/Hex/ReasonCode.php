@@ -8,8 +8,6 @@
 namespace ESD\Plugins\MQTT\Hex;
 
 /**
- * Class ReasonCode
- * @package ESD\Plugins\MQTT\Hex
  * @see https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901031
  */
 abstract class ReasonCode

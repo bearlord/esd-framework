@@ -1,6 +1,7 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
@@ -11,10 +12,6 @@ use ESD\Plugins\MQTT\Exception\InvalidArgumentException;
 use ESD\Plugins\MQTT\Hex\Property;
 use ESD\Plugins\MQTT\Tools\UnPackTool;
 
-/**
- * Class UnPackProperty
- * @package ESD\Plugins\MQTT\Property
- */
 class UnPackProperty
 {
     /**
@@ -32,26 +29,30 @@ class UnPackProperty
                 $remaining = substr($remaining, 1);
                 switch ($property) {
                     case Property::SESSION_EXPIRY_INTERVAL:
+                    case Property::MAXIMUM_PACKET_SIZE:
                         $properties[$key] = UnPackTool::longInt($remaining);
                         $length -= 5;
                         break;
+
                     case Property::AUTHENTICATION_METHOD:
                     case Property::AUTHENTICATION_DATA:
                         $properties[$key] = UnPackTool::string($remaining);
                         $length -= 3;
                         $length -= strlen($properties[$key]);
                         break;
+
                     case Property::REQUEST_PROBLEM_INFORMATION:
                     case Property::REQUEST_RESPONSE_INFORMATION:
                         $properties[$key] = UnPackTool::byte($remaining);
                         $length -= 2;
                         break;
+
                     case Property::RECEIVE_MAXIMUM:
                     case Property::TOPIC_ALIAS_MAXIMUM:
-                    case Property::MAXIMUM_PACKET_SIZE:
                         $properties[$key] = UnPackTool::shortInt($remaining);
                         $length -= 3;
                         break;
+
                     case Property::USER_PROPERTY:
                         $userKey = UnPackTool::string($remaining);
                         $userValue = UnPackTool::string($remaining);

@@ -7,10 +7,6 @@
 
 namespace ESD\Plugins\MQTT\Exception;
 
-/**
- * Class InvalidArgumentException
- * @package ESD\Plugins\MQTT\Exception
- */
 class InvalidArgumentException extends \InvalidArgumentException
 {
 }

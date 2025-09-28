@@ -13,10 +13,6 @@ use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Protocol\ProtocolV3;
 use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 
-/**
- * Class AbstractMessage
- * @package ESD\Plugins\MQTT\Message
- */
 class ConnAck extends AbstractMessage
 {
     /**

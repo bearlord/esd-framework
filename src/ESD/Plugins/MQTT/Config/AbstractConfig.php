@@ -7,10 +7,6 @@
 
 namespace ESD\Plugins\MQTT\Config;
 
-/**
- * Class AbstractConfig
- * @package ESD\Plugins\MQTT\Config
- */
 abstract class AbstractConfig
 {
     public function __construct(array $data = [])

@@ -9,9 +9,8 @@
 namespace ESD\Plugins\MQTT;
 
 use DI\Annotation\Inject;
-use ESD\Plugins\MQTT\Message\AbstractMessage;
+use ESD\Core\Exception;
 use ESD\Plugins\MQTT\Message\ConnAck;
-use ESD\Plugins\MQTT\Message\DisConnect;
 use ESD\Plugins\MQTT\Message\PingResp;
 use ESD\Plugins\MQTT\Message\Publish;
 use ESD\Plugins\MQTT\Message\PubRec;
@@ -26,20 +25,17 @@ use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Tools\UnPackTool;
 use ESD\Core\Server\Config\PortConfig;
+use ESD\Plugins\Redis\RedisException;
 use ESD\Server\Coroutine\Server;
-use ESD\Plugins\MQTT\MqttPluginConfig;
 use ESD\Plugins\Pack\ClientData;
 use ESD\Plugins\Pack\GetBoostSend;
 use ESD\Plugins\Pack\PackTool\IPack;
 use ESD\Plugins\Redis\GetRedis;
 use ESD\Plugins\Topic\GetTopic;
 use ESD\Plugins\Uid\GetUid;
+use ESD\Yii\Base\InvalidConfigException;
 use ESD\Yii\Yii;
 
-/**
- * Class MqttPack
- * @package ESD\Plugins\MQTT
- */
 class MqttPackTemplate implements IPack
 {
     use GetUid;
@@ -156,8 +152,10 @@ class MqttPackTemplate implements IPack
      * @param mixed $data
      * @param PortConfig $portConfig
      * @return ClientData|null
-     * @throws \ESD\Plugins\Redis\RedisException
-     * @throws \ESD\Yii\Base\InvalidConfigException
+     * @throws Exception
+     * @throws RedisException
+     * @throws InvalidConfigException
+     * @throws \RedisException
      */
     public function unPack(int $fd, $data, PortConfig $portConfig): ?ClientData
     {
@@ -166,7 +164,7 @@ class MqttPackTemplate implements IPack
         switch ($type) {
             case Types::CONNECT:
                 //协议版本
-                $protocolLevel = UnPackTool::getProtocolLevel($data);
+                $protocolLevel = UnPackTool::getLevel($data);
                 //解包数据
                 $unpackedData = call_user_func([$this->getProtocolInstance($protocolLevel), 'unpack'], $data);
 
@@ -300,14 +298,6 @@ class MqttPackTemplate implements IPack
                 break;
 
             case Types::DISCONNECT:
-//                //协议版本
-//                $protocolLevel = $this->redis()->hGet($this->buildRedisFdKey($fd), 'protocol_level');
-//                $this->autoBoostSend(
-//                    $fd,
-//                    (new DisConnect())
-//                        ->setProtocolLevel($protocolLevel)
-//                        ->setCode(0)
-//                );
                 Server::$instance->closeFd($fd);
                 break;
         }

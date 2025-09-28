@@ -12,10 +12,6 @@ use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Protocol\ProtocolV3;
 use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 
-/**
- * Class PubAck
- * @package ESD\Plugins\MQTT\Message
- */
 class PubAck extends AbstractMessage
 {
     protected $messageId = 0;

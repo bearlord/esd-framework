@@ -1,16 +1,13 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
 
 namespace ESD\Plugins\MQTT\Protocol;
 
-/**
- * Class ProtocolInterface
- * @package ESD\Plugins\MQTT\Protocol
- */
 interface ProtocolInterface
 {
     public const MQTT_PROTOCOL_LEVEL_3_1 = 3;

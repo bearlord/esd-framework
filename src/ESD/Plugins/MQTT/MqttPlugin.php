@@ -14,10 +14,6 @@ use ESD\Plugins\Pack\PackPlugin;
 use ESD\Plugins\Topic\TopicPlugin;
 use ESD\Plugins\Uid\UidPlugin;
 
-/**
- * Class MqttPlugin
- * @package ESD\Plugins\MQTT
- */
 class MqttPlugin extends AbstractPlugin
 {
     /**
@@ -28,7 +24,6 @@ class MqttPlugin extends AbstractPlugin
     /**
      * MqttPlugin constructor.
      * @param MqttPluginConfig|null $mqttPluginConfig
-     * @throws \ReflectionException
      */
     public function __construct(?MqttPluginConfig $mqttPluginConfig = null)
     {
@@ -43,11 +38,10 @@ class MqttPlugin extends AbstractPlugin
     /**
      * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
-     * @return mixed|void
+     * @return void
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \ESD\Core\Exception
-     * @throws \ReflectionException
      */
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
@@ -60,7 +54,7 @@ class MqttPlugin extends AbstractPlugin
     /**
      * @inheritDoc
      * @param Context $context
-     * @return mixed|void
+     * @return void
      * @throws \ReflectionException
      * @throws \ESD\Core\Plugins\Config\ConfigException
      */
