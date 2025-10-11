@@ -1,16 +1,18 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Plugins\MQTT;
+namespace ESD\Plugins\MQTT\Client;
 
-use ESD\Plugins\MQTT\Config\ClientConfig;
+use ESD\Plugins\MQTT\Client\Config\ClientConfig;
 use ESD\Plugins\MQTT\Exception\ConnectException;
 use ESD\Plugins\MQTT\Exception\ProtocolException;
 use ESD\Plugins\MQTT\Hex\ReasonCode;
+use ESD\Plugins\MQTT\Protocol\Types;
 use ESD\Plugins\MQTT\Tools\Common;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Http\Client as WebSocketClient;
@@ -24,31 +26,31 @@ abstract class BaseClient
     public const WEBSOCKET_CLIENT_TYPE = 3;
 
     /** @var Coroutine\Client|\Swoole\Client|WebSocketClient */
-    private $client;
+    protected $client;
 
     /** @var int */
-    private $messageId = 0;
+    protected int $messageId = 0;
 
     /** @var array */
-    private $connectData = [];
+    protected array $connectData = [];
 
     /** @var string */
-    private $host;
+    protected string $host;
 
     /** @var int */
-    private $port;
+    protected int $port;
 
     /** @var ClientConfig */
-    private $config;
+    protected ClientConfig $config;
 
     /** @var int */
-    private $clientType;
+    protected int $clientType = self::SYNC_CLIENT_TYPE;
 
     /** @var string */
-    private $path = '/mqtt';
+    protected string $path = '/mqtt';
 
     /** @var bool */
-    private $ssl = false;
+    protected bool $ssl = false;
 
     /**
      * @return $this
@@ -95,14 +97,14 @@ abstract class BaseClient
     /**
      * @return $this
      */
-    public function setConfig(ClientConfig $config): self
+    public function setConfig(?ClientConfig $config): self
     {
         $this->config = $config;
 
         return $this;
     }
 
-    public function getConfig(): ClientConfig
+    public function getConfig(): ?ClientConfig
     {
         return $this->config;
     }
@@ -193,7 +195,7 @@ abstract class BaseClient
         return ++$this->messageId > 65535 ? $this->messageId = 1 : $this->messageId;
     }
 
-    public static function genClientID(string $prefix = 'Simps_'): string
+    public static function genClientID(string $prefix = 'yew_'): string
     {
         return uniqid($prefix);
     }
@@ -236,7 +238,7 @@ abstract class BaseClient
     public function connect(bool $clean = true, array $will = [])
     {
         $data = [
-            'type' => Protocol\Types::CONNECT,
+            'type' => Types::CONNECT,
             'protocol_name' => $this->getConfig()->getProtocolName(),
             'protocol_level' => $this->getConfig()->getProtocolLevel(),
             'clean_session' => $clean,
@@ -261,7 +263,7 @@ abstract class BaseClient
     public function subscribe(array $topics, array $properties = [])
     {
         return $this->send([
-            'type' => Protocol\Types::SUBSCRIBE,
+            'type' => Types::SUBSCRIBE,
             'message_id' => $this->buildMessageId(),
             'properties' => $properties,
             'topics' => $topics,
@@ -271,7 +273,7 @@ abstract class BaseClient
     public function unSubscribe(array $topics, array $properties = [])
     {
         return $this->send([
-            'type' => Protocol\Types::UNSUBSCRIBE,
+            'type' => Types::UNSUBSCRIBE,
             'message_id' => $this->buildMessageId(),
             'properties' => $properties,
             'topics' => $topics,
@@ -306,7 +308,7 @@ abstract class BaseClient
 
         return $this->send(
             [
-                'type' => Protocol\Types::PUBLISH,
+                'type' => Types::PUBLISH,
                 'qos' => $qos,
                 'dup' => $dup,
                 'retain' => $retain,
@@ -321,19 +323,19 @@ abstract class BaseClient
 
     public function ping()
     {
-        return $this->send(['type' => Protocol\Types::PINGREQ]);
+        return $this->send(['type' => Types::PINGREQ]);
     }
 
     public function close(int $code = ReasonCode::NORMAL_DISCONNECTION, array $properties = []): bool
     {
-        $this->send(['type' => Protocol\Types::DISCONNECT, 'code' => $code, 'properties' => $properties], false);
+        $this->send(['type' => Types::DISCONNECT, 'code' => $code, 'properties' => $properties], false);
 
         return $this->client->close();
     }
 
     public function auth(int $code = ReasonCode::SUCCESS, array $properties = [])
     {
-        return $this->send(['type' => Protocol\Types::AUTH, 'code' => $code, 'properties' => $properties]);
+        return $this->send(['type' => Types::AUTH, 'code' => $code, 'properties' => $properties]);
     }
 
     abstract protected function reConnect(): void;

@@ -1,11 +1,12 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Plugins\MQTT\Config;
+namespace ESD\Plugins\MQTT\Client\Config;
 
 abstract class AbstractConfig
 {

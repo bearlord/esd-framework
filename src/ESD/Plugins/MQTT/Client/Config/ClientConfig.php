@@ -1,11 +1,12 @@
 <?php
 /**
  * ESD framework
+ * @author tmtbe <896369042@qq.com>
  * @author Lu Fei <lufei@simps.io>
  * @author bearlord <565364226@qq.com>
  */
 
-namespace ESD\Plugins\MQTT\Config;
+namespace ESD\Plugins\MQTT\Client\Config;
 
 use ESD\Plugins\MQTT\Protocol\ProtocolInterface;
 
@@ -14,71 +15,71 @@ class ClientConfig extends AbstractConfig
     /**
      * @var string
      */
-    protected $clientId = "";
+    protected string $clientId = "";
 
     /**
      * @var array
      */
-    protected $swooleConfig = [
+    protected array $swooleConfig = [
         "open_mqtt_protocol" => true,
     ];
 
     /**
      * @var array
      */
-    protected $headers = [
+    protected array $headers = [
         'Sec-Websocket-Protocol' => 'mqtt',
     ];
 
     /**
      * @var string
      */
-    protected $userName = "";
+    protected string $userName = "";
 
     /**
      * @var string
      */
-    protected $password = "";
+    protected string $password = "";
 
     /**
      * @var int
      */
-    protected $keepAlive = 0;
+    protected int $keepAlive = 0;
 
     /**
      * @var string
      */
-    protected $protocolName = ProtocolInterface::MQTT_PROTOCOL_NAME;
+    protected string $protocolName = ProtocolInterface::MQTT_PROTOCOL_NAME;
 
     /**
      * @var int
      */
-    protected $protocolLevel = ProtocolInterface::MQTT_PROTOCOL_LEVEL_3_1_1;
+    protected int $protocolLevel = ProtocolInterface::MQTT_PROTOCOL_LEVEL_3_1_1;
 
     /**
      * @var array
      */
-    protected $properties = [];
+    protected array $properties = [];
 
     /**
      * @var int
      */
-    protected $delay = 3000;
+    protected int $delay = 3000;
 
     /**
      * @var int
      */
-    protected $maxAttempts = 0;
+    protected int $maxAttempts = 0;
 
     /**
      * @var int
      */
-    protected $sockType = SWOOLE_SOCK_TCP;
+    protected int $sockType = SWOOLE_SOCK_TCP;
 
     /**
      * @var int
      */
-    protected $verbose = MQTT_VERBOSE_NONE;
+    protected int $verbose = MQTT_VERBOSE_NONE;
 
     /**
      * @return string
