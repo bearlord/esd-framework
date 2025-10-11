@@ -1,16 +1,20 @@
 <?php
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
 
 namespace ESD\Plugins\Actor\Log;
 
-class Dispatcher
+use ESD\Yii\Base\Component;
+
+class Dispatcher extends Component
 {
 
     /**
      * @var array
      */
-    public $targets = [];
-
-    private $_logger;
+    public array $targets = [];
 
     /**
      * @param $messages

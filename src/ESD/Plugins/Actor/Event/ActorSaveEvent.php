@@ -4,22 +4,17 @@
  * @author tmtbe <896369042@qq.com>
  */
 
-namespace ESD\Plugins\Actor;
+namespace ESD\Plugins\Actor\Event;
 
 use ESD\Core\Plugins\Event\Event;
 
-/**
- * Class ActorCreateEvent
- * @package ESD\Plugins\Actor
- */
-class ActorCreateEvent extends Event
+class ActorSaveEvent extends Event
 {
-    const ActorCreateEvent = "ActorCreateEvent";
+    const ActorSaveEvent = "ActorSaveEvent";
     
-    const ActorCreateReadyEvent = "ActorCreateReadyEvent";
+    const ActorSaveReadyEvent = "ActorSaveReadyEvent";
 
     /**
-     * ActorCreateEvent constructor.
      * @param string $type
      * @param $data
      */

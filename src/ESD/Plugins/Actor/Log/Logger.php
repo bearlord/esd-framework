@@ -1,4 +1,8 @@
 <?php
+/**
+ * ESD framework
+ * @author tmtbe <896369042@qq.com>
+ */
 
 namespace ESD\Plugins\Actor\Log;
 
@@ -8,17 +12,17 @@ class Logger
     /**
      * @var array
      */
-    public $messages = [];
+    public array $messages = [];
 
     /**
      * @var int 
      */
-    public $flushInterval = 1;
+    public int $flushInterval = 1;
 
     /**
-     * @var Dispatcher the message dispatcher
+     * @var Dispatcher|null the message dispatcher
      */
-    public $dispatcher;
+    public ?Dispatcher $dispatcher = null;
 
 
     public function log($message)
