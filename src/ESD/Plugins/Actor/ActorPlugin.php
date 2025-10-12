@@ -32,8 +32,7 @@ class ActorPlugin extends AbstractPlugin
 
     /**
      * ActorPlugin constructor.
-     * @param ActorConfig|null $actorConfig
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -52,7 +51,7 @@ class ActorPlugin extends AbstractPlugin
     /**
      * @inheritDoc
      * @param PluginInterfaceManager $pluginInterfaceManager
-     * @return mixed|void
+     * @return void
      * @throws \ESD\Core\Exception
      */
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
@@ -82,8 +81,6 @@ class ActorPlugin extends AbstractPlugin
         for ($i = 0; $i < $this->actorConfig->getActorWorkerCount(); $i++) {
             Server::$instance->addProcess("actor-$i", ActorProcess::class, ActorConfig::GROUP_NAME);
         }
-
-        Server::$instance->addProcess(ActorCacheProcess::PROCESS_NAME, ActorCacheProcess::class, ActorCacheProcess::GROUP_NAME);
 
         $this->actorManager = ActorManager::getInstance();
 

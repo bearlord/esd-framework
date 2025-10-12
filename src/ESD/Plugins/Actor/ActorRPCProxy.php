@@ -37,7 +37,7 @@ class ActorRPCProxy extends RPCProxy
 
     /**
      * Send message
-     * @param \ESD\Plugins\Actor\ActorMessage $message
+     * @param ActorMessage $message
      */
     public function sendMessage(ActorMessage $message)
     {

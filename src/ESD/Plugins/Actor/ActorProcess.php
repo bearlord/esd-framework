@@ -8,6 +8,8 @@ namespace ESD\Plugins\Actor;
 
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
+use ESD\Plugins\Actor\Event\ActorCreateEvent;
+use ESD\Plugins\Actor\Event\ActorSaveEvent;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
@@ -19,7 +21,7 @@ class ActorProcess extends Process
 {
     /**
      * @inheritDoc
-     * @return mixed|void
+     * @return void
      */
     public function init()
     {
@@ -28,7 +30,7 @@ class ActorProcess extends Process
 
     /**
      * @inheritDoc
-     * @return mixed|void
+     * @return void
      * @throws \Exception
      */
     public function onProcessStart()
@@ -62,7 +64,7 @@ class ActorProcess extends Process
 
     /**
      * @inheritDoc
-     * @return mixed|void
+     * @return void
      */
     public function onProcessStop()
     {
@@ -73,7 +75,7 @@ class ActorProcess extends Process
      * @inheritDoc
      * @param Message $message
      * @param Process $fromProcess
-     * @return mixed|void
+     * @return void
      */
     public function onPipeMessage(Message $message, Process $fromProcess)
     {

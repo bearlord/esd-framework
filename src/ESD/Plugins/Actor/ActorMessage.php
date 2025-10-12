@@ -16,17 +16,17 @@ class ActorMessage
     /**
      * @var string|null Message id
      */
-    protected $msgId = null;
+    protected ?string $msgId = null;
 
     /**
      * @var string|null From
      */
-    protected $from = null;
+    protected ?string $from = null;
 
     /**
-     * @var string To
+     * @var string|null To
      */
-    protected $to = null;
+    protected ?string $to = null;
 
     /**
      * @var mixed Data
@@ -34,14 +34,14 @@ class ActorMessage
     protected $data;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $type = self::TYPE_COMMON;
-    
+    protected ?string $type = self::TYPE_COMMON;
+
     /**
      * @param $data
      * @param string|null $type
-     * @param int|null $msgId
+     * @param string|null $msgId
      * @param string|null $from
      * @param string|null $to
      */
@@ -75,15 +75,15 @@ class ActorMessage
     }
 
     /**
-     * @return int
+     * @return string|null
      */
-    public function getMsgId(): ?int
+    public function getMsgId(): ?string
     {
         return $this->msgId;
     }
 
     /**
-     * @param int $msgId
+     * @param int|null $msgId
      */
     public function setMsgId(?int $msgId = null): void
     {
@@ -99,7 +99,7 @@ class ActorMessage
     }
 
     /**
-     * @param string $from
+     * @param string|null $from
      */
     public function setFrom(?string $from = null): void
     {
@@ -115,7 +115,7 @@ class ActorMessage
     }
 
     /**
-     * @param string $to
+     * @param string|null $to
      */
     public function setTo(?string $to = null): void
     {
@@ -131,7 +131,7 @@ class ActorMessage
     }
 
     /**
-     * @param string $type
+     * @param string|null $type
      * @return void
      */
     public function setType(?string $type = null): void

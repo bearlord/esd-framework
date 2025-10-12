@@ -8,29 +8,25 @@ namespace ESD\Plugins\Actor;
 
 use ESD\Core\Server\Process\Process;
 
-/**
- * Class ActorInfo
- * @package ESD\Plugins\Actor
- */
 class ActorInfo
 {
     /**
      * @var string
      */
-    protected $name;
+    protected string $name;
     /**
      * @var Process
      */
-    protected $process;
+    protected Process $process;
     /**
      * @var string
      */
-    protected $className;
+    protected string $className;
 
     /**
      * @var int
      */
-    protected $createTime;
+    protected int $createTime;
     /**
      * @return string
      */

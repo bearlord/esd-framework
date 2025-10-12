@@ -9,6 +9,7 @@ namespace ESD\Plugins\Actor;
 use ESD\Core\Memory\CrossProcess\Atomic;
 use ESD\Core\Memory\CrossProcess\Table;
 use ESD\Core\Plugins\Logger\GetLogger;
+use ESD\Plugins\Actor\Event\ActorDeleteEvent;
 use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 
@@ -178,7 +179,7 @@ class ActorManager
      * @param string $actorName
      * @return bool
      */
-    public function hasActor(string $actorName)
+    public function hasActor(string $actorName): bool
     {
         $data = $this->actorTable->get($actorName);
         if (empty($data)) {

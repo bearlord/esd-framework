@@ -6,6 +6,7 @@
 
 namespace ESD\Plugins\Actor;
 
+use ESD\Plugins\Actor\Event\ActorCreateEvent;
 use ESD\Server\Coroutine\Server;
 
 /**
@@ -31,7 +32,7 @@ trait GetActorRpc
      * Only the process that created the Actor can use this listener
      * @param string $actorName
      * @param float $timeOut
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      */
     public function waitActorCreate(string $actorName, float $timeOut = 5)
     {
