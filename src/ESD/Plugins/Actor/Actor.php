@@ -12,6 +12,8 @@ use ESD\Core\Plugins\Event\EventDispatcher;
 use ESD\Core\Plugins\Logger\GetLogger;
 use ESD\Plugins\Actor\Event\ActorCreateEvent;
 use ESD\Plugins\Actor\Event\ActorSaveEvent;
+use ESD\Plugins\Actor\Log\LogFactory;
+use ESD\Plugins\Actor\Log\Logger;
 use ESD\Plugins\Actor\Multicast\MulticastConfig;
 use ESD\Plugins\Actor\Multicast\Channel as MulticastChannel;
 use ESD\Plugins\ProcessRPC\GetProcessRpc;
@@ -19,10 +21,6 @@ use ESD\Server\Coroutine\Server;
 use ESD\Yii\Yii;
 use Swoole\Timer;
 
-/**
- * Class Actor
- * @package ESD\Plugins\Actor
- */
 abstract class Actor
 {
     use GetLogger;
@@ -52,25 +50,31 @@ abstract class Actor
     protected $actorConfig;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $name;
+    protected ?string $name;
 
     /**
      * @var array data
      */
-    protected $data;
+    protected array $data;
 
     /**
      * @var array timer ids
      */
-    protected $timerIds = [];
+    protected array $timerIds = [];
+
+    /**
+     * @var Logger
+     */
+    protected Logger $logHandle;
+
 
     /**
      * Actor constructor.
      * @param string|null $name
      * @param bool $isCreated
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      */
     final public function __construct(?string $name = '', bool $isCreated = false)
     {
@@ -90,6 +94,10 @@ abstract class Actor
                 $this->onHandleMessage($message);
             }
         });
+
+        $this->logHandle = LogFactory::create($name);
+
+        $this->tick(10 * 1000, [$this, 'saveContext']);
     }
 
     /**
@@ -141,7 +149,7 @@ abstract class Actor
 
     /**
      * Process the received message
-     * @param \ESD\Plugins\Actor\ActorMessage $message
+     * @param ActorMessage $message
      * @return mixed
      */
     abstract protected function handleMessage(ActorMessage $message);
@@ -169,7 +177,7 @@ abstract class Actor
      * @param string $actorName
      * @param bool $oneway
      * @param float|null $timeOut
-     * @return \ESD\Plugins\Actor\ActorRPCProxy|false
+     * @return ActorRPCProxy|false
      */
     public static function getProxy(string $actorName, ?bool $oneway = false, ?float $timeOut = 5)
     {
@@ -187,8 +195,8 @@ abstract class Actor
      * @param null $data
      * @param bool $waitCreate
      * @param float|null $timeOut
-     * @return \ESD\Plugins\Actor\ActorRPCProxy|false|void
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @return ActorRPCProxy|false|void
+     * @throws ActorException
      */
     public static function create(string $actionClass, string $actorName, $data = null, ?bool $waitCreate = true, ?float $timeOut = 5)
     {
@@ -288,9 +296,8 @@ abstract class Actor
             foreach ($this->timerIds as $timerId) {
                 $this->clearTimer($timerId);
             }
-            $this->debug(Yii::t("esd", "Actor {actor}'s all timer cleared", [
-                "actor" => $this->getName()
-            ]));
+
+            $this->debug(sprintf("Actor %s's all timer cleared", $this->getName()));
         }
         return true;
     }
@@ -338,7 +345,7 @@ abstract class Actor
     {
         $actor = $this->getName();
 
-        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        /** @var MulticastChannel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
 
         $rpcProxy->subscribe($channel, $actor);
@@ -355,7 +362,7 @@ abstract class Actor
     {
         $actor = $this->getName();
 
-        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        /** @var MulticastChannel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
         $rpcProxy->unsubscribe($channel, $actor);
     }
@@ -370,7 +377,7 @@ abstract class Actor
     {
         $actor = $this->getName();
 
-        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        /** @var MulticastChannel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
         $rpcProxy->unsubscribeAll($actor);
     }
@@ -382,7 +389,7 @@ abstract class Actor
      * @param string $message
      * @param array|null $excludeActorList
      * @return void
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
     public function publish(string $channel, string $message, ?array $excludeActorList = []): void
@@ -393,7 +400,7 @@ abstract class Actor
             $excludeActorList = [$from];
         }
 
-        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        /** @var MulticastChannel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
 
         $rpcProxy->publish($channel, $message, $excludeActorList, $from);
@@ -403,7 +410,7 @@ abstract class Actor
      * @param string $channel
      * @param string $message
      * @return void
-     * @throws \ESD\Plugins\Actor\ActorException
+     * @throws ActorException
      * @throws \ESD\Plugins\ProcessRPC\ProcessRPCException
      */
     public function publishTo(string $channel, string $message): void
@@ -412,7 +419,7 @@ abstract class Actor
 
         $excludeActorList = [$from];
 
-        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        /** @var MulticastChannel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
         $rpcProxy->publish($channel, $message, $excludeActorList, $from);
     }
@@ -430,7 +437,7 @@ abstract class Actor
 
         $excludeActorList = [];
 
-        /** @var \ESD\Plugins\Actor\Multicast\Channel $rpcProxy */
+        /** @var MulticastChannel $rpcProxy */
         $rpcProxy = $this->callProcessName($this->getMulticastConfig()->getProcessName(), MulticastChannel::class, true);
         $rpcProxy->publish($channel, $message, $excludeActorList, $from);
     }
