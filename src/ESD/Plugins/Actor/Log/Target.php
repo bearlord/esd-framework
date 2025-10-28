@@ -6,8 +6,6 @@
 
 namespace ESD\Plugins\Actor\Log;
 
-namespace ESD\Plugins\Actor\Log;
-
 use ESD\Yii\Base\Component;
 use ESD\Yii\Helpers\Json;
 
