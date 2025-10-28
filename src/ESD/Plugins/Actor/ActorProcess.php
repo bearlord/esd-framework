@@ -52,13 +52,6 @@ class ActorProcess extends Process
             $this->eventDispatcher->dispatchProcessEvent(new ActorCreateEvent(ActorCreateEvent::ActorCreateReadyEvent . ":" . $actor->getName(), null),
                 Server::$instance->getProcessManager()->getProcessFromId($event->getProcessId())
             );
-
-            //Dispatch ActorSaveEvent to actor-cache process, do not need reply
-            Server::$instance->getEventDispatcher()->dispatchProcessEvent(new ActorSaveEvent(
-                ActorSaveEvent::ActorSaveEvent,
-                [
-                    $class, $name, $data,
-                ]), Server::$instance->getProcessManager()->getProcessFromName(ActorCacheProcess::PROCESS_NAME));
         });
     }
 
