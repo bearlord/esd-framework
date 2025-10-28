@@ -85,6 +85,8 @@ abstract class Actor
             ActorManager::getInstance()->addActor($this);
         }
 
+        $this->init();
+
         $this->channel = DIGet(Channel::class, [$this->actorConfig->getActorMailboxCapacity()]);
 
         //Loop process the information in the mailbox
@@ -94,6 +96,7 @@ abstract class Actor
                 $this->onHandleMessage($message);
             }
         });
+
 
         $this->logHandle = LogFactory::create($name);
 
@@ -125,6 +128,8 @@ abstract class Actor
     {
         $this->data = $data;
     }
+
+    abstract protected function init();
 
     /**
      * @param ActorMessage $message
