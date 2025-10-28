@@ -101,9 +101,9 @@ abstract class Actor
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getData(): array
+    public function getData(): ?array
     {
         return $this->data;
     }
