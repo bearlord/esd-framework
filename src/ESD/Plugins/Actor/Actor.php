@@ -55,9 +55,9 @@ abstract class Actor
     protected ?string $name;
 
     /**
-     * @var array data
+     * @var array|null data
      */
-    protected array $data;
+    protected ?array $data = null;
 
     /**
      * @var array timer ids
