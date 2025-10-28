@@ -103,6 +103,8 @@ abstract class Actor
         $this->tick(10 * 1000, [$this, 'saveContext']);
     }
 
+    abstract protected function init();
+
     /**
      * @return array|null
      */
@@ -129,7 +131,6 @@ abstract class Actor
         $this->data = $data;
     }
 
-    abstract protected function init();
 
     /**
      * @param ActorMessage $message
