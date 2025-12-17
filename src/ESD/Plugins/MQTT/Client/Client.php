@@ -97,8 +97,10 @@ class Client extends BaseClient
         if ($response === '' || !$this->client->isConnected()) {
             $this->reConnect();
             $this->connect($this->getConnectData('clean_session') ?? true, $this->getConnectData('will') ?? []);
+            return null;
         } elseif ($response === false && $this->client->errCode !== SOCKET_ETIMEDOUT) {
             $this->handleException();
+            return null;
         } elseif (is_string($response) && strlen($response) > 0) {
             if ($this->getConfig()->isMQTT5()) {
                 return ProtocolV5::unpack($response);
@@ -106,12 +108,10 @@ class Client extends BaseClient
 
             return ProtocolV3::unpack($response);
         }
-
-        return true;
     }
 
     /**
-     * @return bool|string
+     * @return string
      */
     protected function getResponse()
     {
@@ -129,5 +129,32 @@ class Client extends BaseClient
         }
 
         return $response;
+    }
+
+
+    /**
+     * @return array|bool
+     * @throws \Throwable
+     */
+    public function recvWithoutReconnect()
+    {
+        $response = $this->getResponse();
+
+        if ($response === false && $this->client->errCode !== SOCKET_ETIMEDOUT) {
+            $this->handleException();
+            return null;
+        }
+
+        if ($response === true || $response === "") {
+            return $response;
+        }
+
+        if (is_string($response) && strlen($response) > 0) {
+            if ($this->getConfig()->isMQTT5()) {
+                return ProtocolV5::unpack($response);
+            }
+
+            return ProtocolV3::unpack($response);
+        }
     }
 }
