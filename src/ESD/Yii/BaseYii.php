@@ -321,7 +321,7 @@ class BaseYii
      *   The callable should return a new instance of the object being created.
      *
      * @param array $params the constructor parameters
-     * @return object the created object
+     * @return object|mixed the created object
      * @throws InvalidConfigException if the configuration is invalid.
      * @see \ESD\Yii\Di\Container
      */
