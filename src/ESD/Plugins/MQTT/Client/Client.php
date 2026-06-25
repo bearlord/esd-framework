@@ -14,6 +14,14 @@ use ESD\Plugins\MQTT\Protocol\ProtocolV5;
 
 class Client extends BaseClient
 {
+	/**
+	 * Record all subscriptions for automatic re-subscription after reconnection
+	 * Each element: ['topics' => [...], 'properties' => [...]]
+	 *
+	 * @var array
+	 */
+	protected array $subscriptions = [];
+
     /**
      * @param string $host
      * @param int $port
@@ -93,22 +101,43 @@ class Client extends BaseClient
      */
     public function recv()
     {
-        $response = $this->getResponse();
-        if ($response === '' || !$this->client->isConnected()) {
-            $this->reConnect();
-            $this->connect($this->getConnectData('clean_session') ?? true, $this->getConnectData('will') ?? []);
-            return null;
-        } elseif ($response === false && $this->client->errCode !== SOCKET_ETIMEDOUT) {
-            $this->handleException();
-            return null;
-        } elseif (is_string($response) && strlen($response) > 0) {
-            if ($this->getConfig()->isMQTT5()) {
-                return ProtocolV5::unpack($response);
-            }
+	    $response = $this->getResponse();
+	    if ($response === "" || !$this->client->isConnected()) {
+		    $this->reConnect();
+		    $this->connect($this->getConnectData("clean_session") ?? true, $this->getConnectData("will") ?? []);
 
-            return ProtocolV3::unpack($response);
-        }
+		    // Re-subscribe to previously subscribed topics after reconnection
+		    if (!empty($this->subscriptions)) {
+			    foreach ($this->subscriptions as $subscription) {
+				    parent::subscribe($subscription['topics'], $subscription['properties']);
+			    }
+		    }
+
+	    } elseif ($response === false && $this->client->errCode !== SOCKET_ETIMEDOUT) {
+		    $this->handleException();
+	    } elseif (is_string($response) && strlen($response) > 0) {
+		    if ($this->getConfig()->isMQTT5()) {
+			    return ProtocolV5::unpack($response);
+		    }
+
+		    return ProtocolV3::unpack($response);
+	    }
+
+	    return true;
     }
+
+	/**
+	 * @param array $topics
+	 * @return bool
+	 */
+	public function subscribe(array $topics, array $properties = [])
+	{
+		$this->subscriptions[] = [
+			'topics' => $topics,
+			'properties' => $properties,
+		];
+		return parent::subscribe($topics, $properties);
+	}
 
     /**
      * @return string
@@ -142,7 +171,6 @@ class Client extends BaseClient
 
         if ($response === false && $this->client->errCode !== SOCKET_ETIMEDOUT) {
             $this->handleException();
-            return null;
         }
 
         if ($response === true || $response === "") {
