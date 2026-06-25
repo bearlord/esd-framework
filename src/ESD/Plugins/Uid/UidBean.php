@@ -86,9 +86,12 @@ class UidBean
      */
     public function bindUid(int $fd, string $uid, ?bool $autoKick = true)
     {
-        if ($autoKick) {
-            $this->kickUid($uid);
-        }
+	    if ($autoKick) {
+		    $_fd = $this->getUidFd($uid);
+		    if ($_fd != $fd) {
+			    $this->kickUid($uid);
+		    }
+	    }
         $this->fdUidTable->set($fd, ["uid" => $uid]);
         $this->uidFdTable->set($uid, ["fd" => $fd]);
 
